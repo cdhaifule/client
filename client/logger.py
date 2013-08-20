@@ -323,6 +323,12 @@ def terminate():
     sys.excepthook = original_excepthook
     gevent.hub.Hub = OriginalHub
     gevent.get_hub().__class__ = OriginalHub
-    sys.stdout = sys._old_stdout
-    sys.stderr = sys._old_stderr
+    try:
+        sys.stdout = sys._old_stdout
+    except AttributeError:
+        pass
+    try:
+        sys.stderr = sys._old_stderr
+    except AttributeError:
+        pass
     atexit.register(logging.shutdown)

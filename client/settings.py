@@ -70,10 +70,12 @@ if sys.platform == "win32" and sys.frozen:
     mainicon = os.path.join(app_dir, 'img', 'dlam.ico')
     taskbaricon = mainicon
     bin_dir = os.path.join(app_dir, "bin")
+    menuiconfolder = os.path.join(app_dir, 'img', 'menu')
+    
     import requests
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
-    os.environ["REQUESTS_CA_BUNDLE"] = os.path.join(bin_dir, "cacert.pem")
-    menuiconfolder = os.path.join(app_dir, 'img', 'menu')
+    os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
+    os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
 elif sys.platform == "darwin" and sys.frozen:
     app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")

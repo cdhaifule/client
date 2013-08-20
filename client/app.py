@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
 
+import sys
 from . import loader
 
 def main():
@@ -25,7 +26,7 @@ def main():
         loader.main_loop()
     except:
         loader.terminate()
-    exit(0)
+    sys.exit(0)
     
 if __name__ == "__main__":
     main()
