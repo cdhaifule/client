@@ -1,0 +1,18 @@
+"""
+T-Sinus 154 DSL SE
+"""
+
+vendor = 'T-Com'
+name = 'T-Sinus 154 DSL SE'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/disconnect.exe?')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.exe?')
+

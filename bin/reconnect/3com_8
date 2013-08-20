@@ -1,0 +1,70 @@
+"""
+office connect 3CRWE554G72T FW: 2.01.05
+"""
+
+vendor = '3Com'
+name = 'office connect 3CRWE554G72T FW: 2.01.05'
+regex = r'(?s).*(3Com).*'
+
+# step #1
+get('http://{routerip}/default.htm?')
+
+# step #2
+get('http://{routerip}/menu_nologin.htm?')
+
+# step #3
+get('http://{routerip}/main/login.htm?')
+
+# step #4
+get('http://{routerip}/stbar_waiting.htm?')
+
+# step #5
+data = 'page=login&GetTimeVal=&URL=grd11'
+post('http://{routerip}/main/login.htm', data=data)
+
+# step #6
+get('http://{routerip}/main/loginok_mode.htm?')
+
+# step #7
+get('http://{routerip}/main_frame_admin.htm?')
+
+# step #8
+get('http://{routerip}/menu_admin.htm?')
+
+# step #9
+get('http://{routerip}/main/welcome_noticeboard.htm?')
+
+# step #10
+get('http://{routerip}/stbar.htm?')
+
+# step #11
+get('http://{routerip}/main/status_admin.htm?')
+
+# step #12
+data = 'page=status_admin&button=L2tpDisconnect'
+post('http://{routerip}/main/status_admin.htm', data=data)
+
+# step #13
+data = 'page=status_admin&button=L2tpConnect'
+post('http://{routerip}/main/status_admin.htm', data=data)
+
+# step #14
+data = 'page=status_admin&button=L2tpConnect'
+post('http://{routerip}/main/status_admin.htm', data=data)
+
+# step #15
+data = 'page=logout'
+post('http://{routerip}/main_frame_nologin.htm', data=data)
+
+# step #16
+get('http://{routerip}/main_frame_nologin.htm?')
+
+# step #17
+get('http://{routerip}/menu_nologin.htm?')
+
+# step #18
+get('http://{routerip}/main/login.htm?')
+
+# step #19
+get('http://{routerip}/stbar_waiting.htm?')
+

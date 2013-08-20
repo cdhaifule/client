@@ -1,0 +1,21 @@
+"""
+AG300
+"""
+
+vendor = 'LinkSys'
+name = 'AG300'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Status_Router.asp?')
+
+# step #3
+data = 'submit_button=Status_Router&submit_type=connect&change_action=gozila_cgi&wan_proto=dhcp&status_connection=0'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #4
+get('http://{routerip}/Status_Router.asp?')
+

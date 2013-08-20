@@ -1,0 +1,19 @@
+"""
+ALL1294B Firmw. 1.0 Rel.12
+"""
+
+vendor = 'Allnet'
+name = 'ALL1294B Firmw. 1.0 Rel.12'
+regex = r'(?s).*(Allnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'hang_up_st_poe=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'dial_st_poe=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

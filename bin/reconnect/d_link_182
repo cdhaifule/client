@@ -1,0 +1,32 @@
+"""
+DSL-2540T  F/W Ver.: V3.02B01T01.EU-A
+"""
+
+vendor = 'D-Link'
+name = 'DSL-2540T  F/W Ver.: V3.02B01T01.EU-A'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&connection0%3Apppoe%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #6
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+

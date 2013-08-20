@@ -1,0 +1,14 @@
+"""
+IPLinx Multifunction Switch IAR  MB401 S/E
+"""
+
+vendor = 'IPLinx'
+name = 'IPLinx Multifunction Switch IAR  MB401 S/E'
+regex = r'(?s).*iplinx.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000', auth=("{username}", "{password}"))
+

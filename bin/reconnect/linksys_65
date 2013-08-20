@@ -1,0 +1,42 @@
+"""
+Linksys&nbsp;WRT&nbsp;54GS
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT&nbsp;54GS'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&commit=0&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&commit=0&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #3
+get('http://{routerip}/rstatus.tri')
+
+# step #4
+get('http://{routerip}/rstatus.tri')
+
+# step #5
+data = u'_service=wan-stop&_redirect=status-overview.asp&_sleep=2'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #6
+data = u'_service=wan-restart&_redirect=status-overview.asp&_sleep=5'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #7
+data = u'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #8
+data = u'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #9
+data = u'submit_button=Management&change_action=&submit_type=&action=Reboot&commit=1&PasswdModify=0&remote_mgt_https=&http_enable=&info_passwd=&https_enable=&http_username=d6nw5v1x2pc7st9m&http_passwd=d6nw5v1x2pc7st9m&http_passwdConfirm=d6nw5v1x2pc7st9m&remote_management=0&_http_enable=1&refresh_time=3&status_auth=1&maskmac=1&boot_wait=on&cron_enable=1&loopback_enable=1&nas_enable=1&ntp_enable=1&ntp_server=&resetbutton_enable=1&zebra_enable=1&wol_enable=0&wol_interval=86400&wol_hostname=&wol_passwd=&wol_macs=&ipv6_enable0=0&radvd_enable=0&radvd_conf=&enable_jffs2=0&clean_jffs2=0&language=german&mmc_enable0=0&ip_conntrack_max=4096&ip_conntrack_tcp_timeouts=120&ip_conntrack_udp_timeouts=120&overclocking=200&router_style=wikar&samba_mount=0&samba_share=%2F%2Fyourserverip%2Fyourshare&samba_user=username%2Fcomputer&samba_password=iwer573495u7340&samba_script=yourscript'
+post('http://{routerip}/apply.cgi', data=data)
+

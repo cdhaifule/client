@@ -1,0 +1,13 @@
+"""
+!FRITZ BOX (All via UPNP)
+"""
+
+vendor = '!AVM'
+name = '!FRITZ BOX (All via UPNP)'
+regex = r'(?s).*fritz.*'
+
+# step #1
+headers = {'SoapAction': 'urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination', 'Content-Type': 'text/xml; charset="utf-8"'}
+data = "<?xml version='1.0' encoding='utf-8'?> <s:Envelope s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/' xmlns:s='http://schemas.xmlsoap.org/soap/envelope/'> <s:Body> <u:ForceTermination xmlns:u='urn:schemas-upnp-org:service:WANIPConnection:1' /> </s:Body> </s:Envelope>"
+post('http://{routerip}:49000/upnp/control/WANIPConn1', headers=headers, data=data)
+

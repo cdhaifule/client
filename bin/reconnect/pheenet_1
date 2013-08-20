@@ -1,0 +1,17 @@
+"""
+BIG 31/4P
+"""
+
+vendor = 'PheeNet'
+name = 'BIG 31/4P'
+regex = r'(?s).*(PheeNet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

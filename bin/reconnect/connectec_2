@@ -1,0 +1,17 @@
+"""
+Navi210WV
+"""
+
+vendor = 'ConnecTec'
+name = 'Navi210WV'
+regex = r'(?s).*(ConnecTec).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/conntype.cgi?mystop=Disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/conntype.cgi?myopen=Reconnect')
+

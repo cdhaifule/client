@@ -1,0 +1,17 @@
+"""
+DI-614  (Firmware 2.03)
+"""
+
+vendor = 'D-Link'
+name = 'DI-614  (Firmware 2.03)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?Disconnect=')
+
+# step #3
+get('http://{routerip}/status.cgi?Connect=')
+

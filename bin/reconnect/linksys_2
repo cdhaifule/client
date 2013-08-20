@@ -1,0 +1,17 @@
+"""
+AG241-DE V.2 (v2.01.00)
+"""
+
+vendor = 'LinkSys'
+name = 'AG241-DE V.2 (v2.01.00)'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Disconnect&change_action=gozila_cgi&wan_proto=pppoe')
+
+# step #3
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Connect&change_action=gozila_cgi&wan_proto=pppoe')
+

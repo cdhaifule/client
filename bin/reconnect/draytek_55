@@ -1,0 +1,14 @@
+"""
+Vigor2700
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor2700'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/status.htm?')
+

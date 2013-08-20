@@ -1,0 +1,16 @@
+"""
+Buffalo WHR-HP-G54 (Ver.1.40)
+"""
+
+vendor = 'Buffalo'
+name = 'Buffalo WHR-HP-G54 (Ver.1.40)'
+regex = r'(?s).*buffalo.*'
+
+# step #1
+data = 'req=inp&res=info.html&STOP0=Stopp'
+post('http://{routerip}/cgi-bin/cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'req=inp&res=info.html&START0=Start'
+post('http://{routerip}/cgi-bin/cgi', data=data, auth=("{username}", "{password}"))
+

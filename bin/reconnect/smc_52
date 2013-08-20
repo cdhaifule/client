@@ -1,0 +1,20 @@
+"""
+barricade
+"""
+
+vendor = 'SMC'
+name = 'barricade'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1208598487406')
+
+# step #2
+get('http://{routerip}/syslog1.htm?')
+
+# step #3
+get('http://{routerip}/status.htm?RC=_&ZT=1208598490484')
+
+# step #4
+get('http://{routerip}/syslog1.htm?')
+

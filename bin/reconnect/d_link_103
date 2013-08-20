@@ -1,0 +1,75 @@
+"""
+DI-524 (2.07DE)
+"""
+
+vendor = 'D-Link'
+name = 'DI-524 (2.07DE)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/menu.htm?')
+
+# step #2
+data = 'rc=%40&PN=admin&PS=PASSWORT&rd=menu'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/menu1.htm?')
+
+# step #5
+get('http://{routerip}/hwiz.htm?')
+
+# step #6
+get('http://{routerip}/status.htm?')
+
+# step #7
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1211223686631')
+
+# step #8
+get('http://{routerip}/status.htm?RC=_&ZT=1211223689950')
+
+# step #9
+get('http://{routerip}/status.htm?')
+
+# step #10
+get('http://{routerip}/status.htm?')
+
+# step #11
+get('http://{routerip}/status.htm?')
+
+# step #12
+get('http://{routerip}/status.htm?RC=@&ZT=1211223701048')
+
+# step #13
+get('http://{routerip}/status.htm?')
+
+# step #14
+get('http://{routerip}/status.htm?')
+
+# step #15
+get('http://{routerip}/status.htm?')
+
+# step #16
+get('http://{routerip}/status.htm?')
+
+# step #17
+get('http://{routerip}/status.htm?')
+
+# step #18
+get('http://{routerip}/status.htm?')
+
+# step #19
+get('http://{routerip}/status.htm?')
+
+# step #20
+get('http://{routerip}/wiki/index.php/Einen_Reconnect_aufzeichnen?')
+
+# step #21
+get('http://{routerip}/clr2/?')
+
+# step #22
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

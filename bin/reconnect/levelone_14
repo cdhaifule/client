@@ -1,0 +1,9 @@
+"""
+LevelOne&nbsp;FBR-1416B
+"""
+
+vendor = 'LEVELONE'
+name = 'LevelOne&nbsp;FBR-1416B'
+regex = r''
+
+

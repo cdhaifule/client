@@ -1,0 +1,20 @@
+"""
+ZyXel&nbsp;660HW-61
+"""
+
+vendor = 'ZyXel'
+name = 'ZyXel&nbsp;660HW-61'
+regex = r''
+
+# step #1
+data = u'getpage=../html/advanced/adv_pppfile.htm&encaps0:settings/manual_conn=0&var:conid=encaps0&var:mycon=connection0&var:contype=asis&encaps0:pppoa:command/stop='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = u'getpage=../html/advanced/adv_pppfile.htm&encaps0:settings/manual_conn=1&var:conid=encaps0&var:mycon=connection0&var:contype=asis&encaps0:pppoa:command/start='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = u'getpage=../html/advanced/adv_pppfile.htm&encaps0:settings/manual_conn=1&var:conid=encaps0&var:mycon=connection0&var:contype=asis&encaps0:pppoa:command/start='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

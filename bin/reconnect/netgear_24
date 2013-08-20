@@ -1,0 +1,19 @@
+"""
+FVS 318
+"""
+
+vendor = 'Netgear'
+name = 'FVS 318'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'ConStatus=0'
+post('http://{routerip}/PPPstatus.html', data=data)
+
+# step #3
+data = 'ConStatus=1'
+post('http://{routerip}/PPPstatus.html', data=data)
+

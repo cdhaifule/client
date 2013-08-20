@@ -1,0 +1,27 @@
+"""
+DSL-2741B
+"""
+
+vendor = 'D-Link'
+name = 'DSL-2741B'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'username=admin&password=warp1'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #3
+get('http://{routerip}/banner.htm?')
+
+# step #4
+get('http://{routerip}/wan.htm?')
+
+# step #5
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #6
+get('http://{routerip}/login.htm?')
+

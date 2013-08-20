@@ -1,0 +1,18 @@
+"""
+Sitecom DC-207
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom DC-207'
+regex = r'(?s).*sitecom.*'
+
+# step #1
+data = "rc=@&PS={password}&rd=menu&TC=''"
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

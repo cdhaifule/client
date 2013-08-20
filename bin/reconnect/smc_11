@@ -1,0 +1,15 @@
+"""
+A1T-A
+"""
+
+vendor = 'SMC'
+name = 'A1T-A'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+data = 'quickstart=1&pvc=1&cur_if=11&reconnect-pppoe=Restart+Connection'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+get('http://{routerip}/quickstart_stat.stm?')
+

@@ -1,0 +1,94 @@
+"""
+barricade smc7901bra2
+"""
+
+vendor = 'SMC'
+name = 'barricade smc7901bra2'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/images/ss/ad/wf/wf06_720x300_0907ext4.swf?')
+
+# step #2
+get('http://{routerip}/images/ss/ad/wf/wf06_720x300_0907ext5.swf?')
+
+# step #3
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2F')
+
+# step #6
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2Fwww.raymond.cc%2Fblog%2Farchives%2F2007%2F10%2F23%2Ffinally-the-perfect-way-to-unlimited-rapidshare-downloading%2Ffr%2F')
+
+# step #7
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19746,goog-black-enchash:1:47806')
+
+# step #8
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2F')
+
+# step #9
+data = 'pws=smcadmin'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #10
+get('http://{routerip}/index.stm?')
+
+# step #11
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #12
+get('http://{routerip}/setupa_top.stm?')
+
+# step #13
+get('http://{routerip}/status_main.stm?')
+
+# step #14
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #15
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Findex.stm')
+
+# step #16
+data = 'pvc=0&cur_if=11&disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #17
+get('http://{routerip}/status_main.stm?')
+
+# step #18
+data = 'pvc=1&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #19
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Fcgi-bin%2Fstatusprocess.exe')
+
+# step #20
+get('http://{routerip}/status_main.stm?')
+
+# step #21
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Fstatus_main.stm')
+
+# step #22
+data = 'pvc=1&cur_if=11&dis1=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #23
+get('http://{routerip}/status_main.stm?')
+
+# step #24
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Fstatus_main.stm')
+
+# step #25
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Fcgi-bin%2Fstatusprocess.exe')
+
+# step #26
+data = 'pvc=1&cur_if=11&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #27
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080329151514&url=http%3A%2F%2F192.168.2.1%2Fcgi-bin%2Fstatusprocess.exe')
+

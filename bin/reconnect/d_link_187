@@ -1,0 +1,34 @@
+"""
+DSL-504T Firmware V2.01B02T02.MA.20060728
+"""
+
+vendor = 'D-Link'
+name = 'DSL-504T Firmware V2.01B02T02.MA.20060728'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_system.htm')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Ftools%2Frestartmodem.htm&var%3Acom=restart&var%3Aip=&var%3Arestart=1&logic%3Acommand%2Fsave=&logic%3Acommand%2Fppp_disconnect='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html')
+
+# step #6
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+

@@ -1,0 +1,44 @@
+"""
+DSL-502T
+"""
+
+vendor = 'D-Link'
+name = 'DSL-502T'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&encaps0%3Asettings%2Fmanual_conn=0&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis&encaps0%3Apppoa%3Acommand%2Fstop=&var%3Ajudge='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis&encaps0%3Apppoa%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_ppp.htm')
+
+# step #5
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis&encaps0%3Apppoa%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_ppp.htm')
+
+# step #8
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_ppp.htm')
+
+# step #10
+data = 'getpage=..%2Fhtml%2Fadvanced%2Fadv_pppfile.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

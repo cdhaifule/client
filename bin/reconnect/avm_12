@@ -1,0 +1,9 @@
+"""
+Fritzbox&nbsp;Fon&nbsp;Wlan&nbsp;7050
+"""
+
+vendor = 'AVM'
+name = 'Fritzbox&nbsp;Fon&nbsp;Wlan&nbsp;7050'
+regex = r''
+
+

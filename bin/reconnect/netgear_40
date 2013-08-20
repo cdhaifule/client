@@ -1,0 +1,15 @@
+"""
+NETGEAR&nbsp;FVG318
+"""
+
+vendor = 'Netgear'
+name = 'NETGEAR&nbsp;FVG318'
+regex = r''
+
+# step #1
+get('http://{routerip}/st_pppoe.htm')
+
+# step #2
+data = u'disconnect=Disconnect            Cookie: %%%Set-Cookie%%%\r\nReferer: http://yyy.yyy.yyy.yyy/st_pppoe.htm'
+post('http://{routerip}/st_pppoe.igw', data=data)
+

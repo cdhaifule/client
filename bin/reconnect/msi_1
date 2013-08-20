@@ -1,0 +1,16 @@
+"""
+MSI RG54G3
+"""
+
+vendor = 'MSI'
+name = 'MSI RG54G3'
+regex = r'(?s).*msi.*'
+
+# step #1
+data = 'rc=@&A=H0&rd=status'
+post('http://{routerip}/cgi-bin/dial', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'rc=@&A=D0&rd=status'
+post('http://{routerip}/cgi-bin/dial', data=data, auth=("{username}", "{password}"))
+

@@ -1,0 +1,20 @@
+"""
+AVM Fritz!Box Fon Speedport W 501V (FW. 28.04.08 modded)
+"""
+
+vendor = 'AVM'
+name = 'AVM Fritz!Box Fon Speedport W 501V (FW. 28.04.08 modded)'
+regex = r'(?s).*avm.*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&=&login%3Acommand%2Fpassword={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'connection0:settings/cmd_disconnect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'connection0:settings/cmd_connect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

@@ -1,0 +1,17 @@
+"""
+FBR-1412TX
+"""
+
+vendor = 'LevelOne'
+name = 'FBR-1412TX'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/ddc.css?=')
+
+# step #3
+get('http://{routerip}/192.168.123.254?')
+

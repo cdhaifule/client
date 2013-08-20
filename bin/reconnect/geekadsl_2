@@ -1,0 +1,17 @@
+"""
+pro-max ue4 Firmware CX82xxx_4.1.0.21
+"""
+
+vendor = 'GeekADSL'
+name = 'pro-max ue4 Firmware CX82xxx_4.1.0.21'
+regex = r'(?s).*(GeekADSL).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/doreboot.htm?')
+
+# step #3
+get('http://{routerip}/doc/rbdone.htm?')
+

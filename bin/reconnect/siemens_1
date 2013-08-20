@@ -1,0 +1,47 @@
+"""
+ADSL
+"""
+
+vendor = 'Siemens'
+name = 'ADSL'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/logo_wireless.html?')
+
+# step #5
+get('http://{routerip}/menu.html?')
+
+# step #6
+get('http://{routerip}/footer.html?')
+
+# step #7
+get('http://{routerip}/connect.html?')
+
+# step #8
+get('http://{routerip}/constatus.html?')
+
+# step #9
+get('http://{routerip}/diag.html?')
+
+# step #10
+get('http://{routerip}/menu_mgt.html?')
+
+# step #11
+get('http://{routerip}/resetrouter.html?')
+
+# step #12
+get('http://{routerip}/rebootinfo.cgi?checkNum=6870')
+
+# step #13
+get('http://{routerip}/clear.html?')
+

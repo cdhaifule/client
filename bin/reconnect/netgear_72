@@ -1,0 +1,14 @@
+"""
+Netgear RT311 (FW 3.25)
+"""
+
+vendor = 'Netgear'
+name = 'Netgear RT311 (FW 3.25)'
+regex = r'(?s).*netgear.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=1&T=14000', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=1&T=180000', auth=("{username}", "{password}"))
+

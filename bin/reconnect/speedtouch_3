@@ -1,0 +1,16 @@
+"""
+Speedtouch&nbsp;546v6
+"""
+
+vendor = 'Speedtouch'
+name = 'Speedtouch&nbsp;546v6'
+regex = r''
+
+# step #1
+data = u'0=13&1=Shared_Internet&5=2'
+post('http://{routerip}', data=data)
+
+# step #2
+data = u'0=12&1=Shared_Internet&5=2'
+post('http://{routerip}', data=data)
+

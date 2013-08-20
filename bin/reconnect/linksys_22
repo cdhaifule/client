@@ -1,0 +1,14 @@
+"""
+Linksys BEFW11S4 - Firmware 1.50.x
+"""
+
+vendor = 'Linksys'
+name = 'Linksys BEFW11S4 - Firmware 1.50.x'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=2', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=1', auth=("{username}", "{password}"))
+

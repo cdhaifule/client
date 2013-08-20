@@ -1,0 +1,20 @@
+"""
+5510
+"""
+
+vendor = 'zoom'
+name = '5510'
+regex = r'(?s).*(zoom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/save.htm?')
+
+# step #3
+get('http://{routerip}/doc/dosave.htm?')
+
+# step #4
+get('http://{routerip}/doc/rbdone.htm?')
+

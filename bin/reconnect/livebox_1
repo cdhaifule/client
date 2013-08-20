@@ -1,0 +1,53 @@
+"""
+Iventel v5.10 Firmware A2pBT009c1.d17d
+"""
+
+vendor = 'Livebox'
+name = 'Iventel v5.10 Firmware A2pBT009c1.d17d'
+regex = r'(?s).*(Livebox).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/index2.html?')
+
+# step #4
+get('http://{routerip}/floor.html?')
+
+# step #5
+get('http://{routerip}/logo.html?')
+
+# step #6
+get('http://{routerip}/menu.html?')
+
+# step #7
+get('http://{routerip}/services.html?')
+
+# step #8
+get('http://{routerip}/logo_simple.html?')
+
+# step #9
+get('http://{routerip}/logo_banner.html?')
+
+# step #10
+get('http://{routerip}/logo_simple.html?')
+
+# step #11
+get('http://{routerip}/srv_internet.html?')
+
+# step #12
+get('http://{routerip}/internetok.cgi?enblInternet=0')
+
+# step #13
+get('http://{routerip}/srv_internet.html?')
+
+# step #14
+get('http://{routerip}/internetok.cgi?enblInternet=1')
+
+# step #15
+get('http://{routerip}/srv_internet.html?')
+

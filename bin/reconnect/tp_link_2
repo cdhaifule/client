@@ -1,0 +1,14 @@
+"""
+TD-8811
+"""
+
+vendor = 'TP-Link'
+name = 'TD-8811'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+

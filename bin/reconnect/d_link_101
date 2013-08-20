@@ -1,0 +1,19 @@
+"""
+DI-514 (FW 1.02)
+"""
+
+vendor = 'D-Link'
+name = 'DI-514 (FW 1.02)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=st_devic&connectflag=1'
+post('http://{routerip}/st_devic.html', data=data)
+
+# step #3
+data = 'page=st_devic&connectflag=2'
+post('http://{routerip}/st_devic.html', data=data)
+

@@ -1,0 +1,20 @@
+"""
+3Com&nbsp;Office&nbsp;Connect&nbsp;Wireless&nbsp;11g&nbsp;CableDSL&nbsp;Gateway
+"""
+
+vendor = '3COM'
+name = '3Com&nbsp;Office&nbsp;Connect&nbsp;Wireless&nbsp;11g&nbsp;CableDSL&nbsp;Gateway'
+regex = r''
+
+# step #1
+data = u'page=login&GetTimeVal=1187787359171&URL=PASSWORT'
+post('http://{routerip}/main/login.htm', data=data)
+
+# step #2
+data = u'page=status_admin&button=PppoeDisconnect'
+post('http://{routerip}/main/status_admin.htm', data=data)
+
+# step #3
+data = u'page=status_admin&button=PppoeConnect'
+post('http://{routerip}/main/status_admin.htm', data=data)
+

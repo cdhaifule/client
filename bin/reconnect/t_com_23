@@ -1,0 +1,34 @@
+"""
+Speedport W 701 V (FW 33.04.56
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 701 V (FW 33.04.56'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Averz=2&time%3Asettings%2Ftime=1210366414%2C-120&login%3Acommand%2Fpassword=9280'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_hilfsmittel.htm')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_hilfsmittel_reboot.htm')
+
+# step #5
+get('http://{routerip}/html/m_startonly.htm?')
+
+# step #6
+data = 'logic%3Acommand%2Freboot=1&getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fhcti_hilfsmittel_reboot.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html&var:foo=0.14441085873354276')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_startseite.htm')
+

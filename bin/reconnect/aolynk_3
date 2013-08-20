@@ -1,0 +1,113 @@
+"""
+DR814 ADSL2+
+"""
+
+vendor = 'Aolynk'
+name = 'DR814 ADSL2+'
+regex = r'(?s).*(Aolynk).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/reset/index.html?')
+
+# step #3
+post('http://{routerip}/reset/index.html')
+
+# step #4
+get('http://{routerip}/status.html?')
+
+# step #5
+get('http://{routerip}/status.html?')
+
+# step #6
+get('http://{routerip}/status.html?')
+
+# step #7
+get('http://{routerip}/status.html?')
+
+# step #8
+get('http://{routerip}/status.html?')
+
+# step #9
+get('http://{routerip}/status.html?')
+
+# step #10
+get('http://{routerip}/status.html?')
+
+# step #11
+get('http://{routerip}/status.html?')
+
+# step #12
+get('http://{routerip}/status.html?')
+
+# step #13
+get('http://{routerip}/status.html?')
+
+# step #14
+get('http://{routerip}/status.html?')
+
+# step #15
+get('http://{routerip}/status.html?')
+
+# step #16
+get('http://{routerip}/status.html?')
+
+# step #17
+get('http://{routerip}/status.html?')
+
+# step #18
+get('http://{routerip}/status.html?')
+
+# step #19
+get('http://{routerip}/status.html?')
+
+# step #20
+get('http://{routerip}/status.html?')
+
+# step #21
+get('http://{routerip}/status.html?')
+
+# step #22
+get('http://{routerip}/status.html?')
+
+# step #23
+get('http://{routerip}/status.html?')
+
+# step #24
+get('http://{routerip}/status.html?')
+
+# step #25
+get('http://{routerip}/status.html?')
+
+# step #26
+get('http://{routerip}/status.html?')
+
+# step #27
+get('http://{routerip}/status.html?')
+
+# step #28
+get('http://{routerip}/status.html?')
+
+# step #29
+get('http://{routerip}/status.html?')
+
+# step #30
+get('http://{routerip}/status.html?')
+
+# step #31
+get('http://{routerip}/status.html?')
+
+# step #32
+get('http://{routerip}/status.html?')
+
+# step #33
+get('http://{routerip}/status.html?')
+
+# step #34
+get('http://{routerip}/status.html?')
+
+# step #35
+get('http://{routerip}/status.html?')
+

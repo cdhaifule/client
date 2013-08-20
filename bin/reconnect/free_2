@@ -1,0 +1,14 @@
+"""
+Free Control WLAN
+"""
+
+vendor = 'Free'
+name = 'Free Control WLAN'
+regex = r'(?s).*(pearl|free.?control).*'
+
+# step #1
+get('http://{routerip}/goform/formWanTcpipSetup?pppDisconnect=Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/goform/formWanTcpipSetup?pppConnect=Connect', auth=("{username}", "{password}"))
+

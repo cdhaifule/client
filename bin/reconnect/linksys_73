@@ -1,0 +1,61 @@
+"""
+WAG200G Firmware1.01.05
+"""
+
+vendor = 'LinkSys'
+name = 'WAG200G Firmware1.01.05'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+
+# step #3
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+
+# step #4
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+
+# step #5
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+
+# step #6
+data = 'headers=HTTP%2F1.x+200+OK%0D%0A&router=LINKSYS+WAG200G+Firmware1.01.05'
+post('http://{routerip}/clrfinal/', data=data)
+
+# step #7
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #8
+post('http://{routerip}/services/')
+
+# step #9
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #10
+get('http://{routerip}/clr/?')
+
+# step #11
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #12
+post('http://{routerip}/clr2/')
+
+# step #13
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+
+# step #14
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #15
+data = 'router=LINKSYS+WAG200G+Firmware1.01.05'
+post('http://{routerip}/clr3/', data=data)
+
+# step #16
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #17
+get('http://{routerip}/setup.cgi?next_file=Status.htm')
+

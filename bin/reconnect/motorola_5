@@ -1,0 +1,9 @@
+"""
+Motorola-Modem&nbsp;SBV5120E
+"""
+
+vendor = 'Motorola'
+name = 'Motorola-Modem&nbsp;SBV5120E'
+regex = r''
+
+

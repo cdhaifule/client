@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;WGT624&nbsp;V1
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WGT624&nbsp;V1'
+regex = r''
+
+# step #1
+data = u'ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #2
+data = u'ConMethod=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data)
+

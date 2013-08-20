@@ -1,0 +1,52 @@
+"""
+WRT54G Tomato 1.16
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G Tomato 1.16'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status-data.jsx?_http_id=TID5715b43cbdb7b00e')
+
+# step #5
+post('http://{routerip}/status-data.jsx')
+
+# step #6
+data = '_service=wan-stop&_redirect=status-overview.asp&_sleep=2&_http_id=TID5715b43cbdb7b00e'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #7
+get('http://{routerip}/status-overview.asp?')
+
+# step #8
+get('http://{routerip}/status-data.jsx?_http_id=TID5715b43cbdb7b00e')
+
+# step #9
+post('http://{routerip}/status-data.jsx')
+
+# step #10
+data = '_service=wan-restart&_redirect=status-overview.asp&_sleep=5&_http_id=TID5715b43cbdb7b00e'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #11
+post('http://{routerip}/status-data.jsx')
+
+# step #12
+get('http://{routerip}/status-overview.asp?')
+
+# step #13
+get('http://{routerip}/status-data.jsx?_http_id=TID5715b43cbdb7b00e')
+
+# step #14
+post('http://{routerip}/status-data.jsx')
+

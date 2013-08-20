@@ -1,0 +1,66 @@
+"""
+Acer
+"""
+
+vendor = 'Acer'
+name = 'Acer'
+regex = r'(?s).*(Acer).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/Images/Imagenew?')
+
+# step #5
+get('http://{routerip}/Mainbasic?')
+
+# step #6
+get('http://{routerip}/Setup?')
+
+# step #7
+get('http://{routerip}/b_menu?')
+
+# step #8
+get('http://{routerip}/stargate?')
+
+# step #9
+get('http://{routerip}/stargate?')
+
+# step #10
+get('http://{routerip}/Status?')
+
+# step #11
+data = 'Submit=Disconnect'
+post('http://{routerip}/Forms/Status_1', data=data)
+
+# step #12
+get('http://{routerip}/Status?')
+
+# step #13
+data = 'Submit=Connect'
+post('http://{routerip}/Forms/Status_1', data=data)
+
+# step #14
+get('http://{routerip}/Status?')
+
+# step #15
+data = 'Submit=Disconnect'
+post('http://{routerip}/Forms/Status_1', data=data)
+
+# step #16
+get('http://{routerip}/Status?')
+
+# step #17
+data = 'Submit=Connect'
+post('http://{routerip}/Forms/Status_1', data=data)
+
+# step #18
+get('http://{routerip}/Status?')
+

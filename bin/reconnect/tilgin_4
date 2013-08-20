@@ -1,0 +1,11 @@
+"""
+Wood 422
+"""
+
+vendor = 'Tilgin'
+name = 'Wood 422'
+regex = r'(?s).*(Tilgin).*'
+
+# step #1
+get('http://{routerip}/Wizard/cgi-sig/CGI_Wizard?act=start_pppoe')
+

@@ -1,0 +1,59 @@
+"""
+CL-110
+"""
+
+vendor = 'Siemens'
+name = 'CL-110'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20149,goog-black-enchash:1:48893')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/logo.html?')
+
+# step #6
+get('http://{routerip}/menu.html?')
+
+# step #7
+get('http://{routerip}/version.html?')
+
+# step #8
+get('http://{routerip}/footer.html?')
+
+# step #9
+get('http://{routerip}/connect.html?')
+
+# step #10
+get('http://{routerip}/constatus.html?')
+
+# step #11
+get('http://{routerip}/disconnect.cgi?checkNum=9256')
+
+# step #12
+get('http://{routerip}/connect.html?')
+
+# step #13
+get('http://{routerip}/connect.html?')
+
+# step #14
+get('http://{routerip}/conprocess.cgi?checkNum=5171&pppUserName=cGFyaHM4OC5hdGguZm9ydGhuZXQuZ3I&pppPassword=MDQyMTMyQEA')
+
+# step #15
+get('http://{routerip}/concount.cgi?')
+
+# step #16
+get('http://{routerip}/concount.cgi?')
+
+# step #17
+get('http://{routerip}/constatus.html?')
+

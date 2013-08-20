@@ -1,0 +1,14 @@
+"""
+NetEasy by D-Link NetQom DSL 4100 (FW 0.99i RC1)
+"""
+
+vendor = 'NetEasy'
+name = 'NetEasy by D-Link NetQom DSL 4100 (FW 0.99i RC1)'
+regex = r'(?s).*neteasy.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online1.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

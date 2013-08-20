@@ -1,0 +1,12 @@
+"""
+Allnet ALL0277DSL Firmware Version 2.10.02
+"""
+
+vendor = 'Allnet'
+name = 'Allnet ALL0277DSL Firmware Version 2.10.02'
+regex = r'(?s).*allnet.*'
+
+# step #1
+data = 'todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

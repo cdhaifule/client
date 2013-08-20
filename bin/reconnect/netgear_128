@@ -1,0 +1,19 @@
+"""
+WGR614 v4 Firmware 4.0_70GR
+"""
+
+vendor = 'Netgear'
+name = 'WGR614 v4 Firmware 4.0_70GR'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Disconnect=disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'Connect=connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

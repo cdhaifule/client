@@ -1,0 +1,18 @@
+"""
+EUMEX 704PC LAN
+"""
+
+vendor = 'T-Com'
+name = 'EUMEX 704PC LAN'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'DIALOUT=checked&PPPCONN=checked&CLOSEPPP=16664266'
+post('http://{routerip}/7.html', data=data)
+
+# step #3
+get('http://{routerip}/http.//www.t-online.de?')
+

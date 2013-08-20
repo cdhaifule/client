@@ -1,0 +1,16 @@
+"""
+D-Link&nbsp;DSL-564T&nbsp;FW&nbsp;V300B01T02EU20060831
+"""
+
+vendor = 'D-LINK'
+name = 'D-Link&nbsp;DSL-564T&nbsp;FW&nbsp;V300B01T02EU20060831'
+regex = r''
+
+# step #1
+data = u'getpage=..%%2Fhtml%%2Fstatus%%2Fdeviceinfofile.htm&encaps0%%3Asettings%%2Fmanual_conn=0&var%%3Aconid=encaps0&var%%3Amycon=connection0&var%%3Acontype=&connection0%%3Apppoe%%3Acommand%%2Fstop=&var%%3Ajudge='
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = u'getpage=..%%2Fhtml%%2Fstatus%%2Fdeviceinfofile.htm&encaps0%%3Asettings%%2Fmanual_conn=1&var%%3Aconid=encaps0&var%%3Amycon=connection0&var%%3Acontype=&connection0%%3Apppoe%%3Acommand%%2Fstart=&var%%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+

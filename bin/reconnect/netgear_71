@@ -1,0 +1,16 @@
+"""
+Netgear RP614v3 [6.00GR]
+"""
+
+vendor = 'Netgear'
+name = 'Netgear RP614v3 [6.00GR]'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'Load=Q&connTime=00%3A00%3A02&connStatus=Connected&getIP=OK&pppoeAct=2&Button=Apply'
+post('http://{routerip}/post-query', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Load=Q&connTime=00%3A00%3A02&connStatus=Connected&getIP=OK&pppoeAct=1&Button=Apply'
+post('http://{routerip}/post-query', data=data, auth=("{username}", "{password}"))
+

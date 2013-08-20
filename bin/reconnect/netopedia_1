@@ -1,0 +1,120 @@
+"""
+3347W
+"""
+
+vendor = 'Netopedia'
+name = '3347W'
+regex = r'(?s).*(Netopedia).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19922,goog-black-enchash:1:-1')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/menuRES.htm?')
+
+# step #6
+get('http://{routerip}/headerimage.htm?')
+
+# step #7
+get('http://{routerip}/homeRES.htm?')
+
+# step #8
+get('http://{routerip}/menuRES.htm?')
+
+# step #9
+data = 'Restart+Connection=Verbindung+neu+aufbauen'
+post('http://{routerip}/Forms/homeRES_1', data=data)
+
+# step #10
+get('http://{routerip}/indexRES.htm?reconnectRES.htm=')
+
+# step #11
+get('http://{routerip}/headerimage.htm?')
+
+# step #12
+get('http://{routerip}/reconnectRES.htm?')
+
+# step #13
+get('http://{routerip}/menuRES.htm?')
+
+# step #14
+get('http://{routerip}/menuRES.htm?')
+
+# step #15
+get('http://{routerip}/Images/Block3?')
+
+# step #16
+get('http://{routerip}/Images/Block5?')
+
+# step #17
+get('http://{routerip}/Images/Block7?')
+
+# step #18
+get('http://{routerip}/Images/Block9?')
+
+# step #19
+get('http://{routerip}/Images/Block11?')
+
+# step #20
+get('http://{routerip}/Images/Block14?')
+
+# step #21
+get('http://{routerip}/Images/Block1?')
+
+# step #22
+get('http://{routerip}/reconnectRES.htm?')
+
+# step #23
+get('http://{routerip}/menuRES.htm?')
+
+# step #24
+get('http://{routerip}/Images/Block3?')
+
+# step #25
+get('http://{routerip}/Images/Block5?')
+
+# step #26
+get('http://{routerip}/Images/Block7?')
+
+# step #27
+get('http://{routerip}/Images/Block9?')
+
+# step #28
+get('http://{routerip}/Images/Block11?')
+
+# step #29
+get('http://{routerip}/Images/Block14?')
+
+# step #30
+get('http://{routerip}/Images/Block1?')
+
+# step #31
+get('http://{routerip}/reconnectRES.htm?')
+
+# step #32
+get('http://{routerip}/menuRES.htm?')
+
+# step #33
+get('http://{routerip}/indexRES.htm?homeRES.htm=')
+
+# step #34
+get('http://{routerip}/headerimage.htm?')
+
+# step #35
+get('http://{routerip}/menuRES.htm?')
+
+# step #36
+get('http://{routerip}/homeRES.htm?')
+
+# step #37
+get('http://{routerip}/menuRES.htm?')
+

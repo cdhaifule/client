@@ -1,0 +1,31 @@
+"""
+WRT54G-DE v3.03.2.de 192.168.1.1.
+"""
+
+vendor = 'Netgear'
+name = 'WRT54G-DE v3.03.2.de 192.168.1.1.'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Status_Router.asp?')
+
+# step #3
+get('http://{routerip}/Status_Router.asp?')
+
+# step #4
+data = 'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #5
+data = 'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #6
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:21119,goog-black-enchash:1:51167')
+
+# step #7
+get('http://{routerip}/Status_Router.asp?')
+

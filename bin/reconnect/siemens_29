@@ -1,0 +1,17 @@
+"""
+Siemens Gigaset SE515 dsl
+"""
+
+vendor = 'Siemens'
+name = 'Siemens Gigaset SE515 dsl'
+regex = r'(?s).*(siemens|gigaset).*'
+
+# step #1
+get('http://{routerip}/login.htm')
+
+# step #2
+get('http://{routerip}/welcome.htm?wanId=1')
+
+# step #3
+get('http://{routerip}/welcome.htm?wanId=1')
+

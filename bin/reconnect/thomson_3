@@ -1,0 +1,11 @@
+"""
+SpeedTouch 530
+"""
+
+vendor = 'Thomson'
+name = 'SpeedTouch 530'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+

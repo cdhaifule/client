@@ -1,0 +1,19 @@
+"""
+DG834B FW V3.01.25
+"""
+
+vendor = 'Netgear'
+name = 'DG834B FW V3.01.25'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'todo=disconnect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #3
+data = 'todo=connect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+

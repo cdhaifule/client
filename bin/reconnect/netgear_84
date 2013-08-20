@@ -1,0 +1,16 @@
+"""
+Netgear WGT 624 V3 Firmware: V4.1.9_1.0.1
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGT 624 V3 Firmware: V4.1.9_1.0.1'
+regex = r'(?s).*(Netgear|WGT).*'
+
+# step #1
+data = 'Disconnect=+Trennen+'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Connect=+Verbinden+'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

@@ -1,0 +1,19 @@
+"""
+DP 802 (FW: 2.10, HW: A-1)
+"""
+
+vendor = 'D-Link'
+name = 'DP 802 (FW: 2.10, HW: A-1)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Tools(1)=    Hang Up'
+post('http://{routerip}/Tools', data=data)
+
+# step #3
+data = 'Tools(1)=     Dial Up'
+post('http://{routerip}/Tools', data=data)
+

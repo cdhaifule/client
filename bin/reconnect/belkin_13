@@ -1,0 +1,28 @@
+"""
+F5D5231-4 Cable/DSL Gateway Router
+"""
+
+vendor = 'Belkin'
+name = 'F5D5231-4 Cable/DSL Gateway Router'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/util_reset.htm?')
+
+# step #2
+get('http://{routerip}/login.htm?')
+
+# step #3
+data = 'page=login&logout=2&pws='
+post('http://{routerip}/login.htm', data=data)
+
+# step #4
+get('http://{routerip}/util_reset.htm?')
+
+# step #5
+data = 'page=system_reset&logout=2'
+post('http://{routerip}/util_reset.htm', data=data)
+
+# step #6
+get('http://{routerip}/indexa.htm?')
+

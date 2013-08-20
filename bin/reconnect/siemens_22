@@ -1,0 +1,69 @@
+"""
+SE505
+"""
+
+vendor = 'Siemens'
+name = 'SE505'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/login_de.htm?')
+
+# step #3
+data = 'page=login&pws=&bug=fixed&login=LOGIN'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #4
+get('http://{routerip}/Setup.htm?')
+
+# step #5
+get('http://{routerip}/de/Setup.htm?')
+
+# step #6
+get('http://{routerip}/de/set_status.htm?')
+
+# step #7
+get('http://{routerip}/de/fsG_wireless_intro.htm?')
+
+# step #8
+get('http://{routerip}/de/adv_top.htm?')
+
+# step #9
+get('http://{routerip}/de/fs_wireless_intro.htm?')
+
+# step #10
+get('http://{routerip}/de/menue_wireless_intro.htm?')
+
+# step #11
+get('http://{routerip}/de/adv_wl_intro.htm?')
+
+# step #12
+get('http://{routerip}/de/fs_wan.htm?')
+
+# step #13
+get('http://{routerip}/de/menue_wan.htm?')
+
+# step #14
+get('http://{routerip}/de/adv_wan_pppoe.htm?')
+
+# step #15
+get('http://{routerip}/apply.cgi?webpage=de%2Fadv_wan_pppoe.htm&wan_provider=other&wan_access=eth1&wan_proto=pppoe&pppoe_keepalive=0&pppoe_demand=1&test=none&lan_restart=&action=Apply&rc_restart=6&pppoe_idletime=300&radiobuttonWAN=radiobutton&radiobuttonProtocol=radiobutton&pppoe_username=ar2687850058&pppoe_passwd=15532506&pppoe_passwd2=15532506&pppoe_mode=2&pppoe_idletime_min=5&pppoe_mru=1492&pppoe_mtu=1492&BA=ANWENDEN')
+
+# step #16
+get('http://{routerip}/de/adv_wan_pppoe.htm?')
+
+# step #17
+get('http://{routerip}/apply.cgi?webpage=de%2Fadv_wan_pppoe.htm&wan_provider=other&wan_access=eth1&wan_proto=pppoe&pppoe_keepalive=1&pppoe_demand=0&test=none&lan_restart=&action=Apply&rc_restart=6&pppoe_idletime=300&radiobuttonWAN=radiobutton&radiobuttonProtocol=radiobutton&pppoe_username=ar2687850058&pppoe_passwd=15532506&pppoe_passwd2=15532506&pppoe_mode=0&pppoe_mru=1492&pppoe_mtu=1492&BA=ANWENDEN')
+
+# step #18
+get('http://{routerip}/de/wait_lan15.htm?')
+
+# step #19
+get('http://{routerip}/de/Setup.htm?')
+
+# step #20
+get('http://{routerip}/de/set_status.htm?')
+

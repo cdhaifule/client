@@ -1,0 +1,50 @@
+"""
+WGR614v9
+"""
+
+vendor = 'Netgear'
+name = 'WGR614v9'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:31,goog-white-url:1:371,goog-black-url:1:20337,goog-black-enchash:1:49337')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/start.htm?')
+
+# step #6
+get('http://{routerip}/MNU_top.htm?')
+
+# step #7
+get('http://{routerip}/MNU_menu.htm?')
+
+# step #8
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #9
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #10
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #11
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #12
+get('http://{routerip}/BAS_ether.htm?')
+
+# step #13
+get('http://{routerip}/BAS_ether_h.htm?')
+
+# step #14
+get('http://{routerip}/LGO_logout.htm?')
+

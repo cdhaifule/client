@@ -1,0 +1,20 @@
+"""
+Arcor&nbsp;Easybox&nbsp;300&nbsp;400&nbsp;&nbsp;600
+"""
+
+vendor = 'Arcor'
+name = 'Arcor&nbsp;Easybox&nbsp;300&nbsp;400&nbsp;&nbsp;600'
+regex = r''
+
+# step #1
+data = u'user=%user%&pws=%pwd%'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = u'pvc=0&cur_if=11&disconnect.x=102&disconnect.y=5&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = u'pvc=0&cur_if=3&connect.x=47&connect.y=10&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

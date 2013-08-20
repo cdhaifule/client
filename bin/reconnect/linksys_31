@@ -1,0 +1,14 @@
+"""
+Linksys WAG54G Ver. 1.2
+"""
+
+vendor = 'Linksys'
+name = 'Linksys WAG54G Ver. 1.2'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=2', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=1', auth=("{username}", "{password}"))
+

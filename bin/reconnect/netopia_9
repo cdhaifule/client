@@ -1,0 +1,11 @@
+"""
+Netopia&nbsp;3357NWG
+"""
+
+vendor = 'Netopia'
+name = 'Netopia&nbsp;3357NWG'
+regex = r''
+
+# step #1
+get('http://{routerip}/Forms/homeRES_1')
+

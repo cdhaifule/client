@@ -1,0 +1,107 @@
+"""
+Sinus W 500V
+"""
+
+vendor = 'T-Com'
+name = 'Sinus W 500V'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/js_top.txt')
+
+# step #3
+get('http://{routerip}/html/top_start_passwort.htm?')
+
+# step #4
+get('http://{routerip}/html/b_banner.htm?')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_startseite.htm')
+
+# step #6
+get('http://{routerip}/html/m_start_passwort.htm?')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/js_top.txt')
+
+# step #8
+get('http://{routerip}/html/js_menu.txt?')
+
+# step #9
+get('http://{routerip}/weather/local/GMXX0007?cc=*&unit=m')
+
+# step #10
+get('http://{routerip}/17/1?id=1060245455&rnd=1073395')
+
+# step #11
+get('http://{routerip}/weather/local/GMXX0007?dayf=2&unit=m')
+
+# step #12
+get('http://{routerip}/html/m_start_passwort.htm?')
+
+# step #13
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&login%3Acommand%2Fpassword=kataschela'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #14
+get('http://{routerip}/html/js_fade.txt?')
+
+# step #15
+get('http://{routerip}/html/m_startseite.htm?')
+
+# step #16
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #17
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #18
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #19
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #20
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #21
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&connection0%3Asettings%2Fenabled=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #22
+get('http://{routerip}/html/m_startseite.htm?')
+
+# step #23
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&connection0%3Asettings%2Fenabled=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #24
+get('http://{routerip}/html/m_startseite.htm?')
+
+# step #25
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #26
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #27
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #28
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #29
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #30
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20072,goog-black-enchash:1:48654')
+
+# step #31
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+
+# step #32
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:pppoe:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:pppoe:settings/username&var:n4=connection0:settings/enabled')
+

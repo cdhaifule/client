@@ -1,0 +1,11 @@
+"""
+RG54GS Firmware C1.0.4.0 ETS[Oct 13 2005]
+"""
+
+vendor = 'MSI'
+name = 'RG54GS Firmware C1.0.4.0 ETS[Oct 13 2005]'
+regex = r'(?s).*(MSI).*'
+
+# step #1
+get('http://{routerip}/system/systemstatus.htm?')
+

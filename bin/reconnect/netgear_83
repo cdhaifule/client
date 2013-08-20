@@ -1,0 +1,16 @@
+"""
+Netgear WGR614v7  V1.0.14_1.0.14  (English)
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGR614v7  V1.0.14_1.0.14  (English)'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'ConMethod=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

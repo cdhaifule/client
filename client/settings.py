@@ -1,0 +1,134 @@
+"""Copyright (C) 2013 COLDWELL AG
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import os
+import sys
+import uuid
+import platform
+
+module_dir = os.path.dirname(__file__)
+script_dir = os.path.abspath(os.path.dirname(module_dir))
+
+if sys.platform == "darwin":
+    home_dir = os.environ["HOME"]
+    data_dir = os.path.join(home_dir, "Library", 'download.am')
+elif sys.platform == "win32":
+    if platform.release() == 'XP':
+        os.environ['LOCALAPPDATA'] = os.environ['APPDATA']
+    home_dir = os.path.join(os.environ["HOMEDRIVE"], os.environ["HOMEPATH"])
+    data_dir = os.path.join(os.environ["LOCALAPPDATA"], 'download.am-data')
+else:
+    home_dir = os.environ["HOME"]
+    data_dir = os.path.join(home_dir, ".download.am")
+
+app_uuid_file = os.path.join(data_dir, '.app.uuid')
+next_uid_file = os.path.join(data_dir, '.next.id')    # when integer no file is used. useful for debug
+
+db_file = os.path.join(data_dir, 'dlam.db')
+config_file = os.path.join(data_dir, 'config.json')
+
+log_file = os.path.join(data_dir, 'dlam.log')
+log_settings_file = os.path.join(data_dir, 'log.json')
+
+localize_file = os.path.join(data_dir, '.localize')
+
+temp_dir = os.path.join(data_dir, 'tmp')
+
+torrent_dir = os.path.join(data_dir, 'torrents')
+torrent_session_state_file = os.path.join(data_dir, 'torrent.state')
+torrent_dht_state_file = os.path.join(data_dir, 'torrent-dht.state')
+
+external_plugins = os.path.join(data_dir, "extern")
+
+
+frontend_domain = "www.download.am"
+patchserver = "http://repo.download.am"
+
+app_build = 1
+app_uuid = None
+
+try:
+    sys.frozen
+except AttributeError:
+    sys.frozen = False
+
+if sys.platform == "win32" and sys.frozen:
+    app_dir = os.path.dirname(sys.executable)
+    mainicon = os.path.join(app_dir, 'img', 'dlam.ico')
+    taskbaricon = mainicon
+    bin_dir = os.path.join(app_dir, "bin")
+    import requests
+    requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
+    os.environ["REQUESTS_CA_BUNDLE"] = os.path.join(bin_dir, "cacert.pem")
+    menuiconfolder = os.path.join(app_dir, 'img', 'menu')
+elif sys.platform == "darwin" and sys.frozen:
+    app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
+    bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
+    mainicon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam.icns")
+    taskbaricon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam_black.icns")
+    menuiconfolder = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img/menu")
+else:
+    app_dir = os.getcwd()
+    bin_dir = os.path.join(app_dir, "bin")
+    menuiconfolder = os.path.join(app_dir, "client/img/menu")
+    if sys.platform == "darwin":
+        mainicon = os.path.join(app_dir, "client/img/dlam.icns")
+        taskbaricon = os.path.join(app_dir, "client/img/dlam_black.icns")
+    else: # it's linux baby :)
+        mainicon = os.path.join(app_dir, "client/img/dlam.ico")
+        taskbaricon = mainicon
+
+def _makedirs(path):
+    try:
+        try:
+            os.makedirs(path)
+            return
+        except OSError as e:
+            if e.errno != 17:
+                raise
+    except BaseException as e:
+        print >>sys.stderr, 'error creating file or directory {}: {}'.format(path, e)
+        raise SystemExit()
+
+_makedirs(data_dir)
+_makedirs(torrent_dir)
+_makedirs(temp_dir)
+
+def init_pre():
+    global log
+    global app_uuid
+
+    from . import logger
+    log = logger.get("settings")
+
+    os.chdir(script_dir)
+    try:
+        with open(app_uuid_file, 'r') as f:
+            app_uuid = f.read().strip()
+    except:
+        app_uuid = None
+
+    if not app_uuid:
+        app_uuid = str(uuid.uuid4())
+        while len(app_uuid) < 36:
+            app_uuid += app_uuid
+        app_uuid = app_uuid[:36]
+        with open(app_uuid_file, 'wb') as f:
+            f.write(app_uuid)
+        log.info('created new app uuid: {}'.format(app_uuid))
+
+def init():
+    pass

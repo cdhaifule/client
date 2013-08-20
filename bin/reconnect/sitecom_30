@@ -1,0 +1,44 @@
+"""
+WL 109  0.01.31
+"""
+
+vendor = 'Sitecom'
+name = 'WL 109  0.01.31'
+regex = r'(?s).*(Sitecom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/setup.cgi?')
+
+# step #3
+get('http://{routerip}/setup.cgi?')
+
+# step #4
+get('http://{routerip}/home.htm?')
+
+# step #5
+get('http://{routerip}/setup.cgi?next_file=title.htm')
+
+# step #6
+get('http://{routerip}/setup.cgi?next_file=menu.htm')
+
+# step #7
+get('http://{routerip}/header.htm?')
+
+# step #8
+get('http://{routerip}/setup.cgi?next_file=s_status.htm')
+
+# step #9
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #10
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #11
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #12
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+

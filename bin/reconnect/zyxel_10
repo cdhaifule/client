@@ -1,0 +1,20 @@
+"""
+Prestige 2602HWL-67
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 2602HWL-67'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+data = 'loginPassword=&hiddenPassword=%%%MD5:::pass%%%&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+data = 'DiagDSLDisconnect=PPPoE Trennung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+data = 'DiagDSLConnect=PPPoE Trennung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+

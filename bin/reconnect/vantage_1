@@ -1,0 +1,19 @@
+"""
+ADSL IAN4000/ZOT IA400 von Zero One
+"""
+
+vendor = 'Vantage'
+name = 'ADSL IAN4000/ZOT IA400 von Zero One'
+regex = r'(?s).*(Vantage).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Show-Disconn.HTM=  Disconnect'
+post('http://{routerip}/Diag.htm', data=data)
+
+# step #3
+data = 'Show-Conn.HTM=    Connect'
+post('http://{routerip}/Diag.htm', data=data)
+

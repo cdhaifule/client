@@ -1,0 +1,18 @@
+"""
+WGT624, FW: Version 3.0.2 Nov 13 2003
+"""
+
+vendor = 'Netgear'
+name = 'WGT624, FW: Version 3.0.2 Nov 13 2003'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

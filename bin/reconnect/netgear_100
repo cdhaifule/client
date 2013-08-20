@@ -1,0 +1,14 @@
+"""
+Netgear&nbsp;RP614&nbsp;V4
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;RP614&nbsp;V4'
+regex = r''
+
+# step #1
+post('http://{routerip}/cgi-bin/apply.cgi?page=pppoestatus.html')
+
+# step #2
+post('http://{routerip}/cgi-bin/apply.cgi?page=pppoestatus.html')
+

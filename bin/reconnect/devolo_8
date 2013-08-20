@@ -1,0 +1,14 @@
+"""
+Devolo&nbsp;Microlink&nbsp;LAN&nbsp;Router&nbsp;FW&nbsp;214
+"""
+
+vendor = 'Devolo'
+name = 'Devolo&nbsp;Microlink&nbsp;LAN&nbsp;Router&nbsp;FW&nbsp;214'
+regex = r''
+
+# step #1
+get('http://{routerip}/de/status.htm?page=status&applyflag=1')
+
+# step #2
+get('http://{routerip}/de/status.htm?page=status&applyflag=0')
+

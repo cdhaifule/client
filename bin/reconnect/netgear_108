@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;WNR834B
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WNR834B'
+regex = r''
+
+# step #1
+data = u'todo=disconnect&this_file=RST_poe.htm&next_file=RST_poe.htm'
+post('http://{routerip}/setup.cgi?next_file=RST_wanstat.htm', data=data)
+
+# step #2
+data = u'todo=connect&this_file=RST_poe.htm&next_file=RST_poe.htm'
+post('http://{routerip}/setup.cgi?next_file=RST_wanstat.htm', data=data)
+

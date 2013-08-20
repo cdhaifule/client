@@ -1,0 +1,17 @@
+"""
+Broadband Router Version R1.93s
+"""
+
+vendor = 'Digitus'
+name = 'Broadband Router Version R1.93s'
+regex = r'(?s).*(Digitus).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/logi?RC=@D{password}{username}')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=0&T=10000')
+

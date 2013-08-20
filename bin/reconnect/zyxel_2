@@ -1,0 +1,17 @@
+"""
+630C1 USBMODEM
+"""
+
+vendor = 'ZYXEL '
+name = '630C1 USBMODEM'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?ver=0.13.1?')
+
+# step #2
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P008')
+

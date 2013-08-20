@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;WPN824&nbsp;FW&nbsp;V2015&nbsp;1011
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WPN824&nbsp;FW&nbsp;V2015&nbsp;1011'
+regex = r''
+
+# step #1
+data = u'ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #2
+data = u'ConMethod=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data)
+

@@ -1,0 +1,40 @@
+"""
+Speedtouch Adsl modem 510 Firmware 4.2.7.16.0
+"""
+
+vendor = 'Thomson'
+name = 'Speedtouch Adsl modem 510 Firmware 4.2.7.16.0'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/index.htm?')
+
+# step #5
+get('http://{routerip}/header.htm?')
+
+# step #6
+get('http://{routerip}/menu.htm?menu=0')
+
+# step #7
+get('http://{routerip}/cgi/status/?')
+
+# step #8
+get('http://{routerip}/dial.htm?')
+
+# step #9
+data = '1=6&11=152459@tedata.net.eg&12=********&14=on&21=0&22=PPPoE_1&23=RELAY&24=-7B0B-0-0-0-0-0_7_1_1_1_0_1_A00001C_0_0_0_0_0&25=152459@tedata.net.eg&26=KDBIFIHJOOENPHAD&27=&28=tedata'
+post('http://{routerip}/cgi/dial/', data=data)
+
+# step #10
+data = '1=5&11=152459@tedata.net.eg&12=********&14=on&21=0&22=PPPoE_1&23=RELAY&24=-7B0B-0-0-0-0-0_1_0_0_1_0_1_A00001C_0_0_0_0_0&25=152459@tedata.net.eg&26=KDBIFIHJOOENPHAD&27=&28=tedata'
+post('http://{routerip}/cgi/dial/', data=data)
+

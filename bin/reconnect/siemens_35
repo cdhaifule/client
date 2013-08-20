@@ -1,0 +1,14 @@
+"""
+Siemens&nbsp;ADSL&nbsp;C2-010-I
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;ADSL&nbsp;C2-010-I'
+regex = r''
+
+# step #1
+get('http://{routerip}/Action?id=141&sec_proto=1&login=PPPOE-NAME&passwd=PPPOE-PW&d_route=1&ex_param1=16&ppp_status=2&conn_mode=2&inact_tm_out1=5')
+
+# step #2
+get('http://{routerip}/Action?id=140&sec_proto=1&login=PPPOE-NAME&passwd=PPPOE-PW&d_route=1&ex_param1=16&ppp_status=1&conn_mode=2&inact_tm_out1=5')
+

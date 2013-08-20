@@ -1,0 +1,61 @@
+"""
+CGA5720S/TE
+"""
+
+vendor = 'Philips'
+name = 'CGA5720S/TE'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'pws=WRITE_YOUR_PASSWORD_HERE'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/top.stm?pn1=sa3.gif&pn2=ad1.gif')
+
+# step #5
+get('http://{routerip}/status.stm?')
+
+# step #6
+get('http://{routerip}/status_menu.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+get('http://{routerip}/aindex.stm?')
+
+# step #9
+get('http://{routerip}/setupaa_menu.stm?')
+
+# step #10
+get('http://{routerip}/setupa_main.stm?')
+
+# step #11
+get('http://{routerip}/top.stm?pn1=sa3.gif&pn2=ad1.gif')
+
+# step #12
+get('http://{routerip}/tl.stm?')
+
+# step #13
+get('http://{routerip}/tl_menu.stm?')
+
+# step #14
+get('http://{routerip}/tl_main.stm?')
+
+# step #15
+get('http://{routerip}/system_r.stm?')
+
+# step #16
+data = 'page=tools_gateway&logout=&savesetting=REBOOT+ROUTER'
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #17
+get('http://{routerip}/wait.stm?')
+

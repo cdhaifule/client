@@ -1,0 +1,14 @@
+"""
+Arcor WLAN 200
+"""
+
+vendor = 'Arcor'
+name = 'Arcor WLAN 200'
+regex = r'(?s).*arcor.*'
+
+# step #1
+get('http://{routerip}/Forms/DiagADSL_1?DiagDSLDisconnect=PPPoE%20Trennung', auth=("{username}", "{password}"))
+
+# step #2
+get('http://http://www.google.de/')
+

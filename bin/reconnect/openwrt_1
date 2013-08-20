@@ -1,0 +1,11 @@
+"""
+OpenWrt&nbsp;White&nbsp;Russian
+"""
+
+vendor = 'OpenWRT'
+name = 'OpenWrt&nbsp;White&nbsp;Russian'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/webif/status-pppoe.sh?action=reconnect')
+

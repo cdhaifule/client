@@ -1,0 +1,15 @@
+"""
+Router
+"""
+
+vendor = 'E-tech'
+name = 'Router'
+regex = r'(?s).*(E-tech).*'
+
+# step #1
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Findex.html&var%3Apagename=dhcpc&var%3Aerrorpagename=home&var%3Amenu=setup&var%3Amenutitle=Setup&var%3Apagetitle=Static&var%3Apagemaster=Static&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin&var%3Afromlogin=1&var%3Amode=new'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var:style=style5&var:main=menu&var:menu=setup&var:menutitle=Setup&var:pagename=savereboot&var:pagetitle=Save%20and%20Reboot')
+

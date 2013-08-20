@@ -1,0 +1,33 @@
+"""
+AOLINK dr 814 adsl2+
+"""
+
+vendor = 'AOLYNK'
+name = 'AOLINK dr 814 adsl2+'
+regex = r'(?s).*(AOLYNK).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/index_main.html?')
+
+# step #4
+get('http://{routerip}/welcome.html?')
+
+# step #5
+get('http://{routerip}/menu_admin.html?')
+
+# step #6
+data = 'EmWeb_ns%3Avim%3A3=%2Fstatus.html&EmWeb_ns%3Avim%3A8._wanppp=ImService%3APppoeUp&EmWeb_ns%3Avim%3A6._wanppp%3Aenabled=false&EmWeb_ns%3Avim%3A23=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data)
+
+# step #7
+get('http://{routerip}/status.html?')
+
+# step #8
+get('http://{routerip}/status.html?')
+

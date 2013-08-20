@@ -1,0 +1,11 @@
+"""
+6600
+"""
+
+vendor = 'Philips'
+name = '6600'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+get('http://{routerip}/?')
+

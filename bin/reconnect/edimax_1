@@ -1,0 +1,40 @@
+"""
+AR-7084A Firmware 3.5.18.0
+"""
+
+vendor = 'EdiMax'
+name = 'AR-7084A Firmware 3.5.18.0'
+regex = r'(?s).*(EdiMax).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status.html?')
+
+# step #5
+get('http://{routerip}/navigation-status.html?')
+
+# step #6
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #7
+data = 'DvInfo_PVC=PVC0&PPPoEConn=Disconnect&PVC_or_Renew_or_Release=0'
+post('http://{routerip}/Forms/status_deviceinfo_1', data=data)
+
+# step #8
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #9
+data = 'DvInfo_PVC=PVC0&PPPoEConn=Connect&PVC_or_Renew_or_Release=0'
+post('http://{routerip}/Forms/status_deviceinfo_1', data=data)
+
+# step #10
+get('http://{routerip}/status/status_deviceinfo.htm?')
+

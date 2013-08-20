@@ -1,0 +1,90 @@
+"""
+T-Sinus1054DSL
+"""
+
+vendor = 'T-Com'
+name = 'T-Sinus1054DSL'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #3
+get('http://{routerip}/b_banner.html?')
+
+# step #4
+get('http://{routerip}/m_start_passwort.html?')
+
+# step #5
+get('http://{routerip}/hcti_start_passwort.html?')
+
+# step #6
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959668097&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=AATe6uoQomYHrUTn9PCfoKLHVkBNBMIk3UCwiJfn&=')
+
+# step #7
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959666504&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=H3Xyf%2BoF8oOvsvXowSUSc%2F8%2B4NHz0NDmMrOT7IwTmePTJNLy4VguAulB7HOEIzyW5Tq5gQ%3D%3D&=')
+
+# step #8
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959666082&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=YEukTOZIEfRiNIZGX33mDO7eeMTKJAnnNWOGy5%2BRyoI7GvVz0l7TTKlA2LD3ebOs%2FUgQ8w%3D%3D&=')
+
+# step #9
+data = 'T1=iefbQHEr7434'
+post('http://{routerip}/start.login', data=data)
+
+# step #10
+get('http://{routerip}/m_startseite.htm?')
+
+# step #11
+get('http://{routerip}/hcti_startseite.htm?')
+
+# step #12
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597769&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=i%2BvkBgqX605WVStetovXiZVUroh4LXX2%2BtPvV5m6qU382Pi6vtPoaOI%3D&=')
+
+# step #13
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597769&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=i%2BvkBgqX605WVStetovXiZVUroh4LXX2%2BtPvV5m6qU382Pi6vtPoaOI%3D&=')
+
+# step #14
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597582&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=PVp1HaOVjpwFUEmuTLKpszUt0M85j6MVA0v3foyFeEb3NjJ%2BEdHlGK1R0d74Pg%3D%3D&=')
+
+# step #15
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597566&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=HOIXLGdgCD3MDjBeQpP60TzGXxmMHg0amy38PDysbTmvevCgcS%2FxvaMkvUQQ1Q%3D%3D&=')
+
+# step #16
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597472&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=qi3jrhdU8yACIYB1nes3pEBBklvkfjNDcysvABcHEfzApOYXvI26FAU3xe8uXHgobQ%3D%3D&=')
+
+# step #17
+get('http://{routerip}/hcti_status.htm?')
+
+# step #18
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959597488&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=Uhn%2BjWkQ0OZP81GWG6gw9a2ESmrrGL6VfIiVdZ0bU%2Fdjd6EhBI82mRUocO0Lwb8bBg%3D%3D&=')
+
+# step #19
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959595269&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=%2BrkJqt%2FbKRw5%2BcPlbR4XyVlRX2z0iVX%2FQBV7j9b%2BIhG9SwOW%2BD6Sywuea97r&=')
+
+# step #20
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959595269&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=%2BrkJqt%2FbKRw5%2BcPlbR4XyVlRX2z0iVX%2FQBV7j9b%2BIhG9SwOW%2BD6Sywuea97r&=')
+
+# step #21
+get('http://{routerip}/hcti_status_internet.htm?')
+
+# step #22
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #23
+get('http://{routerip}/pppctl.cmd?action=1')
+
+# step #24
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959580879&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=scTfgcGomvIADMmTKIAvarnpIysycFc4M%2BglrIl3SCXr2GckJzXek6KJzbXTv0X2NnPGgGA%3D&=')
+
+# step #25
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959580879&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=scTfgcGomvIADMmTKIAvarnpIysycFc4M%2BglrIl3SCXr2GckJzXek6KJzbXTv0X2NnPGgGA%3D&=')
+
+# step #26
+get('http://{routerip}/logout.cmd?')
+
+# step #27
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=-1959572879&wrkey=MTrfQhelfMBc3dYTwX-Lox3H&encparams=QBJDeuWgvuosyqLwfFU%2Bia6%2Fi83Lt8WUUMdQIrpIe7mehrnIfjLh2w%3D%3D&=')
+

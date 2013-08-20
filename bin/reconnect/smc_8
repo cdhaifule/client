@@ -1,0 +1,20 @@
+"""
+7404BRB (FW 0.25_german)
+"""
+
+vendor = 'SMC'
+name = '7404BRB (FW 0.25_german)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = 'disconnect=disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'connect=connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

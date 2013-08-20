@@ -1,0 +1,20 @@
+"""
+SMC 7004ABR (FW. 1.42.024)
+"""
+
+vendor = 'SMC'
+name = 'SMC 7004ABR (FW. 1.42.024)'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = 'page=setup_wan_pppoe&connectflag=2&logout=2&UN=sebfloth%40dsl-flat&PW=3rb2o7t&PWV=3rb2o7t&SN=Citykom+DSL&idle=0&reconnect=on'
+post('http://{routerip}/setup_wan_pppoe.htm', data=data)
+
+# step #3
+data = 'page=setup_wan_pppoe&connectflag=1&logout=2&UN=sebfloth%40dsl-flat&PW=3rb2o7t&PWV=3rb2o7t&SN=Citykom+DSL&idle=0&reconnect=on'
+post('http://{routerip}/setup_wan_pppoe.htm', data=data)
+

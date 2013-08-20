@@ -1,0 +1,14 @@
+"""
+Draytek Vigor 2600 V2.2.5 deutsch
+"""
+
+vendor = 'Draytek'
+name = 'Draytek Vigor 2600 V2.2.5 deutsch'
+regex = r'(?s).*draytek.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

@@ -1,0 +1,76 @@
+"""
+WRT 45 GL Firmware Tomato V 1.17
+"""
+
+vendor = 'LinkSys'
+name = 'WRT 45 GL Firmware Tomato V 1.17'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status-data.jsx?_http_id=TIDcb3687ed9cf3a502')
+
+# step #5
+data = '_service=wan-stop&_redirect=status-overview.asp&_sleep=2&_http_id=TIDcb3687ed9cf3a502'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #6
+get('http://{routerip}/status-overview.asp?')
+
+# step #7
+get('http://{routerip}/status-data.jsx?_http_id=TIDcb3687ed9cf3a502')
+
+# step #8
+post('http://{routerip}/status-data.jsx')
+
+# step #9
+post('http://{routerip}/status-data.jsx')
+
+# step #10
+data = '_service=wan-restart&_redirect=status-overview.asp&_sleep=5&_http_id=TIDcb3687ed9cf3a502'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #11
+get('http://{routerip}/status-overview.asp?')
+
+# step #12
+post('http://{routerip}/status-data.jsx')
+
+# step #13
+get('http://{routerip}/status-data.jsx?_http_id=TIDcb3687ed9cf3a502')
+
+# step #14
+post('http://{routerip}/status-data.jsx')
+
+# step #15
+post('http://{routerip}/status-data.jsx')
+
+# step #16
+post('http://{routerip}/status-data.jsx')
+
+# step #17
+post('http://{routerip}/status-data.jsx')
+
+# step #18
+post('http://{routerip}/status-data.jsx')
+
+# step #19
+post('http://{routerip}/status-data.jsx')
+
+# step #20
+post('http://{routerip}/status-data.jsx')
+
+# step #21
+post('http://{routerip}/status-data.jsx')
+
+# step #22
+post('http://{routerip}/status-data.jsx')
+

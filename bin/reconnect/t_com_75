@@ -1,0 +1,54 @@
+"""
+T-Online Speedport 300
+"""
+
+vendor = 'T-Com'
+name = 'T-Online Speedport 300'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #3
+get('http://{routerip}/b_banner.htm?')
+
+# step #4
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #5
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #6
+get('http://{routerip}/info_Verwaltung_de.xml?')
+
+# step #7
+data = 'P1=85884568'
+post('http://{routerip}/start.login', data=data)
+
+# step #8
+get('http://{routerip}/b_banner.htm?')
+
+# step #9
+get('http://{routerip}/m_startseite.htm?')
+
+# step #10
+get('http://{routerip}/hcti_startseite.htm?')
+
+# step #11
+get('http://{routerip}/top_online.htm?')
+
+# step #12
+get('http://{routerip}/info_Verwaltung_de.xml?')
+
+# step #13
+get('http://{routerip}/top_online.htm?')
+
+# step #14
+get('http://{routerip}/top_online.htm?')
+
+# step #15
+get('http://{routerip}/logout.cmd?')
+

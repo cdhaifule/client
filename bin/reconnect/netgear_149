@@ -1,0 +1,76 @@
+"""
+WGU624
+"""
+
+vendor = 'Netgear'
+name = 'WGU624'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/index.htm?')
+
+# step #5
+get('http://{routerip}/top.html?')
+
+# step #6
+get('http://{routerip}/contents1.html?')
+
+# step #7
+get('http://{routerip}/basicform.html?')
+
+# step #8
+get('http://{routerip}/help/help_basic1.html?')
+
+# step #9
+get('http://{routerip}/basictop.html?')
+
+# step #10
+get('http://{routerip}/basicbuttom.html?')
+
+# step #11
+get('http://{routerip}/basicformpppoe.html?')
+
+# step #12
+get('http://{routerip}/contents.html?')
+
+# step #13
+get('http://{routerip}/help/help_basic1.html?')
+
+# step #14
+get('http://{routerip}/sysstatus.html?')
+
+# step #15
+get('http://{routerip}/help/help_SysStatus.html?')
+
+# step #16
+get('http://{routerip}/pppoestatus.htm?')
+
+# step #17
+data = 'Load=Q&connTime=00%3A00%3A34&connStatus=Connected&getIP=OK&pppoeAct=2&Button=Apply'
+post('http://{routerip}/post-query', data=data)
+
+# step #18
+get('http://{routerip}/pppoestatus.htm?')
+
+# step #19
+data = 'Load=Q&connTime=00%3A00%3A00&connStatus=Disconnected&getIP=---&pppoeAct=1&Button=Apply'
+post('http://{routerip}/post-query', data=data)
+
+# step #20
+get('http://{routerip}/sysstatus.html?')
+
+# step #21
+get('http://{routerip}/help/help_SysStatus.html?')
+
+# step #22
+get('http://{routerip}/pppoestatus.htm?')
+

@@ -1,0 +1,18 @@
+"""
+Multi-Functional Broadband NAT Router (R1.94o2)
+"""
+
+vendor = 'Digitus'
+name = 'Multi-Functional Broadband NAT Router (R1.94o2)'
+regex = r'(?s).*(Digitus).*'
+
+# step #1
+data = 'login=1&password={password}'
+post('http://{routerip}/login.html', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=0&T=10000&rd=status')
+

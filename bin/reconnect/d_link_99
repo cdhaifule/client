@@ -1,0 +1,17 @@
+"""
+DI-514 (FW 1.00)
+"""
+
+vendor = 'D-Link'
+name = 'DI-514 (FW 1.00)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+post('http://{routerip}/suspend()')
+
+# step #3
+post('http://{routerip}/resume()')
+

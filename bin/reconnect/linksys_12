@@ -1,0 +1,35 @@
+"""
+BEFW11S4 V2/V3 Firmware 1.45z
+"""
+
+vendor = 'LinkSys'
+name = 'BEFW11S4 V2/V3 Firmware 1.45z'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/Status.htm?')
+
+# step #5
+get('http://{routerip}/Gozila.cgi?pppoeAct=2')
+
+# step #6
+get('http://{routerip}/Status.htm?')
+
+# step #7
+get('http://{routerip}/Gozila.cgi?pppoeAct=1')
+
+# step #8
+get('http://{routerip}/Status.htm?')
+
+# step #9
+get('http://{routerip}/Status.htm?')
+

@@ -1,0 +1,37 @@
+"""
+Broadband Router
+"""
+
+vendor = 'Encore'
+name = 'Broadband Router'
+regex = r'(?s).*(Encore).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/status.htm?')
+
+# step #4
+data = 'disconnect=Disconnect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #5
+get('http://{routerip}/status.htm?')
+
+# step #6
+data = 'connect=Connect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #7
+get('http://{routerip}/status.htm?')
+
+# step #8
+get('http://{routerip}/?')
+
+# step #9
+get('http://{routerip}/?')
+

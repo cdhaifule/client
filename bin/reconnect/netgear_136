@@ -1,0 +1,171 @@
+"""
+WGR614v7 Firmwareversion V1.1.14_1.1.14GR
+"""
+
+vendor = 'Netgear'
+name = 'WGR614v7 Firmwareversion V1.1.14_1.1.14GR'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/start.htm?')
+
+# step #5
+get('http://{routerip}/MNU_top.htm?')
+
+# step #6
+get('http://{routerip}/MNU_menu.htm?')
+
+# step #7
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #8
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #9
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #10
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #11
+get('http://{routerip}/BAS_pppoe.htm?')
+
+# step #12
+get('http://{routerip}/BAS_pppoe_h.htm?')
+
+# step #13
+get('http://{routerip}/FW_log.htm?')
+
+# step #14
+get('http://{routerip}/FW_log_h.htm?')
+
+# step #15
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20414,goog-black-enchash:1:49504')
+
+# step #16
+get('http://{routerip}/WLG_wireless.htm?')
+
+# step #17
+get('http://{routerip}/WLG_wireless1.htm?')
+
+# step #18
+get('http://{routerip}/WLG_wireless_h.htm?')
+
+# step #19
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #20
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #21
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #22
+get('http://{routerip}/BAS_pppoe.htm?')
+
+# step #23
+get('http://{routerip}/BAS_pppoe_h.htm?')
+
+# step #24
+get('http://{routerip}/WIZ_sel.htm?')
+
+# step #25
+get('http://{routerip}/WIZ_sel_h.htm?')
+
+# step #26
+get('http://{routerip}/FW_log.htm?')
+
+# step #27
+get('http://{routerip}/FW_log_h.htm?')
+
+# step #28
+get('http://{routerip}/BKS_keyword.htm?')
+
+# step #29
+get('http://{routerip}/BKS_keyword_h.htm?')
+
+# step #30
+get('http://{routerip}/BKS_service.htm?')
+
+# step #31
+get('http://{routerip}/BKS_service_h.htm?')
+
+# step #32
+get('http://{routerip}/FW_schedule.htm?')
+
+# step #33
+get('http://{routerip}/FW_schedule_h.htm?')
+
+# step #34
+get('http://{routerip}/FW_email.htm?')
+
+# step #35
+get('http://{routerip}/FW_email_h.htm?')
+
+# step #36
+get('http://{routerip}/RST_status.htm?')
+
+# step #37
+get('http://{routerip}/RST_status_h.htm?')
+
+# step #38
+get('http://{routerip}/RST_wanstat.htm?')
+
+# step #39
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #40
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #41
+data = 'ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #42
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #43
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #44
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #45
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #46
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #47
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #48
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #49
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #50
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #51
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #52
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #53
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #54
+get('http://{routerip}/RST_st_poe.htm?')
+

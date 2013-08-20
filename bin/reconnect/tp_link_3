@@ -1,0 +1,11 @@
+"""
+TD-W8920G
+"""
+
+vendor = 'TP-Link'
+name = 'TD-W8920G'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+

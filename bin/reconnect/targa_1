@@ -1,0 +1,21 @@
+"""
+Targa WR 500 VoIP (Firmware 0.10)
+"""
+
+vendor = 'Targa'
+name = 'Targa WR 500 VoIP (Firmware 0.10)'
+regex = r'(?s).*targa.*'
+
+# step #1
+data = 'P1={password}'
+post('http://{routerip}/start.login', data=data)
+
+# step #2
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #3
+get('http://{routerip}/pppctl.cmd?action=1')
+
+# step #4
+get('http://{routerip}/logout.cmd')
+

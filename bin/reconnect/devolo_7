@@ -1,0 +1,14 @@
+"""
+Devolo&nbsp;MicroLink&nbsp;ADSL&nbsp;Modem&nbsp;Router&nbsp;FW&nbsp;159
+"""
+
+vendor = 'Devolo'
+name = 'Devolo&nbsp;MicroLink&nbsp;ADSL&nbsp;Modem&nbsp;Router&nbsp;FW&nbsp;159'
+regex = r''
+
+# step #1
+get('http://{routerip}/doc/de/ppp.htm?PPP_connection_number=1&New_PPP_Action=1&WINDWEB_URL=/doc/de/ppp.htm')
+
+# step #2
+get('http://{routerip}/doc/de/ppp.htm?PPP_connection_number=1&New_PPP_Action=0&WINDWEB_URL=/doc/de/ppp.htm')
+

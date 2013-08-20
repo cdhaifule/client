@@ -1,0 +1,57 @@
+"""
+P660 HW-D1
+"""
+
+vendor = 'ZYXEL '
+name = 'P660 HW-D1'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=c25d296f6cd03bc471a6e0aca6db88fc&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #3
+get('http://{routerip}/rpSys.html?')
+
+# step #4
+get('http://{routerip}/top.html?')
+
+# step #5
+get('http://{routerip}/rpPanel.html?')
+
+# step #6
+get('http://{routerip}/path.html?')
+
+# step #7
+get('http://{routerip}/buttom.html?')
+
+# step #8
+get('http://{routerip}/home.html?')
+
+# step #9
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19669,goog-black-enchash:1:47598')
+
+# step #10
+get('http://{routerip}/rpFWUpload.html?')
+
+# step #11
+get('http://{routerip}/buttom.html?')
+
+# step #12
+get('http://{routerip}/rpSysReboot.html?')
+
+# step #13
+get('http://{routerip}/buttom.html?')
+
+# step #14
+post('http://{routerip}/Forms/rpSysReboot_1')
+
+# step #15
+get('http://{routerip}/RebootSuccPrev.html?')
+
+# step #16
+get('http://{routerip}/RebootSucc.html?')
+

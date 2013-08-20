@@ -1,0 +1,15 @@
+"""
+USR-819112
+"""
+
+vendor = 'USRobotics'
+name = 'USR-819112'
+regex = r'(?s).*(USRobotics).*'
+
+# step #1
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #2
+get('http://{routerip}/wait.stm?')
+

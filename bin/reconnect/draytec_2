@@ -1,0 +1,14 @@
+"""
+Draytec Vigor 2600i (DSL) Firmware 2.54_G (German)
+"""
+
+vendor = 'Draytec'
+name = 'Draytec Vigor 2600i (DSL) Firmware 2.54_G (German)'
+regex = r'(?s).*(draytec|vigor).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

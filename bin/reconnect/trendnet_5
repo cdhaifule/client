@@ -1,0 +1,15 @@
+"""
+TEW-452BRP
+"""
+
+vendor = 'Trendnet'
+name = 'TEW-452BRP'
+regex = r'(?s).*(Trendnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'restart=Restart'
+post('http://{routerip}/restart.cgi', data=data)
+

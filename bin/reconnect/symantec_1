@@ -1,0 +1,18 @@
+"""
+Firewall Appliance
+"""
+
+vendor = 'Symantec'
+name = 'Firewall Appliance'
+regex = r'(?s).*(Symantec).*'
+
+# step #1
+get('http://{routerip}/main.html?')
+
+# step #2
+get('http://{routerip}/advpppoe.html?')
+
+# step #3
+data = '0=on&1=0&2=0&3=0&4=0&5=0&6=&8=0&9=GMX%2Fka3494-631%40online.de&10=xxxxxxxx&11=xxxxxxxx&hang_Up=Trennen'
+post('http://{routerip}/advpppoe.cgi', data=data)
+

@@ -1,0 +1,39 @@
+"""
+Firmware-Version: V3.40(SQ.0) | 09/09/2004
+"""
+
+vendor = 'ZyNOS'
+name = 'Firmware-Version: V3.40(SQ.0) | 09/09/2004'
+regex = r'(?s).*(ZyNOS).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Panel.html?')
+
+# step #3
+get('http://{routerip}/FirstPage.html?')
+
+# step #4
+get('http://{routerip}/Title.html?')
+
+# step #5
+get('http://{routerip}/Panel_Mten_Diagnostic.html?')
+
+# step #6
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #7
+get('http://{routerip}/Title.html?')
+
+# step #8
+get('http://{routerip}/DiagGeneral.html?')
+
+# step #9
+get('http://{routerip}/Title.html?')
+
+# step #10
+data = 'PingIPAddr=&IsReset=1'
+post('http://{routerip}/Forms/DiagGeneral_2', data=data)
+

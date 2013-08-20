@@ -1,0 +1,15 @@
+"""
+WBR-3408
+"""
+
+vendor = 'Level-one'
+name = 'WBR-3408'
+regex = r'(?s).*(Level-one).*'
+
+# step #1
+get('http://{routerip}/Status.htm?')
+
+# step #2
+data = 'reboot_system=Restart&message='
+post('http://{routerip}/status.cgi', data=data)
+

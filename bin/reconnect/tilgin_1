@@ -1,0 +1,16 @@
+"""
+Tilgin Vood 422
+"""
+
+vendor = 'Tilgin'
+name = 'Tilgin Vood 422'
+regex = r'(?s).*(tilgin|vood).*'
+
+# step #1
+headers = {'Accept-Language': 'de-de,de;q=0.8,en-us;q=0.5,en;q=0.3', 'Accept-Encoding': 'gzip,deflate', 'Connection': 'keep-alive', 'Keep-Alive': '300', 'Accept': 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5', 'User-Agent': 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; de; rv:1.8.1.7) Gecko/20070914 Firefox/2.0.0.7', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7', 'Referer': 'http://{routerip}/'}
+get('http://{routerip}:8080/Wizard/cgi-sig/CGI_Wizard?act=stop_pppoe', headers=headers)
+
+# step #2
+headers = {'Accept-Language': 'de-de,de;q=0.8,en-us;q=0.5,en;q=0.3', 'Accept-Encoding': 'gzip,deflate', 'Connection': 'keep-alive', 'Keep-Alive': '300', 'Accept': 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5', 'User-Agent': 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; de; rv:1.8.1.7) Gecko/20070914 Firefox/2.0.0.7', 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7', 'Referer': 'http://{routerip}/index.html'}
+get('http://{routerip}:8080/Wizard/cgi-sig/CGI_Wizard?act=start_pppoe', headers=headers)
+

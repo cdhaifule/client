@@ -1,0 +1,14 @@
+"""
+Elsa Lancom 1000 Office
+"""
+
+vendor = 'Elsa'
+name = 'Elsa Lancom 1000 Office'
+regex = r'(?s).*(elsa|lancom).*'
+
+# step #1
+get('http://{routerip}/config/4/1/2?exec', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/www.lancom.de', auth=("{username}", "{password}"))
+

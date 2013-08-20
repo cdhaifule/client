@@ -1,0 +1,17 @@
+"""
+Belkin&nbsp;F5D7231-4
+"""
+
+vendor = 'Belkin'
+name = 'Belkin&nbsp;F5D7231-4'
+regex = r''
+
+# step #1
+get('http://{routerip}/apply.cgi?webpage=util_reset.html&action=Reboot&page=system_reset&logout=2')
+
+# step #2
+get('http://{routerip}/login.cgi?page=login&logout=2&pws=DEIN PASSWORT')
+
+# step #3
+get('http://{routerip}/apply.cgi?webpage=util_reset.html&action=Reboot&page=system_reset&logout=2')
+

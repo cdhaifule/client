@@ -1,0 +1,14 @@
+"""
+Edimax&nbsp;BR-6104K
+"""
+
+vendor = 'Edimax'
+name = 'Edimax&nbsp;BR-6104K'
+regex = r''
+
+# step #1
+get('http://{routerip}/rstatus.tri')
+
+# step #2
+get('http://{routerip}/rstatus.tri')
+

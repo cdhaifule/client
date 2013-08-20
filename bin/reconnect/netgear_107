@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;WGT634U
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WGT634U'
+regex = r''
+
+# step #1
+data = u'connect_ornot=0'
+post('http://{routerip}/cgi-bin/st_poe.cgi?/cgi-bin/connection_status_pppoe.html', data=data)
+
+# step #2
+data = u'connect_ornot=1'
+post('http://{routerip}/cgi-bin/st_poe.cgi?/cgi-bin/connection_status_pppoe.html', data=data)
+

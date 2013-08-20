@@ -1,0 +1,11 @@
+"""
+AH4222 - V47-03
+"""
+
+vendor = 'Tecom'
+name = 'AH4222 - V47-03'
+regex = r'(?s).*(Tecom).*'
+
+# step #1
+get('http://{routerip}/info_user.html?')
+

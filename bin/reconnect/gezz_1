@@ -1,0 +1,14 @@
+"""
+AS900UR-SP1/SP4 Firmware Version: CX82xxx_4.1.0.29 Customer Software Version: 4.1.0.29_GEZZ_F3.2.2
+"""
+
+vendor = 'GEZZ'
+name = 'AS900UR-SP1/SP4 Firmware Version: CX82xxx_4.1.0.29 Customer Software Version: 4.1.0.29_GEZZ_F3.2.2'
+regex = r'(?s).*(GEZZ).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/doreboot.htm?')
+

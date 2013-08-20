@@ -1,0 +1,20 @@
+"""
+Atlantisland
+"""
+
+vendor = 'Atlantisland'
+name = 'Atlantisland'
+regex = r'(?s).*(Atlantisland).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/goform/connect?wan_connect_status=Disconnected')
+
+# step #3
+get('http://{routerip}/home.asp?')
+
+# step #4
+get('http://{routerip}/home.asp?')
+

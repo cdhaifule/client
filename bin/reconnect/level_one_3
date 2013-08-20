@@ -1,0 +1,19 @@
+"""
+FBR-1403TX (FW 1.6, R06)
+"""
+
+vendor = 'Level-one'
+name = 'FBR-1403TX (FW 1.6, R06)'
+regex = r'(?s).*(Level-one).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'hang_up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

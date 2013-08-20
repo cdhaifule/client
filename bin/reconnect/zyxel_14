@@ -1,0 +1,18 @@
+"""
+Prestige 650H-17 xDSL-Router mit integriertem DSL-Modem
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 650H-17 xDSL-Router mit integriertem DSL-Modem'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Submit=  Reset ADSL Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+get('http://{routerip}/?')
+

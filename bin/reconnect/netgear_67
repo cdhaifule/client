@@ -1,0 +1,16 @@
+"""
+Netgear RP614v1 - 4.15 RC4
+"""
+
+vendor = 'Netgear'
+name = 'Netgear RP614v1 - 4.15 RC4'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'Load=Q&connTime=0:00:10&connStatus=Connected&getIP=OK&pppoeAct=2&Button=Apply'
+post('http://{routerip}/post-query', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Load=Q&connTime=00:00:00&connStatus=Disconnected&getIP=---&pppoeAct=1&Button=Apply'
+post('http://{routerip}/post-query', data=data, auth=("{username}", "{password}"))
+

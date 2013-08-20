@@ -1,0 +1,16 @@
+"""
+ZyXel&nbsp;P-660&nbsp;HW-T7C
+"""
+
+vendor = 'ZyXel'
+name = 'ZyXel&nbsp;P-660&nbsp;HW-T7C'
+regex = r''
+
+# step #1
+data = u'LineInfoDisplay=&DiagDSLDisconnect=PPPoE+Trennung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #2
+data = u'LineInfoDisplay=&DiagDSLConnect=PPPoE+Verbindung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+

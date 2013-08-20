@@ -1,0 +1,21 @@
+"""
+Sphairon&nbsp;Turbolink&nbsp;JDR455WB
+"""
+
+vendor = 'Sphairon'
+name = 'Sphairon&nbsp;Turbolink&nbsp;JDR455WB'
+regex = r''
+
+# step #1
+get('http://{routerip}/')
+
+# step #2
+get('http://{routerip}/title.htm')
+
+# step #3
+data = u'todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #4
+get('http://{routerip}/title.htm')
+

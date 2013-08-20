@@ -1,0 +1,20 @@
+"""
+MN-500
+"""
+
+vendor = 'Microsoft'
+name = 'MN-500'
+regex = r'(?s).*(Microsoft).*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = 'fs=1&release=2&connectflag=2&page=status'
+post('http://{routerip}/home.htm', data=data)
+
+# step #3
+data = 'fs=1&release=1&connectflag=1&page=status'
+post('http://{routerip}/home.htm', data=data)
+

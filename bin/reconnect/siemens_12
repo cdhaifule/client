@@ -1,0 +1,206 @@
+"""
+Gigaset SE515 dsl 2.12.3.21c_BA010a
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SE515 dsl 2.12.3.21c_BA010a'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #2
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/login.htm?')
+
+# step #5
+data = 'password=&username=admin&challenge=&response=e95a06ad0c6f9632f82faa4220dfc22f'
+post('http://{routerip}/login.tri', data=data)
+
+# step #6
+get('http://{routerip}/conninfo.htm?')
+
+# step #7
+get('http://{routerip}/welcome.htm?')
+
+# step #8
+get('http://{routerip}/conninfo.htm?')
+
+# step #9
+data = 'wanId=1&Submit=Disconnect'
+post('http://{routerip}/lineconn.tri', data=data)
+
+# step #10
+get('http://{routerip}/conninfo.htm?')
+
+# step #11
+get('http://{routerip}/welcome.htm?')
+
+# step #12
+get('http://{routerip}/conninfo.htm?')
+
+# step #13
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #14
+data = 'wanId=1&Submit=Connect'
+post('http://{routerip}/lineconn.tri', data=data)
+
+# step #15
+get('http://{routerip}/conninfo.htm?')
+
+# step #16
+get('http://{routerip}/welcome.htm?')
+
+# step #17
+get('http://{routerip}/conninfo.htm?')
+
+# step #18
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #19
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #20
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #21
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #22
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #23
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #24
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #25
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #26
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #27
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #28
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #29
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #30
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #31
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #32
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #33
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #34
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #35
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #36
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #37
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #38
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #39
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #40
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #41
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #42
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #43
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #44
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #45
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #46
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #47
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #48
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #49
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #50
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #51
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #52
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #53
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #54
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #55
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #56
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20142,goog-black-enchash:1:48865')
+
+# step #57
+get('http://{routerip}/conninfo.htm?browserAutoRefresh=1')
+
+# step #58
+get('http://{routerip}/status_setup.htm?')
+
+# step #59
+get('http://{routerip}/status_top.htm?')
+
+# step #60
+get('http://{routerip}/status_menu.htm?')
+
+# step #61
+get('http://{routerip}/info_device.htm?')
+
+# step #62
+get('http://{routerip}/info_device.htm?')
+
+# step #63
+get('http://{routerip}/info_device.htm?browserAutoRefresh=1')
+
+# step #64
+get('http://{routerip}/info_device.htm?browserAutoRefresh=1')
+
+# step #65
+get('http://{routerip}/info_device.htm?browserAutoRefresh=1')
+

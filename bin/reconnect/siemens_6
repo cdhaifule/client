@@ -1,0 +1,73 @@
+"""
+Gigaset SE105
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SE105'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/frame_wizard.htm?')
+
+# step #2
+get('http://{routerip}/frame_wizard_country.htm?')
+
+# step #3
+get('http://{routerip}/wizard_top.htm?')
+
+# step #4
+get('http://{routerip}/menu_wizard_country.htm?')
+
+# step #5
+get('http://{routerip}/wizard_country.htm?')
+
+# step #6
+data = 'page=wizard_country&Country=4&countryOpt=4'
+post('http://{routerip}/frame_wizard_wireless.htm', data=data)
+
+# step #7
+get('http://{routerip}/menu_wizard_wireless.htm?')
+
+# step #8
+get('http://{routerip}/wizard_wireless.htm?')
+
+# step #9
+data = 'page=wizard_wireless&country=4&ssid=ConnectionPoint4&ssidmode=1'
+post('http://{routerip}/frame_wizard_wantype.htm', data=data)
+
+# step #10
+get('http://{routerip}/frame_wizard_wantype.htm?')
+
+# step #11
+get('http://{routerip}/menu_wizard_wantype.htm?')
+
+# step #12
+get('http://{routerip}/wizard_wantype_mode.htm?')
+
+# step #13
+get('http://{routerip}/wizard_isptdsl.htm?')
+
+# step #14
+data = 'page=wizard_isptdsl&isp=2&anschlusskennung=001307475503&onlinenum=550226903670&numsuffix=0001&perpasswd=98117642&reperpasswd=98117642&tdslidle=10&tdslreconnect=on&BF=FERTIG'
+post('http://{routerip}/wizard_isptdsl.htm', data=data)
+
+# step #15
+get('http://{routerip}/status.htm?')
+
+# step #16
+data = 'page=status_main&button=pppoedisconnect'
+post('http://{routerip}/status_main.htm', data=data)
+
+# step #17
+get('http://{routerip}/status.htm?')
+
+# step #18
+data = 'page=status_main&button=pppoeconnect'
+post('http://{routerip}/status_main.htm', data=data)
+
+# step #19
+get('http://{routerip}/status.htm?')
+
+# step #20
+get('http://{routerip}/status.htm?')
+

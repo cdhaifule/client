@@ -1,0 +1,19 @@
+"""
+Netgear ProSafe VPN Wireless ADSL Gateway DGFV338
+"""
+
+vendor = 'Netgear'
+name = 'Netgear ProSafe VPN Wireless ADSL Gateway DGFV338'
+regex = r'(?s).*(netgear|prosafe).*'
+
+# step #1
+data = 'web0x120010=admin&web0x120011=ccl&umi.loginAuth=Login'
+post('http://{routerip}/platform.cgi', data=data)
+
+# step #2
+data = 'web0x220001=1&umi.wan1Disconnect=1'
+post('http://{routerip}/platform.cgi', data=data)
+
+# step #3
+get('http://http://www.google.de/')
+

@@ -1,0 +1,14 @@
+"""
+D-LINK&nbsp;DI-604
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DI-604'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1187756988343')
+
+# step #2
+get('http://{routerip}/status.htm?RC=@&ZT=1187756989265')
+

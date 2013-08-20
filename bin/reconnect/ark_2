@@ -1,0 +1,19 @@
+"""
+IS-104,Bestech IBR400 ,LinkPro BR-401,LinkPro BR-801,Mentor FR4
+"""
+
+vendor = 'ARK'
+name = 'IS-104,Bestech IBR400 ,LinkPro BR-401,LinkPro BR-801,Mentor FR4'
+regex = r'(?s).*(ARK).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'function=suspend()'
+post('http://{routerip}/system_status.htm', data=data)
+
+# step #3
+data = 'function=resume()'
+post('http://{routerip}/system_status.htm', data=data)
+

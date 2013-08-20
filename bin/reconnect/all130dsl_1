@@ -1,0 +1,12 @@
+"""
+ALL130DSL (FW 0.01.41)
+"""
+
+vendor = 'ALL130DSL'
+name = 'ALL130DSL (FW 0.01.41)'
+regex = r'(?s).*allnet.*'
+
+# step #1
+data = 'todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

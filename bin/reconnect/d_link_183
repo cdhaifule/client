@@ -1,0 +1,24 @@
+"""
+DSL-2640T V3.02B01T01.ME-A.20070521
+"""
+
+vendor = 'D-Link'
+name = 'DSL-2640T V3.02B01T01.ME-A.20070521'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+

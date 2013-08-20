@@ -1,0 +1,14 @@
+"""
+ADSL modem multiservices PSTN blue
+"""
+
+vendor = 'Philips'
+name = 'ADSL modem multiservices PSTN blue'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:fr:official')
+
+# step #2
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:fr:official')
+

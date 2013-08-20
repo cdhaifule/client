@@ -1,0 +1,17 @@
+"""
+Broadband Home Station
+"""
+
+vendor = 'Sitecom'
+name = 'Broadband Home Station'
+regex = r'(?s).*(Sitecom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H0&RD=')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D0&RD=')
+

@@ -1,0 +1,16 @@
+"""
+DLink DI-614+ Firmware 2.34
+"""
+
+vendor = 'DLink'
+name = 'DLink DI-614+ Firmware 2.34'
+regex = r'(?s).*dlink.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/status.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=Connect'
+post('http://{routerip}/status.cgi', data=data, auth=("{username}", "{password}"))
+

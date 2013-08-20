@@ -1,0 +1,16 @@
+"""
+NETGEAR WGR624 Firmware-Version 4.07 deutsch
+"""
+
+vendor = 'NETGEAR'
+name = 'NETGEAR WGR624 Firmware-Version 4.07 deutsch'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Verbindung+trennen&'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=++Verbinden++&'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

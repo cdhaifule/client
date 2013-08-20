@@ -1,0 +1,16 @@
+"""
+Billion Bipac 7500G
+"""
+
+vendor = 'Billion'
+name = 'Billion Bipac 7500G'
+regex = r'(?s).*(billion|bipac).*'
+
+# step #1
+data = 'EmWeb_ns:vim:3=/status.html&EmWeb_ns:vim:4.ImServices.wanlink.1:enabled=false&EmWeb_ns:vim:18=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'EmWeb_ns:vim:3=/status.html&EmWeb_ns:vim:4.ImServices.wanlink.1:enabled=true&EmWeb_ns:vim:18=true'
+post('http://{routerip}/status-welcome-common.html/connect', data=data, auth=("{username}", "{password}"))
+

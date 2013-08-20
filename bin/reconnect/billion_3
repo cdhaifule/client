@@ -1,0 +1,19 @@
+"""
+BIPAC743-GE
+"""
+
+vendor = 'Billion'
+name = 'BIPAC743-GE'
+regex = r'(?s).*(Billion).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'EmWeb_ns:vim:4=/status.html&EmWeb_ns:vim:2.ImServices.wanlink.1:enabled=false&EmWeb_ns:vim:18=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data)
+
+# step #3
+data = 'EmWeb_ns:vim:4=/status.html&EmWeb_ns:vim:2.ImServices.wanlink.1:enabled=true&EmWeb_ns:vim:18=true'
+post('http://{routerip}/status-welcome-common.html/connect', data=data)
+

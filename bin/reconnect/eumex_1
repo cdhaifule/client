@@ -1,0 +1,15 @@
+"""
+EUMEX 704PC DSL
+"""
+
+vendor = 'EUMEX'
+name = 'EUMEX 704PC DSL'
+regex = r'(?s).*eumex.*'
+
+# step #1
+data = 'CLOSEPPP=16661186'
+post('http://{routerip}/7.html', data=data, auth=("{username}", "{password}"))
+
+# step #2
+get('http://http://www.t-online.de/')
+

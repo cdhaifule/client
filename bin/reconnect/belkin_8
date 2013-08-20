@@ -1,0 +1,11 @@
+"""
+Belkin&nbsp;F5D7230-4&nbsp;FW40503
+"""
+
+vendor = 'Belkin'
+name = 'Belkin&nbsp;F5D7230-4&nbsp;FW40503'
+regex = r''
+
+# step #1
+get('http://{routerip}/login.cgi?page=login&logout=2&pws=')
+

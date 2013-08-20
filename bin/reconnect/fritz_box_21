@@ -1,0 +1,28 @@
+"""
+WLAN 3020
+"""
+
+vendor = 'FRITZ!Box'
+name = 'WLAN 3020'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #2
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1208876262%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1208876263%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1208876294%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1208876325%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1208876355%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+

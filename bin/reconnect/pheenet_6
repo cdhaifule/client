@@ -1,0 +1,17 @@
+"""
+WBIG-104b  FW 3.3.1
+"""
+
+vendor = 'PheeNet'
+name = 'WBIG-104b  FW 3.3.1'
+regex = r'(?s).*(PheeNet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?disconnect=Disconnect')
+
+# step #3
+get('http://{routerip}/status.cgi?connect=Connect')
+

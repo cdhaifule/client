@@ -1,0 +1,59 @@
+"""
+DG632b
+"""
+
+vendor = 'Netgear'
+name = 'DG632b'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'nextpage=..%2Fhtml%2Findextop.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/start.htm')
+
+# step #4
+get('http://{routerip}/html/top.htm?')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/menu.htm')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/s_status.htm&var:modemType=0')
+
+# step #7
+get('http://{routerip}/html/hwizard.htm?')
+
+# step #8
+get('http://{routerip}/html/hsstatus.htm?')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/wanstat.htm&var:wanType=pppoe')
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/st_poe.htm&var:wanType=pppoe')
+
+# step #11
+data = 'var%3AactId=&var%3AnextTarget=&nextpage=..%2Fhtml%2Fst_poe.htm&var%3AwanType=pppoe&connection0%3Apppoe%3Acommand%2Fstop='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #12
+data = 'var%3AactId=&var%3AnextTarget=&nextpage=..%2Fhtml%2Fst_poe.htm&var%3AwanType=pppoe'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #13
+data = 'var%3AactId=delay3sec&var%3AnextTarget=..%2Fhtml%2Fst_poe.htm&nextpage=..%2Fhtml%2Fonload.htm&var%3AwanType=pppoe&connection0%3Apppoe%3Acommand%2Fstart='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #14
+data = 'var%3AactId=&nextpage=..%2Fhtml%2Fst_poe.htm&=&var%3AwanType=pppoe&=&=&=&='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #15
+data = 'var%3AactId=&var%3AnextTarget=&nextpage=..%2Fhtml%2Fst_poe.htm&var%3AwanType=pppoe'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

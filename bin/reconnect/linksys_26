@@ -1,0 +1,16 @@
+"""
+Linksys WAG300N (FW 1.01.06)
+"""
+
+vendor = 'Linksys'
+name = 'Linksys WAG300N (FW 1.01.06)'
+regex = r'(?s).*linksys.*'
+
+# step #1
+data = 'release=%20disconnect%20&ctype=pppoe&ifstatus=Up&todo=disconnect&this_file=status.htm&next_file=status.htm&message='
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'renew=%20connect%20&ctype=pppoe&ifstatus=Up&todo=connect&this_file=status.htm&next_file=status.htm&message='
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

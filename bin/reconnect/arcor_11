@@ -1,0 +1,20 @@
+"""
+Arcor&nbsp;Easy&nbsp;Box&nbsp;A&nbsp;600&nbsp;WLan
+"""
+
+vendor = 'Arcor'
+name = 'Arcor&nbsp;Easy&nbsp;Box&nbsp;A&nbsp;600&nbsp;WLan'
+regex = r''
+
+# step #1
+data = u'user=BENUTZERNAME&pws=PASSWORT'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = u'pvc=0&cur_if=11&disconnect.x=125&disconnect.y=9&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = u'pvc=0&cur_if=3&connect.x=41&connect.y=9&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

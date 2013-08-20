@@ -1,0 +1,19 @@
+"""
+MR814v2 (Version 5.09 Dec 12 2003)
+"""
+
+vendor = 'Netgear'
+name = 'MR814v2 (Version 5.09 Dec 12 2003)'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}//st_poe.cgi', data=data)
+
+# step #3
+data = 'connect=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

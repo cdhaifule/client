@@ -1,0 +1,17 @@
+"""
+WR1133 (WL-504) FW V.3.14.0014 (2003.07.15)
+"""
+
+vendor = 'Sitecom'
+name = 'WR1133 (WL-504) FW V.3.14.0014 (2003.07.15)'
+regex = r'(?s).*(Sitecom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.htm?page=status&applyflag=1')
+
+# step #3
+get('http://{routerip}/status.htm?page=status&applyflag=0')
+

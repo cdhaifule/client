@@ -1,0 +1,11 @@
+"""
+Fon WLAN 7050 Firmware-Version 14.04.33
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7050 Firmware-Version 14.04.33'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1207058237%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+

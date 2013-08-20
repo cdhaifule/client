@@ -1,0 +1,58 @@
+"""
+WLAN 802.11b
+"""
+
+vendor = 'Encore'
+name = 'WLAN 802.11b'
+regex = r'(?s).*(Encore).*'
+
+# step #1
+data = 'page=login&pws='
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+get('http://{routerip}/index.htm?')
+
+# step #3
+get('http://{routerip}/frame_setup.htm?')
+
+# step #4
+get('http://{routerip}/setup_top.htm?')
+
+# step #5
+get('http://{routerip}/frame_setup_main.htm?')
+
+# step #6
+get('http://{routerip}/menu_setup.htm?')
+
+# step #7
+get('http://{routerip}/setup_main.htm?')
+
+# step #8
+get('http://{routerip}/frame_setup_system.htm?')
+
+# step #9
+get('http://{routerip}/menu_setup_system.htm?')
+
+# step #10
+get('http://{routerip}/system_main.htm?')
+
+# step #11
+get('http://{routerip}/system_status.htm?')
+
+# step #12
+data = 'page=status&connectflag=1'
+post('http://{routerip}/system_status.htm', data=data)
+
+# step #13
+data = 'page=status&connectflag=2'
+post('http://{routerip}/system_status.htm', data=data)
+
+# step #14
+data = 'page=status&connectflag=2'
+post('http://{routerip}/system_status.htm', data=data)
+
+# step #15
+data = 'page=status&connectflag=2'
+post('http://{routerip}/system_status.htm', data=data)
+

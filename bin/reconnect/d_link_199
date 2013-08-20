@@ -1,0 +1,32 @@
+"""
+Dir-300 Firmware 1.00
+"""
+
+vendor = 'D-Link'
+name = 'Dir-300 Firmware 1.00'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/index.php?')
+
+# step #2
+get('http://{routerip}/bsc_internet.php?')
+
+# step #3
+get('http://{routerip}/model/__ajax_wan_conninfo.php?r=2008.4.8.0.10.12')
+
+# step #4
+get('http://{routerip}/model/__ajax_wan_conninfo.php?r=2008.4.8.0.10.16')
+
+# step #5
+get('http://{routerip}/model/__ajax_wan_conninfo.php?r=2008.4.8.0.10.19')
+
+# step #6
+get('http://{routerip}/sys_cfg_valid.xgi?=&exeshell=submit%20REBOOT')
+
+# step #7
+get('http://{routerip}/sys_cfg_valid.php?uptime=30930')
+
+# step #8
+get('http://{routerip}/bsc_internet.php?')
+

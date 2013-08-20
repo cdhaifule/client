@@ -1,0 +1,44 @@
+"""
+DM111PB
+"""
+
+vendor = 'Netgear'
+name = 'DM111PB'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/top.html?')
+
+# step #3
+get('http://{routerip}/menu.html?')
+
+# step #4
+get('http://{routerip}/footer.html?')
+
+# step #5
+get('http://{routerip}/connect.html?')
+
+# step #6
+get('http://{routerip}/hlpstart.html?')
+
+# step #7
+get('http://{routerip}/hlpstart.html?')
+
+# step #8
+get('http://{routerip}/constatus.html?')
+
+# step #9
+get('http://{routerip}/diagMenu.html?')
+
+# step #10
+get('http://{routerip}/hlpdiag.html?')
+
+# step #11
+get('http://{routerip}/rebootinfo.cgi?checkNum=2115')
+
+# step #12
+get('http://{routerip}/rebootinfo.cgi?checkNum=2115')
+

@@ -1,0 +1,17 @@
+"""
+U.S. Robotics Broadband Router (Model # USR8000, Version V1.25) 
+"""
+
+vendor = 'U.S.'
+name = 'U.S. Robotics Broadband Router (Model # USR8000, Version V1.25) '
+regex = r'(?s).*robotics.*'
+
+# step #1
+get('http://{routerip}/login.cgi?PSWD={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=0&T=10000')
+

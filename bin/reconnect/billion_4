@@ -1,0 +1,14 @@
+"""
+BiPAC 5200S
+"""
+
+vendor = 'Billion'
+name = 'BiPAC 5200S'
+regex = r'(?s).*(Billion).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status/status_deviceinfo.htm?')
+

@@ -1,0 +1,44 @@
+"""
+Fon 5140 (UI) Firmware 43.04.37
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon 5140 (UI) Firmware 43.04.37'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1208539341%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1208539342%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1208539373%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1208539404%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=')
+
+# step #7
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20220,goog-black-enchash:1:49031')
+
+# step #8
+get('http://{routerip}/clr2/?')
+
+# step #9
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #10
+data = 'router=Fritz%21Box+Fon+5140+%28UI%29+Firmware+43.04.37'
+post('http://{routerip}/clr3/', data=data)
+
+# step #11
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

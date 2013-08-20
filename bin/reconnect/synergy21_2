@@ -1,0 +1,17 @@
+"""
+s21610B
+"""
+
+vendor = 'synergy21'
+name = 's21610B'
+regex = r'(?s).*(synergy21).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=1')
+
+# step #3
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=0')
+

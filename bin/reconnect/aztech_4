@@ -1,0 +1,30 @@
+"""
+DSL 600EU - F/W-62.53.2
+"""
+
+vendor = 'Aztech'
+name = 'DSL 600EU - F/W-62.53.2'
+regex = r'(?s).*(Aztech).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?')
+
+# step #3
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Findex.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&testwebcm=webcm&login%3Acommand%2Fusername={username}&login%3Acommand%2Fpassword={password}&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstop=&var%3Aconnecting1=0&var%3Alanip='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstart=&var%3Aconnecting1=1&connection0%3Asettings%2Fdescription=quickstart&fdb%3Asettings%2Fservice%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fnat%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fspi%2Fstate=0&var%3Alanip='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstart=&var%3Aconnecting1=2&connection0%3Asettings%2Fdescription=quickstart&fdb%3Asettings%2Fservice%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fnat%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fspi%2Fstate=0&var%3Alanip='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

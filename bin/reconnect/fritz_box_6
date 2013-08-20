@@ -1,0 +1,11 @@
+"""
+Fon T-sinus 1054 DSL
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon T-sinus 1054 DSL'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:31,goog-white-url:1:371,goog-black-url:1:20910,goog-black-enchash:1:50689')
+

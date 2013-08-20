@@ -1,0 +1,16 @@
+"""
+CopperJet&nbsp;1616
+"""
+
+vendor = 'CopperJet'
+name = 'CopperJet&nbsp;1616'
+regex = r''
+
+# step #1
+data = u'EmWeb_ns%3Avim%3A3=%2Fstatus.html&EmWeb_ns%3Avim%3A9._wanppp=ImService%3Appp-0&EmWeb_ns%3Avim%3A8._wanppp%3Aenabled=false&EmWeb_ns%3Avim%3A30=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data)
+
+# step #2
+data = u'EmWeb_ns%3Avim%3A3=%2Fstatus.html&EmWeb_ns%3Avim%3A9._wanppp=ImService%3Appp-0&EmWeb_ns%3Avim%3A8._wanppp%3Aenabled=true&EmWeb_ns%3Avim%3A30=true'
+post('http://{routerip}/status-welcome-common.html/connect', data=data)
+

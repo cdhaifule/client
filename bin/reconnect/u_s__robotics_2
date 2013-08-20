@@ -1,0 +1,54 @@
+"""
+Broadband Router Model # USR8001, Version V1.0
+"""
+
+vendor = 'U.S. Robotics'
+name = 'Broadband Router Model # USR8001, Version V1.0'
+regex = r'(?s).*(U.S. Robotics).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/menu.htm?')
+
+# step #3
+get('http://{routerip}/banner.htm?')
+
+# step #4
+get('http://{routerip}/status.htm?')
+
+# step #5
+data = 'rc=%40&PS=almut&rd=menu&TC=1208967734.093'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #6
+get('http://{routerip}/status.htm?RC=@&ZT=1208960535968')
+
+# step #7
+get('http://{routerip}/menu.htm?rc=_&rf=0010')
+
+# step #8
+get('http://{routerip}/_toolbox.htm?')
+
+# step #9
+get('http://{routerip}/cgi-bin/rebo?D=&ZT=1208960541109')
+
+# step #10
+get('http://{routerip}/?')
+
+# step #11
+get('http://{routerip}/banner.htm?')
+
+# step #12
+get('http://{routerip}/menu.htm?')
+
+# step #13
+get('http://{routerip}/status.htm?')
+
+# step #14
+get('http://{routerip}/status.htm?rc=_&ZT=1208960560109')
+
+# step #15
+get('http://{routerip}/status.htm?rc=_&ZT=1208960563406')
+

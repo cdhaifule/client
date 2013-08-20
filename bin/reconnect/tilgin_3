@@ -1,0 +1,14 @@
+"""
+Tilgin&nbsp;Vood&nbsp;422
+"""
+
+vendor = 'Tilgin'
+name = 'Tilgin&nbsp;Vood&nbsp;422'
+regex = r''
+
+# step #1
+get('http://{routerip}/Wizard/cgi-sig/CGI_Wizard?act=stop_pppoe')
+
+# step #2
+get('http://{routerip}/Wizard/cgi-sig/CGI_Wizard?act=start_pppoe')
+

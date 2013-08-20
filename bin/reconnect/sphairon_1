@@ -1,0 +1,35 @@
+"""
+A610CR
+"""
+
+vendor = 'Sphairon'
+name = 'A610CR'
+regex = r'(?s).*(Sphairon).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/doc/index.htm?')
+
+# step #5
+get('http://{routerip}/doc/toc.htm?')
+
+# step #6
+get('http://{routerip}/doc/home.htm?')
+
+# step #7
+get('http://{routerip}/doc/save.htm?')
+
+# step #8
+get('http://{routerip}/doc/doreboot.htm?')
+
+# step #9
+get('http://{routerip}/doc/rbdone.htm?')
+

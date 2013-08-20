@@ -1,0 +1,19 @@
+"""
+SpeedTouch 780 WL(i)
+"""
+
+vendor = 'THOMSON'
+name = 'SpeedTouch 780 WL(i)'
+regex = r'(?s).*(THOMSON).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = '0=13&1=Internetverbindung&5=1'
+post('http://{routerip}/', data=data)
+
+# step #3
+data = '0=12&1=Internetverbindung&5=1'
+post('http://{routerip}/', data=data)
+

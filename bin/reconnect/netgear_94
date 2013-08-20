@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;DG834B&nbsp;Netgear&nbsp;DGB834PN
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;DG834B&nbsp;Netgear&nbsp;DGB834PN'
+regex = r''
+
+# step #1
+data = u'todo=disconnect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #2
+data = u'todo=connect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+

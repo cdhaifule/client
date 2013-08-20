@@ -1,0 +1,23 @@
+"""
+Gateway 2701hgt
+"""
+
+vendor = '2wire'
+name = 'Gateway 2701hgt'
+regex = r'(?s).*(2wire).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/xslt?PAGE=A07&THISPAGE=&NEXTPAGE=A07')
+
+# step #3
+get('http://{routerip}/xslt?PAGE=A08&THISPAGE=A07&NEXTPAGE=A08')
+
+# step #4
+post('http://{routerip}/xslt')
+
+# step #5
+get('http://{routerip}/xslt?PAGE=A01&THISPAGE=A09&NEXTPAGE=A01')
+

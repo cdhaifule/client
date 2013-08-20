@@ -1,0 +1,20 @@
+"""
+Barricade (7004ABR EU - Mod.Nr.750.5703)
+"""
+
+vendor = 'SMC'
+name = 'Barricade (7004ABR EU - Mod.Nr.750.5703)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = 'page=status&logout=2&connectflag=3'
+post('http://{routerip}/status.HTM', data=data)
+
+# step #3
+data = 'page=status&logout=2&connectflag=4'
+post('http://{routerip}/status.HTM', data=data)
+

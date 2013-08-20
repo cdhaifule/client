@@ -1,0 +1,84 @@
+"""
+WGB111GR
+"""
+
+vendor = 'Netgear'
+name = 'WGB111GR'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/start.htm?')
+
+# step #4
+get('http://{routerip}/MNU_top.htm?')
+
+# step #5
+get('http://{routerip}/MNU_menu.htm?')
+
+# step #6
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #7
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #8
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #9
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #10
+get('http://{routerip}/BAS_pppoe.htm?')
+
+# step #11
+get('http://{routerip}/BAS_pppoe_h.htm?')
+
+# step #12
+get('http://{routerip}/RST_status.htm?')
+
+# step #13
+get('http://{routerip}/RST_status_h.htm?')
+
+# step #14
+get('http://{routerip}/RST_wanstat.htm?')
+
+# step #15
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #16
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #17
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #18
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #19
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #20
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #21
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #22
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #23
+data = 'ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #24
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #25
+get('http://{routerip}/RST_st_poe.htm?')
+

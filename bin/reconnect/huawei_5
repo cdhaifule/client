@@ -1,0 +1,63 @@
+"""
+SmartAX MT880 Firmware E37.5.40
+"""
+
+vendor = 'Huawei'
+name = 'SmartAX MT880 Firmware E37.5.40'
+regex = r'(?s).*(Huawei).*'
+
+# step #1
+data = 'client=navclient-auto-ffox&appver=3.0b5&pver=2.1&wrkey=AKEgNivoQqnat67B11gJmrhCudWBT7U5o9Vi-85fWzUuSYWqqTJ1yU6qvvM8w5DhzxJV_perRn3k2pRwpC9Otkc6ogSzepgADg'
+post('http://{routerip}/safebrowsing/downloads', data=data)
+
+# step #2
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_s_3595-3600:3595-3600?')
+
+# step #3
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_s_3601-3606:3601-3606?')
+
+# step #4
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_s_3607-3612:3607-3612?')
+
+# step #5
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_s_3613-3618:3613-3618?')
+
+# step #6
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_s_3637-3642:3637-3642?')
+
+# step #7
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_a_3960:3960?')
+
+# step #8
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_a_3961-3966:3961-3966?')
+
+# step #9
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_a_3967-3972:3967-3972?')
+
+# step #10
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_a_3973:3973?')
+
+# step #11
+get('http://{routerip}/safebrowsing/rd/goog-malware-shavar_a_3975:3975?')
+
+# step #12
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_s_7849-7854:7849-7854?')
+
+# step #13
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_s_7903-7906:7903-7906?')
+
+# step #14
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_a_9523-9528:9523-9528?')
+
+# step #15
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_a_9529:9529?')
+
+# step #16
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_a_9530:9530?')
+
+# step #17
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_a_9532-9534:9532-9534?')
+
+# step #18
+get('http://{routerip}/safebrowsing/rd/goog-phish-shavar_a_9585:9585?')
+

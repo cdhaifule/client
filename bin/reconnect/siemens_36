@@ -1,0 +1,20 @@
+"""
+Siemens&nbsp;ADSL&nbsp;CL-110-I
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;ADSL&nbsp;CL-110-I'
+regex = r''
+
+# step #1
+get('http://{routerip}/constatus.html')
+
+# step #2
+get('http://{routerip}/disconnect.cgi?checkNum=%randomNum%')
+
+# step #3
+get('http://{routerip}/constatus.html')
+
+# step #4
+get('http://{routerip}/connect.cgi?checkNum=%randomNum%')
+

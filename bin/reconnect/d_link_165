@@ -1,0 +1,17 @@
+"""
+DI-824VUP  (Firmware 1.05)
+"""
+
+vendor = 'D-Link'
+name = 'DI-824VUP  (Firmware 1.05)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@status&A=H&M=0&T=2000&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@status&A=D&M=0&T=10000&rd=status')
+

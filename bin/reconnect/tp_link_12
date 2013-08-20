@@ -1,0 +1,68 @@
+"""
+Wireless Router WR543G
+"""
+
+vendor = 'TP-Link'
+name = 'Wireless Router WR543G'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/frames/top.htm?')
+
+# step #5
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #6
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #7
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #8
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=0')
+
+# step #9
+get('http://{routerip}/userRpm/DateTimeCfgRpm.htm?')
+
+# step #10
+get('http://{routerip}/userRpm/DateTimeCfgHelpRpm.htm?')
+
+# step #11
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=5')
+
+# step #12
+get('http://{routerip}/userRpm/SysRebootRpm.htm?')
+
+# step #13
+get('http://{routerip}/userRpm/SysRebootHelpRpm.htm?')
+
+# step #14
+get('http://{routerip}/userRpm/SysRebootRpm.htm?Reboot=Reboot')
+
+# step #15
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=Z&SubID=0')
+
+# step #16
+get('http://{routerip}/?')
+
+# step #17
+get('http://{routerip}/frames/top.htm?')
+
+# step #18
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #19
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #20
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+

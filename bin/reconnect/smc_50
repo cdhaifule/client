@@ -1,0 +1,9 @@
+"""
+SMC&nbsp;Barricade&nbsp;WBR14T-G
+"""
+
+vendor = 'SMC'
+name = 'SMC&nbsp;Barricade&nbsp;WBR14T-G'
+regex = r''
+
+

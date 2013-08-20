@@ -1,0 +1,19 @@
+"""
+TEW-431BRP
+"""
+
+vendor = 'Trendnet'
+name = 'TEW-431BRP'
+regex = r'(?s).*(Trendnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'hang_Up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

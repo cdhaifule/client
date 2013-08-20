@@ -1,0 +1,17 @@
+"""
+NetFaster&nbsp;IAD
+"""
+
+vendor = 'NetFaster'
+name = 'NetFaster&nbsp;IAD'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?user=%USER%&pws=%PWD%')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=Disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/logout.exe')
+

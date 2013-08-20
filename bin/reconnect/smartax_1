@@ -1,0 +1,17 @@
+"""
+MT882
+"""
+
+vendor = 'SmartAX'
+name = 'MT882'
+regex = r'(?s).*(SmartAX).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Action?save_reboot=1&reboot_loc=0&id=5')
+
+# step #3
+get('http://{routerip}/?')
+

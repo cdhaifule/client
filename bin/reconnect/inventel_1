@@ -1,0 +1,83 @@
+"""
+DV4210-WA
+"""
+
+vendor = 'INVENTEL'
+name = 'DV4210-WA'
+regex = r'(?s).*(INVENTEL).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:24,goog-white-url:1:371,goog-black-url:1:18424,goog-black-enchash:1:44353')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/?')
+
+# step #6
+get('http://{routerip}/?')
+
+# step #7
+get('http://{routerip}/?')
+
+# step #8
+get('http://{routerip}/?')
+
+# step #9
+get('http://{routerip}/?')
+
+# step #10
+get('http://{routerip}/index2.html?')
+
+# step #11
+get('http://{routerip}/index2.html?')
+
+# step #12
+get('http://{routerip}/floor.html?')
+
+# step #13
+get('http://{routerip}/logo.html?')
+
+# step #14
+get('http://{routerip}/menu.html?')
+
+# step #15
+get('http://{routerip}/services.html?')
+
+# step #16
+get('http://{routerip}/logo_simple.html?')
+
+# step #17
+get('http://{routerip}/logo_banner.html?')
+
+# step #18
+get('http://{routerip}/logo_simple.html?')
+
+# step #19
+get('http://{routerip}/srv_internet.html?')
+
+# step #20
+get('http://{routerip}/internetok.cgi?enblInternet=0')
+
+# step #21
+get('http://{routerip}/srv_internet.html?')
+
+# step #22
+get('http://{routerip}/srv_internet.html?')
+
+# step #23
+get('http://{routerip}/internetok.cgi?enblInternet=1')
+
+# step #24
+get('http://{routerip}/srv_internet.html?')
+
+# step #25
+get('http://{routerip}/srv_internet.html?')
+

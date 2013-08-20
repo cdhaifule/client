@@ -1,0 +1,46 @@
+"""
+prosafe vpn firewall 25 fvs 124g
+"""
+
+vendor = 'Netgear'
+name = 'prosafe vpn firewall 25 fvs 124g'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+data = 'username=admin&password=&challenge=&response=85a4e7aef28973d6d9ddd0995bd7299c'
+post('http://{routerip}/login.igw', data=data)
+
+# step #2
+get('http://{routerip}/menu_top.htm?')
+
+# step #3
+get('http://{routerip}/menu.htm?')
+
+# step #4
+get('http://{routerip}/basic.htm?')
+
+# step #5
+get('http://{routerip}/hether.htm?')
+
+# step #6
+get('http://{routerip}/basictopb.htm?')
+
+# step #7
+get('http://{routerip}/ether*WAN1?')
+
+# step #8
+get('http://{routerip}/diag.htm?')
+
+# step #9
+get('http://{routerip}/h_diag.htm?')
+
+# step #10
+data = 'IPAddr1=&IPAddr2=&IPAddr3=&IPAddr4=&lookup_name=&Reboot=Reboot'
+post('http://{routerip}/pingandtrace.igw', data=data)
+
+# step #11
+get('http://{routerip}/login.htm?')
+
+# step #12
+get('http://{routerip}/search?sourceid=navclient-ff&features=Rank&client=navclient-auto-ff&googleip=O;74.125.39.104;156&ch=8dd0d7277&q=info:http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FEinen_Reconnect_aufzeichnen')
+

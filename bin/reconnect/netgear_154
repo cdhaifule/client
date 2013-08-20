@@ -1,0 +1,33 @@
+"""
+WPN824_V2H1_V1.1.35_1.1.1GR
+"""
+
+vendor = 'Netgear'
+name = 'WPN824_V2H1_V1.1.35_1.1.1GR'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/RST_wanstat.htm?')
+
+# step #3
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #4
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #5
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20130,goog-black-enchash:1:48819')
+
+# step #6
+data = 'ConMethod=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #7
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #8
+get('http://{routerip}/RST_st_poe.htm?')
+

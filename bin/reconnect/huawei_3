@@ -1,0 +1,53 @@
+"""
+MT882
+"""
+
+vendor = 'Huawei'
+name = 'MT882'
+regex = r'(?s).*(Huawei).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/MainPage?id=45')
+
+# step #4
+get('http://{routerip}/hag/pages/menu.htm?menu=0')
+
+# step #5
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080420235442&url=http%3A%2F%2F192.168.1.2%2F')
+
+# step #6
+get('http://{routerip}/MainPage?id=6')
+
+# step #7
+get('http://{routerip}/hag/pages/menu.htm?menu=3')
+
+# step #8
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080420235442&url=http%3A%2F%2F192.168.1.2%2Fhag%2Fpages%2Fmenu.htm%3Fmenu%3D3')
+
+# step #9
+get('http://{routerip}/MainPage?id=6')
+
+# step #10
+get('http://{routerip}/hag/js/global.gsv?')
+
+# step #11
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080420235442&url=http%3A%2F%2F192.168.1.2%2FMainPage%3Fid%3D6')
+
+# step #12
+get('http://{routerip}/MainPage?id=4')
+
+# step #13
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080420235442&url=http%3A%2F%2F192.168.1.2%2FMainPage%3Fid%3D4')
+
+# step #14
+get('http://{routerip}/Action?save_reboot=1&reboot_loc=0&id=5')
+
+# step #15
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080420235442&url=http%3A%2F%2F192.168.1.2%2FAction%3Fsave_reboot%3D1%26reboot_loc%3D0%26id%3D5')
+

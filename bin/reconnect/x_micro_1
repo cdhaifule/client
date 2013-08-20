@@ -1,0 +1,17 @@
+"""
+WLAN 11G (108 Mbps)
+"""
+
+vendor = 'X-Micro'
+name = 'WLAN 11G (108 Mbps)'
+regex = r'(?s).*(X-Micro).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?disconnect=Disconnect')
+
+# step #3
+get('http://{routerip}/status.cgi?connect=Connect')
+

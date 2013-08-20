@@ -1,0 +1,34 @@
+"""
+Barricade SMC7904WBRA
+"""
+
+vendor = 'SMC'
+name = 'Barricade SMC7904WBRA'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+data = 'pvc=0&cur_if=11&disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+get('http://{routerip}/status_main.stm?')
+
+# step #3
+data = 'pvc=1&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #6
+get('http://{routerip}/setupa_top.stm?')
+
+# step #7
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+

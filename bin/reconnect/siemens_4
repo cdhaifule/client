@@ -1,0 +1,18 @@
+"""
+Gigaset Router DSL/Cable
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset Router DSL/Cable'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+get('http://{routerip}/status_main.htm?page=status_main&button=pppoedisconnect')
+
+# step #3
+get('http://{routerip}/status_main.htm?page=status_main&button=pppoeconnect')
+

@@ -1,0 +1,16 @@
+"""
+Compu-Shack - DSL SR-103 (SC142558)
+"""
+
+vendor = 'Compu-Shack'
+name = 'Compu-Shack - DSL SR-103 (SC142558)'
+regex = r'(?s).*shack.*'
+
+# step #1
+data = 'hang_Up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

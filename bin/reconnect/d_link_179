@@ -1,0 +1,74 @@
+"""
+DSL 520T
+"""
+
+vendor = 'D-Link'
+name = 'DSL 520T'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #8
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0&var%3AmyconIndex=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #9
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=0&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&encaps0%3Apppoa%3Acommand%2Fstop=&var%3Ajudge='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #11
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0&var%3AmyconIndex=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #12
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&encaps0%3Apppoa%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #13
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #14
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0&var%3AmyconIndex=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #15
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&encaps0%3Apppoa%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #16
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #17
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0&var%3AmyconIndex=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #18
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #19
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0&var%3AmyconIndex=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

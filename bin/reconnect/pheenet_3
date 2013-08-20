@@ -1,0 +1,14 @@
+"""
+PheeNet FW 1.08.01 (26.05.2003)
+"""
+
+vendor = 'PheeNet'
+name = 'PheeNet FW 1.08.01 (26.05.2003)'
+regex = r'(?s).*pheenet.*'
+
+# step #1
+get('http://{routerip}/status.cgi?disconnect=Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?connect=Connect', auth=("{username}", "{password}"))
+

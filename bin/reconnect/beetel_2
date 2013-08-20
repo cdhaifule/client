@@ -1,0 +1,14 @@
+"""
+Router-Beetel 220BX ADSL Router
+"""
+
+vendor = 'Beetel'
+name = 'Router-Beetel 220BX ADSL Router'
+regex = r'(?s).*(Beetel).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+

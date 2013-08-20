@@ -1,0 +1,51 @@
+"""
+SMT-G3010
+"""
+
+vendor = 'Samsung'
+name = 'SMT-G3010'
+regex = r'(?s).*(Samsung).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'login_retry=no&ok=ok&basic=&login_pwd=urban'
+post('http://{routerip}/login/login.php', data=data)
+
+# step #3
+get('http://{routerip}/menu/top.php?')
+
+# step #4
+get('http://{routerip}/menu/subbody.php?topmenu=1&leftmenu=0')
+
+# step #5
+get('http://{routerip}/menu/leftmenu.php?topmenu=1&leftmenu=0')
+
+# step #6
+get('http://{routerip}/login/banner.htm?')
+
+# step #7
+get('http://{routerip}/contents/status.php?topmenu=1')
+
+# step #8
+get('http://{routerip}/menu/top.php?topmenu=5')
+
+# step #9
+get('http://{routerip}/blank.php?')
+
+# step #10
+get('http://{routerip}/menu/leftmenu.php?topmenu=5&leftmenu=-1')
+
+# step #11
+get('http://{routerip}/contents/system/email_alert.php?topmenu=5')
+
+# step #12
+get('http://{routerip}/menu/leftmenu.php?topmenu=5&leftmenu=6')
+
+# step #13
+get('http://{routerip}/contents/system/reboot.php?topmenu=5')
+
+# step #14
+post('http://{routerip}/contents/system/reboot.php')
+

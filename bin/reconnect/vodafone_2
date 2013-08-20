@@ -1,0 +1,37 @@
+"""
+EasyBox A  W-LAN
+"""
+
+vendor = 'Vodafone'
+name = 'EasyBox A  W-LAN'
+regex = r'(?s).*(Vodafone).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/setupa_top.stm?')
+
+# step #5
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #6
+get('http://{routerip}/menu.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+data = 'pvc=0&cur_if=11&disconnect.x=101&disconnect.y=7&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+

@@ -1,0 +1,14 @@
+"""
+LevelOne FBR-1461B
+"""
+
+vendor = 'LevelOne'
+name = 'LevelOne FBR-1461B'
+regex = r'(?s).*levelone.*'
+
+# step #1
+get('http://{routerip}/goform/disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/goform/connect', auth=("{username}", "{password}"))
+

@@ -1,0 +1,25 @@
+"""
+CPEo 400
+"""
+
+vendor = 'Motorola'
+name = 'CPEo 400'
+regex = r'(?s).*(Motorola).*'
+
+# step #1
+get('http://{routerip}/accountLogoff/home?')
+
+# step #2
+data = 'confirmed=true&submitButton=OK'
+post('http://{routerip}/accountLogoff/home', data=data)
+
+# step #3
+get('http://{routerip}/home?confirmed=true&submitButton=OK&t=fftet18p')
+
+# step #4
+data = 'confirmed=true&submitButton=OK&t=fftet18p&username=I102102%40wateen.net&password=PWD2512784012'
+post('http://{routerip}/user/refresh/home', data=data)
+
+# step #5
+get('http://{routerip}/user/refresh/home?confirmed=true&submitButton=OK&t=fftetuap')
+

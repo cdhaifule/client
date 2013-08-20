@@ -1,0 +1,16 @@
+"""
+Netgear WPNT834 FW; 1.0.51
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WPNT834 FW; 1.0.51'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'todo=connect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

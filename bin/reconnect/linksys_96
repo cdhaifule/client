@@ -1,0 +1,43 @@
+"""
+WRT54G/GS/GL Tomato Firmware v1.19.1463
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G/GS/GL Tomato Firmware v1.19.1463'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status-data.jsx?_http_id=TID99457d2aaccb47c8')
+
+# step #5
+data = '_service=wan-stop&_redirect=status-overview.asp&_sleep=2&_http_id=TID99457d2aaccb47c8'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #6
+get('http://{routerip}/status-overview.asp?')
+
+# step #7
+get('http://{routerip}/status-data.jsx?_http_id=TID99457d2aaccb47c8')
+
+# step #8
+post('http://{routerip}/status-data.jsx')
+
+# step #9
+data = '_service=wan-restart&_redirect=status-overview.asp&_sleep=5&_http_id=TID99457d2aaccb47c8'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #10
+get('http://{routerip}/status-overview.asp?')
+
+# step #11
+get('http://{routerip}/status-data.jsx?_http_id=TID99457d2aaccb47c8')
+

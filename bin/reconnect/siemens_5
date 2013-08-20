@@ -1,0 +1,105 @@
+"""
+Gigaset SE 555 WLAN dsl
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SE 555 WLAN dsl'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/welcome_login.stm?')
+
+# step #3
+get('http://{routerip}/help/en/help_welcome_login.stm?')
+
+# step #4
+data = 'your_password=1200'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #5
+get('http://{routerip}/home_security.stm?')
+
+# step #6
+get('http://{routerip}/home.stm?')
+
+# step #7
+get('http://{routerip}/home_internet.stm?')
+
+# step #8
+get('http://{routerip}/home_internet.stm?')
+
+# step #9
+get('http://{routerip}/home_internet.stm?')
+
+# step #10
+get('http://{routerip}/home_internet.stm?')
+
+# step #11
+get('http://{routerip}/home_internet.stm?')
+
+# step #12
+get('http://{routerip}/home_internet.stm?')
+
+# step #13
+get('http://{routerip}/home_internet.stm?')
+
+# step #14
+get('http://{routerip}/home_internet.stm?')
+
+# step #15
+get('http://{routerip}/home_internet.stm?')
+
+# step #16
+get('http://{routerip}/home_internet.stm?')
+
+# step #17
+get('http://{routerip}/home_internet.stm?')
+
+# step #18
+get('http://{routerip}/home_internet.stm?')
+
+# step #19
+get('http://{routerip}/home_internet.stm?')
+
+# step #20
+get('http://{routerip}/home_internet.stm?')
+
+# step #21
+get('http://{routerip}/home_internet.stm?')
+
+# step #22
+get('http://{routerip}/home_internet.stm?')
+
+# step #23
+get('http://{routerip}/home_internet.stm?')
+
+# step #24
+get('http://{routerip}/home_internet.stm?')
+
+# step #25
+get('http://{routerip}/home_internet.stm?')
+
+# step #26
+get('http://{routerip}/home_internet.stm?')
+
+# step #27
+get('http://{routerip}/home_internet.stm?')
+
+# step #28
+get('http://{routerip}/home_internet.stm?')
+
+# step #29
+get('http://{routerip}/home_internet.stm?')
+
+# step #30
+get('http://{routerip}/home_internet.stm?')
+
+# step #31
+get('http://{routerip}/home_internet.stm?')
+
+# step #32
+get('http://{routerip}/home_internet.stm?')
+

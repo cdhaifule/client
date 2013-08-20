@@ -1,0 +1,35 @@
+"""
+Speedport W 701 V Firware 33.04.44
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 701 V Firware 33.04.44'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:31,goog-white-url:1:371,goog-black-url:1:20960,goog-black-enchash:1:50816')
+
+# step #2
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Averz=2&login%3Acommand%2Fpassword=0000'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_disconnect=1&var%3Astate=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #6
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_connect=1&var%3Astate=5'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+

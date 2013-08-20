@@ -1,0 +1,17 @@
+"""
+TEI6608S FW R03-027-L
+"""
+
+vendor = 'Tenda'
+name = 'TEI6608S FW R03-027-L'
+regex = r'(?s).*(Tenda).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/if.cgi?redirect=sys_status.htm&failure=fail.htm&type=wan_state_reset&ifname=ppp0&ifstatus=Up&ifcmd=DISCONNECT&submit()=')
+
+# step #3
+get('http://{routerip}/if.cgi?redirect=sys_status.htm&failure=fail.htm&type=wan_state_reset&ifname=ppp0&ifstatus=Down&ifcmd=CONNECT&submit()=')
+

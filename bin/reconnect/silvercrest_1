@@ -1,0 +1,16 @@
+"""
+SilverCrest Silvercrest-6640Sg
+"""
+
+vendor = 'SilverCrest'
+name = 'SilverCrest Silvercrest-6640Sg'
+regex = r'(?s).*silvercrest.*'
+
+# step #1
+data = 'frmno=19'
+post('http://{routerip}/goform/cgiaction', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'frmno=18'
+post('http://{routerip}/goform/cgiaction', data=data, auth=("{username}", "{password}"))
+

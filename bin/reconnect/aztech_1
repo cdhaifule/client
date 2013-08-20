@@ -1,0 +1,50 @@
+"""
+DSL 305EU Firmware 21.50.6b
+"""
+
+vendor = 'Aztech'
+name = 'DSL 305EU Firmware 21.50.6b'
+regex = r'(?s).*(Aztech).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/doc/index.htm?')
+
+# step #3
+get('http://{routerip}/doc/toc.htm?')
+
+# step #4
+get('http://{routerip}/doc/main_idx.htm?')
+
+# step #5
+get('http://{routerip}/doc/main.htm?WINDWEB_URL=%2Fdoc%2Fmain_idx.htm&wanAdapterSelection=0')
+
+# step #6
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #7
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #8
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Floginout.htm&simple_ppp_username=ibergonzi%40arnet-rosario-apb&simple_ppp_pwd=1442747&wanAdapterSelection=0&wan_encapsulation=8&wan_VPI=0&wan_VCI=33&PPP_connection_number=1&New_PPP_Action=1')
+
+# step #9
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #10
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Floginout.htm&simple_ppp_username=ibergonzi%40arnet-rosario-apb&simple_ppp_pwd=1442747&wanAdapterSelection=0&wan_encapsulation=8&wan_VPI=0&wan_VCI=33&PPP_connection_number=1&New_PPP_Action=0')
+
+# step #11
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #12
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #13
+get('http://{routerip}/doc/loginout.htm?')
+
+# step #14
+get('http://{routerip}/doc/loginout.htm?')
+

@@ -1,0 +1,24 @@
+"""
+Wlan 200 P-660HW-T7C FW Version: V3.40 (AHS. 1)
+"""
+
+vendor = 'Arcor'
+name = 'Wlan 200 P-660HW-T7C FW Version: V3.40 (AHS. 1)'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=ADSL+Leitung+zur%FCcksetzen'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+get('http://{routerip}/DiagADSL.html?')
+
+# step #4
+get('http://{routerip}/Title.html?')
+
+# step #5
+get('http://{routerip}/robots.txt?')
+

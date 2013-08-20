@@ -1,0 +1,16 @@
+"""
+Linksys WRT54GC Firmwareversion: v1.03.0
+"""
+
+vendor = 'Linksys'
+name = 'Linksys WRT54GC Firmwareversion: v1.03.0'
+regex = r'(?s).*linksys.*'
+
+# step #1
+data = u'release=Trennung&ctype=pppoe'
+post('http://{routerip}/status.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = u'renew=Schlie\xdfen+Sie+an&ctype=pppoe'
+post('http://{routerip}/status.cgi', data=data, auth=("{username}", "{password}"))
+

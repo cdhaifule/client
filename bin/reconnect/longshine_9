@@ -1,0 +1,14 @@
+"""
+Longshine LCS-883R-DSL-4F
+"""
+
+vendor = 'Longshine'
+name = 'Longshine LCS-883R-DSL-4F'
+regex = r'(?s).*longshine.*'
+
+# step #1
+get('http://{routerip}/discons.html', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/connects.html', auth=("{username}", "{password}"))
+

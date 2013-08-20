@@ -1,0 +1,23 @@
+"""
+T-Com&nbsp;Speedport&nbsp;W&nbsp;502V
+"""
+
+vendor = 'T-Com'
+name = 'T-Com&nbsp;Speedport&nbsp;W&nbsp;502V'
+regex = r''
+
+# step #1
+headers = {u'Referer': u'http://192.168.0.1/hcti_start_passwort.stm'}
+data = u'&pws=%PWD$'
+post('http://{routerip}/cgi-bin/login.cgi', headers=headers, data=data)
+
+# step #2
+headers = {u'Referer': u'http://192.168.0.1/hcti_startseite.stm'}
+data = u'connect=0&disconnect=1&block=0&nonblock=0&abc=47            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', headers=headers, data=data)
+
+# step #3
+headers = {u'Referer': u'http://192.168.0.1/hcti_startseite.stm'}
+data = u'connect=0&connect=1&block=0&nonblock=0&abc=47            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', headers=headers, data=data)
+

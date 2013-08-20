@@ -1,0 +1,14 @@
+"""
+520i
+"""
+
+vendor = 'jetspeed'
+name = '520i'
+regex = r'(?s).*(jetspeed).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Action?reboot_loc=0&id=5&cmdReboot=Reboot')
+

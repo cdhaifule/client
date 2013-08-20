@@ -1,0 +1,23 @@
+"""
+Speedport W 500V
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 500V'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20650,goog-black-enchash:1:50089')
+
+# step #2
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #3
+get('http://{routerip}/js_fade.txt?')
+
+# step #4
+get('http://{routerip}/pppctl.cmd?action=1')
+
+# step #5
+get('http://{routerip}/js_fade.txt?')
+

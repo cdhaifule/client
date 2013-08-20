@@ -1,0 +1,17 @@
+"""
+Tecom
+"""
+
+vendor = 'Tecom'
+name = 'Tecom'
+regex = r'(?s).*(Tecom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/resetrouter.html?')
+
+# step #3
+get('http://{routerip}/rebootinfo.cgi?')
+

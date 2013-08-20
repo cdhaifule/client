@@ -1,0 +1,11 @@
+"""
+pack sagem f@ast tm 2404 n.d.topnet 253019772
+"""
+
+vendor = 'Sagem'
+name = 'pack sagem f@ast tm 2404 n.d.topnet 253019772'
+regex = r'(?s).*(Sagem).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20045,goog-black-enchash:1:48570')
+

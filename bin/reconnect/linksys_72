@@ -1,0 +1,15 @@
+"""
+WAG200G Firmware 1.01.06
+"""
+
+vendor = 'LinkSys'
+name = 'WAG200G Firmware 1.01.06'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'ctype=pppoe&ifstatus=Down&todo=connect&this_file=Status.htm&next_file=Status.htm&message='
+post('http://{routerip}/setup.cgi', data=data)
+

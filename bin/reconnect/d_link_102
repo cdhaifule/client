@@ -1,0 +1,34 @@
+"""
+DI-514 Firmware 1.05.06
+"""
+
+vendor = 'D-Link'
+name = 'DI-514 Firmware 1.05.06'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=st_devic&connectflag=1'
+post('http://{routerip}/st_devic.html', data=data)
+
+# step #3
+get('http://{routerip}/return_message.html?')
+
+# step #4
+get('http://{routerip}/st_devic.html?')
+
+# step #5
+data = 'page=st_devic&connectflag=2'
+post('http://{routerip}/st_devic.html', data=data)
+
+# step #6
+get('http://{routerip}/return_message.html?')
+
+# step #7
+get('http://{routerip}/st_devic.html?')
+
+# step #8
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20511,goog-black-enchash:1:49730')
+

@@ -1,0 +1,36 @@
+"""
+Faster
+"""
+
+vendor = 'Net'
+name = 'Faster'
+regex = r'(?s).*(Net).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/setupa_top.stm?')
+
+# step #3
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #4
+get('http://{routerip}/menu.stm?')
+
+# step #5
+get('http://{routerip}/setupa_main.stm?')
+
+# step #6
+get('http://{routerip}/tl_main.stm?')
+
+# step #7
+get('http://{routerip}/system_r.stm?')
+
+# step #8
+data = 'page=tools_gateway&logout=&savesetting=REBOOT+ROUTER'
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #9
+get('http://{routerip}/wait.stm?')
+

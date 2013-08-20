@@ -1,0 +1,12 @@
+"""
+Thomson&nbsp;THG&nbsp;520
+"""
+
+vendor = 'Thomson'
+name = 'Thomson&nbsp;THG&nbsp;520'
+regex = r''
+
+# step #1
+data = u'mCmInfoDsFreq1=xx&mCmInfoUsId1=xx'
+post('http://{routerip}/goform/InitialScan', data=data)
+

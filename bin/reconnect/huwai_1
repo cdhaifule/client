@@ -1,0 +1,17 @@
+"""
+SmartAX MT841
+"""
+
+vendor = 'Huwai'
+name = 'SmartAX MT841'
+regex = r'(?s).*(Huwai).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/phtml/info/st_ppp_discon.html?=ImServices.ppp-0.1')
+
+# step #3
+get('http://{routerip}/phtml/info/st_ppp_connect.html?=ImServices.ppp-0.1')
+

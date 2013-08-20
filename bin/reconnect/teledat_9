@@ -1,0 +1,20 @@
+"""
+Teledat&nbsp;Router&nbsp;631
+"""
+
+vendor = 'Teledat'
+name = 'Teledat&nbsp;Router&nbsp;631'
+regex = r''
+
+# step #1
+data = u'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=Passwortf\xfcrdasWebinterfaceinMD5codiert&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+data = u'wzPPPOE_UserName=BenutzernamebeimInternetproviderimKlartext&wzPPPOE_Password=KennwortbeimInternetproviderimKlartext&PPPoE_PPPoEVCKA=0&PPPoE_PPPoEVCIdleTime=0&WAN_Internat_Access=on&wzWAN1Next=Speichern'
+post('http://{routerip}/Forms/wzPoe_1', data=data)
+
+# step #3
+data = u'wzPPPOE_UserName=BenutzernamebeimInternetproviderimKlartext&wzPPPOE_Password=KennwortbeimInternetproviderimKlartext&PPPoE_PPPoEVCIdleTime=0&PPPoE_PPPoEVCKA=1&WAN_Internat_Access=on&wzWAN1Next=Speichern'
+post('http://{routerip}/Forms/wzPoe_1', data=data)
+

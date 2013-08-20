@@ -1,0 +1,50 @@
+"""
+LCS-WR5-2214 Firmware 4.2.3.0.1eu
+"""
+
+vendor = 'longshine'
+name = 'LCS-WR5-2214 Firmware 4.2.3.0.1eu'
+regex = r'(?s).*(longshine).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/home.asp?')
+
+# step #5
+get('http://{routerip}/menu.htm?')
+
+# step #6
+get('http://{routerip}/status.asp?')
+
+# step #7
+get('http://{routerip}/tcpipwan.asp?')
+
+# step #8
+data = 'ipMode=pptp&wanType=ppp&wan_ip=172.1.1.1&wan_mask=255.255.255.0&wan_gateway=172.1.1.254&pppUserName=06965603713&pppPassword=rafi&pppConnectType=2&pppDisconnect=Disconnect&pppMtuSize=1452&pptpIpAddr=172.1.1.2&pptpSubnetMask=255.255.255.0&pptpGateway=172.1.1.254&pptpServerIpAddr=172.1.1.1&pptpUserName=&pptpPassword=&pptpAuthtype=0&pptpMtuSize=1452&l2tpIpmode=0&l2tpServerIpAddr=172.1.1.1&l2tpUserName=&l2tpPassword=&l2tpTimeout=0&l2tpMtuSize=1452&dnsMode=dnsAuto&wan_macAddr=000000000000&pingWANEnabled=ON&upnpEnabled=ON&WANPassThru1=ON&WANPassThru2=ON&webWanAccess=&remoteMgtPort=0&submit-url=%2Ftcpipwan.asp&submit-value=0.025'
+post('http://{routerip}/goform/formWanTcpipSetup', data=data)
+
+# step #9
+get('http://{routerip}/tcpipwan.asp?')
+
+# step #10
+data = 'ipMode=pptp&wanType=ppp&wan_ip=172.1.1.1&wan_mask=255.255.255.0&wan_gateway=172.1.1.254&pppUserName=06965603713&pppPassword=rafi&pppConnectType=2&pppConnect=Connect&pppMtuSize=1452&pptpIpAddr=172.1.1.2&pptpSubnetMask=255.255.255.0&pptpGateway=172.1.1.254&pptpServerIpAddr=172.1.1.1&pptpUserName=&pptpPassword=&pptpAuthtype=0&pptpMtuSize=1452&l2tpIpmode=0&l2tpServerIpAddr=172.1.1.1&l2tpUserName=&l2tpPassword=&l2tpTimeout=0&l2tpMtuSize=1452&dnsMode=dnsAuto&wan_macAddr=000000000000&pingWANEnabled=ON&upnpEnabled=ON&WANPassThru1=ON&WANPassThru2=ON&webWanAccess=&remoteMgtPort=0&submit-url=%2Ftcpipwan.asp&submit-value=0.025'
+post('http://{routerip}/goform/formWanTcpipSetup', data=data)
+
+# step #11
+get('http://{routerip}/tcpipwan.asp?')
+
+# step #12
+get('http://{routerip}/logout.asp?')
+
+# step #13
+data = 'logout=Save&return-url=%2Fwizard.asp'
+post('http://{routerip}/goform/formLogout', data=data)
+

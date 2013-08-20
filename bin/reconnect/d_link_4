@@ -1,0 +1,506 @@
+"""
+604t gen II nz (xtra model)
+"""
+
+vendor = 'D-Link'
+name = '604t gen II nz (xtra model)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2F')
+
+# step #5
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+post('http://{routerip}/checkurl/')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #8
+post('http://{routerip}/checkurl/')
+
+# step #9
+post('http://{routerip}/checkurl/')
+
+# step #10
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #12
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #13
+post('http://{routerip}/checkurl/')
+
+# step #14
+post('http://{routerip}/checkurl/')
+
+# step #15
+post('http://{routerip}/checkurl/')
+
+# step #16
+post('http://{routerip}/ajax/notes.json.jsp')
+
+# step #17
+post('http://{routerip}/checkurl/')
+
+# step #18
+post('http://{routerip}/checkurl/')
+
+# step #19
+post('http://{routerip}/checkurl/')
+
+# step #20
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #21
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Fstatus%2Fstatus_deviceinfo.htm')
+
+# step #22
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #23
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #24
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #25
+post('http://{routerip}/checkurl/')
+
+# step #26
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #27
+post('http://{routerip}/checkurl/')
+
+# step #28
+post('http://{routerip}/checkurl/')
+
+# step #29
+post('http://{routerip}/checkurl/')
+
+# step #30
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #31
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Fstatus%2Fstatus_deviceinfo.htm')
+
+# step #32
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #33
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #34
+post('http://{routerip}/checkurl/')
+
+# step #35
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #36
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #37
+post('http://{routerip}/checkurl/')
+
+# step #38
+post('http://{routerip}/checkurl/')
+
+# step #39
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #40
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Ftools%2Ftools_admin.htm')
+
+# step #41
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #42
+post('http://{routerip}/checkurl/')
+
+# step #43
+post('http://{routerip}/checkurl/')
+
+# step #44
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_system.htm')
+
+# step #45
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Ftools%2Ftools_system.htm')
+
+# step #46
+post('http://{routerip}/checkurl/')
+
+# step #47
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #48
+post('http://{routerip}/checkurl/')
+
+# step #49
+get('http://{routerip}/toolbar/firefox/update.xml?')
+
+# step #50
+post('http://{routerip}/')
+
+# step #51
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}&version=0.7.5.4&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #52
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=toolbar@alexa.com&version=1.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #53
+get('http://{routerip}/firefox/update?guid={3112ca9c-de6d-4884-a869-9855de68056c}&version=3.0.20070525W&application={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appversion=2.0.0.14&dist=google')
+
+# step #54
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=filtersetg@updater&version=0.3.1.3&maxAppVersion=3.0b5&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #55
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={E2C5E80C-79B5-485a-A493-3E87E28823A5}&version=1.5&maxAppVersion=2.0.0.*&status=userDisabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #56
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={082b6fe0-310a-11db-a98b-0800200c9a66}&version=2.4.4.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #57
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=acmanager@ucla&version=2.3&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #58
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={4AB21F99-91C5-4a9d-813E-425841874FB1}&version=1.0.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #59
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=stickis@activeweave.com&version=1.1.777&maxAppVersion=3.0b5pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #60
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=divx@partners.mozilla.com&version=1.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #61
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={a7c6cf7f-112c-4500-a7ea-39801a327e5f}&version=0.97.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #62
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0003-ABCDEFFEDCBA}&version=6.0.03&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #63
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={1018e4d6-728f-4b20-ad56-37578a4de76b}&version=3.2.3&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #64
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={ef62e1ce-d2a4-4cdd-b7ec-92b120366b66}&version=2.2.1&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #65
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={19503e42-ca3c-4c27-b1e2-9cdb2170ee34}&version=0.9.9&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #66
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=simplemail@telega.phpnet.us&version=2.63&maxAppVersion=3.0b5&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #67
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={c1dffba0-628e-11d9-9669-0800200c9a66}&version=2.0.2&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #68
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={81BF1D23-5F17-408D-AC6B-BD6DF7CAF670}&version=6.0.4.1&maxAppVersion=3.0b5&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #69
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={e497edd0-9d4e-4429-9a0b-4f05bd2c4dc2}&version=0.13&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #70
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={fefdd087-77c6-4743-b0f5-31ad9b063d06}&version=0.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #71
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={DDC359D1-844A-42a7-9AA1-88A850A938A8}&version=1.0.1&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #72
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={602E0D2D-7710-4d47-A32C-998398DB993D}&version=1.1&maxAppVersion=3.0a9&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #73
+get('http://{routerip}/updates/update.php?id=toolbar@instantbuzz.com&version=0.6&reqversion=1&maxappversion=3.0.0.*&status=userEnabled&appid={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appver=2.0.0.14&appos=WINNT&appapi=x86-msvc')
+
+# step #74
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={2843a0c8-caba-4428-b96a-83b5547c0fdd}&version=2.0.3&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #75
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={D4DD63FA-01E4-46a7-B6B1-EDAB7D6AD389}&version=0.9.6.1&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #76
+get('http://{routerip}/updates/update.php?id={65b3130e-8513-41b6-8ea8-43dbd9cc0b12}&version=0.5&reqversion=1&maxappversion=2.0.0.*&status=userEnabled&appid={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appver=2.0.0.14&appos=WINNT&appapi=x86-msvc')
+
+# step #77
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={8f8fe09b-0bd3-4470-bc1b-8cad42b8203a}&version=0.13.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #78
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={A2F388E5-2777-454e-85BB-58E6FB48E690}&version=0.7.8&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #79
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={4A207596-AED2-4223-929F-BBE1D691B7CD}&version=1.8.6&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #80
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={11F9F076-72B3-4586-995D-5042CF5D3AD4}&version=4.1.2&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #81
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=kgen@elitwork.com&version=0.3&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #82
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={73a6fe31-595d-460b-a920-fcc0f8843232}&version=1.6.4&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #83
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={c36177c0-224a-11da-8cd6-0800200c9a66}&version=2.0.0&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #84
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={8bc5b5eb-0ec4-46ed-a024-ace8a3032888}&version=4.2.2&maxAppVersion=3.0b2&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #85
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={fe0258ab-4f74-43a1-8781-bcdf340f9ee9}&version=2.5.3&maxAppVersion=3.0a9&status=userDisabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #86
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=redshift_V2@shift-themes.com&version=0.96&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #87
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={888d99e7-e8b5-46a3-851e-1ec45da1e644}&version=3.0.0&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #88
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={b9db16a4-6edc-47ec-a1f4-b86292ed211d}&version=3.0.3&maxAppVersion=3.0b5&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #89
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={F807FACD-E46A-4793-B345-D58CB177673C}&version=2.1&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #90
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={9e48e253-edbc-4b52-9ebc-50a33a8d5ac4}&version=1.2&maxAppVersion=3.0a7&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #91
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=sxipper@sxip.com&version=2.0.2&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #92
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=translator@dontfollowme.net&version=1.0.4.4&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #93
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=evcextension@verisign.com&version=1.0.1.2898&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #94
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={07b2a769-ed19-4483-87ce-c643914c81bb}&version=2.0.0.11&maxAppVersion=3.0b1&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #95
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={8B8A525A-CFCA-44cf-81C3-3969E6CB96E0}&version=2.7.3.8&maxAppVersion=3.0b2&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #96
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=snaplinks@snaplinks.net&version=0.0.4&maxAppVersion=3.0a8&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #97
+get('http://{routerip}/blocklist/1/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/2.0.0.14/?')
+
+# step #98
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=piclens@cooliris.com&version=1.6.3.2361&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #99
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={1280606b-2510-4fe0-97ef-9b5a22eafe30}&version=0.6.1.13&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #100
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=routerstatus@undermined.org&version=0.1.7.8&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #101
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={d8646e86-22ba-4f3d-8751-23c723ebd7b9}&version=1.6&maxAppVersion=3.0a3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.14&appOS=WINNT&appABI=x86-msvc')
+
+# step #102
+get('http://{routerip}/toolbar/update.rdf?')
+
+# step #103
+get('http://{routerip}/firefox/update.rdf?')
+
+# step #104
+post('http://{routerip}/')
+
+# step #105
+get('http://{routerip}/FirefoxUpdate/?ctid=CT848332')
+
+# step #106
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2Fdownload.chip.eu%2Fen%2Fdownload_getfile_en_2059789.html%3Fs%3Dhttp%3A%2F%2Fdl13.chip.eu%26f%3D%2F95638%2FCryptload_1.0.5_en.rar.torrent%26t%3D481eb684%26sign%3D40ef45bccad52f476a35803eec27a2dc%26dl_type%3Dtorrent')
+
+# step #107
+post('http://{routerip}/checkurl/')
+
+# step #108
+post('http://{routerip}/checkurl/')
+
+# step #109
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #110
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #111
+post('http://{routerip}/checkurl/')
+
+# step #112
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #113
+post('http://{routerip}/checkurl/')
+
+# step #114
+post('http://{routerip}/checkurl/')
+
+# step #115
+post('http://{routerip}/checkurl/')
+
+# step #116
+post('http://{routerip}/checkurl/')
+
+# step #117
+get('http://{routerip}/cgi-bin/webcm?')
+
+# step #118
+post('http://{routerip}/checkurl/')
+
+# step #119
+post('http://{routerip}/ajax/notes.json.jsp')
+
+# step #120
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Ftools%2Ftools_admin.htm')
+
+# step #121
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #122
+get('http://{routerip}/cgi-bin/webcm?')
+
+# step #123
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Fstatus%2Fstatus_deviceinfo.htm')
+
+# step #124
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #125
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #126
+post('http://{routerip}/checkurl/')
+
+# step #127
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #128
+get('http://{routerip}/cgi-bin/webcm?')
+
+# step #129
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #130
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #131
+post('http://{routerip}/checkurl/')
+
+# step #132
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm%3Fgetpage%3D..%2Fhtml%2Fstatus%2Fstatus_deviceinfo.htm')
+
+# step #133
+post('http://{routerip}/checkurl/')
+
+# step #134
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #135
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #136
+post('http://{routerip}/checkurl/')
+
+# step #137
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #138
+post('http://{routerip}/checkurl/')
+
+# step #139
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #140
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2F')
+
+# step #141
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2F10.1.1.1%2Fcgi-bin%2Fwebcm')
+
+# step #142
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080114131620&url=http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FRecording_a_reconnect')
+
+# step #143
+post('http://{routerip}/checkurl/')
+
+# step #144
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #145
+get('http://{routerip}/data/Ge4r71ZRuc12W5?cli=10&ver=ff-1.1&dat=ns&cdt=rq%3D1%26wid%3D18397&url=http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FRecording_a_reconnect')
+
+# step #146
+get('http://{routerip}/wiki/index.php?title=Spezial:Letzte_%C3%84nderungen&feed=atom')
+
+# step #147
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #148
+get('http://{routerip}/wiki/index.php?title=Spezial:Letzte_%C3%84nderungen&feed=rss')
+
+# step #149
+post('http://{routerip}/checkurl/')
+
+# step #150
+post('http://{routerip}/checkurl/')
+
+# step #151
+get('http://{routerip}/toolbarad.php?user_id=83137')
+
+# step #152
+post('http://{routerip}/ajax/notes.json.jsp')
+
+# step #153
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #154
+get('http://{routerip}/weatherrequest.ctp?type=forecast&imagetype=DEFAULT&locale=en-us&locationid=NZXX0003')
+
+# step #155
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #156
+post('http://{routerip}/checkurl/')
+
+# step #157
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #158
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #159
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #160
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #161
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #162
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #163
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #164
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+
+# step #165
+get('http://{routerip}/iSearch/get_isearch_sitelist.php?client=FFGM&version=1.2&release=0&service=1&affiliate=&lang=en_US&uuid=229fc771-a9f9-aee3-d676-936e1f86705c')
+

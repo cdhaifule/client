@@ -1,0 +1,21 @@
+"""
+SMCWBR14T-G (FW 1.07)
+"""
+
+vendor = 'SMCWBR14T-G'
+name = 'SMCWBR14T-G (FW 1.07)'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=Disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=Connect')
+
+# step #4
+get('http://{routerip}/cgi-bin/logout.exe')
+

@@ -1,0 +1,12 @@
+"""
+Netgear&nbsp;MR314
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;MR314'
+regex = r''
+
+# step #1
+data = u'wzWLANNoteFinish=Finish'
+post('http://{routerip}/Forms/wzWLANNote', data=data)
+

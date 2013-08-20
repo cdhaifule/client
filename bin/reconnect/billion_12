@@ -1,0 +1,17 @@
+"""
+Bipac 640-AE
+"""
+
+vendor = 'Billion'
+name = 'Bipac 640-AE'
+regex = r'(?s).*(Billion).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/stat1.htm?page=status&Conn=Abbruch&ConnStatus=Disconnecting&pptpConn=&PPTPConnStatus=&renew=&DHCPConnStatus=&scrollTop=&isclear=3')
+
+# step #3
+get('http://{routerip}/stat1.htm?page=status&Conn=Verbinden&ConnStatus=Abbruch&pptpConn=&PPTPConnStatus=&renew=&DHCPConnStatus=&scrollTop=&isclear=3')
+

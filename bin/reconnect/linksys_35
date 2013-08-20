@@ -1,0 +1,16 @@
+"""
+Linksys WRT54G (DD-WRT v23 SP2)
+"""
+
+vendor = 'Linksys'
+name = 'Linksys WRT54G (DD-WRT v23 SP2)'
+regex = r'(?s).*linksys.*'
+
+# step #1
+data = 'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data, auth=("{username}", "{password}"))
+

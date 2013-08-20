@@ -1,0 +1,16 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE505&nbsp;DD-WRT
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE505&nbsp;DD-WRT'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&action=Apply&change_action=gozila_cgi&submit_type=Disconnect_pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=Status_Router&action=Apply&change_action=gozila_cgi&submit_type=Connect_pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+

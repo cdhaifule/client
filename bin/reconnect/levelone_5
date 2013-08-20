@@ -1,0 +1,19 @@
+"""
+Frt-2101 Tx v1
+"""
+
+vendor = 'LevelOne'
+name = 'Frt-2101 Tx v1'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'p1_dial_hu=Hang up'
+post('http://{routerip}/isdn_st.cgi', data=data)
+
+# step #3
+data = 'p1_dial_hu=     Dial'
+post('http://{routerip}/isdn_st.cgi', data=data)
+

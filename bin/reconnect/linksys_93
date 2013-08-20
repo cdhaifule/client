@@ -1,0 +1,19 @@
+"""
+WRT54G v5.1 (FW 1.00.6)
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G v5.1 (FW 1.00.6)'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'action=Disconnect'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #3
+data = 'action=Connect'
+post('http://{routerip}/rstatus.tri', data=data)
+

@@ -1,0 +1,14 @@
+"""
+Trendnet&nbsp;TEW-631BRP
+"""
+
+vendor = 'TrendNet'
+name = 'Trendnet&nbsp;TEW-631BRP'
+regex = r''
+
+# step #1
+get('http://{routerip}/wan_pppoe.cgi?connect=false')
+
+# step #2
+get('http://{routerip}/wan_pppoe.cgi?connect=true')
+

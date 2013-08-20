@@ -1,0 +1,16 @@
+"""
+D-LINK&nbsp;DI-624
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DI-624'
+regex = r''
+
+# step #1
+data = u'disconnect=Disconnect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #2
+data = u'connect=Connect'
+post('http://{routerip}/status.cgi', data=data)
+

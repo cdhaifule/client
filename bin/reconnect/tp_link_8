@@ -1,0 +1,11 @@
+"""
+TL-WR641G/TL-WR642G
+"""
+
+vendor = 'TP-LINK'
+name = 'TL-WR641G/TL-WR642G'
+regex = r'(?s).*(TP-LINK).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20447,goog-black-enchash:1:49604')
+

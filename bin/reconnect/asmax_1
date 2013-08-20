@@ -1,0 +1,28 @@
+"""
+804
+"""
+
+vendor = 'Asmax'
+name = '804'
+regex = r'(?s).*(Asmax).*'
+
+# step #1
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&encaps0%3Apppoa%3Acommand%2Fstop=&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&encaps0%3Apppoa%3Acommand%2Fstart=&var%3Aconnecting1=1&connection0%3Asettings%2Fdescription=quickstart&fdb%3Asettings%2Fservice%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fnat%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fspi%2Fstate=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&var%3Aconnecting1=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

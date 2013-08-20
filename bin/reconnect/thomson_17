@@ -1,0 +1,31 @@
+"""
+speed touch 563
+"""
+
+vendor = 'Thomson'
+name = 'speed touch 563'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+data = 'ce=1&be=0&l0=1&l1=1&name=Internet&0=13&1=Internet&5=2'
+post('http://{routerip}/cgi/b/is/_pppoa_/ov/', data=data)
+
+# step #2
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080516211033&url=http%3A%2F%2F72.27.142.38%2Fcgi%2Fb%2Fis%2F_pppoa_%2Fov%2F%3Fce%3D1%26be%3D0%26l0%3D1%26l1%3D1%26name%3DInternet')
+
+# step #3
+get('http://{routerip}/cgi/b/ic/connect/?nm=1&client=192.168.1.64&server=209.234.171.101&event=ServerConnect&url=xml.alexa.com/data')
+
+# step #4
+data = 'ce=1&be=0&l0=-1&l1=-1&client=192.168.1.64&server=198.18.1.13&event=DNSSpoofed&url=en-us.start2.mozilla.com/firefox&0=35&1=&34=en-us.start2.mozilla.com%2Ffirefox&38=DNSSpoofed'
+post('http://{routerip}/cgi/b/ic/connect/', data=data)
+
+# step #5
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080516211033&url=http%3A%2F%2Fdsldevice.lan%2Fcgi%2Fb%2Fic%2Fconnect%2F%3Fce%3D1%26be%3D0%26l0%3D-1%26l1%3D-1%26client%3D192.168.1.64%26server%3D198.18.1.13%26event%3DDNSSpoofed%26url%3Den-us.start2.mozilla.com%2Ffirefox')
+
+# step #6
+get('http://{routerip}/cgi/b/ic/connect/success/?ce=1&be=0&l0=-1&l1=-1&nm=1&url=en-us.start2.mozilla.com/firefox&event=DNSSpoofed')
+
+# step #7
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080516211033&url=http%3A%2F%2Fdsldevice.lan%2Fcgi%2Fb%2Fic%2Fconnect%2Fsuccess%2F%3Fce%3D1%26be%3D0%26l0%3D-1%26l1%3D-1%26nm%3D1%26url%3Den-us.start2.mozilla.com%2Ffirefox%26event%3DDNSSpoofed')
+

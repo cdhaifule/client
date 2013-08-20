@@ -1,0 +1,14 @@
+"""
+TL-WR541g 542g
+"""
+
+vendor = 'TP-Link'
+name = 'TL-WR541g 542g'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/userRpm/StatusRpm.htm?Disconnect=Disconnect&wan=1')
+

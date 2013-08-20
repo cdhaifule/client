@@ -1,0 +1,28 @@
+"""
+V1.3b10
+"""
+
+vendor = 'm0n0wall'
+name = 'V1.3b10'
+regex = r'(?s).*(m0n0wall).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status_interfaces.php?')
+
+# step #5
+data = 'submit=Disconnect'
+post('http://{routerip}/status_interfaces.php', data=data)
+
+# step #6
+data = 'submit=Connect'
+post('http://{routerip}/status_interfaces.php', data=data)
+

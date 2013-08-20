@@ -1,0 +1,22 @@
+"""
+WRT54GC v.2.0
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54GC v.2.0'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'release=IP+Release&ctype=dhcp'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #3
+data = 'renew=IP+Renew&ctype=dhcp'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #4
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

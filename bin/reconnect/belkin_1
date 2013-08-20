@@ -1,0 +1,49 @@
+"""
+.Wireless.G-Router.F5D7230-4
+"""
+
+vendor = 'Belkin'
+name = '.Wireless.G-Router.F5D7230-4'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #3
+get('http://{routerip}/login.stm?')
+
+# step #4
+data = 'pws='
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #5
+get('http://{routerip}/index.stm?')
+
+# step #6
+get('http://{routerip}/system_r.stm?')
+
+# step #7
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #8
+get('http://{routerip}/wait_count.stm?')
+
+# step #9
+get('http://{routerip}/?')
+
+# step #10
+get('http://{routerip}/clr2/?')
+
+# step #11
+get('http://{routerip}/wiki/index.php/Einen_Reconnect_aufzeichnen?')
+
+# step #12
+get('http://{routerip}/wiki/index.php?title=Spezial:Letzte_%C3%84nderungen&feed=atom')
+
+# step #13
+get('http://{routerip}/wiki/index.php?title=Spezial:Letzte_%C3%84nderungen&feed=rss')
+

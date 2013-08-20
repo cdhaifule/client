@@ -1,0 +1,26 @@
+"""
+H9200
+"""
+
+vendor = 'Prolink'
+name = 'H9200'
+regex = r'(?s).*(Prolink).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P000')
+
+# step #4
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:-1,goog-white-url:1:-1,goog-black-url:1:-1,goog-black-enchash:1:-1')
+
+# step #5
+get('http://{routerip}/todo.html?')
+
+# step #6
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P004')
+

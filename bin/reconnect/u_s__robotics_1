@@ -1,0 +1,17 @@
+"""
+Broadband Router (Model # 8003 , 1.04 06 ) (master)
+"""
+
+vendor = 'U.S. Robotics'
+name = 'Broadband Router (Model # 8003 , 1.04 06 ) (master)'
+regex = r'(?s).*(U.S. Robotics).*'
+
+# step #1
+get('http://{routerip}/login.cgi?PSW={password}')
+
+# step #2
+get('http://{routerip}/Gozila.cgi?stat_pppoeconn=2')
+
+# step #3
+get('http://{routerip}/www.routercontrol.de?')
+

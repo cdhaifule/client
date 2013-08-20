@@ -1,0 +1,14 @@
+"""
+D-Link DI-604 (FW 1.80-1.82b2)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-604 (FW 1.80-1.82b2)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status', auth=("{username}", "{password}"))
+

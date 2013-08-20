@@ -1,0 +1,14 @@
+"""
+Netopia 3351
+"""
+
+vendor = 'Netopia'
+name = 'Netopia 3351'
+regex = r'(?s).*netopia.*'
+
+# step #1
+get('http://{routerip}/Forms/homeRES_1', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Forms/homeRES_1', auth=("{username}", "{password}"))
+

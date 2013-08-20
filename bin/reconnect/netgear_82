@@ -1,0 +1,16 @@
+"""
+Netgear WGR614v6 FW V1.1.9GR_1.1.9 german
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGR614v6 FW V1.1.9GR_1.1.9 german'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'Disconnect=verbindung trennen&close=Fenster schliesen&ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Connect= Verbinden&close=Fenster schliesen&ConMethod=Verbinden'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

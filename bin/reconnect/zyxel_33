@@ -1,0 +1,16 @@
+"""
+ZyXel&nbsp;Prestige&nbsp;650&nbsp;HE-7
+"""
+
+vendor = 'ZyXel'
+name = 'ZyXel&nbsp;Prestige&nbsp;650&nbsp;HE-7'
+regex = r''
+
+# step #1
+data = u'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=125wd1254d6w51ds18dw4awd465dw86&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+data = u'LineInfoDisplay=Start+to+reset+ADSL<br>0ALoading+ADSL+modem+F/W...&DiagResetADSL=Reset+ADSL+Line            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+

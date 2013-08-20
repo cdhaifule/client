@@ -1,0 +1,17 @@
+"""
+Vigor 2500We FW 2.51 englisch (DSL)
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor 2500We FW 2.51 englisch (DSL)'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/online3.cgi?')
+
+# step #3
+get('http://{routerip}/cgi-bin/goinet.cgi?')
+

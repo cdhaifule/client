@@ -1,0 +1,14 @@
+"""
+Netgear WGR614 v2 Firmware 2.00
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGR614 v2 Firmware 2.00'
+regex = r'(?s).*netgear.*'
+
+# step #1
+get('http://{routerip}/st_poe.cgi?Disconnect=Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/st_poe.cgi?Connect=++Connect++', auth=("{username}", "{password}"))
+

@@ -1,0 +1,19 @@
+"""
+Prestige 650H-E7 V3.40(OS.1)C0_20060720 [english]
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 650H-E7 V3.40(OS.1)C0_20060720 [english]'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+data = 'LoginPassword=ZyXEL ZyWALL Series&hiddenPassword=%%%MD5:::pass%%%'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+data = 'DiagResetADSL=Reset ADSL Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

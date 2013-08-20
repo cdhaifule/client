@@ -1,0 +1,70 @@
+"""
+Router
+"""
+
+vendor = '3Com'
+name = 'Router'
+regex = r'(?s).*(3Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/login.stm?')
+
+# step #3
+get('http://{routerip}/menu_nologin.stm?')
+
+# step #4
+get('http://{routerip}/login_main.stm?')
+
+# step #5
+get('http://{routerip}/stbar_waiting.stm?')
+
+# step #6
+data = 'pws=admin'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #7
+get('http://{routerip}/index.stm?')
+
+# step #8
+get('http://{routerip}/main_frame_admin1.stm?')
+
+# step #9
+get('http://{routerip}/menu_admin.stm?')
+
+# step #10
+get('http://{routerip}/notice_board.stm?')
+
+# step #11
+get('http://{routerip}/stbar.stm?')
+
+# step #12
+get('http://{routerip}/system_r.stm?')
+
+# step #13
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #14
+get('http://{routerip}/restartingok.stm?')
+
+# step #15
+get('http://{routerip}/restarting.stm?')
+
+# step #16
+get('http://{routerip}/main_frame_nologin.htm?')
+
+# step #17
+get('http://{routerip}/login.stm?')
+
+# step #18
+get('http://{routerip}/menu_nologin.stm?')
+
+# step #19
+get('http://{routerip}/login_main.stm?')
+
+# step #20
+get('http://{routerip}/stbar_waiting.stm?')
+

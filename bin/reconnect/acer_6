@@ -1,0 +1,19 @@
+"""
+WLAN 11g Broadband Router 54MBit (Modell: WLAN-G-RU2)
+"""
+
+vendor = 'Acer'
+name = 'WLAN 11g Broadband Router 54MBit (Modell: WLAN-G-RU2)'
+regex = r'(?s).*(Acer).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Submit=Trennen'
+post('http://{routerip}/Forms/Status_1', data=data)
+
+# step #3
+data = 'Submit=verbinden'
+post('http://{routerip}/Forms/Status_1', data=data)
+

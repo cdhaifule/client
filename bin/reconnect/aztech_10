@@ -1,0 +1,24 @@
+"""
+DSL605EW
+"""
+
+vendor = 'Aztech'
+name = 'DSL605EW'
+regex = r'(?s).*(Aztech).*'
+
+# step #1
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Findex.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Basic&var%3Apagetitle=Home&var%3Apagemaster=home&testwebcm=webcm&login%3Acommand%2Fusername=zx7177&login%3Acommand%2Fpassword=jon170890&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Basic&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstop=&var%3Aconnecting1=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Basic&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstart=&var%3Aconnecting1=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=%2Fusr%2Fwww_safe%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=basic&var%3Aerrorpagename=home&var%3Amenu=basic&var%3Amenutitle=Basic&var%3Apagetitle=Home&var%3Apagemaster=home&connection0%3Apppoe%3Acommand%2Fstart=&var%3Aconnecting1=2'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

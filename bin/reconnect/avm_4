@@ -1,0 +1,19 @@
+"""
+AVM Fritz!Box Fon WLAN 7050 (FW. 14.04.33)
+"""
+
+vendor = 'AVM'
+name = 'AVM Fritz!Box Fon WLAN 7050 (FW. 14.04.33)'
+regex = r'(?s).*avm.*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&=&login%3Acommand%2Fpassword={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/de/menus/menu2.html&errorpage=../html/index.html&var:lang=de&var:pagename=home&var:menu=home&=&login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://http://www.google.de/')
+

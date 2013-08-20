@@ -1,0 +1,16 @@
+"""
+Level-One FBR-1402TX
+"""
+
+vendor = 'Level-One'
+name = 'Level-One FBR-1402TX'
+regex = r'(?s).*level.?one.*'
+
+# step #1
+data = 'hang_up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

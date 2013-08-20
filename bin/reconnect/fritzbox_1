@@ -1,0 +1,39 @@
+"""
+WLAN FON 7140
+"""
+
+vendor = 'FritzBox'
+name = 'WLAN FON 7140'
+regex = r'(?s).*(FritzBox).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #2
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=en&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1210760120%2C-180'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=en&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1210760121%2C-180'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1210760124%2C-180&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=1')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210760127%2C-180&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=1')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210760130%2C-180&var%3Ashowall=&logger%3Asettings%2Ffilter=0')
+
+# step #7
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&var%3AtabReset=0&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #9
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=en&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1210760134%2C-180'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

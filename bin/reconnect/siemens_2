@@ -1,0 +1,17 @@
+"""
+CL-010-l
+"""
+
+vendor = 'Siemens'
+name = 'CL-010-l'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/?ver=0.13.1xs?')
+
+# step #2
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P008')
+
+# step #3
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+

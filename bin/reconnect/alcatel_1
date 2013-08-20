@@ -1,0 +1,16 @@
+"""
+Alcatel Version 2726 v. 2.8
+"""
+
+vendor = 'Alcatel'
+name = 'Alcatel Version 2726 v. 2.8'
+regex = r'(?s).*alcatel.*'
+
+# step #1
+data = 'PPPOE_Opmode=1&Conf_idle_time=0&Finish.x=27&Finish.y=7'
+post('http://{routerip}/cgi-bin/Mode.exe', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'PPPOE_Opmode=0&Conf_idle_time=0&Finish.x=0&Finish.y=0'
+post('http://{routerip}/cgi-bin/Mode.exe', data=data, auth=("{username}", "{password}"))
+

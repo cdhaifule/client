@@ -1,0 +1,70 @@
+"""
+Tomato
+"""
+
+vendor = 'Tomato'
+name = 'Tomato'
+regex = r'(?s).*(Tomato).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status-data.jsx?')
+
+# step #5
+post('http://{routerip}/status-data.jsx')
+
+# step #6
+post('http://{routerip}/status-data.jsx')
+
+# step #7
+post('http://{routerip}/status-data.jsx')
+
+# step #8
+data = '_service=wan-stop&_redirect=status-overview.asp&_sleep=2'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #9
+get('http://{routerip}/status-overview.asp?')
+
+# step #10
+get('http://{routerip}/status-data.jsx?')
+
+# step #11
+post('http://{routerip}/status-data.jsx')
+
+# step #12
+post('http://{routerip}/status-data.jsx')
+
+# step #13
+data = '_service=wan-restart&_redirect=status-overview.asp&_sleep=5'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #14
+get('http://{routerip}/status-overview.asp?')
+
+# step #15
+get('http://{routerip}/status-data.jsx?')
+
+# step #16
+post('http://{routerip}/status-data.jsx')
+
+# step #17
+post('http://{routerip}/status-data.jsx')
+
+# step #18
+post('http://{routerip}/status-data.jsx')
+
+# step #19
+post('http://{routerip}/status-data.jsx')
+
+# step #20
+post('http://{routerip}/status-data.jsx')
+

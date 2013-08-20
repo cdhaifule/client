@@ -1,0 +1,29 @@
+"""
+DSL-500G ADSL Router Firmware R2.01.B18.LA(021206a/T93.3.44)
+"""
+
+vendor = 'D-Link'
+name = 'DSL-500G ADSL Router Firmware R2.01.B18.LA(021206a/T93.3.44)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/hag/pages/home.ssi?')
+
+# step #4
+get('http://{routerip}/hag/pages/logo.ssi?')
+
+# step #5
+get('http://{routerip}/hag/pages/TreeMenu/menu.ssi?')
+
+# step #6
+get('http://{routerip}/MainPage?id=6')
+
+# step #7
+get('http://{routerip}/hag/js/global.gsv?')
+

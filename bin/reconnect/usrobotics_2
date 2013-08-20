@@ -1,0 +1,44 @@
+"""
+USR5463 FW 0.06
+"""
+
+vendor = 'USRobotics'
+name = 'USR5463 FW 0.06'
+regex = r'(?s).*(USRobotics).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'pws=admin'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/top.stm?pn1=sa3.gif&pn2=ad1.gif')
+
+# step #5
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #6
+get('http://{routerip}/rsetupa_menu.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+data = 'pvc=0&cur_if=10&disconnect=Disconnect&dhcpd_log=&securitylog=2008-03-26++18%3A53%3A20+192.168.2.101+login+success%0D%0A2008-03-26++18%3A52%3A46+PPPoE1+get+IP%3A87.123.167.217%0D%0A2008-03-26++18%3A52%3A46+Username+and+Password%3A+OK+%0D%0A2008-03-26++18%3A52%3A46+PPPoE1+start+PPP++++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+receive+PADS++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+send+PADR+++++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+receive+PADO++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A52%3A46+Dial+On+Demand%28PPPoE1%29++++%0D%0A2008-03-26++18%3A52%3A41+PPPoE+stop++++++++++++++++%0D%0A2008-03-26++18%3A52%3A41+PPPoE1+stop+PPP+++++++++++%0D%0A2008-03-26++18%3A52%3A20+192.168.2.101+login+success%0D%0A2008-03-26++18%3A50%3A06+PPPoE1+get+IP%3A87.123.165.47%0D%0A2008-03-26++18%3A50%3A05+Username+and+Password%3A+OK+%0D%0A2008-03-26++18%3A50%3A05+PPPoE1+start+PPP++++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+receive+PADS++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+send+PADR+++++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+receive+PADO++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A50%3A00+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A50%3A00+Dial+On+Demand%28PPPoE1%29++++%0D%0A'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+
+# step #10
+data = 'pvc=0&cur_if=10&connect=+Connect+&dhcpd_log=&securitylog=2008-03-26++18%3A53%3A25+PPPoE+stop++++++++++++++++%0D%0A2008-03-26++18%3A53%3A25+PPPoE1+stop+PPP+++++++++++%0D%0A2008-03-26++18%3A53%3A20+192.168.2.101+login+success%0D%0A2008-03-26++18%3A52%3A46+PPPoE1+get+IP%3A87.123.167.217%0D%0A2008-03-26++18%3A52%3A46+Username+and+Password%3A+OK+%0D%0A2008-03-26++18%3A52%3A46+PPPoE1+start+PPP++++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+receive+PADS++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+send+PADR+++++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+receive+PADO++++++++%0D%0A2008-03-26++18%3A52%3A46+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A52%3A46+Dial+On+Demand%28PPPoE1%29++++%0D%0A2008-03-26++18%3A52%3A41+PPPoE+stop++++++++++++++++%0D%0A2008-03-26++18%3A52%3A41+PPPoE1+stop+PPP+++++++++++%0D%0A2008-03-26++18%3A52%3A20+192.168.2.101+login+success%0D%0A2008-03-26++18%3A50%3A06+PPPoE1+get+IP%3A87.123.165.47%0D%0A2008-03-26++18%3A50%3A05+Username+and+Password%3A+OK+%0D%0A2008-03-26++18%3A50%3A05+PPPoE1+start+PPP++++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+receive+PADS++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+send+PADR+++++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+receive+PADO++++++++%0D%0A2008-03-26++18%3A50%3A05+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A50%3A00+PPPoE+send+PADI+++++++++++%0D%0A2008-03-26++18%3A50%3A00+Dial+On+Demand%28PPPoE1%29++++%0D%0A'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+

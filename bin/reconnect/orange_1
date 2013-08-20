@@ -1,0 +1,23 @@
+"""
+'s Livebox
+"""
+
+vendor = 'Orange'
+name = "'s Livebox"
+regex = r'(?s).*(Orange).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/adslok.cgi?enblInternet=1')
+
+# step #4
+get('http://{routerip}/adslok.cgi?enblInternet=1')
+
+# step #5
+get('http://{routerip}/srv_internet.html?')
+

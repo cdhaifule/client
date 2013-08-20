@@ -1,0 +1,20 @@
+"""
+Siemens Gigaset SE252 dsl
+"""
+
+vendor = 'Siemens'
+name = 'Siemens Gigaset SE252 dsl'
+regex = r'(?s).*(siemens|gigaset).*'
+
+# step #1
+data = 'username={username}&password={password}'
+post('http://{routerip}/pflogin.cgi', data=data)
+
+# step #2
+data = 'submit=Trennen'
+post('http://{routerip}/RunConnect.cgi', data=data)
+
+# step #3
+data = 'submit=Verbinden'
+post('http://{routerip}/RunConnect.cgi', data=data)
+

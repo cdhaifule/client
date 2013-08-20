@@ -1,0 +1,17 @@
+"""
+7004VBR v2 FW: 1.07
+"""
+
+vendor = 'SMC'
+name = '7004VBR v2 FW: 1.07'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/status.htm?RC=@')
+

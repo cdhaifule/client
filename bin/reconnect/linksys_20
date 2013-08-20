@@ -1,0 +1,14 @@
+"""
+Linksys BEFSX41 EU  - Firmware  144.11t
+"""
+
+vendor = 'Linksys'
+name = 'Linksys BEFSX41 EU  - Firmware  144.11t'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/Gozila.cgi?pppoeAct=0', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Gozila.cgi?pppoeAct=1', auth=("{username}", "{password}"))
+

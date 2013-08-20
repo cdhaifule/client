@@ -1,0 +1,16 @@
+"""
+D-LINK&nbsp;DSL-524T
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DSL-524T'
+regex = r''
+
+# step #1
+data = u'getpage=../html/home/fpanelNAT.htm&var:conid=encaps0&var:mycon=connection0&var:Encaps=asis&var:change=&var:contype=pppoa&var:preForm=home&var:getpage=../html/home/wanPPP.htm&var:NATstate=1&var:Firewallstate=1&encaps0:settings/type=pppoa&connection0:settings/type=pppoa&encaps0:pvc:settings/active=1&encaps0:pvc:settings/vpi=8&encaps0:pvc:settings/vci=48&encaps0:pvc:settings/mac=00:1B:11:13:67:EB&encaps0:pvc:settings/traffic_class=UBR&encaps0:pvc:settings/pcr=0&encaps0:pvc:settings/scr=0&encaps0:pvc:settings/cdvt=0&encaps0:pvc:settings/mbs=0&encaps0:pvc:settings/auto_vc=0&encaps0:pppoa:settings/encaps=2&encaps0:pppoa:settings/username=8825040000&encaps0:pppoa:settings/password=fkovupaz&encaps0:pppoa:settings/auth_type=Auto&encaps0:pppoa:settings/mtu=1400&encaps0:pppoa:settings/mru=1492&encaps0:pppoa:settings/idle=300&encaps0:pppoa:settings/maxfail=10&encaps0:pppoa:settings/debug=0&encaps0:pppoa:settings/mode=1&encaps0:pppoa:settings/lcp_echo_failure=10&encaps0:pppoa:settings/defaultroute=1&encaps0:pppoa:settings/ppp_unnum=0&encaps0:pppoa:settings/assigned_ip=0.0.0.0&connection0:fwan:settings/private/mtu/state=1&connection0:settings/description=encaps0&connection0:fwan:settings/private/spi/state=1&fdb:settings/service/mtu/mss_value=1360'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = u'getpage=../html/home/wanPPP.htm&var:NATstate=1&var:Firewallstate=1&var:conid=encaps0&var:mycon=connection0&var:contype=pppoa&var:preForm=home&var:getpage=../html/home/wanPPP.htm&fdb:settings/service/nat/state=1&var:clone=&fdb:settings/service/spi/state=1&var:Encaps=asis&var:pppoemode=&var:pppoamode='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

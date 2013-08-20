@@ -1,0 +1,18 @@
+"""
+D-Link&nbsp;DIR-100&nbsp;FW&nbsp;v111DE
+"""
+
+vendor = 'D-LINK'
+name = 'D-Link&nbsp;DIR-100&nbsp;FW&nbsp;v111DE'
+regex = r''
+
+# step #1
+data = u'authen_username=EUER_LOGIN&authen_password=EUER_MD5_VERSCHL\xdcSSELTES_PASSWORT'
+post('http://{routerip}/postlogin.xgi', data=data)
+
+# step #2
+get('http://{routerip}/Status/st_device.xgi?set/runtime/wan/inf:1/Disconnect=1')
+
+# step #3
+get('http://{routerip}/Status/st_device.xgi?set/runtime/wan/inf:1/Connect=1')
+

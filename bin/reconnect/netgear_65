@@ -1,0 +1,19 @@
+"""
+Netgear RP 614 V4 - Firmware V0.1.9_05.09GR 
+"""
+
+vendor = 'Netgear'
+name = 'Netgear RP 614 V4 - Firmware V0.1.9_05.09GR '
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'page=pppoestatus.html&action=connection&pppoeAct=2&Button=Apply'
+post('http://{routerip}/cgi-bin/apply.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=pppoestatus.html&action=connection&connStatus=Idle&getIP=0.0.0.0&pppoeAct=1&Button=Apply'
+post('http://{routerip}/cgi-bin/apply.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #3
+get('http://{routerip}/gologout.html', auth=("{username}", "{password}"))
+

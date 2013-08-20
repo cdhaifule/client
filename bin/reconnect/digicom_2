@@ -1,0 +1,72 @@
+"""
+Michelangelo Wave b
+"""
+
+vendor = 'Digicom'
+name = 'Michelangelo Wave b'
+regex = r'(?s).*(Digicom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/General.jjss?')
+
+# step #5
+get('http://{routerip}/navigation.html?')
+
+# step #6
+get('http://{routerip}/header_frame.html?')
+
+# step #7
+get('http://{routerip}/bottom.html?')
+
+# step #8
+get('http://{routerip}/wzOthers.html?')
+
+# step #9
+get('http://{routerip}/General.jjss?')
+
+# step #10
+get('http://{routerip}/General.jjss?')
+
+# step #11
+get('http://{routerip}/General.jjss?')
+
+# step #12
+get('http://{routerip}/General.jjss?')
+
+# step #13
+get('http://{routerip}/navigation_language.html?')
+
+# step #14
+get('http://{routerip}/General.jjss?')
+
+# step #15
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #16
+get('http://{routerip}/General.jjss?')
+
+# step #17
+get('http://{routerip}/DiagADSL.html?')
+
+# step #18
+get('http://{routerip}/General.jjss?')
+
+# step #19
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #20
+get('http://{routerip}/DiagADSL.html?')
+
+# step #21
+get('http://{routerip}/General.jjss?')
+

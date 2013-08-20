@@ -1,0 +1,18 @@
+"""
+Eumex 300ip
+"""
+
+vendor = 'T-Com'
+name = 'Eumex 300ip'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_startseite.htm')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_hilfsmittel.htm')
+
+# step #3
+data = 'logic%3Acommand%2Freboot=1&getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fhcti_hilfsmittel_reboot.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

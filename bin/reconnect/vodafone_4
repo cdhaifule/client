@@ -1,0 +1,47 @@
+"""
+EasyBox A 600 Firmware 200011
+"""
+
+vendor = 'Vodafone'
+name = 'EasyBox A 600 Firmware 200011'
+regex = r'(?s).*(Vodafone).*'
+
+# step #1
+data = 'user=yassin&pws=all4one'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/status_main.stm?')
+
+# step #7
+data = 'pvc=0&cur_if=11&disconnect.x=109&disconnect.y=11&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+data = 'pvc=0&cur_if=3&connect.x=62&connect.y=3&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #10
+get('http://{routerip}/status_main.stm?')
+
+# step #11
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #12
+get('http://{routerip}/login_600.stm?')
+

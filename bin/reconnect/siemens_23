@@ -1,0 +1,14 @@
+"""
+SL2_141
+"""
+
+vendor = 'Siemens'
+name = 'SL2_141'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+

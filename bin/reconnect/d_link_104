@@ -1,0 +1,17 @@
+"""
+DI-524 (FW: V2.03(DE))
+"""
+
+vendor = 'D-Link'
+name = 'DI-524 (FW: V2.03(DE))'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

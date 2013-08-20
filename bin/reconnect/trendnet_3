@@ -1,0 +1,61 @@
+"""
+TEW-432BRP
+"""
+
+vendor = 'Trendnet'
+name = 'TEW-432BRP'
+regex = r'(?s).*(Trendnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/wizard.htm?')
+
+# step #4
+get('http://{routerip}/wizard.cgi?next=Next+%3E&start_wizard=0')
+
+# step #5
+get('http://{routerip}/wizard2.htm?')
+
+# step #6
+data = 'time_zone=-80&next=Next+%3E'
+post('http://{routerip}/wizard2.cgi', data=data)
+
+# step #7
+get('http://{routerip}/wizard3.htm?')
+
+# step #8
+data = 'ip=192.168.1.1&mask=255.255.255.0&dhcp=1&start_ip=192.168.1.100&end_ip=192.168.1.199'
+post('http://{routerip}/wizard3.cgi', data=data)
+
+# step #9
+get('http://{routerip}/wizard4.htm?')
+
+# step #10
+post('http://{routerip}/wizard4.cgi')
+
+# step #11
+get('http://{routerip}/wizard5c.htm?')
+
+# step #12
+data = 'name=augustobarreto&pwd1=2304&pwd2=2304'
+post('http://{routerip}/wizard5c.cgi', data=data)
+
+# step #13
+get('http://{routerip}/wizard6.htm?')
+
+# step #14
+data = 'enable=1&ssid=Barretonet&channel=6'
+post('http://{routerip}/wizard6.cgi', data=data)
+
+# step #15
+get('http://{routerip}/wizard7.htm?')
+
+# step #16
+data = 'restart=Restart'
+post('http://{routerip}/wizard7.cgi', data=data)
+

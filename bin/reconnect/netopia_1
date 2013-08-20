@@ -1,0 +1,76 @@
+"""
+2247nwg
+"""
+
+vendor = 'Netopia'
+name = '2247nwg'
+regex = r'(?s).*(Netopia).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/headerimage.htm?')
+
+# step #3
+get('http://{routerip}/menuRES.htm?')
+
+# step #4
+get('http://{routerip}/homeRES.htm?')
+
+# step #5
+get('http://{routerip}/indexRES.htm?expertRES.htm=')
+
+# step #6
+get('http://{routerip}/headerimage.htm?')
+
+# step #7
+get('http://{routerip}/menuRES.htm?')
+
+# step #8
+get('http://{routerip}/expertRES.htm?')
+
+# step #9
+data = 'Yes%2C+enter+expert+mode=%A0Yes%2C+enter+expert+mode%A0'
+post('http://{routerip}/Forms/expertRES_1', data=data)
+
+# step #10
+get('http://{routerip}/indexExptRES.htm?homeRES.htm=')
+
+# step #11
+get('http://{routerip}/headerimage.htm?')
+
+# step #12
+get('http://{routerip}/menuExpertRES.htm?')
+
+# step #13
+get('http://{routerip}/homeRES.htm?')
+
+# step #14
+get('http://{routerip}/indexExptRES.htm?restartModemRES.htm=')
+
+# step #15
+get('http://{routerip}/headerimage.htm?')
+
+# step #16
+get('http://{routerip}/menuExpertRES.htm?')
+
+# step #17
+get('http://{routerip}/restartModemRES.htm?')
+
+# step #18
+data = 'Yes%2C+restart+modem=Yes%2C+restart+Router'
+post('http://{routerip}/Forms/restartModemRES_1', data=data)
+
+# step #19
+get('http://{routerip}/?')
+
+# step #20
+get('http://{routerip}/headerimage.htm?')
+
+# step #21
+get('http://{routerip}/menuRES.htm?')
+
+# step #22
+get('http://{routerip}/homeRES.htm?')
+

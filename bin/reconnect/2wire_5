@@ -1,0 +1,11 @@
+"""
+HomePortal 1100
+"""
+
+vendor = '2wire'
+name = 'HomePortal 1100'
+regex = r'(?s).*(2wire).*'
+
+# step #1
+get('http://{routerip}/?')
+

@@ -1,0 +1,19 @@
+"""
+WBR-2400TX
+"""
+
+vendor = 'LevelOne'
+name = 'WBR-2400TX'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'hang_up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

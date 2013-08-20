@@ -1,0 +1,24 @@
+"""
+Gigaset SE551 WLAN dsl/cable
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SE551 WLAN dsl/cable'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/wiki/index.php/Einen_Reconnect_aufzeichnen?')
+
+# step #2
+post('http://{routerip}/clr2/')
+
+# step #3
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #4
+data = 'router=Gigaset+SE551+WLAN+dsl%2Fcable'
+post('http://{routerip}/clr3/', data=data)
+
+# step #5
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

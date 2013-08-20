@@ -1,0 +1,23 @@
+"""
+ADSL2253EU
+"""
+
+vendor = 'ELCON'
+name = 'ADSL2253EU'
+regex = r'(?s).*(ELCON).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/banner.html?')
+
+# step #4
+get('http://{routerip}/menu.html?')
+
+# step #5
+get('http://{routerip}/info.html?')
+

@@ -1,0 +1,14 @@
+"""
+D-Link DI-624 (FW1.25)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624 (FW1.25)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+post('http://{routerip}/input type=submit name="disconnect" value="Disconnect"', auth=("{username}", "{password}"))
+
+# step #2
+get('http://http://www.google.de/')
+

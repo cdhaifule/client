@@ -1,0 +1,19 @@
+"""
+DI-624  (FW 2.03b36) DEU
+"""
+
+vendor = 'D-Link'
+name = 'DI-624  (FW 2.03b36) DEU'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect='
+post('http://{routerip}/status.cgi', data=data)
+
+# step #3
+data = 'connect='
+post('http://{routerip}/status.cgi', data=data)
+

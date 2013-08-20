@@ -1,0 +1,61 @@
+"""
+easy box
+"""
+
+vendor = 'Arcor'
+name = 'easy box'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+data = 'user=root&pws=maerz08'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/status_main.stm?')
+
+# step #7
+get('http://{routerip}/index3.stm?')
+
+# step #8
+get('http://{routerip}/setupd.stm?')
+
+# step #9
+get('http://{routerip}/setupd_brief.stm?')
+
+# step #10
+get('http://{routerip}/menu.stm?')
+
+# step #11
+get('http://{routerip}/system_main.stm?')
+
+# step #12
+get('http://{routerip}/system_r.stm?')
+
+# step #13
+post('http://{routerip}/sync/bookmarks/getchanges')
+
+# step #14
+post('http://{routerip}/login/sync')
+
+# step #15
+post('http://{routerip}/sync/bookmarks/getchanges')
+
+# step #16
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #17
+get('http://{routerip}/wait.stm?')
+

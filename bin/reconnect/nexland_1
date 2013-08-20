@@ -1,0 +1,19 @@
+"""
+ISB SOHO
+"""
+
+vendor = 'Nexland'
+name = 'ISB SOHO'
+regex = r'(?s).*(Nexland).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'hang_Up=Disconnect'
+post('http://{routerip}/advpppoe.cgi', data=data)
+
+# step #3
+data = 'dial=Connect'
+post('http://{routerip}/advpppoe.cgi', data=data)
+

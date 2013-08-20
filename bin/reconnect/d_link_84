@@ -1,0 +1,20 @@
+"""
+D-Link DSL-G664T (V1.00B02T02.DE.20040804)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DSL-G664T (V1.00B02T02.DE.20040804)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+data = 'getpage=../html/login_gm.html&errorpage=../html/index.html&login:command/username={username}&login:command/password={password}&var:errormsg=Error&var:language=gm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/status_gm/connstatus.htm&var:language=gm&connection0:settings/manual_conn=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=../html/status_gm/connstatus.htm&var:language=gm&connection0:settings/manual_conn=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

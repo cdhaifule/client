@@ -1,0 +1,16 @@
+"""
+ASUS&nbsp;RX3041
+"""
+
+vendor = 'ASUS'
+name = 'ASUS&nbsp;RX3041'
+regex = r''
+
+# step #1
+data = u'CMD=WAN_CON&GO=sys_status.htm&action=4'
+post('http://{routerip}/do_cmd.htm', data=data)
+
+# step #2
+data = u'CMD=WAN_CON&GO=sys_status.htm&action=3'
+post('http://{routerip}/do_cmd.htm', data=data)
+

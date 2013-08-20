@@ -1,0 +1,11 @@
+"""
+WGT624 Firmware V4.1.9_1.0.1
+"""
+
+vendor = 'Netgear'
+name = 'WGT624 Firmware V4.1.9_1.0.1'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+

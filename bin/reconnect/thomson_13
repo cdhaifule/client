@@ -1,0 +1,16 @@
+"""
+Thomson Speedtouch 546v6 SW 5.3.9.2
+"""
+
+vendor = 'Thomson'
+name = 'Thomson Speedtouch 546v6 SW 5.3.9.2'
+regex = r'(?s).*thomson.*'
+
+# step #1
+data = '0=13&1=Shared_Internet&5=2'
+post('http://{routerip}/?0=13&1=Shared_Internet&5=2', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = '0=12&1=Shared_Internet&5=2'
+post('http://{routerip}/?0=12&1=Shared_Internet&5=2', data=data, auth=("{username}", "{password}"))
+

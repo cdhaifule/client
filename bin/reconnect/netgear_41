@@ -1,0 +1,16 @@
+"""
+Netgear DG632b Firmware 3.40
+"""
+
+vendor = 'Netgear'
+name = 'Netgear DG632b Firmware 3.40'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'nextpage=../html/st_poe.htm&var:wanType=pppoe&connection0:pppoe:command/stop="&'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'nextpage=../html/st_poe.htm&var:wanType=pppoe&connection0:pppoe:command/start="&'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+

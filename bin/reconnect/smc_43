@@ -1,0 +1,14 @@
+"""
+SMC Barricade (7004BR)
+"""
+
+vendor = 'SMC'
+name = 'SMC Barricade (7004BR)'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=0&T=10000', auth=("{username}", "{password}"))
+

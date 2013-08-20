@@ -1,0 +1,51 @@
+"""
+DG834NB
+"""
+
+vendor = 'Netgear'
+name = 'DG834NB'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/start.htm?')
+
+# step #3
+get('http://{routerip}/top.htm?')
+
+# step #4
+get('http://{routerip}/menu.htm?')
+
+# step #5
+get('http://{routerip}/blank.htm?')
+
+# step #6
+get('http://{routerip}/s_status.htm?')
+
+# step #7
+get('http://{routerip}/hsstatus_w.htm?')
+
+# step #8
+get('http://{routerip}/setup.cgi?next_file=wanstat.htm')
+
+# step #9
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #10
+data = 'todo=disconnect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #11
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #12
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #13
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #14
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+

@@ -1,0 +1,50 @@
+"""
+DIR-635
+"""
+
+vendor = 'D-Link'
+name = 'DIR-635'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/post_login.xml?hash=3fb72e7377dccdedf1807711d440e3c0158c0bae')
+
+# step #2
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #3
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #4
+get('http://{routerip}/Status/lan_computers_table.sxsl?')
+
+# step #5
+get('http://{routerip}/Status/igmp_group_memberships.sxsl?')
+
+# step #6
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #7
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #8
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #9
+get('http://{routerip}/wan_pppoe.cgi?connect=false')
+
+# step #10
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #11
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #12
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #13
+get('http://{routerip}/wan_pppoe.cgi?connect=true')
+
+# step #14
+get('http://{routerip}/wan_connection_status.sxml?')
+

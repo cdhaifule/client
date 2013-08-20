@@ -1,0 +1,19 @@
+"""
+WAG200G (FW. 1.01.01 english)
+"""
+
+vendor = 'LinkSys'
+name = 'WAG200G (FW. 1.01.01 english)'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'release= disconnect &ctype=pppoe&ifstatus=Up&todo=disconnect&this_file=status.htm&next_file=status.htm&message='
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #3
+data = 'renew= connect &ctype=pppoe&ifstatus=Up&todo=connect&this_file=status.htm&next_file=status.htm&message='
+post('http://{routerip}/setup.cgi', data=data)
+

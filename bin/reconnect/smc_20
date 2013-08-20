@@ -1,0 +1,17 @@
+"""
+Barricade 7008BR
+"""
+
+vendor = 'SMC'
+name = 'Barricade 7008BR'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000&ZT=1207755240218')
+
+# step #2
+get('http://{routerip}/robots.txt?')
+
+# step #3
+get('http://{routerip}/status.htm?RC=_&ZT=1207755243375')
+

@@ -1,0 +1,32 @@
+"""
+DI-524a1 v1.4
+"""
+
+vendor = 'D-Link'
+name = 'DI-524a1 v1.4'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/Home/h_wizard.htm?')
+
+# step #4
+get('http://{routerip}/Status/st_devic.htm?')
+
+# step #5
+get('http://{routerip}/Status/st_devic.xgi?set/runtime/wan/inf:1/Disconnect=1')
+
+# step #6
+get('http://{routerip}/Status/st_devic.htm?')
+
+# step #7
+get('http://{routerip}/Status/st_devic.xgi?set/runtime/wan/inf:1/Connect=1')
+
+# step #8
+get('http://{routerip}/Status/st_devic.htm?')
+

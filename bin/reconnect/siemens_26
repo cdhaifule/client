@@ -1,0 +1,17 @@
+"""
+Siemens Gigaset SE105 dsl/cable
+"""
+
+vendor = 'Siemens'
+name = 'Siemens Gigaset SE105 dsl/cable'
+regex = r'(?s).*(siemens|gigaset).*'
+
+# step #1
+get('http://{routerip}/login.htm?page=login&pws={password}')
+
+# step #2
+get('http://{routerip}/status_main.htm?page=status_main&button=pppoedisconnect')
+
+# step #3
+get('http://{routerip}/status_main.htm?page=status_main&button=pppoeconnect')
+

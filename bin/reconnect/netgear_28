@@ -1,0 +1,19 @@
+"""
+FWG114P V 1.1 betarelease 05
+"""
+
+vendor = 'Netgear'
+name = 'FWG114P V 1.1 betarelease 05'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'connect=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

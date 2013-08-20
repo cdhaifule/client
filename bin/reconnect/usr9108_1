@@ -1,0 +1,14 @@
+"""
+- U.S. Robotics Wireless MAXg ADSL Gateway
+"""
+
+vendor = 'USR9108'
+name = '- U.S. Robotics Wireless MAXg ADSL Gateway'
+regex = r'(?s).*(USR9108).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+

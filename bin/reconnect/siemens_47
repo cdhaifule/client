@@ -1,0 +1,14 @@
+"""
+Siemens&nbsp;Speedstream&nbsp;4100
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Speedstream&nbsp;4100'
+regex = r''
+
+# step #1
+get('http://{routerip}/PPP_logout.cgi?ConnID=oe00')
+
+# step #2
+get('http://{routerip}/PPP_doLogin.cgi?ConnID=oe00')
+

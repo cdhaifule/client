@@ -1,0 +1,20 @@
+"""
+DSL 600EU Firmware 38.2.9/6
+"""
+
+vendor = 'Aztech'
+name = 'DSL 600EU Firmware 38.2.9/6'
+regex = r'(?s).*(Aztech).*'
+
+# step #1
+data = 'var%3Amain=menu1&var%3Astyle=style1&getpage=..%2Fhtml%2Fdefs%2Fstyle1%2Fmenus%2Fmenu1.html&errorpage=..%2Fhtml%2Findex.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=quickstart&var%3Amenutitle=Quickstart&var%3Apagetitle=Quick+Start&var%3Apagemaster=home&login%3Acommand%2Fusername=admin&login%3Acommand%2Fpassword=haniaagata&var%3Arestore=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'var%3Amain=menu1&var%3Astyle=style1&getpage=..%2Fhtml%2Fdefs%2Fstyle1%2Fmenus%2Fmenu1.html&errorpage=..%2Fhtml%2Fstatus%2Fconnection.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=quickstart&var%3Amenutitle=Quickstart&var%3Apagetitle=Quick+Start&var%3Apagemaster=home&var%3AconnectBtnPressed=&var%3Aconid=connection0&connection0%3Apppoa%3Acommand%2Fstop='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'var%3Amain=menu1&var%3Astyle=style1&getpage=..%2Fhtml%2Fdefs%2Fstyle1%2Fmenus%2Fmenu1.html&errorpage=..%2Fhtml%2Fstatus%2Fconnection.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=quickstart&var%3Amenutitle=Quickstart&var%3Apagetitle=Quick+Start&var%3Apagemaster=home&var%3AconnectBtnPressed=1&var%3Aconid=connection0&connection0%3Apppoa%3Acommand%2Fstart='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

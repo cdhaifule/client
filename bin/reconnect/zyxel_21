@@ -1,0 +1,11 @@
+"""
+Prestige 660HW-61
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 660HW-61'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20176,goog-black-enchash:1:48954')
+

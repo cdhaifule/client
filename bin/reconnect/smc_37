@@ -1,0 +1,20 @@
+"""
+SMC Arcor Easy Box A 600 Wlan
+"""
+
+vendor = 'SMC'
+name = 'SMC Arcor Easy Box A 600 Wlan'
+regex = r'(?s).*(smc|arcor).*'
+
+# step #1
+data = 'user={username}&pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = 'pvc=0&cur_if=11&disconnect.x=125&disconnect.y=9&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'pvc=0&cur_if=3&connect.x=41&connect.y=9&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

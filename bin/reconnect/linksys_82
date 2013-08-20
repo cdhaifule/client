@@ -1,0 +1,34 @@
+"""
+WRT300N V1.1
+"""
+
+vendor = 'LinkSys'
+name = 'WRT300N V1.1'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/Status_Router.asp?')
+
+# step #5
+data = 'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #6
+data = 'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #7
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:en-US:official')
+
+# step #8
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:en-US:official')
+

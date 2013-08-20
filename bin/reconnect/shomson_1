@@ -1,0 +1,24 @@
+"""
+Speed Touch
+"""
+
+vendor = 'Shomson'
+name = 'Speed Touch'
+regex = r'(?s).*(Shomson).*'
+
+# step #1
+get('http://{routerip}/clr/?')
+
+# step #2
+post('http://{routerip}/clr2/')
+
+# step #3
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #4
+data = 'router=Speed+Touch'
+post('http://{routerip}/clr3/', data=data)
+
+# step #5
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

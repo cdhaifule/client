@@ -1,0 +1,14 @@
+"""
+Sitecom&nbsp;Broadband&nbsp;Home&nbsp;Station
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom&nbsp;Broadband&nbsp;Home&nbsp;Station'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H0&RD')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D0&RD')
+

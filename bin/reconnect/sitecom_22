@@ -1,0 +1,9 @@
+"""
+Sitecom&nbsp;DC-207
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom&nbsp;DC-207'
+regex = r''
+
+

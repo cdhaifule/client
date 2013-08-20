@@ -1,0 +1,14 @@
+"""
+D-Link DI-624 (HW.:C3 FW: 2.53b0069)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624 (HW.:C3 FW: 2.53b0069)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/<input type=submit name="pptpdisconnect" value="Disconnect">', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/<input type=submit name="pptpconnect" value="Connect">', auth=("{username}", "{password}"))
+

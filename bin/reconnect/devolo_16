@@ -1,0 +1,14 @@
+"""
+devolo MicroLink LAN Router (FW 2.14)
+"""
+
+vendor = 'devolo'
+name = 'devolo MicroLink LAN Router (FW 2.14)'
+regex = r'(?s).*(devolo|microlink).*'
+
+# step #1
+get('http://{routerip}/de/status.htm?page=status&applyflag=1', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/de/status.htm?page=status&applyflag=0', auth=("{username}", "{password}"))
+

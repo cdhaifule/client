@@ -1,0 +1,16 @@
+"""
+SiteCom WL-160 54g Wireless Broadband Router v1.45 v1.61
+"""
+
+vendor = 'SiteCom'
+name = 'SiteCom WL-160 54g Wireless Broadband Router v1.45 v1.61'
+regex = r'(?s).*sitecom.*'
+
+# step #1
+data = 'internetSta=Disconnect&buttonact1=Disconnect&buttonact=Disconnect&submit-url=/status.asp&wanMode=3'
+post('http://{routerip}/goform/formConnect', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'internetSta=Connect&buttonact1=Connect&buttonact=Connect&submit-url=/status.asp&wanMode=3'
+post('http://{routerip}/goform/formConnect', data=data, auth=("{username}", "{password}"))
+

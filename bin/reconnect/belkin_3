@@ -1,0 +1,20 @@
+"""
+54g Deutsch, Modell: F5D7630de4B
+"""
+
+vendor = 'Belkin'
+name = '54g Deutsch, Modell: F5D7630de4B'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = 'disconnect=Abbruch'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'connect=Verbinden'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

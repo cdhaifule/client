@@ -1,0 +1,19 @@
+"""
+Netgear WGT624v2 FW: 4.2.10_1.0.1 englisch
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGT624v2 FW: 4.2.10_1.0.1 englisch'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'Disconnect=Disconnect&close=Close Window&ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Connect=  Connect  &close=Close Window&ConMethod=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #3
+get('http://{routerip}/LGO_logout.htm', auth=("{username}", "{password}"))
+

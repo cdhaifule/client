@@ -1,0 +1,64 @@
+"""
+Speedport W500v
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W500v'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #3
+get('http://{routerip}/b_banner.htm?')
+
+# step #4
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #5
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #6
+get('http://{routerip}/js_menu.txt?')
+
+# step #7
+data = 'P1='
+post('http://{routerip}/start.login', data=data)
+
+# step #8
+get('http://{routerip}/js_menu.txt?')
+
+# step #9
+data = 'P1=0000'
+post('http://{routerip}/start.login', data=data)
+
+# step #10
+get('http://{routerip}/b_banner.htm?')
+
+# step #11
+get('http://{routerip}/m_startseite.htm?')
+
+# step #12
+get('http://{routerip}/hcti_startseite.htm?')
+
+# step #13
+get('http://{routerip}/js_fade.txt?')
+
+# step #14
+get('http://{routerip}/js_menu.txt?')
+
+# step #15
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #16
+get('http://{routerip}/js_fade.txt?')
+
+# step #17
+get('http://{routerip}/pppctl.cmd?action=1')
+
+# step #18
+get('http://{routerip}/js_fade.txt?')
+

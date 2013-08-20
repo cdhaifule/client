@@ -1,0 +1,17 @@
+"""
+D-Link&nbsp;DIR&nbsp;635
+"""
+
+vendor = 'D-LINK'
+name = 'D-Link&nbsp;DIR&nbsp;635'
+regex = r''
+
+# step #1
+get('http://{routerip}/post_login.xml?hash=%PWD%')
+
+# step #2
+get('http://{routerip}/wan_pppoe.cgi?connect=false')
+
+# step #3
+get('http://{routerip}/wan_pppoe.cgi?connect=true')
+

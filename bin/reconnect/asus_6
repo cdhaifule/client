@@ -1,0 +1,47 @@
+"""
+W500W
+"""
+
+vendor = 'Asus'
+name = 'W500W'
+regex = r'(?s).*(Asus).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/Main_List.asp?')
+
+# step #4
+get('http://{routerip}/Title.asp?')
+
+# step #5
+get('http://{routerip}/Main_Index_HomeGateway.asp?')
+
+# step #6
+get('http://{routerip}/Main_GStatus_Content.asp?')
+
+# step #7
+get('http://{routerip}/apply.cgi?current_page=Main_GStatus_Content.asp&next_page=default+value&next_host=192.168.0.1&sid_list=default+value&group_id=&modified=0&action_mode=Update&first_time=&action_script=dhcpc_release&load_script=&preferred_lang=DE&wan_proto_t=PPPoE&wan_ipaddr_t=84.58.197.158&wan_netmask_t=255.255.255.255&wan_gateway_t=84.58.192.1&wan_dns_t=195.50.140.178+195.50.140.114&wan_status_t=Connected&PPPConnection_x_WANAction_button=Trennen&=HP+HP+Business+Inkjet+1200&=On-Line&=&lan_ipaddr_t=192.168.0.1&lan_netmask_t=255.255.255.0&lan_gateway_t=192.168.0.1')
+
+# step #8
+get('http://{routerip}/Main_GStatus_Content.asp?')
+
+# step #9
+get('http://{routerip}/apply.cgi?current_page=Main_GStatus_Content.asp&next_page=default+value&next_host=192.168.0.1&sid_list=default+value&group_id=&modified=0&action_mode=Update&first_time=&action_script=dhcpc_renew&load_script=&preferred_lang=DE&wan_proto_t=PPPoE&wan_ipaddr_t=&wan_netmask_t=&wan_gateway_t=&wan_dns_t=&wan_status_t=Disconnected&PPPConnection_x_WANAction_button1=Verbinden&=HP+HP+Business+Inkjet+1200&=On-Line&=&lan_ipaddr_t=192.168.0.1&lan_netmask_t=255.255.255.0&lan_gateway_t=192.168.0.1')
+
+# step #10
+get('http://{routerip}/Main_GStatus_Content.asp?')
+
+# step #11
+get('http://{routerip}/apply.cgi?current_page=Main_GStatus_Content.asp&next_page=default+value&next_host=192.168.0.1&sid_list=default+value&group_id=&modified=0&action_mode=Update&first_time=&action_script=dhcpc_renew&load_script=&preferred_lang=DE&wan_proto_t=PPPoE&wan_ipaddr_t=&wan_netmask_t=&wan_gateway_t=&wan_dns_t=&wan_status_t=Disconnected&PPPConnection_x_WANAction_button1=Verbinden&=HP+HP+Business+Inkjet+1200&=On-Line&=&lan_ipaddr_t=192.168.0.1&lan_netmask_t=255.255.255.0&lan_gateway_t=192.168.0.1')
+
+# step #12
+get('http://{routerip}/Main_GStatus_Content.asp?')
+
+# step #13
+get('http://{routerip}/Logout.asp?')
+

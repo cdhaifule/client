@@ -1,0 +1,39 @@
+"""
+A Quip A/W-Lan Set
+"""
+
+vendor = 'AQuip'
+name = 'A Quip A/W-Lan Set'
+regex = r'(?s).*(AQuip).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/system_status.asp?')
+
+# step #3
+get('http://{routerip}/Start?')
+
+# step #4
+get('http://{routerip}/Default?')
+
+# step #5
+get('http://{routerip}/cgi-bin/ivw/CP/index;LoggedOut?r=&d=70913.39379597665')
+
+# step #6
+post('http://{routerip}/clr2/')
+
+# step #7
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #8
+data = 'router=A+Quip+A%2FW-Lan+Set'
+post('http://{routerip}/clr3/', data=data)
+
+# step #9
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #10
+get('http://{routerip}/system_status.asp?')
+

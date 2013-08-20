@@ -1,0 +1,74 @@
+"""
+F5D8233-4
+"""
+
+vendor = 'Belkin'
+name = 'F5D8233-4'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/?ver=0.13.1xs?')
+
+# step #2
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P008')
+
+# step #4
+get('http://{routerip}/system_r.stm?')
+
+# step #5
+get('http://{routerip}/login.stm?')
+
+# step #6
+get('http://{routerip}/setup_top.htm?')
+
+# step #7
+get('http://{routerip}/setup_top.htm?')
+
+# step #8
+get('http://{routerip}/fwAuto.stm?')
+
+# step #9
+data = 'totalMSec=1208338693.232&pws='
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #10
+get('http://{routerip}/index.htm?')
+
+# step #11
+get('http://{routerip}/setup_top.htm?')
+
+# step #12
+get('http://{routerip}/system_r.stm?')
+
+# step #13
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #14
+get('http://{routerip}/waitp.stm?')
+
+# step #15
+get('http://{routerip}/?')
+
+# step #16
+get('http://{routerip}/setup_top.htm?')
+
+# step #17
+get('http://{routerip}/status.stm?')
+
+# step #18
+get('http://{routerip}/clr2/?')
+
+# step #19
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #20
+data = 'router=Belkin+F5D8233-4'
+post('http://{routerip}/clr3/', data=data)
+
+# step #21
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

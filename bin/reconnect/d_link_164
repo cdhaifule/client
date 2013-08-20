@@ -1,0 +1,17 @@
+"""
+DI-804V (Firmware v4.72)
+"""
+
+vendor = 'D-Link'
+name = 'DI-804V (Firmware v4.72)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/release.htm?')
+
+# step #3
+get('http://{routerip}/renew.htm?')
+

@@ -1,0 +1,17 @@
+"""
+Vigor 2200E (DSL) Firmware 2.311_G (German)
+"""
+
+vendor = 'Draytec'
+name = 'Vigor 2200E (DSL) Firmware 2.311_G (German)'
+regex = r'(?s).*(Draytec).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/online3.cgi?')
+
+# step #3
+get('http://{routerip}/cgi-bin/goinet.cgi?')
+

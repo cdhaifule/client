@@ -1,0 +1,18 @@
+"""
+WL-174 Modem/Router Firmware 2.9.5.0(RUE0.C2A)3.5.18.0
+"""
+
+vendor = 'Sitecom'
+name = 'WL-174 Modem/Router Firmware 2.9.5.0(RUE0.C2A)3.5.18.0'
+regex = r'(?s).*(Sitecom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'restoreFlag=0&Restart=RESTART'
+post('http://{routerip}/Forms/tools_system_1', data=data)
+
+# step #3
+get('http://{routerip}/maintenance/tools_system.htm?')
+

@@ -1,0 +1,11 @@
+"""
+TCM420
+"""
+
+vendor = 'THOMSON'
+name = 'TCM420'
+regex = r'(?s).*(THOMSON).*'
+
+# step #1
+get('http://{routerip}/set_scan_body.asp?')
+

@@ -1,0 +1,17 @@
+"""
+ASUS WL-500g/WL-500g Premium
+"""
+
+vendor = 'ASUS'
+name = 'ASUS WL-500g/WL-500g Premium'
+regex = r'(?s).*asus.*'
+
+# step #1
+get('http://{routerip}/apply.cgi?action_script=dhcpc_release', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/apply.cgi?action_script=dhcpc_renew', auth=("{username}", "{password}"))
+
+# step #3
+get('http://{routerip}/javascript:top.openBranch("Logout")', auth=("{username}", "{password}"))
+

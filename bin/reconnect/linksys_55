@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WAG&nbsp;300N
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WAG&nbsp;300N'
+regex = r''
+
+# step #1
+data = u'ctype=pppoe&ifstatus=Up&todo=disconnect&this_file=Status.htm&next_file=Stat us.htm&message='
+post('http://{routerip}/setup.cgi?next_file=Status.htm', data=data)
+
+# step #2
+data = u'ctype=pppoe&ifstatus=Down&todo=connect&this_file=Status.htm&next_file=Statu s.htm&message='
+post('http://{routerip}/setup.cgi?next_file=Status.htm', data=data)
+

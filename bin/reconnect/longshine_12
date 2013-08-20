@@ -1,0 +1,14 @@
+"""
+Longshine LCS-IR-2114-A (FW R1.97f5)
+"""
+
+vendor = 'Longshine'
+name = 'Longshine LCS-IR-2114-A (FW R1.97f5)'
+regex = r'(?s).*longshine.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?rc=@&amp&A=H0&amp&rd=status', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status', auth=("{username}", "{password}"))
+

@@ -1,0 +1,16 @@
+"""
+&nbsp;WRT54G-Router&nbsp;Firmware&nbsp;v4211
+"""
+
+vendor = 'Linksys'
+name = '&nbsp;WRT54G-Router&nbsp;Firmware&nbsp;v4211'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=goz ila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila _cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+

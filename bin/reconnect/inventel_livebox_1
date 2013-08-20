@@ -1,0 +1,14 @@
+"""
+Inventel&nbsp;Livebox
+"""
+
+vendor = 'Inventel_Livebox'
+name = 'Inventel&nbsp;Livebox'
+regex = r''
+
+# step #1
+get('http://{routerip}/adslok.cgi?enblInternet=0')
+
+# step #2
+get('http://{routerip}/adslok.cgi?enblInternet=1')
+

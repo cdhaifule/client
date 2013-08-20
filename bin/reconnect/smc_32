@@ -1,0 +1,18 @@
+"""
+SMC 7004VBR v2 FW: 1.07
+"""
+
+vendor = 'SMC'
+name = 'SMC 7004VBR v2 FW: 1.07'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+data = 'rc=@&PS={password}&rd=login'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/status.htm?RC=@')
+

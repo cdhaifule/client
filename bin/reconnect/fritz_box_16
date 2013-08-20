@@ -1,0 +1,14 @@
+"""
+Fon WLAN 7170 Firmware 29.04.49
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7170 Firmware 29.04.49'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+post('http://{routerip}/upnp/control/WANIPConn1')
+
+# step #2
+post('http://{routerip}/upnp/control/WANIPConn1')
+

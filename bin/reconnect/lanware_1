@@ -1,0 +1,14 @@
+"""
+LanWare BR 1200
+"""
+
+vendor = 'LanWare'
+name = 'LanWare BR 1200'
+regex = r'(?s).*lanware.*'
+
+# step #1
+get('http://{routerip}/status[1].htm?page=status&applyflag=1', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status[1].htm?page=status&applyflag=0', auth=("{username}", "{password}"))
+

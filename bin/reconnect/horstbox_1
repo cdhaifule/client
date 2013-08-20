@@ -1,0 +1,20 @@
+"""
+Horstbox&nbsp;DVA-G3342SD
+"""
+
+vendor = 'Horstbox'
+name = 'Horstbox&nbsp;DVA-G3342SD'
+regex = r''
+
+# step #1
+data = u'login_userName=%USER%&login_password=%PASSWORD%&targetPage=welcome.html&sa ve=Anmelden            Referer: http://%IP%/german/basic/login.html'
+post('http://{routerip}/goform/login_set', data=data)
+
+# step #2
+data = u'disconnect=Trennen            Referer: http://%IP%/german/basic/main_status.html'
+post('http://{routerip}/goform/status_set', data=data)
+
+# step #3
+data = u'connect=Verbinden            Referer: http://%IP%/german/basic/main_status.html'
+post('http://{routerip}/goform/status_set', data=data)
+

@@ -1,0 +1,17 @@
+"""
+USR8000 (FW 1.23)
+"""
+
+vendor = 'USRobotics'
+name = 'USR8000 (FW 1.23)'
+regex = r'(?s).*(USRobotics).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=1&T=14000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=1&T=180000')
+

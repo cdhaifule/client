@@ -1,0 +1,50 @@
+"""
+7904WBRA2EU Fw:0.09a (Jun 2 2006 14:51:56)
+"""
+
+vendor = 'SMC'
+name = '7904WBRA2EU Fw:0.09a (Jun 2 2006 14:51:56)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'pws=09111990'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/setupa_top.stm?')
+
+# step #6
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+data = 'pvc=1&cur_if=3&dis1=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+
+# step #10
+data = 'pvc=1&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+
+# step #12
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #13
+get('http://{routerip}/login.stm?')
+

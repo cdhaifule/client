@@ -1,0 +1,14 @@
+"""
+ENDSL-AR Firmware:CX82xxx_4.1.0.34  Software Version:ARTCX-WPT.042905.00FA
+"""
+
+vendor = 'Encore'
+name = 'ENDSL-AR Firmware:CX82xxx_4.1.0.34  Software Version:ARTCX-WPT.042905.00FA'
+regex = r'(?s).*(Encore).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/doreboot.htm?')
+

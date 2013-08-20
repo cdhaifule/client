@@ -1,0 +1,17 @@
+"""
+Q51
+"""
+
+vendor = 'GeekADSL'
+name = 'Q51'
+regex = r'(?s).*(GeekADSL).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/doc2/dorebot2.htm?')
+

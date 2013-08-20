@@ -1,0 +1,66 @@
+"""
+(???)
+"""
+
+vendor = 'ZYXEL '
+name = '(???)'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=5760560f6f56510848ea4aa9bd399a96&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+get('http://{routerip}/rpSys.html?')
+
+# step #3
+get('http://{routerip}/top.html?')
+
+# step #4
+get('http://{routerip}/rpPanel.html?')
+
+# step #5
+get('http://{routerip}/path.html?')
+
+# step #6
+get('http://{routerip}/home.html?')
+
+# step #7
+get('http://{routerip}/buttom.html?')
+
+# step #8
+get('http://{routerip}/refresh.html?')
+
+# step #9
+get('http://{routerip}/home.html?')
+
+# step #10
+get('http://{routerip}/top.html?')
+
+# step #11
+get('http://{routerip}/refresh.html?')
+
+# step #12
+get('http://{routerip}/rpFWUpload.html?')
+
+# step #13
+get('http://{routerip}/buttom.html?')
+
+# step #14
+get('http://{routerip}/refresh.html?')
+
+# step #15
+get('http://{routerip}/rpSysReboot.html?')
+
+# step #16
+get('http://{routerip}/buttom.html?')
+
+# step #17
+post('http://{routerip}/Forms/rpSysReboot_1')
+
+# step #18
+get('http://{routerip}/RebootSuccPrev.html?')
+
+# step #19
+get('http://{routerip}/RebootSucc.html?')
+

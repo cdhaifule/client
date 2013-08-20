@@ -1,0 +1,11 @@
+"""
+H9200
+"""
+
+vendor = 'Prolink'
+name = 'H9200'
+regex = r'(?s).*(Prolink).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+

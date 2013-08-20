@@ -1,0 +1,41 @@
+"""
+2700hgv-2
+"""
+
+vendor = '2wire'
+name = '2700hgv-2'
+regex = r'(?s).*(2wire).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/wiki/index.php/Recording_a_reconnect?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/xslt?PAGE=A07&THISPAGE=A01&NEXTPAGE=A07')
+
+# step #5
+get('http://{routerip}/xslt?PAGE=A07&THISPAGE=A07&NEXTPAGE=A07')
+
+# step #6
+get('http://{routerip}/xslt?PAGE=A08&THISPAGE=A07&NEXTPAGE=A08')
+
+# step #7
+get('http://{routerip}/dorf2.php?newdid=131590&gid=37&id=22&c=34f')
+
+# step #8
+post('http://{routerip}/xslt')
+
+# step #9
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19920,goog-black-enchash:1:48261')
+
+# step #10
+get('http://{routerip}/xslt?PAGE=HURL01')
+
+# step #11
+get('http://{routerip}/xslt?PAGE=A01&THISPAGE=A09&NEXTPAGE=A01')
+

@@ -1,0 +1,14 @@
+"""
+Linksys&nbsp;AG041
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;AG041'
+regex = r''
+
+# step #1
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=2')
+
+# step #2
+get('http://{routerip}/Gozila.cgi?RouterStatus.htm=255&hid_returnPoint=&hid_dialAction=1')
+

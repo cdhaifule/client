@@ -1,0 +1,9 @@
+"""
+Motorola&nbsp;SBV4200
+"""
+
+vendor = 'Motorola'
+name = 'Motorola&nbsp;SBV4200'
+regex = r''
+
+

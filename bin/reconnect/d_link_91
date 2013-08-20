@@ -1,0 +1,35 @@
+"""
+D-Link&nbsp;DSL-564T&nbsp;FW&nbsp;V100B02T02DE20040813
+"""
+
+vendor = 'D-LINK'
+name = 'D-Link&nbsp;DSL-564T&nbsp;FW&nbsp;V100B02T02DE20040813'
+regex = r''
+
+# step #1
+get('http://{routerip}/html/login_gm.html')
+
+# step #2
+get('http://{routerip}/html/set_gm.html')
+
+# step #3
+data = u'getpage=..%%2Fhtml%%2Fhome_gm.htm&errorpage=..%%2Fhtml%%2Findex.html&login%%3Acommand%%2Fusername=admin&login%%3Acommand%%2Fpassword=admin&var%%3Alanguage=gm&var%%3Aerrormsg=Error'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status_gm/index.htm&var:language=gm')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status_gm/connstatus.htm&var:language=gm')
+
+# step #6
+data = u'getpage=..%%2Fhtml%%2Fstatus_gm%%2Fconnstatus.htm&var%%3Alanguage=gm&connection1%%3Asettings%%2Fmanual_conn=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+data = u'getpage=..%%2Fhtml%%2Fstatus_gm%%2Fconnstatus.htm&var%%3Alanguage=gm&connection1%%3Asettings%%2Fmanual_conn=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status_gm/connstatus.htm&var:language=gm')
+

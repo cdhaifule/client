@@ -1,0 +1,17 @@
+"""
+T-Com T-Sinus 111 DSL (FW 1.2)
+"""
+
+vendor = 'T-Com'
+name = 'T-Com T-Sinus 111 DSL (FW 1.2)'
+regex = r'(?s).*sinus.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=true')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=true')
+

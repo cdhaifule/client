@@ -1,0 +1,26 @@
+"""
+Loopcomm
+"""
+
+vendor = 'Loopcomm'
+name = 'Loopcomm'
+regex = r'(?s).*(Loopcomm).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/index.htm?')
+
+# step #3
+get('http://{routerip}/doc/home.htm?')
+
+# step #4
+get('http://{routerip}/doc/toc.htm?')
+
+# step #5
+get('http://{routerip}/doc/save.htm?')
+
+# step #6
+get('http://{routerip}/doc/doreboot.htm?')
+

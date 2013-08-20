@@ -1,0 +1,24 @@
+"""
+SMC&nbsp;2804WBR
+"""
+
+vendor = 'SMC'
+name = 'SMC&nbsp;2804WBR'
+regex = r''
+
+# step #1
+data = u'page=login&pws=PASSWORD'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = u'page=status_main&button=pppoedisconnect&disconnect=Disconnect'
+post('http://{routerip}/status_main.htm', data=data)
+
+# step #3
+data = u'page=status_main&button=pppoeconnect&connect=+Connect+'
+post('http://{routerip}/status_main.htm', data=data)
+
+# step #4
+data = u'page=status_main&button=pppoeconnect&connect=+Connect+'
+post('http://{routerip}/status_main.htm', data=data)
+

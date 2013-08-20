@@ -1,0 +1,14 @@
+"""
+DLink DI-804HV Firmware V1.44b03
+"""
+
+vendor = 'DLink'
+name = 'DLink DI-804HV Firmware V1.44b03'
+regex = r'(?s).*dlink.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@status&A=H&M=0&T=2000&rd=status', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@status&A=G&rd=status', auth=("{username}", "{password}"))
+

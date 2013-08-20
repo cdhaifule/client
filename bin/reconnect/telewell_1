@@ -1,0 +1,11 @@
+"""
+TW-EA501 FwVer:3.3.2.5
+"""
+
+vendor = 'TELEWELL'
+name = 'TW-EA501 FwVer:3.3.2.5'
+regex = r'(?s).*(TELEWELL).*'
+
+# step #1
+get('http://{routerip}/en-US/firefox/images/addon_icon/3829?')
+

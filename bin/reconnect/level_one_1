@@ -1,0 +1,53 @@
+"""
+1405TX v 0.11
+"""
+
+vendor = 'Level one'
+name = '1405TX v 0.11'
+regex = r'(?s).*(Level one).*'
+
+# step #1
+data = 'pws=admin'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/info_top.stm?')
+
+# step #4
+get('http://{routerip}/index_brief.stm?')
+
+# step #5
+get('http://{routerip}/template2.stm?')
+
+# step #6
+get('http://{routerip}/template1.stm?')
+
+# step #7
+get('http://{routerip}/info.stm?')
+
+# step #8
+get('http://{routerip}/info_menu.stm?')
+
+# step #9
+get('http://{routerip}/info_main.stm?')
+
+# step #10
+get('http://{routerip}/info_main1.stm?')
+
+# step #11
+data = 'first=1&disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess1.exe', data=data)
+
+# step #12
+get('http://{routerip}/info_main1.stm?')
+
+# step #13
+data = 'first=2000&connect=+Connect+'
+post('http://{routerip}/cgi-bin/statusprocess1.exe', data=data)
+
+# step #14
+get('http://{routerip}/info_main1.stm?')
+

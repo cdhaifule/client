@@ -1,0 +1,19 @@
+"""
+SMC Barricade (7008ABR V2.0)
+"""
+
+vendor = 'SMC'
+name = 'SMC Barricade (7008ABR V2.0)'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'connect=+Connect+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

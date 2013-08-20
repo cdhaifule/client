@@ -1,0 +1,18 @@
+"""
+Digitus Broadband Router Version R1.96h13 Deutsch
+"""
+
+vendor = 'Digitus'
+name = 'Digitus Broadband Router Version R1.96h13 Deutsch'
+regex = r'(?s).*(digitus|broadband).*'
+
+# step #1
+data = 'login=1&password={password}'
+post('http://{routerip}/login.html', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1066220875625')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status&ZT=1066220915875')
+

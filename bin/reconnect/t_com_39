@@ -1,0 +1,16 @@
+"""
+T-Com Speedport W 501V (FW 28.03.93)
+"""
+
+vendor = 'T-Com'
+name = 'T-Com Speedport W 501V (FW 28.03.93)'
+regex = r'(?s).*t-com.*'
+
+# step #1
+data = 'logic:command/reboot=1'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'logic:command/reboot=1'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+

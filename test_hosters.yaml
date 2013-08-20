@@ -1,0 +1,178 @@
+bitshare.com:
+    guest:
+        url: http://bitshare.com/files/8n59swqv/1mb.bin.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+            - {state: download_complete}
+
+cloudzer.net:
+    guest:
+        url: http://cloudzer.net/file/testfile
+        result_check: {name: 100mb.bin, size: 100 MB}
+        result_download: {last_error: INPUT IGNORED}
+
+crocko.com:
+    guest:
+        url: http://www.crocko.com/4A41C96FA92C496E92EA1575D6FFC502/1mb.bin
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: RETRY TOO LONG}
+            - {last_error: INPUT IGNORED}
+
+dfiles.eu:
+    guest:
+        url: http://dfiles.eu/files/mhcxp5w8x
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+
+extabit.com:
+    guest:
+        url: http://extabit.com/file/28xb2yc3nz0uj
+        result_check: {name: testfile.rar, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+            - {last_error: RETRY TOO LONG}
+            - {state: download_complete}
+
+4shared.com:
+#    guest/photo:
+#       url: http://www.4shared.com/photo/jZ6beSzQ/testFile.html
+#       result_check: {name: testFile.JPG, size: 78848}
+    guest/document:
+        url: http://www.4shared.com/office/KxVkxfU_/testfile.htm
+        result_check: {name: testfile.doc, size: 24576}
+        result_download: {state: download_complete}
+
+freakshare.com:
+    guest:
+        url: http://freakshare.com/files/y5s3jq13/1mb.bin.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {last_error: INPUT IGNORED}
+
+ftp:
+    anonymous:
+        url: ftp://ftp.nl.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/SHA256SUMS
+        result_check: {name: SHA256SUMS, size: 14289}
+        result_download: {state: download_complete}
+
+hotfile.com:
+    guest:
+        url: https://hotfile.com/dl/196736290/eca79ba/1mb.bin.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+            - {last_error: RETRY TOO LONG}
+            - {state: download_complete}
+
+# http
+
+letitbit.net:
+    guest:
+        url: http://letitbit.net/download/30003.3a22673545913c7c00898eb3fa12/1mb.bin.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+            - {last_error: RETRY TOO LONG}
+            - {state: download_complete}
+
+mediafire.com:
+    guest:
+        url: http://www.mediafire.com/?obp1062uh32daaj
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {state: download_complete}
+
+# mega.co.nz
+
+netload.in:
+    guest:
+        url: http://netload.in/dateiJbrCB5DG5a/1mb.bin.htm
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {last_error: INPUT IGNORED}
+            - {state: download_complete}
+
+rapidgator.net:
+    guest:
+        url: http://rapidgator.net/file/0ad2733dd416c408c547eaf9fd44e022/1mb.bin.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {last_error: INPUT IGNORED}
+
+rapidshare.com:
+    guest/permitted:
+        url: http://rapidshare.com/files/2695984185/1mb.bin
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {state: download_complete}
+    premium/invalid_login:
+        account: {username: 123456789, password: 987654321}
+        result_account: {premium: null}
+        url: http://rapidshare.com/files/2695984185/1mb.bin
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download:
+            - {state: download_complete}
+            - {last_error: download is not permitted by uploader}
+
+relink.us:
+    guest: # without captcha, password...
+        type: decrypter
+        url: http://www.relink.us/f/b045a40716baf4e4ccf11870b93d57
+        result_new: {state: check, name: null, size: null}
+        result_check: [{state: deleted}, {last_error: INPUT IGNORED}]
+    guest/captcha:
+        type: decrypter
+        url: http://www.relink.us/f/355894bfae98feab82b41ec691e3e4
+        result_check: {last_error: INPUT IGNORED}
+    guest/password:
+        type: decrypter
+        url: http://www.relink.us/f/776858cdb9c6c90a409a907fd30cb0
+        result_check: {last_error: INPUT IGNORED}
+
+share-links.biz:
+    direct: 
+        type: decrypter
+        url: http://s2l.biz/ze5u5jm5w0h
+        result_new: {state: check, name: 100MB-london.bin, size: null}
+        result_check: {state: deleted}
+    password:
+        type: decrypter
+        url: http://s2l.biz/goyu5jmvc1y6
+        result_check: {last_error: INPUT IGNORED}
+    captcha:
+        type: decrypter
+        url: http://s2l.biz/zqzu5jmlthwc
+        result_check: {last_error: INPUT IGNORED}
+    password_captcha:
+        type: decrypter
+        url: http://s2l.biz/0sxu5jmqmql
+        result_check: {last_error: INPUT IGNORED}
+
+share-online.biz:
+    guest:
+        url: http://www.share-online.biz/dl/Y62J1COMU6J
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {last_error: INPUT IGNORED}
+
+# sockshare.com
+
+# streamcloud.eu
+
+# torrent
+
+uploaded.net:
+    guest:
+        url: http://uploaded.net/file/testfile
+        result_check: {name: 100mb.bin, size: 100 MB}
+        result_download: {last_error: INPUT IGNORED}
+
+# youtube.com
+
+zippyshare.com:
+    guest/downloadable:
+        url: http://www42.zippyshare.com/v/4224360/file.html
+        result_check: {name: 1mb.bin, size: 1 MB}
+        result_download: {state: download_complete}
+    guest/captcha:
+        url: http://www38.zippyshare.com/v/10197709/file.html
+        result_check: {name: test.bin, size: 100 MB}
+        result_download: {last_error: INPUT IGNORED}

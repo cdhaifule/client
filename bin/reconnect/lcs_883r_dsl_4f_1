@@ -1,0 +1,16 @@
+"""
+LCS-883R-DSL-4F / Firmware Version : 6.15.02r Build 0084
+"""
+
+vendor = 'LCS-883R-DSL-4F'
+name = 'LCS-883R-DSL-4F / Firmware Version : 6.15.02r Build 0084'
+regex = r'(?s).*(Longshine|lcs-883r-dsl-4f).*'
+
+# step #1
+data = 'Show-discons.htm=     Disconnect'
+post('http://{routerip}/status.htm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Show-connects.htm=        Connect'
+post('http://{routerip}/status.htm', data=data, auth=("{username}", "{password}"))
+

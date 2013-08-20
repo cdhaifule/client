@@ -1,0 +1,14 @@
+"""
+Siemens ADSL SL2-141-I
+"""
+
+vendor = 'Siemens'
+name = 'Siemens ADSL SL2-141-I'
+regex = r'(?s).*siemens.*'
+
+# step #1
+get('http://{routerip}/Disbut()', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/ConBut()', auth=("{username}", "{password}"))
+

@@ -1,0 +1,14 @@
+"""
+LG LAM200R
+"""
+
+vendor = 'LG'
+name = 'LG LAM200R'
+regex = r'(?s).*lg.*'
+
+# step #1
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_virtual_circuit=0&PPP_Action=1', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_virtual_circuit=0&PPP_Action=0', auth=("{username}", "{password}"))
+

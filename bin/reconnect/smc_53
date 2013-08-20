@@ -1,0 +1,62 @@
+"""
+barricade 7804wbrb
+"""
+
+vendor = 'SMC'
+name = 'barricade 7804wbrb'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/login_de.htm?')
+
+# step #2
+data = 'pws=3590'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/setupa.stm?')
+
+# step #5
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #6
+get('http://{routerip}/setupa_top.stm?')
+
+# step #7
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #8
+get('http://{routerip}/setupa_main.stm?')
+
+# step #9
+get('http://{routerip}/status.stm?')
+
+# step #10
+get('http://{routerip}/status_menu.stm?')
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+
+# step #12
+data = 'disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #13
+get('http://{routerip}/status_main.stm?')
+
+# step #14
+data = 'connect=+Connect+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #15
+get('http://{routerip}/status_main.stm?')
+
+# step #16
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #17
+get('http://{routerip}/login.stm?')
+

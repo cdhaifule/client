@@ -1,0 +1,17 @@
+"""
+DSL Router Komfort FW: V3.20 (CA.0)
+"""
+
+vendor = 'Teledat'
+name = 'DSL Router Komfort FW: V3.20 (CA.0)'
+regex = r'(?s).*(Teledat).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=1&T=14000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=1&T=180000')
+

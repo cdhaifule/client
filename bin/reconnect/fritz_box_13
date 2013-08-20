@@ -1,0 +1,28 @@
+"""
+Fon WLAN 7170 (UI)  Firmware-Version 29.04.49
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7170 (UI)  Firmware-Version 29.04.49'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&=&login%3Acommand%2Fpassword=webking'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=konfig&var%3Apagemaster=&time%3Asettings%2Ftime=1210575883%2C-270&var%3Aactivtype=pppoe&var%3AtabInetstat=1')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=enhsettings&var%3Aerrorpagename=enhsettings&var%3Amenu=enhsettings&var%3Apagemaster=&time%3Asettings%2Ftime=1210575889%2C-270&connection0%3Apppoe%3Asettings%2Fmode=lcp&var%3AUseSip=&var%3AUseRouter=&var%3AUseFlat=&var%3APppProvider=&var%3APppUser=&var%3APppPassword=&var%3APppPin=&var%3APppTimeout=&var%3APppTelenode=&var%3AVoipUser=&var%3AVoipPassword=&var%3AEncapsulation=&var%3AAtaMode=&var%3AUseDhcp=&var%3AIpaddr=&var%3ANetmask=&var%3AGateway=&var%3ADns0=&var%3ADns1=&var%3ASipProvider=&var%3ASipUser=&var%3ASipPassword=&var%3ASipRegistrar=&var%3ASipStun=&var%3ASipProxy=&var%3ASipRufnr=&var%3ASipRegType=&var%3ASipUseOKZ=&var%3ASipMsn=&var%3ASipPassThrough=&var%3ASipShowOKZ=&var%3ASipOKZ=&var%3ASipUseLKZ=&var%3ASipKeepOKZPrefix=&var%3ASipKeepLKZPrefix=&var%3ASipPstn=&var%3AUseODA=&var%3AAcceptAGB=&var%3AHTMLConfigAssiTyp=')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210575895%2C-270')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210575903%2C-270&var%3Ashowall=&logger%3Asettings%2Ffilter=0')
+
+# step #6
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&var%3AtabReset=0&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

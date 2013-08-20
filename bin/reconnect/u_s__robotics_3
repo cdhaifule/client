@@ -1,0 +1,32 @@
+"""
+USR 9107
+"""
+
+vendor = 'U.S. Robotics'
+name = 'USR 9107'
+regex = r'(?s).*(U.S. Robotics).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/info.html?')
+
+# step #5
+get('http://{routerip}/resetrouter.html?')
+
+# step #6
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #7
+get('http://{routerip}/index.html?')
+
+# step #8
+get('http://{routerip}/info.html?')
+

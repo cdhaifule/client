@@ -1,0 +1,17 @@
+"""
+TP-LINK Cable/DSL Router Model No.: TL-R460
+"""
+
+vendor = 'TP-LINK'
+name = 'TP-LINK Cable/DSL Router Model No.: TL-R460'
+regex = r'(?s).*tp-link.*'
+
+# step #1
+get('http://{routerip}/userRpm/StatusRpm.htm?Disconnect=Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/userRpm/StatusRpm.htm?Connect=Connect', auth=("{username}", "{password}"))
+
+# step #3
+get('http://{routerip}/userRpm/StatusRpm.htm?Logout=Logout', auth=("{username}", "{password}"))
+

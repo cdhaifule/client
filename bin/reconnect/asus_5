@@ -1,0 +1,12 @@
+"""
+Asus&nbsp;WL&nbsp;500g&nbsp;Premium&nbsp;-&nbsp;Firmware&nbsp;DD-WRT&nbsp;v24
+"""
+
+vendor = 'ASUS'
+name = 'Asus&nbsp;WL&nbsp;500g&nbsp;Premium&nbsp;-&nbsp;Firmware&nbsp;DD-WRT&nbsp;v24'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&action=Apply&change_action=gozila_cgi&submit_type=Disconnect_pppoe'
+post('http://{routerip}/apply.cgi', data=data, auth=("{username}", "{password}"))
+

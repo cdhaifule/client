@@ -1,0 +1,32 @@
+"""
+Speedlink 445A
+"""
+
+vendor = 'Trust'
+name = 'Speedlink 445A'
+regex = r'(?s).*(Trust).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/doc/toc.htm?')
+
+# step #5
+get('http://{routerip}/doc/home.htm?')
+
+# step #6
+get('http://{routerip}/doc/rbnosv.htm?')
+
+# step #7
+get('http://{routerip}/doc/doreboot.htm?')
+
+# step #8
+get('http://{routerip}/doc/rbdone.htm?')
+

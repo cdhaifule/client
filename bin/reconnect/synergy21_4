@@ -1,0 +1,16 @@
+"""
+synergy21 s21611
+"""
+
+vendor = 'synergy21'
+name = 'synergy21 s21611'
+regex = r'(?s).*synergy21.*'
+
+# step #1
+data = 'hang_Up=Disconnect'
+post('http://{routerip}/st_pptp', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'dial= Connect'
+post('http://{routerip}/st_pptp', data=data, auth=("{username}", "{password}"))
+

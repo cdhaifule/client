@@ -1,0 +1,16 @@
+"""
+Netgear FR114P V 1.4 Release 17
+"""
+
+vendor = 'Netgear'
+name = 'Netgear FR114P V 1.4 Release 17'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

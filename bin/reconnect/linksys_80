@@ -1,0 +1,32 @@
+"""
+WRT150N [Firmware Version: v1.01.9]
+"""
+
+vendor = 'LinkSys'
+name = 'WRT150N [Firmware Version: v1.01.9]'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/Status_Router.asp?')
+
+# step #5
+data = 'submit_button=Status_Router&submit_type=renew&change_action=gozila_cgi&wan_proto=dhcp'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #6
+data = 'submit_button=Status_Router&submit_type=release&change_action=gozila_cgi&wan_proto=dhcp'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #7
+data = 'submit_button=Status_Router&submit_type=renew&change_action=gozila_cgi&wan_proto=dhcp'
+post('http://{routerip}/apply.cgi', data=data)
+

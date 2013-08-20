@@ -1,0 +1,17 @@
+"""
+DI-704P (Firmware 2.70)
+"""
+
+vendor = 'D-Link'
+name = 'DI-704P (Firmware 2.70)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

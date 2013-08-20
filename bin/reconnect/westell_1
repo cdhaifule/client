@@ -1,0 +1,16 @@
+"""
+Westell&nbsp;WireSpeed&nbsp;Dual&nbsp;Connect&nbsp;FW&nbsp;4000000
+"""
+
+vendor = 'Westell'
+name = 'Westell&nbsp;WireSpeed&nbsp;Dual&nbsp;Connect&nbsp;FW&nbsp;4000000'
+regex = r''
+
+# step #1
+data = u'PPPRequest=2&currentCnIndex=0&ModemId=MDdCNDA4NjgwODgwKjYyNkZFNA%%3D%%3D'
+post('http://{routerip}/indexView.htm', data=data)
+
+# step #2
+data = u'PPPRequest=1&currentCnIndex=0&ModemId=MDdCNDA4NjgwODgwKjYyNkZFNA%%3D%%3D'
+post('http://{routerip}/indexView.htm', data=data)
+

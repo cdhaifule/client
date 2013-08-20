@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;ProSafe&nbsp;VPN&nbsp;Firewall&nbsp;FVS318&nbsp;V2
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;ProSafe&nbsp;VPN&nbsp;Firewall&nbsp;FVS318&nbsp;V2'
+regex = r''
+
+# step #1
+data = u'Disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #2
+data = u'Connect=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

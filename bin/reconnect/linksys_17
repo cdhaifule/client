@@ -1,0 +1,14 @@
+"""
+Linksys BEFSR81v3 (FW 2.51.1)
+"""
+
+vendor = 'Linksys'
+name = 'Linksys BEFSR81v3 (FW 2.51.1)'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/Gozila.cgi?Status_Router.htm=255&hid_returnPoint=&pppoeAct=2', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Gozila.cgi?Status_Router.htm=255&hid_returnPoint=&pppoeAct=1', auth=("{username}", "{password}"))
+

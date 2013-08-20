@@ -1,0 +1,18 @@
+"""
+Fritz!Box Fon (FW. 06.04.15)
+"""
+
+vendor = 'AVM'
+name = 'Fritz!Box Fon (FW. 06.04.15)'
+regex = r'(?s).*(AVM).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'getpage=../html/reboot.html&errorpage=../html/de/menus/menu2.html&var:lang=de&var:pagename=reset&var:errorpagename=reset&var:menu=system&var:pagemaster=&time:settings/time=&var:tabReset=0&logic:command/reboot=../gateway/commands/saveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

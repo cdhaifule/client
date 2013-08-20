@@ -1,0 +1,14 @@
+"""
+4MBO&nbsp;WLAN&nbsp;AP-Router&nbsp;2002
+"""
+
+vendor = '4MBO'
+name = '4MBO&nbsp;WLAN&nbsp;AP-Router&nbsp;2002'
+regex = r''
+
+# step #1
+get('http://{routerip}/status.cgi?Connect')
+
+# step #2
+get('http://{routerip}/status.cgi?Disconnect')
+

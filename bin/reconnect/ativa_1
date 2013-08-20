@@ -1,0 +1,34 @@
+"""
+wireless g router firmware 9.01.08
+"""
+
+vendor = 'ativa'
+name = 'wireless g router firmware 9.01.08'
+regex = r'(?s).*(ativa).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/system_r.stm?')
+
+# step #3
+get('http://{routerip}/login.stm?')
+
+# step #4
+data = 'pws='
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #5
+get('http://{routerip}/system_r.stm?')
+
+# step #6
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #7
+get('http://{routerip}/wait_count.stm?')
+
+# step #8
+get('http://{routerip}/?')
+

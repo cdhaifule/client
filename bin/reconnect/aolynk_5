@@ -1,0 +1,14 @@
+"""
+dr814 adsl2+
+"""
+
+vendor = 'Aolynk'
+name = 'dr814 adsl2+'
+regex = r'(?s).*(Aolynk).*'
+
+# step #1
+post('http://{routerip}/checkurl/')
+
+# step #2
+post('http://{routerip}/checkurl/')
+

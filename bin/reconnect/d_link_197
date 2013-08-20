@@ -1,0 +1,29 @@
+"""
+Di-524
+"""
+
+vendor = 'D-Link'
+name = 'Di-524'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/atbox.htm?')
+
+# step #3
+get('http://{routerip}/misc.htm?')
+
+# step #4
+get('http://{routerip}/x.htm?RC=@mis&ZT=1209821205538')
+
+# step #5
+get('http://{routerip}/cgi-bin/rebo?D=&ZT=1209821205835')
+
+# step #6
+get('http://{routerip}/x.htm?v0=@mis&v1=1209821205538&v2=&v3=&v4=&v5=&v6=show')
+
+# step #7
+get('http://{routerip}/misc.htm?rc=_&ZT=1209821211773')
+

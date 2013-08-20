@@ -1,0 +1,16 @@
+"""
+ZyXEL&nbsp;Prestige&nbsp;202h&nbsp;Plus&nbsp;v2&nbsp;FW&nbsp;Version&nbsp;V340AND1&nbsp;&nbsp;072
+"""
+
+vendor = 'ZyXel'
+name = 'ZyXEL&nbsp;Prestige&nbsp;202h&nbsp;Plus&nbsp;v2&nbsp;FW&nbsp;Version&nbsp;V340AND1&nbsp;&nbsp;072'
+regex = r''
+
+# step #1
+data = u'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=202cb962ac59075b964b07152d234b70&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+data = u'wan_RemoteName=Teleos&wan_PriPhone=0192145&wan_SecPhone=0192145&wan_UserName=abreimhorst&wan_Password=ab7860249&wan_DynIP=DynamicIP&WAN_TranType_Sel=00000000&WAN_Multilink_Sel=00000002&wan_ConnectSel=Conn_on_Demand&wan_IdleTime=120&wan_Budget=0&wan_Period=0&wan_Save=Apply'
+post('http://{routerip}/Forms/rpWAN_1', data=data)
+

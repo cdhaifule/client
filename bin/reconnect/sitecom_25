@@ -1,0 +1,16 @@
+"""
+Sitecom&nbsp;WL-122
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom&nbsp;WL-122'
+regex = r''
+
+# step #1
+data = u'setobject_pppoestatus=i1_3_6_1_4_1_937_2_1_3_16_0%%3D2'
+post('http://{routerip}/cgi-bin/setobject?status.shtml', data=data)
+
+# step #2
+data = u'setobject_pppoestatus=i1_3_6_1_4_1_937_2_1_3_16_0%%3D1'
+post('http://{routerip}/cgi-bin/setobject?status.shtml', data=data)
+

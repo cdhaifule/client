@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;DG632B
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;DG632B'
+regex = r''
+
+# step #1
+data = u'var:actId=&var:nextTarget=&nextpage=../html/st_poe.htm&var:wanType=pppoe&connection0:pppoe:command/stop=&'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = u'var:actId=&var:nextTarget=&nextpage=../html/st_poe.htm&var:wanType=pppoe&connection0:pppoe:command/start=&'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

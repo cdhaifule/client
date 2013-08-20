@@ -1,0 +1,14 @@
+"""
+Billion&nbsp;BIPAC-640&nbsp;AE
+"""
+
+vendor = 'Billion'
+name = 'Billion&nbsp;BIPAC-640&nbsp;AE'
+regex = r''
+
+# step #1
+get('http://{routerip}/stat1.htm?page=status&Conn=Abbruch&ConnStatus=Disconnecting&pptpConn=&PPTPConnStatus=&renew=&DHCPConnStatus=&scrollTop=&isclear=3')
+
+# step #2
+get('http://{routerip}/stat1.htm?page=status&Conn=Verbinden&ConnStatus=Abbruch&pptpConn=&PPTPConnStatus=&renew=&DHCPConnStatus=&scrollTop=&isclear=3')
+

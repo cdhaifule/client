@@ -1,0 +1,14 @@
+"""
+Draytek Vigor 2200X Broadband Router/Switch  FW v2.00a  (DSL)
+"""
+
+vendor = 'Draytek'
+name = 'Draytek Vigor 2200X Broadband Router/Switch  FW v2.00a  (DSL)'
+regex = r'(?s).*draytek.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

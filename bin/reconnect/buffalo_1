@@ -1,0 +1,56 @@
+"""
+BHR-4RV
+"""
+
+vendor = 'Buffalo'
+name = 'BHR-4RV'
+regex = r'(?s).*(Buffalo).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/vpn/top-vpn.htm?')
+
+# step #5
+get('http://{routerip}/vpn/top-vpn_head.htm?')
+
+# step #6
+get('http://{routerip}/vpn/top-vpn_side.htm?')
+
+# step #7
+get('http://{routerip}/vpn/top-vpn_main.htm?')
+
+# step #8
+get('http://{routerip}/advance/advance-lan-port.htm?')
+
+# step #9
+get('http://{routerip}/advance/ad-top.htm?')
+
+# step #10
+get('http://{routerip}/advance/advance2-lan-port.htm?')
+
+# step #11
+get('http://{routerip}/advance/ad-lan-ether.htm?')
+
+# step #12
+get('http://{routerip}/advance/advance-admin-system.htm?')
+
+# step #13
+get('http://{routerip}/advance/ad-top.htm?')
+
+# step #14
+get('http://{routerip}/advance/advance2-admin-system.htm?')
+
+# step #15
+get('http://{routerip}/advance/ad-admin-system.htm?')
+
+# step #16
+get('http://{routerip}/advance/apply.cgi?action_melco=wanlink&wanlink=down&web_uuid=5886c310-519a-46bf-b0ef-c739ee3357d8')
+

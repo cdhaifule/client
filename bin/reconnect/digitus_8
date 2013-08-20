@@ -1,0 +1,31 @@
+"""
+DN-7019
+"""
+
+vendor = 'Digitus'
+name = 'DN-7019'
+regex = r'(?s).*(Digitus).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'disconnect=Disconnect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #5
+get('http://{routerip}/system_deviceinfo.htm?')
+
+# step #6
+data = 'connect=Connect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #7
+get('http://{routerip}/system_deviceinfo.htm?')
+

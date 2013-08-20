@@ -1,0 +1,17 @@
+"""
+Gigaset SX541 WLAN dsl
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SX541 WLAN dsl'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/conninfo.exe?pvc=0&cur_if=11&disconnect=Trennen')
+
+# step #3
+get('http://{routerip}/cgi-bin/conninfo.exe?pvc=0&cur_if=3&connect=Verbinden')
+

@@ -1,0 +1,14 @@
+"""
+SMC&nbsp;Barricade&nbsp;7404&nbsp;BRA
+"""
+
+vendor = 'SMC'
+name = 'SMC&nbsp;Barricade&nbsp;7404&nbsp;BRA'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=true')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=true')
+

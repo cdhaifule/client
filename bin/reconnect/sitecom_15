@@ -1,0 +1,14 @@
+"""
+Sitecom WL-143 v250
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom WL-143 v250'
+regex = r'(?s).*sitecom.*'
+
+# step #1
+get('http://{routerip}/goform/ipcnt_button', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/goform/ipcnt_button', auth=("{username}", "{password}"))
+

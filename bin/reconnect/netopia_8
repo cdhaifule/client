@@ -1,0 +1,12 @@
+"""
+Netopia&nbsp;3342&nbsp;3352
+"""
+
+vendor = 'Netopia'
+name = 'Netopia&nbsp;3342&nbsp;3352'
+regex = r''
+
+# step #1
+data = u'Restart+Connection=Verbindung+neu+aufbauen'
+post('http://{routerip}/Forms/homeRES_1', data=data)
+

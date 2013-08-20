@@ -1,0 +1,14 @@
+"""
+Siemens&nbsp;SL2-141-I
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;SL2-141-I'
+regex = r''
+
+# step #1
+get('http://{routerip}/constatus.html')
+
+# step #2
+get('http://{routerip}/disconnect.cgi?checkNum=%randomNum%')
+

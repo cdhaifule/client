@@ -1,0 +1,21 @@
+"""
+T-Com T-Sinus 1054 DSL
+"""
+
+vendor = 'T-Com'
+name = 'T-Com T-Sinus 1054 DSL'
+regex = r'(?s).*sinus.*'
+
+# step #1
+data = 'T1={password}'
+post('http://{routerip}/start.login', data=data)
+
+# step #2
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #3
+get('http://{routerip}/hcti_status_internet.htm')
+
+# step #4
+get('http://{routerip}/pppctl.cmd?action=1')
+

@@ -1,0 +1,20 @@
+"""
+WRT54G firmware 1.02.5
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G firmware 1.02.5'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.12&version=goog-white-domain:1:29,goog-white-url:1:371,goog-black-url:1:18920,goog-black-enchash:1:45675')
+
+# step #4
+get('http://{routerip}/?')
+

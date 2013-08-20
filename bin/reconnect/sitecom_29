@@ -1,0 +1,14 @@
+"""
+Sitecon&nbsp;WL-143
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecon&nbsp;WL-143'
+regex = r''
+
+# step #1
+get('http://{routerip}/goform/ipcnt_button')
+
+# step #2
+get('http://{routerip}/goform/ipcnt_button')
+

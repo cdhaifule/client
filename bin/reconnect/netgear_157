@@ -1,0 +1,24 @@
+"""
+Wireless ADSL Modem Router DG834 GB Firmware 4.01.27
+"""
+
+vendor = 'Netgear'
+name = 'Wireless ADSL Modem Router DG834 GB Firmware 4.01.27'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #3
+data = 'todo=connect&this_file=st_poe.htm&next_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #4
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #5
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+

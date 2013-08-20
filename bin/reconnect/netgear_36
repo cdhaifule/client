@@ -1,0 +1,16 @@
+"""
+NETGEAR WGR624 Firmware-Version 3.0.2 (Attached Devices)
+"""
+
+vendor = 'NETGEAR'
+name = 'NETGEAR WGR624 Firmware-Version 3.0.2 (Attached Devices)'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

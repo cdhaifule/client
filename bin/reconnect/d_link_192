@@ -1,0 +1,41 @@
+"""
+DSL-G624T Firmware V3.10B01T02.EU-A.20070613
+"""
+
+vendor = 'D-Link'
+name = 'DSL-G624T Firmware V3.10B01T02.EU-A.20070613'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=&var:aprestart=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wan.htm')
+
+# step #7
+data = 'getpage=..%2Fhtml%2Fhome%2Fhome_wan_ppp.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=asis&var%3AcontypeReal=&var%3ApreForm=home'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/fPanelSaveall.htm')
+
+# step #9
+data = 'getpage=..%2Fhtml%2Ftools%2Frestartmodem.htm&var%3Acom=restart&logic%3Acommand%2Fsave=&logic%3Acommand%2Fppp_disconnect='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/fPanelSendForm.htm&var:com=restart')
+

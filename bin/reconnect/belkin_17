@@ -1,0 +1,11 @@
+"""
+G plus F5D7231-4_UK_5.01.03
+"""
+
+vendor = 'Belkin'
+name = 'G plus F5D7231-4_UK_5.01.03'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20057,goog-black-enchash:1:48603')
+

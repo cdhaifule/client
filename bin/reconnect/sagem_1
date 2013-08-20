@@ -1,0 +1,53 @@
+"""
+F@st 1500 WG
+"""
+
+vendor = 'SAGEM'
+name = 'F@st 1500 WG'
+regex = r'(?s).*(SAGEM).*'
+
+# step #1
+get('http://{routerip}/login.stm?')
+
+# step #2
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/status.stm?')
+
+# step #5
+get('http://{routerip}/m_status_main.stm?')
+
+# step #6
+get('http://{routerip}/status_menu.stm?')
+
+# step #7
+get('http://{routerip}/setup_tops.stm?')
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+data = 'r2f_flag=1&pvc=9&dis1=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #10
+get('http://{routerip}/status_main.stm?')
+
+# step #11
+data = 'r2f_flag=1&pvc=9&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #12
+get('http://{routerip}/status_main.stm?')
+
+# step #13
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #14
+get('http://{routerip}/login.stm?')
+

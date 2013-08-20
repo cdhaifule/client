@@ -1,0 +1,16 @@
+"""
+D-Link DSL-G684T (V3.02B01T02.EU-A.20070413)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DSL-G684T (V3.02B01T02.EU-A.20070413)'
+regex = r'(?s).*d-link.*'
+
+# step #1
+data = 'getpage=../html/status/deviceinfofile.htm&encaps0:settings/manual_conn=0&var:mycon=connection0&var:conid=encaps0&connection0:pppoe:command/stop=&encaps0:pppoa:command/stop=&var:judge=2'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'getpage=../html/status/deviceinfofile.htm&encaps0:settings/manual_conn=1&var:mycon=connection0&var:conid=encaps0&connection0:pppoe:command/start=&encaps0:pppoa:command/start=&var:judge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+

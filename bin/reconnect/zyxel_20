@@ -1,0 +1,95 @@
+"""
+Prestige 650HW-37
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 650HW-37'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=a0d59f9da960a589cbd660d09d36a217&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #3
+get('http://{routerip}/rpSys.html?')
+
+# step #4
+get('http://{routerip}/Title.html?')
+
+# step #5
+get('http://{routerip}/Panel.html?')
+
+# step #6
+get('http://{routerip}/FirstPage.html?')
+
+# step #7
+get('http://{routerip}/Title.html?')
+
+# step #8
+get('http://{routerip}/Panel_Mten_Diagnostic.html?')
+
+# step #9
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #10
+get('http://{routerip}/Title.html?')
+
+# step #11
+get('http://{routerip}/DiagADSL.html?')
+
+# step #12
+get('http://{routerip}/Title.html?')
+
+# step #13
+data = 'LineInfoDisplay=&DiagDSLDisconnect=PPPoE+Trennung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #14
+get('http://{routerip}/DiagADSL.html?')
+
+# step #15
+get('http://{routerip}/Title.html?')
+
+# step #16
+data = 'LineInfoDisplay=&DiagDSLConnect=PPPoE+Verbindung'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #17
+get('http://{routerip}/DiagWait.html?')
+
+# step #18
+get('http://{routerip}/Title.html?')
+
+# step #19
+get('http://{routerip}/DiagADSL.html?')
+
+# step #20
+get('http://{routerip}/Title.html?')
+
+# step #21
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #22
+get('http://{routerip}/Title.html?')
+
+# step #23
+get('http://{routerip}/FirstPage.html?')
+
+# step #24
+get('http://{routerip}/Panel.html?')
+
+# step #25
+get('http://{routerip}/Title.html?')
+
+# step #26
+get('http://{routerip}/wzAol.html?')
+
+# step #27
+get('http://{routerip}/Panel_Wiz_AOL.html?')
+
+# step #28
+get('http://{routerip}/Title.html?')
+

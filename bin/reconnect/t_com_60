@@ -1,0 +1,14 @@
+"""
+T-Com T-Sinus 154 DSL SE
+"""
+
+vendor = 'T-Com'
+name = 'T-Com T-Sinus 154 DSL SE'
+regex = r'(?s).*sinus.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/disconnect.exe', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/connect.exe', auth=("{username}", "{password}"))
+

@@ -1,0 +1,15 @@
+"""
+DIR - 635
+"""
+
+vendor = 'D-Link'
+name = 'DIR - 635'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+data = 'router=D-Link+DIR+-+635'
+post('http://{routerip}/clr3/', data=data)
+
+# step #2
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

@@ -1,0 +1,26 @@
+"""
+MT882
+"""
+
+vendor = 'Huawei'
+name = 'MT882'
+regex = r'(?s).*(Huawei).*'
+
+# step #1
+get('http://{routerip}/GenAction?MacWanUsrName=lopylul%40arnet-rosario-glc&MacWanPasswd=asdf1981&ex_param1=8&MacWanBdgEn=0&MacWanIgmpEn=1&MacWanUseDns=1&MacWanGwIp=0.0.0.0&MacWanNetMask=0.0.0.0&MacWanIpAddr=0.0.0.0&prim_serv=0.0.0.0&sec_serv=0.0.0.0&MacWanVcEn=1&MacWanEncaps=3&sec_proto=0&MacWanVci=33&MacWanVpi=0&MacWanDhcpClEn=0&MacWanDefRtEn=1&MacWanNatEn=1&mtu=1492&trf_index=0&id=13&b2=Desconectar')
+
+# step #2
+get('http://{routerip}/GenMainPage?id=16&ex_param1=8')
+
+# step #3
+get('http://{routerip}/GenMainPage?id=12')
+
+# step #4
+get('http://{routerip}/GenAction?MacWanUsrName=lopylul%40arnet-rosario-glc&MacWanPasswd=asdf1981&ex_param1=8&MacWanBdgEn=0&MacWanIgmpEn=1&MacWanUseDns=1&MacWanGwIp=0.0.0.0&MacWanNetMask=0.0.0.0&MacWanIpAddr=0.0.0.0&prim_serv=0.0.0.0&sec_serv=0.0.0.0&MacWanVcEn=1&MacWanEncaps=3&sec_proto=0&MacWanVci=33&MacWanVpi=0&MacWanDhcpClEn=0&MacWanDefRtEn=1&MacWanNatEn=1&mtu=1492&trf_index=0&id=12&b1=Connectar')
+
+# step #5
+get('http://{routerip}/GenMainPage?id=17&ex_param1=8')
+
+# step #6
+get('http://{routerip}/GenMainPage?id=20&ex_param1=16')
+

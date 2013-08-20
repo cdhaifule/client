@@ -1,0 +1,14 @@
+"""
+SMC Barricade (7004BR, Firmware R1.96h2)
+"""
+
+vendor = 'SMC'
+name = 'SMC Barricade (7004BR, Firmware R1.96h2)'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status', auth=("{username}", "{password}"))
+

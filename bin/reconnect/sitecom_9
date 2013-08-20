@@ -1,0 +1,16 @@
+"""
+Sitecom DC-202 V3
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom DC-202 V3'
+regex = r'(?s).*sitecom.*'
+
+# step #1
+data = 'modem_log_st_poe=&hang_up_st_poe=Disconnect&message='
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'modem_log_st_poe=&dial_st_poe=Connect&message='
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

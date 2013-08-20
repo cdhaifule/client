@@ -1,0 +1,16 @@
+"""
+D-Link DSL-G664T (V3.0)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DSL-G664T (V3.0)'
+regex = r'(?s).*d-link.*'
+
+# step #1
+data = 'connection0:pppoe:command/stop=&var:contype=&var:mycon=connection0&var:conid=encaps0&encaps0:settings/manual_conn=0&getpage=../html/status/deviceinfofile.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connection0:pppoe:command/start=&var:contype=&var:mycon=connection0&var:conid=encaps0&encaps0:settings/manual_conn=1&getpage=../html/status/deviceinfofile.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data, auth=("{username}", "{password}"))
+

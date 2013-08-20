@@ -1,0 +1,17 @@
+"""
+Vigor 2500 WE FW 2.5.1
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor 2500 WE FW 2.5.1'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/http://192.168.99.1/cgi-bin/online3.cgi?')
+
+# step #3
+get('http://{routerip}/http://192.168.99.1/cgi-bin/goinet.cgi?')
+

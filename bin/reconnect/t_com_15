@@ -1,0 +1,104 @@
+"""
+Speedport W 502V Typ A Firmware 1.18.000
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 502V Typ A Firmware 1.18.000'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/top_start_passwort.stm?')
+
+# step #4
+get('http://{routerip}/b_banner.stm?')
+
+# step #5
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #6
+get('http://{routerip}/hcti_start_passwort.stm?')
+
+# step #7
+get('http://{routerip}/info_verwaltung_de.xml?')
+
+# step #8
+data = 'pws=649B0F'
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #9
+get('http://{routerip}/wait_login.stm?')
+
+# step #10
+get('http://{routerip}/index.stm?')
+
+# step #11
+get('http://{routerip}/b_banner.stm?')
+
+# step #12
+get('http://{routerip}/m_startseite.stm?')
+
+# step #13
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #14
+get('http://{routerip}/js_dsl.stm?')
+
+# step #15
+get('http://{routerip}/js_wan.stm?')
+
+# step #16
+get('http://{routerip}/images_internet.stm?')
+
+# step #17
+get('http://{routerip}/info_startseite_de.xml?')
+
+# step #18
+get('http://{routerip}/images_internet.stm?')
+
+# step #19
+data = 'connect=0&disconnect=0&block=1&nonblock=0&abc=0'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', data=data)
+
+# step #20
+get('http://{routerip}/wait.stm?')
+
+# step #21
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #22
+get('http://{routerip}/images_internet.stm?')
+
+# step #23
+get('http://{routerip}/info_startseite_de.xml?')
+
+# step #24
+data = 'connect=0&disconnect=0&block=0&nonblock=1&abc=0'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', data=data)
+
+# step #25
+get('http://{routerip}/wait.stm?')
+
+# step #26
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #27
+get('http://{routerip}/images_internet.stm?')
+
+# step #28
+get('http://{routerip}/info_startseite_de.xml?')
+
+# step #29
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #30
+get('http://{routerip}/cgi-bin/logoutall.cgi?')
+
+# step #31
+get('http://{routerip}/hcti_beenden.stm?')
+

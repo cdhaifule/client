@@ -1,0 +1,15 @@
+"""
+Edimax&nbsp;BR-6204WG
+"""
+
+vendor = 'Edimax'
+name = 'Edimax&nbsp;BR-6204WG'
+regex = r''
+
+# step #1
+data = u'page=login&goto=%2Futil_reset.html&pws='
+post('http://{routerip}/login.html', data=data)
+
+# step #2
+post('http://{routerip}/util_reset.html')
+

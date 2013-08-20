@@ -1,0 +1,20 @@
+"""
+THG520
+"""
+
+vendor = 'THOMSON'
+name = 'THG520'
+regex = r'(?s).*(THOMSON).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P000')
+
+# step #3
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+
+# step #4
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20267,goog-black-enchash:1:49186')
+

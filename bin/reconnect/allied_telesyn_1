@@ -1,0 +1,15 @@
+"""
+AR220E
+"""
+
+vendor = 'Allied Telesyn'
+name = 'AR220E'
+regex = r'(?s).*(Allied Telesyn).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Load=S&Username=root&Password=&ConfirmPassword=&Reboot=Execute'
+post('http://{routerip}/post-query', data=data)
+

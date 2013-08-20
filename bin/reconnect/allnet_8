@@ -1,0 +1,18 @@
+"""
+ALL130DSL (FW 0.01.41)
+"""
+
+vendor = 'Allnet'
+name = 'ALL130DSL (FW 0.01.41)'
+regex = r'(?s).*(Allnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #3
+get('http://{routerip}/?')
+

@@ -1,0 +1,57 @@
+"""
+P-660R-T1
+"""
+
+vendor = 'ZYXEL '
+name = 'P-660R-T1'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/Panel_Mten_Diagnostic.html?')
+
+# step #2
+get('http://{routerip}/DiagADSL.html?')
+
+# step #3
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #4
+get('http://{routerip}/DiagADSL.html?')
+
+# step #5
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #6
+get('http://{routerip}/DiagGeneral.html?')
+
+# step #7
+data = 'PingIPAddr=192.168.1.1&Submit=Ping&IsReset=0'
+post('http://{routerip}/Forms/DiagGeneral_2', data=data)
+
+# step #8
+get('http://{routerip}/DiagGeneral.html?')
+
+# step #9
+data = 'PingIPAddr=&IsReset=1'
+post('http://{routerip}/Forms/DiagGeneral_2', data=data)
+
+# step #10
+get('http://{routerip}/rpAuth.html?')
+
+# step #11
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=5f4dcc3b5aa765d61d8327deb882cf99&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #12
+get('http://{routerip}/rpSys.html?')
+
+# step #13
+get('http://{routerip}/Title.html?')
+
+# step #14
+get('http://{routerip}/Panel.html?')
+
+# step #15
+get('http://{routerip}/FirstPage.html?')
+

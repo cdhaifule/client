@@ -1,0 +1,17 @@
+"""
+Teledat 830 DSL Router
+"""
+
+vendor = 'T-Com'
+name = 'Teledat 830 DSL Router'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=71&aa={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/online3.cgi?1=')
+
+# step #3
+get('http://{routerip}/cgi-bin/goinet.cgi?1=')
+

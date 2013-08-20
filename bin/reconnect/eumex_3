@@ -1,0 +1,20 @@
+"""
+Eumex 300 IP Firmware 15.04.05
+"""
+
+vendor = 'Eumex'
+name = 'Eumex 300 IP Firmware 15.04.05'
+regex = r'(?s).*eumex.*'
+
+# step #1
+data = 'getpage=../html/hcti_startseite.htm&login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/hcti_startseite.htm&errorpage=../html/hcti_startseite.htm&connection0:settings/cmd_disconnect=1&var:state=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=../html/hcti_startseite.htm&errorpage=../html/hcti_startseite.htm&connection0:settings/cmd_connect=1&var:state=5'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

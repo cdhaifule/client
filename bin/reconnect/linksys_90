@@ -1,0 +1,46 @@
+"""
+WRT54G Firmware 7.00.1
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G Firmware 7.00.1'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20031,goog-black-enchash:1:48320')
+
+# step #3
+get('http://{routerip}/StaRouter.htm?')
+
+# step #4
+get('http://{routerip}/StaRouter.htm?')
+
+# step #5
+get('http://{routerip}/StaRouter.htm?')
+
+# step #6
+get('http://{routerip}/StaRouter.htm?')
+
+# step #7
+get('http://{routerip}/StaRouter.htm?')
+
+# step #8
+get('http://{routerip}/?')
+
+# step #9
+get('http://{routerip}/StaRouter.htm?')
+
+# step #10
+data = 'action=Disconnect&wan_pro=2&conn_stats=300&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #11
+data = 'action=Connect&wan_pro=2&conn_stats=-1&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #12
+get('http://{routerip}/StaRouter.htm?')
+

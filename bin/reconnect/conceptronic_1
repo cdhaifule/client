@@ -1,0 +1,16 @@
+"""
+C54APRB2
+"""
+
+vendor = 'Conceptronic'
+name = 'C54APRB2'
+regex = r''
+
+# step #1
+data = 'getpage=../html/status/deviceinfofile.htm&encaps0:settings/manual_conn=0&var:conid=encaps0&var:mycon=connection0&var:contype=&connection0:pppoe:command/stop=&var:judge='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/status/deviceinfofile.htm&encaps0:settings/manual_conn=1&var:conid=encaps0&var:mycon=connection0&var:contype=&connection0:pppoe:command/start=&var:judge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

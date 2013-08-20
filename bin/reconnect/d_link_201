@@ -1,0 +1,60 @@
+"""
+G624t
+"""
+
+vendor = 'D-Link'
+name = 'G624t'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername={username}&login%3Acommand%2Fpassword={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=&var:aprestart=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wan.htm')
+
+# step #7
+data = 'getpage=..%2Fhtml%2Fhome%2Fhome_wan_ppp.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=pppoe&var%3AcontypeReal=&var%3ApreForm=home'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #9
+data = 'getpage=..%2Fhtml%2Fstatus%2Fstatus_deviceinfo_deviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #10
+data = 'getpage=..%2Fhtml%2Fstatus%2Fstatus_deviceinfo_deviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=0&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&connection0%3Apppoe%3Acommand%2Fstop=&var%3Ajudge='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #11
+data = 'getpage=..%2Fhtml%2Fstatus%2Fstatus_deviceinfo_deviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&connection0%3Apppoe%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #12
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #13
+data = 'getpage=..%2Fhtml%2Fstatus%2Fstatus_deviceinfo_deviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #14
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #15
+data = 'getpage=..%2Fhtml%2Fstatus%2Fstatus_deviceinfo_deviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

@@ -1,0 +1,17 @@
+"""
+Broadband Internet Router   4 port switch
+"""
+
+vendor = 'Kobishi'
+name = 'Broadband Internet Router   4 port switch'
+regex = r'(?s).*(Kobishi).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess1.exe?disconnect=%Disconnect%')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess1.exe?connect=%  Connect%')
+

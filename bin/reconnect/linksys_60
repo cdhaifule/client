@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WRT&nbsp;54G&nbsp;Tomato&nbsp;114
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT&nbsp;54G&nbsp;Tomato&nbsp;114'
+regex = r''
+
+# step #1
+data = u'_service=wan-stop&_redirect=status-overview.asp&_sleep=2&_http_id=TID8743a25d1ddc2686'
+post('http://{routerip}/service.cgi', data=data)
+
+# step #2
+data = u'_service=wan-restart&_redirect=status-overview.asp&_sleep=5&_http_id=TID8743a25d1ddc2686'
+post('http://{routerip}/service.cgi', data=data)
+

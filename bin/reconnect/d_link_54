@@ -1,0 +1,16 @@
+"""
+D-Link DI-624 (HW.:D2G FW: 4.03)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624 (HW.:D2G FW: 4.03)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_device.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=Connect'
+post('http://{routerip}/st_device.cgi', data=data, auth=("{username}", "{password}"))
+

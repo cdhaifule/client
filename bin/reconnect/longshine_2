@@ -1,0 +1,18 @@
+"""
+LCS-883R-ADSL-redBox (8.2.0.16 v2.0)
+"""
+
+vendor = 'Longshine'
+name = 'LCS-883R-ADSL-redBox (8.2.0.16 v2.0)'
+regex = r'(?s).*(Longshine).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'EmWeb_ns:vim:2=/status.html&EmWeb_ns:vim:8._wanppp=ImService:PppoeUp&EmWeb_ns:vim:6._wanppp:enabled=false&EmWeb_ns:vim:16=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data)
+
+# step #3
+get('http://{routerip}/http://www.routercontrol.de/?')
+

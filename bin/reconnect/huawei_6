@@ -1,0 +1,55 @@
+"""
+sterlite MT841
+"""
+
+vendor = 'Huawei'
+name = 'sterlite MT841'
+regex = r'(?s).*(Huawei).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/phtml/pMain.html?')
+
+# step #3
+get('http://{routerip}/phtml/pMain.html?')
+
+# step #4
+get('http://{routerip}/phtml/upper_frame.html?')
+
+# step #5
+get('http://{routerip}/phtml/null.html?')
+
+# step #6
+get('http://{routerip}/phtml/menu/menu.html?menu=0')
+
+# step #7
+get('http://{routerip}/phtml/info/service_info.html?')
+
+# step #8
+get('http://{routerip}/phtml/info/st_ppp_discon.html?ImServices.ppp-0.1=')
+
+# step #9
+data = 'EmWeb_ns%3Avim%3A2.ImServices.ppp-0.1%3Aenabled=false&EmWeb_ns%3Avim%3A12=true'
+post('http://{routerip}/phtml/info/st_ppp_discon.html/adsl_ppp_Disconnect', data=data)
+
+# step #10
+get('http://{routerip}/phtml/info/st_discon.html?')
+
+# step #11
+get('http://{routerip}/phtml/info/service_info.html?')
+
+# step #12
+get('http://{routerip}/phtml/info/st_ppp_connect.html?ImServices.ppp-0.1=')
+
+# step #13
+data = 'EmWeb_ns%3Avim%3A2.ImServices.ppp-0.1%3Aenabled=true&EmWeb_ns%3Avim%3A12=true'
+post('http://{routerip}/phtml/info/st_ppp_connect.html/adsl_ppp_Connect', data=data)
+
+# step #14
+get('http://{routerip}/phtml/info/st_connect.html?')
+
+# step #15
+get('http://{routerip}/phtml/info/service_info.html?')
+

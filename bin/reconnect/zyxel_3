@@ -1,0 +1,17 @@
+"""
+NBG334W
+"""
+
+vendor = 'ZYXEL '
+name = 'NBG334W'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:en-GB:official')
+
+# step #2
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:en-GB:official')
+
+# step #3
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:en-GB:official')
+

@@ -1,0 +1,14 @@
+"""
+Mentor Broadband Router Rev.A1-01 V2.00.0028
+"""
+
+vendor = 'Mentor'
+name = 'Mentor Broadband Router Rev.A1-01 V2.00.0028'
+regex = r'(?s).*mentor.*'
+
+# step #1
+get('http://{routerip}/<td class=textCell><input type="button" value="Disconnect" name="disconnect" onClick="suspend();"></td>', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/<td class=textCell><input type="button" value="Connect" name="connect" onClick="resume();"></td>', auth=("{username}", "{password}"))
+

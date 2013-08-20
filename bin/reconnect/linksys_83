@@ -1,0 +1,31 @@
+"""
+WRT300N v1.1 Firmware v1.51.2 Feb. 27, 2007
+"""
+
+vendor = 'LinkSys'
+name = 'WRT300N v1.1 Firmware v1.51.2 Feb. 27, 2007'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20953,goog-black-enchash:1:50805')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/Status_Router.asp?')
+
+# step #6
+data = 'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #7
+data = 'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+

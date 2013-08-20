@@ -1,0 +1,105 @@
+"""
+WRT54G3G Firmware 2.10.17
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G3G Firmware 2.10.17'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #5
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #6
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #7
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #8
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #9
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #10
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #11
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #12
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #13
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #14
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #15
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #16
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #17
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #18
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #19
+data = 'submit_button=index&change_action=gozila_cgi&submit_type=Connect_wwan&next_page=index_wstatus2.asp'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #20
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #21
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #22
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #23
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #24
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #25
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #26
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #27
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #28
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #29
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #30
+get('http://{routerip}/index_wstatus2.asp?')
+
+# step #31
+get('http://{routerip}/index_wstatus1.asp?')
+
+# step #32
+get('http://{routerip}/index_wstatus1.asp?')
+

@@ -1,0 +1,16 @@
+"""
+LevelOne WBR-3407B
+"""
+
+vendor = 'LevelOne'
+name = 'LevelOne WBR-3407B'
+regex = r'(?s).*levelone.*'
+
+# step #1
+data = '&todo=disconnect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = '&todo=connect'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

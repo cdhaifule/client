@@ -1,0 +1,16 @@
+"""
+NETGEAR MR814v2 (Version 5.3_05 Jun 7 2004)
+"""
+
+vendor = 'NETGEAR'
+name = 'NETGEAR MR814v2 (Version 5.3_05 Jun 7 2004)'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect="Disconnect"'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect="  Connect  "'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+

@@ -1,0 +1,242 @@
+"""
+DGL 4300 (FW 1.7)
+"""
+
+vendor = 'D-Link'
+name = 'DGL 4300 (FW 1.7)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/check_new_firmware.cgi?')
+
+# step #3
+get('http://{routerip}/post_login.cgi?data=mV5Q0tVA5aNs26eLTgJUYd54i.T.')
+
+# step #4
+get('http://{routerip}/Status_Device_Info.html?')
+
+# step #5
+get('http://{routerip}/connection_status.xml?')
+
+# step #6
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #7
+get('http://{routerip}/computer_list.xml?')
+
+# step #8
+get('http://{routerip}/pppoe.cgi?data=.f..')
+
+# step #9
+get('http://{routerip}/connection_status.xml?')
+
+# step #10
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #11
+get('http://{routerip}/computer_list.xml?')
+
+# step #12
+get('http://{routerip}/pppoe.cgi?data=.P..')
+
+# step #13
+get('http://{routerip}/connection_status.xml?')
+
+# step #14
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #15
+get('http://{routerip}/computer_list.xml?')
+
+# step #16
+get('http://{routerip}/connection_status.xml?')
+
+# step #17
+get('http://{routerip}/Status_Device_Info.html?')
+
+# step #18
+get('http://{routerip}/Status_Device_Info.html?')
+
+# step #19
+get('http://{routerip}/Status_Device_Info.html?')
+
+# step #20
+get('http://{routerip}/swf_masthead.swf?')
+
+# step #21
+get('http://{routerip}/swf_masthead.swf?')
+
+# step #22
+get('http://{routerip}/connection_status.xml?')
+
+# step #23
+get('http://{routerip}/computer_list.xml?')
+
+# step #24
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #25
+get('http://{routerip}/connection_status.xml?')
+
+# step #26
+get('http://{routerip}/computer_list.xml?')
+
+# step #27
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #28
+get('http://{routerip}/connection_status.xml?')
+
+# step #29
+get('http://{routerip}/computer_list.xml?')
+
+# step #30
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #31
+get('http://{routerip}/connection_status.xml?')
+
+# step #32
+get('http://{routerip}/connection_status.xml?')
+
+# step #33
+get('http://{routerip}/computer_list.xml?')
+
+# step #34
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #35
+get('http://{routerip}/connection_status.xml?')
+
+# step #36
+get('http://{routerip}/computer_list.xml?')
+
+# step #37
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #38
+get('http://{routerip}/connection_status.xml?')
+
+# step #39
+get('http://{routerip}/connection_status.xml?')
+
+# step #40
+get('http://{routerip}/computer_list.xml?')
+
+# step #41
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #42
+get('http://{routerip}/connection_status.xml?')
+
+# step #43
+get('http://{routerip}/computer_list.xml?')
+
+# step #44
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #45
+get('http://{routerip}/connection_status.xml?')
+
+# step #46
+get('http://{routerip}/computer_list.xml?')
+
+# step #47
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #48
+get('http://{routerip}/connection_status.xml?')
+
+# step #49
+get('http://{routerip}/connection_status.xml?')
+
+# step #50
+get('http://{routerip}/computer_list.xml?')
+
+# step #51
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #52
+get('http://{routerip}/connection_status.xml?')
+
+# step #53
+get('http://{routerip}/computer_list.xml?')
+
+# step #54
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #55
+get('http://{routerip}/connection_status.xml?')
+
+# step #56
+get('http://{routerip}/computer_list.xml?')
+
+# step #57
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #58
+get('http://{routerip}/connection_status.xml?')
+
+# step #59
+get('http://{routerip}/connection_status.xml?')
+
+# step #60
+get('http://{routerip}/computer_list.xml?')
+
+# step #61
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #62
+get('http://{routerip}/connection_status.xml?')
+
+# step #63
+get('http://{routerip}/computer_list.xml?')
+
+# step #64
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #65
+get('http://{routerip}/connection_status.xml?')
+
+# step #66
+get('http://{routerip}/connection_status.xml?')
+
+# step #67
+get('http://{routerip}/computer_list.xml?')
+
+# step #68
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #69
+get('http://{routerip}/connection_status.xml?')
+
+# step #70
+get('http://{routerip}/computer_list.xml?')
+
+# step #71
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #72
+get('http://{routerip}/connection_status.xml?')
+
+# step #73
+get('http://{routerip}/computer_list.xml?')
+
+# step #74
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #75
+get('http://{routerip}/connection_status.xml?')
+
+# step #76
+get('http://{routerip}/connection_status.xml?')
+
+# step #77
+get('http://{routerip}/computer_list.xml?')
+
+# step #78
+get('http://{routerip}/igmp_group_memberships.xml?')
+

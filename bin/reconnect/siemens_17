@@ -1,0 +1,19 @@
+"""
+Gigaset SX550i (DD-WRT Firmware v23 SP2)
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SX550i (DD-WRT Firmware v23 SP2)'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #3
+data = 'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&action=Apply'
+post('http://{routerip}/apply.cgi', data=data)
+

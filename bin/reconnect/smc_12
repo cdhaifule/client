@@ -1,0 +1,17 @@
+"""
+Barricade (7004ABR - Mod. Nr.750.9918)
+"""
+
+vendor = 'SMC'
+name = 'Barricade (7004ABR - Mod. Nr.750.9918)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect= connect ')
+

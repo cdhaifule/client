@@ -1,0 +1,18 @@
+"""
+Fritz!Box SL WLAN
+"""
+
+vendor = 'AVM'
+name = 'Fritz!Box SL WLAN'
+regex = r'(?s).*(AVM).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'getpage=../html/de/menus/menu2.html&errorpage=../html/de/menus/menu2.html&var:lang=de&var:pagename=home&var:errorpagename= &var:menu=home&var:pagetitle=&var:pagemaster=&time:settings/time=&var:activtype=pppoe&sip:settings/no-emu/activated=no-emu&sip:status/no-emu/connect=no-emu&connection0:pppoe:status/voipconnect =Verbunden'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

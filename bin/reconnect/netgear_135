@@ -1,0 +1,92 @@
+"""
+WGR614v6 V2.0.19_1.0.19NA
+"""
+
+vendor = 'Netgear'
+name = 'WGR614v6 V2.0.19_1.0.19NA'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/start.htm?')
+
+# step #4
+get('http://{routerip}/MNU_top.htm?')
+
+# step #5
+get('http://{routerip}/MNU_menu.htm?')
+
+# step #6
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #7
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #8
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #9
+get('http://{routerip}/MNU_blank.htm?')
+
+# step #10
+get('http://{routerip}/BAS_pppoe.htm?')
+
+# step #11
+get('http://{routerip}/BAS_pppoe_h.htm?')
+
+# step #12
+get('http://{routerip}/WLG_wireless.htm?')
+
+# step #13
+get('http://{routerip}/WLG_wireless1.htm?')
+
+# step #14
+get('http://{routerip}/WLG_wireless_h.htm?')
+
+# step #15
+get('http://{routerip}/FW_log.htm?')
+
+# step #16
+get('http://{routerip}/FW_log_h.htm?')
+
+# step #17
+get('http://{routerip}/BKS_keyword.htm?')
+
+# step #18
+get('http://{routerip}/BKS_keyword_h.htm?')
+
+# step #19
+get('http://{routerip}/BKS_service.htm?')
+
+# step #20
+get('http://{routerip}/BKS_service_h.htm?')
+
+# step #21
+get('http://{routerip}/FW_schedule.htm?')
+
+# step #22
+get('http://{routerip}/FW_schedule_h.htm?')
+
+# step #23
+get('http://{routerip}/RST_status.htm?')
+
+# step #24
+get('http://{routerip}/RST_status_h.htm?')
+
+# step #25
+get('http://{routerip}/RST_wanstat.htm?')
+
+# step #26
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #27
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #28
+get('http://{routerip}/RST_st_poe.htm?')
+

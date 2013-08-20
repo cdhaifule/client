@@ -1,0 +1,11 @@
+"""
+Targa&nbsp;WR&nbsp;500&nbsp;VoIP
+"""
+
+vendor = 'Targa'
+name = 'Targa&nbsp;WR&nbsp;500&nbsp;VoIP'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/disconnect.exe')
+

@@ -1,0 +1,44 @@
+"""
+easy box A800
+"""
+
+vendor = 'Arcor'
+name = 'easy box A800'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'user=root&pws=duc900ss'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #3
+get('http://{routerip}/index.stm?')
+
+# step #4
+get('http://{routerip}/setupa_top.stm?')
+
+# step #5
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #6
+get('http://{routerip}/menu.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+data = 'pvc=0&cur_if=11&disconnect.x=89&disconnect.y=12&disconnect=Neu+verbinden'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+
+# step #10
+data = 'pvc=0&cur_if=3&connect.x=67&connect.y=10&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/err_msg_inframe.stm?')
+

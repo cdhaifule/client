@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;WNR854T
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WNR854T'
+regex = r''
+
+# step #1
+data = u'command=device_data&cur_ipaddr=192.168.1.1&next_page=RST_st_poe.htm&reboot=0&save=1&ConnectionOption=release&dial_ppp=0&do_wan_test=0&data1=dial_ppp+do_wan_test&Disconnect=Verbindung+beenden&ConMethod=Disconnect            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/post.cgi', data=data)
+
+# step #2
+data = u'command=device_data&cur_ipaddr=192.168.1.1&next_page=RST_st_poe.htm&reboot=0&save=1&ConnectionOption=renew&dial_ppp=1&do_wan_test=1&data1=dial_ppp+do_wan_test&Connect=Verbindung+beenden&ConMethod=Connect            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/post.cgi', data=data)
+

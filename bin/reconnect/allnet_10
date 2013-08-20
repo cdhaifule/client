@@ -1,0 +1,19 @@
+"""
+ALL130DSLA (FW 0.01.03)
+"""
+
+vendor = 'Allnet'
+name = 'ALL130DSLA (FW 0.01.03)'
+regex = r'(?s).*(Allnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'todo=disconnect&this_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #3
+data = 'todo=connect&this_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data)
+

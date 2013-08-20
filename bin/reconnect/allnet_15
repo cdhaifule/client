@@ -1,0 +1,16 @@
+"""
+Allnet ALL0277DSLBv2 Firmware Version 2.10.02  (vom 23.11.2005)
+"""
+
+vendor = 'Allnet'
+name = 'Allnet ALL0277DSLBv2 Firmware Version 2.10.02  (vom 23.11.2005)'
+regex = r'(?s).*allnet.*'
+
+# step #1
+data = 'todo=disconnect&this_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'todo=connect&this_file=st_poe.htm'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

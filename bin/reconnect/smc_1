@@ -1,0 +1,31 @@
+"""
+7004 ABR Firmware V1.42.024
+"""
+
+vendor = 'SMC'
+name = '7004 ABR Firmware V1.42.024'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'page=login&pws=asshole'
+post('http://{routerip}/login.htm', data=data)
+
+# step #3
+get('http://{routerip}/index.htm?')
+
+# step #4
+get('http://{routerip}/setup.HTM?')
+
+# step #5
+get('http://{routerip}/setup_wan_pppoe.htm?')
+
+# step #6
+data = 'page=setup_wan_pppoe&connectflag=2&logout=2&UN=040802804&PW=&PWV=&SN=HanseNet&idle=0&reconnect=on'
+post('http://{routerip}/setup_wan_pppoe.htm', data=data)
+
+# step #7
+get('http://{routerip}/status.HTM?')
+

@@ -1,0 +1,18 @@
+"""
+o2 Surf & Phone Router
+"""
+
+vendor = 'o2'
+name = 'o2 Surf & Phone Router'
+regex = r'(?s).*o2.*'
+
+# step #1
+data = 'hiddenPassword=MD5PasswordL({password})&Prestige_Login=Einloggen'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #2
+get('http://{routerip}/Forms/DiagADSL_1?DiagResetADSL')
+
+# step #3
+get('http://http://www.t-online.de/')
+

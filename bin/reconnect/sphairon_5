@@ -1,0 +1,16 @@
+"""
+Sphairon Turbolink JDR454W (FW 4.00.05)
+"""
+
+vendor = 'Sphairon'
+name = 'Sphairon Turbolink JDR454W (FW 4.00.05)'
+regex = r'(?s).*sphairon.*'
+
+# step #1
+data = 'disconnect=Disconnect&todo=disconnect&this_file=header.htm&next_file=header.htm'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=%20Connect%20&todo=connect&this_file=header.htm&next_file=header.htm'
+post('http://{routerip}/setup.cgi', data=data, auth=("{username}", "{password}"))
+

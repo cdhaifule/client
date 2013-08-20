@@ -1,0 +1,17 @@
+"""
+Broadband xDSL/Cable SOHO Router
+"""
+
+vendor = 'Soho'
+name = 'Broadband xDSL/Cable SOHO Router'
+regex = r'(?s).*(Soho).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/discon.htm?')
+
+# step #3
+get('http://{routerip}/connect.htm?')
+

@@ -1,0 +1,65 @@
+"""
+speedport
+"""
+
+vendor = 'T-Com'
+name = 'speedport'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top_start_passwort.stm?')
+
+# step #3
+get('http://{routerip}/b_banner.stm?')
+
+# step #4
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #5
+get('http://{routerip}/hcti_start_passwort.stm?')
+
+# step #6
+data = 'pws=290600'
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #7
+get('http://{routerip}/wait.stm?')
+
+# step #8
+get('http://{routerip}/index.stm?')
+
+# step #9
+get('http://{routerip}/b_banner.stm?')
+
+# step #10
+get('http://{routerip}/m_startseite.stm?')
+
+# step #11
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #12
+data = 'connect=0&disconnect=0&block=1&nonblock=0'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', data=data)
+
+# step #13
+get('http://{routerip}/wait.stm?')
+
+# step #14
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #15
+data = 'connect=0&disconnect=0&block=0&nonblock=1'
+post('http://{routerip}/cgi-bin/status_startseite.cgi', data=data)
+
+# step #16
+get('http://{routerip}/wait.stm?')
+
+# step #17
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #18
+get('http://{routerip}/hcti_startseite.stm?')
+

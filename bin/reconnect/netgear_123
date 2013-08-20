@@ -1,0 +1,19 @@
+"""
+WGR614 FW: Version 1.12 July 24 2003 Beta
+"""
+
+vendor = 'Netgear'
+name = 'WGR614 FW: Version 1.12 July 24 2003 Beta'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}//st_poe.cgi', data=data)
+
+# step #3
+data = 'connect=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

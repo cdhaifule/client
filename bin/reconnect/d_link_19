@@ -1,0 +1,14 @@
+"""
+D-Link DI-304 Firmware v1.1rc1 ISDN
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-304 Firmware v1.1rc1 ISDN'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online1.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

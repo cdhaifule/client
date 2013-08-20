@@ -1,0 +1,20 @@
+"""
+Trendware TW100-S4W1CA (Version F1)
+"""
+
+vendor = 'Trendware'
+name = 'Trendware TW100-S4W1CA (Version F1)'
+regex = r'(?s).*trendware.*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = 'page=status&connectflag=1'
+post('http://{routerip}/system_status.htm', data=data)
+
+# step #3
+data = 'page=status&connectflag=2'
+post('http://{routerip}/system_status.htm', data=data)
+

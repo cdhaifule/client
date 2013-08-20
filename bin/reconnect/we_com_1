@@ -1,0 +1,17 @@
+"""
+We.com
+"""
+
+vendor = 'We.com'
+name = 'We.com'
+regex = r'(?s).*(We.com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?')
+
+# step #3
+get('http://{routerip}/http://www.t-online.de?')
+

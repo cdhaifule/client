@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WAG&nbsp;54G&nbsp;v2
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WAG&nbsp;54G&nbsp;v2'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&submit_type=disconnect&change_action=gozila_cgi&wan_proto=dhcp&status_connection=0'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=Status_Router&submit_type=connect&change_action=gozila_cgi&wan_proto=dhcp&status_connection=0'
+post('http://{routerip}/apply.cgi', data=data)
+

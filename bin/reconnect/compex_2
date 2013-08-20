@@ -1,0 +1,18 @@
+"""
+NetPassage 15-B
+"""
+
+vendor = 'Compex'
+name = 'NetPassage 15-B'
+regex = r'(?s).*(Compex).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'CONNECT=Disconnect'
+post('http://{routerip}/act_extip', data=data)
+
+# step #3
+get('http://{routerip}/http://www.t-online.de/?')
+

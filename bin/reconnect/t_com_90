@@ -1,0 +1,28 @@
+"""
+T-Sinus 154 dsl basic se  firmware 1.13
+"""
+
+vendor = 'T-Com'
+name = 'T-Sinus 154 dsl basic se  firmware 1.13'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'disconnect=Trennen'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+get('http://{routerip}/wait.stm?')
+
+# step #3
+get('http://{routerip}/hcti_status_internet.stm?')
+
+# step #4
+data = 'connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #5
+get('http://{routerip}/wait.stm?')
+
+# step #6
+get('http://{routerip}/hcti_status_internet.stm?')
+

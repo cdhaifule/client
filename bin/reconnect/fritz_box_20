@@ -1,0 +1,11 @@
+"""
+SL WLAN (UI), Firmware-Version 09.03.14
+"""
+
+vendor = 'FRITZ!Box'
+name = 'SL WLAN (UI), Firmware-Version 09.03.14'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fmenus%2Fmenu1.html&errorpage=..%2Fhtml%2Fmenus%2Fmenu1.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=+&var%3Apagemaster=&time%3Asettings%2Ftime=1209748192%2C-120&var%3Aactivtype=pppoe')
+

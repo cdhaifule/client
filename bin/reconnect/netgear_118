@@ -1,0 +1,19 @@
+"""
+RP614v3 Alle engl. Firmware
+"""
+
+vendor = 'Netgear'
+name = 'RP614v3 Alle engl. Firmware'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Load=Q&connStatus=Connected&getIP=OK&pppoeAct=1&close=Close Window&Button=Apply'
+post('http://{routerip}/post-query', data=data)
+
+# step #3
+data = 'Load=Q&connStatus=Disconnected&getIP=---&pppoeAct=2&close=Close Window&Button=Apply'
+post('http://{routerip}/post-query', data=data)
+

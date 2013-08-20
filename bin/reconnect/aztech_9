@@ -1,0 +1,65 @@
+"""
+DSL3100R ADSL 4 Port Ethernet Router Firmware 32.4.3
+"""
+
+vendor = 'Aztech'
+name = 'DSL3100R ADSL 4 Port Ethernet Router Firmware 32.4.3'
+regex = r'(?s).*(Aztech).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #3
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #4
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #5
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #6
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #7
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #8
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #9
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #10
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #11
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #12
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #13
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #14
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #15
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #16
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #17
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+
+# step #18
+get('http://{routerip}/doc/pvc_idx.htm?/doc/loginout.htm=')
+
+# step #19
+get('http://{routerip}/doc/loginout.htm?WINDWEB_URL=%2Fdoc%2Fpvc_idx.htm&wanAdapterSelection=0')
+

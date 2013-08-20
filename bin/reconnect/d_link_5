@@ -1,0 +1,137 @@
+"""
+724GU
+"""
+
+vendor = 'D-Link'
+name = '724GU'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/post_login.cgi?data=o9ttqkvRZdOodd7kImQ8qfhCINH.')
+
+# step #3
+get('http://{routerip}/st_devic.html?')
+
+# step #4
+get('http://{routerip}/connection_status.xml?')
+
+# step #5
+get('http://{routerip}/computer_list.xml?')
+
+# step #6
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #7
+get('http://{routerip}/routing_table.xml?')
+
+# step #8
+get('http://{routerip}/st_devic.html?')
+
+# step #9
+get('http://{routerip}/connection_status.xml?')
+
+# step #10
+get('http://{routerip}/computer_list.xml?')
+
+# step #11
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #12
+get('http://{routerip}/routing_table.xml?')
+
+# step #13
+get('http://{routerip}/connection_status.xml?')
+
+# step #14
+get('http://{routerip}/computer_list.xml?')
+
+# step #15
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #16
+get('http://{routerip}/routing_table.xml?')
+
+# step #17
+get('http://{routerip}/pppoe.cgi?data=.f..')
+
+# step #18
+get('http://{routerip}/connection_status.xml?')
+
+# step #19
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #20
+get('http://{routerip}/computer_list.xml?')
+
+# step #21
+get('http://{routerip}/routing_table.xml?')
+
+# step #22
+get('http://{routerip}/connection_status.xml?')
+
+# step #23
+get('http://{routerip}/connection_status.xml?')
+
+# step #24
+get('http://{routerip}/computer_list.xml?')
+
+# step #25
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #26
+get('http://{routerip}/routing_table.xml?')
+
+# step #27
+get('http://{routerip}/pppoe.cgi?data=.P..')
+
+# step #28
+get('http://{routerip}/connection_status.xml?')
+
+# step #29
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #30
+get('http://{routerip}/computer_list.xml?')
+
+# step #31
+get('http://{routerip}/routing_table.xml?')
+
+# step #32
+get('http://{routerip}/connection_status.xml?')
+
+# step #33
+get('http://{routerip}/st_devic.html?')
+
+# step #34
+get('http://{routerip}/st_devic.html?')
+
+# step #35
+get('http://{routerip}/st_devic.html?')
+
+# step #36
+get('http://{routerip}/connection_status.xml?')
+
+# step #37
+get('http://{routerip}/computer_list.xml?')
+
+# step #38
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #39
+get('http://{routerip}/routing_table.xml?')
+
+# step #40
+get('http://{routerip}/connection_status.xml?')
+
+# step #41
+get('http://{routerip}/computer_list.xml?')
+
+# step #42
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #43
+get('http://{routerip}/routing_table.xml?')
+

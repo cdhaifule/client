@@ -1,0 +1,16 @@
+"""
+Netgear&nbsp;MR814
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;MR814'
+regex = r''
+
+# step #1
+data = u'/st_poe.cgi disconnect=Disconnect'
+post('http://{routerip}/st_poe.htm', data=data)
+
+# step #2
+data = u'/st_poe.cgi connect=++Connect++'
+post('http://{routerip}/st_poe.htm', data=data)
+

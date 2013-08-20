@@ -1,0 +1,56 @@
+"""
+x8821r+
+"""
+
+vendor = 'Xavi'
+name = 'x8821r+'
+regex = r'(?s).*(Xavi).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/MenuPage?')
+
+# step #5
+get('http://{routerip}/hag/pages/logo.htm?')
+
+# step #6
+get('http://{routerip}/hag/pages/MenuHome.htm?')
+
+# step #7
+get('http://{routerip}/MainPage?id=6')
+
+# step #8
+get('http://{routerip}/hag/js/global.gsv?')
+
+# step #9
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19997,goog-black-enchash:1:48461')
+
+# step #10
+get('http://{routerip}/MenuPage?MenuId=7')
+
+# step #11
+get('http://{routerip}/hag/pages/MenuAdm.htm?')
+
+# step #12
+get('http://{routerip}/MainPage?id=3')
+
+# step #13
+get('http://{routerip}/hag/js/global.gsv?')
+
+# step #14
+get('http://{routerip}/MainPage?id=4')
+
+# step #15
+get('http://{routerip}/Action?reboot_loc=0&id=5&cmdReboot=Reboot')
+
+# step #16
+get('http://{routerip}/MainPage?id=4')
+

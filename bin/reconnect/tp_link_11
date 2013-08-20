@@ -1,0 +1,35 @@
+"""
+WR541G/542G Firmware 2.11.2 Build 060524 Rel.67292n
+"""
+
+vendor = 'TP-Link'
+name = 'WR541G/542G Firmware 2.11.2 Build 060524 Rel.67292n'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/frames/top.htm?')
+
+# step #5
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #6
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #7
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #8
+get('http://{routerip}/userRpm/StatusRpm.htm?Disconnect=Disconnect&wan=1')
+
+# step #9
+get('http://{routerip}/userRpm/StatusRpm.htm?Connect=Connect&wan=1')
+

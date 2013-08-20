@@ -1,0 +1,16 @@
+"""
+Fiberline&nbsp;CAS&nbsp;2040&nbsp;FW&nbsp;60
+"""
+
+vendor = 'Fiberline'
+name = 'Fiberline&nbsp;CAS&nbsp;2040&nbsp;FW&nbsp;60'
+regex = r''
+
+# step #1
+data = u'disconn=RELEASE / DISCONNECT'
+post('http://{routerip}/ipstatus', data=data)
+
+# step #2
+data = u'conn=RENEW / CONNECT'
+post('http://{routerip}/ipstatus', data=data)
+

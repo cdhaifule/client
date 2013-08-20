@@ -1,0 +1,158 @@
+"""
+version v7.14.3.1
+"""
+
+vendor = 'INVENTEL'
+name = 'version v7.14.3.1'
+regex = r'(?s).*(INVENTEL).*'
+
+# step #1
+get('http://{routerip}/index.html?')
+
+# step #2
+get('http://{routerip}/empty.html?')
+
+# step #3
+get('http://{routerip}/home.html?')
+
+# step #4
+get('http://{routerip}/js/menu.lib.js?')
+
+# step #5
+get('http://{routerip}/js/menu.conf.js?')
+
+# step #6
+get('http://{routerip}/img/header.left.gif?')
+
+# step #7
+get('http://{routerip}/img/header.logo.gif?')
+
+# step #8
+get('http://{routerip}/img/header.bg.gif?')
+
+# step #9
+get('http://{routerip}/img/header.right.gif?')
+
+# step #10
+get('http://{routerip}/js/menu.init.0.js?')
+
+# step #11
+get('http://{routerip}/js/menu.build.js?')
+
+# step #12
+get('http://{routerip}/sniffer.html?')
+
+# step #13
+get('http://{routerip}/img/index.logo.gif?')
+
+# step #14
+get('http://{routerip}/sniffer.html?')
+
+# step #15
+get('http://{routerip}/index.html?')
+
+# step #16
+get('http://{routerip}/empty.html?')
+
+# step #17
+get('http://{routerip}/home.html?')
+
+# step #18
+get('http://{routerip}/js/menu.lib.js?')
+
+# step #19
+get('http://{routerip}/js/menu.conf.js?')
+
+# step #20
+get('http://{routerip}/img/header.left.gif?')
+
+# step #21
+get('http://{routerip}/img/header.logo.gif?')
+
+# step #22
+get('http://{routerip}/img/header.bg.gif?')
+
+# step #23
+get('http://{routerip}/img/header.right.gif?')
+
+# step #24
+get('http://{routerip}/js/menu.init.0.js?')
+
+# step #25
+get('http://{routerip}/js/menu.build.js?')
+
+# step #26
+get('http://{routerip}/sniffer.html?')
+
+# step #27
+get('http://{routerip}/img/index.logo.gif?')
+
+# step #28
+get('http://{routerip}/sniffer.html?')
+
+# step #29
+get('http://{routerip}/sniffer.html?')
+
+# step #30
+get('http://{routerip}/index.html?')
+
+# step #31
+get('http://{routerip}/empty.html?')
+
+# step #32
+get('http://{routerip}/home.html?')
+
+# step #33
+get('http://{routerip}/js/menu.lib.js?')
+
+# step #34
+get('http://{routerip}/js/menu.conf.js?')
+
+# step #35
+get('http://{routerip}/img/header.left.gif?')
+
+# step #36
+get('http://{routerip}/img/header.logo.gif?')
+
+# step #37
+get('http://{routerip}/img/header.bg.gif?')
+
+# step #38
+get('http://{routerip}/img/header.right.gif?')
+
+# step #39
+get('http://{routerip}/js/menu.init.0.js?')
+
+# step #40
+get('http://{routerip}/js/menu.build.js?')
+
+# step #41
+get('http://{routerip}/sniffer.html?')
+
+# step #42
+get('http://{routerip}/img/index.logo.gif?')
+
+# step #43
+get('http://{routerip}/sniffer.html?')
+
+# step #44
+get('http://{routerip}/sniffer.html?')
+
+# step #45
+get('http://{routerip}/sniffer.html?')
+
+# step #46
+get('http://{routerip}/sniffer.html?')
+
+# step #47
+get('http://{routerip}/sniffer.html?')
+
+# step #48
+get('http://{routerip}/sniffer.html?')
+
+# step #49
+get('http://{routerip}/sniffer.html?')
+
+# step #50
+get('http://{routerip}/sniffer.html?')
+

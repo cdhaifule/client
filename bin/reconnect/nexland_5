@@ -1,0 +1,14 @@
+"""
+Nexland xDSL
+"""
+
+vendor = 'Nexland'
+name = 'Nexland xDSL'
+regex = r'(?s).*nexland.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=1&T=14000', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=D&M=1&T=180000', auth=("{username}", "{password}"))
+

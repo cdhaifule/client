@@ -1,0 +1,17 @@
+"""
+Vigor 2000/2200 FW 1.07/1.08 deutsch (DSL)
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor 2000/2200 FW 1.07/1.08 deutsch (DSL)'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/online3.cgi?')
+
+# step #3
+get('http://{routerip}/cgi-bin/goinet.cgi?')
+

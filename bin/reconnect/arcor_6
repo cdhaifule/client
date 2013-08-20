@@ -1,0 +1,58 @@
+"""
+-Easy Box a 400
+"""
+
+vendor = 'Arcor'
+name = '-Easy Box a 400'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #4
+get('http://{routerip}/setupa_top.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/status_main.stm?')
+
+# step #7
+get('http://{routerip}/index3.stm?')
+
+# step #8
+get('http://{routerip}/setupd_brief.stm?')
+
+# step #9
+get('http://{routerip}/setupd.stm?')
+
+# step #10
+get('http://{routerip}/menu.stm?')
+
+# step #11
+get('http://{routerip}/system_main.stm?')
+
+# step #12
+get('http://{routerip}/system_r.stm?')
+
+# step #13
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #14
+get('http://{routerip}/wait.stm?')
+
+# step #15
+get('http://{routerip}/?')
+
+# step #16
+get('http://{routerip}/?')
+

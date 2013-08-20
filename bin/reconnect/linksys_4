@@ -1,0 +1,17 @@
+"""
+BEFSR41 V.1.42.6
+"""
+
+vendor = 'LinkSys'
+name = 'BEFSR41 V.1.42.6'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Gozila.cgi?pppoeAct=0')
+
+# step #3
+get('http://{routerip}/Gozila.cgi?pppoeAct=1')
+

@@ -1,0 +1,28 @@
+"""
+-Easy Box A 400
+"""
+
+vendor = 'Arcor'
+name = '-Easy Box A 400'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+data = 'pvc=0&cur_if=3&connect.x=48&connect.y=7&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+get('http://{routerip}/err_msg_inframe.stm?')
+
+# step #3
+get('http://{routerip}/clr2/?')
+
+# step #4
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #5
+data = 'router=Arcor-Easy+Box+A+400'
+post('http://{routerip}/clr3/', data=data)
+
+# step #6
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

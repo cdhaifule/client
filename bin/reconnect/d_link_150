@@ -1,0 +1,19 @@
+"""
+DI-634M  MIMO (HW Rev.A Firmware 1.22)
+"""
+
+vendor = 'D-Link'
+name = 'DI-634M  MIMO (HW Rev.A Firmware 1.22)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_device.cgi', data=data)
+
+# step #3
+data = 'connect=Connect'
+post('http://{routerip}/st_device.cgi', data=data)
+

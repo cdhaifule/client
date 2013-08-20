@@ -1,0 +1,14 @@
+"""
+DrayTek Vigor 2500 WE FW 2.5.1
+"""
+
+vendor = 'DrayTek'
+name = 'DrayTek Vigor 2500 WE FW 2.5.1'
+regex = r'(?s).*draytek.*'
+
+# step #1
+get('http://http://192.168.99.1/online3.cgi')
+
+# step #2
+get('http://http://192.168.99.1/goinet.cgi')
+

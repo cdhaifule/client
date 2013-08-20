@@ -1,0 +1,27 @@
+"""
+USR819112
+"""
+
+vendor = 'USRobotics'
+name = 'USR819112'
+regex = r'(?s).*(USRobotics).*'
+
+# step #1
+data = 'pws='
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/setupw.stm?')
+
+# step #3
+get('http://{routerip}/setupw_0.stm?')
+
+# step #4
+get('http://{routerip}/setupw_top.stm?')
+
+# step #5
+get('http://{routerip}/setupw_menu0.stm?')
+
+# step #6
+get('http://{routerip}/setupw_main0.stm?')
+

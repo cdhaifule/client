@@ -1,0 +1,14 @@
+"""
+Thomson Speedtouch 546v6 SW 6.2.17.5
+"""
+
+vendor = 'Thomson'
+name = 'Thomson Speedtouch 546v6 SW 6.2.17.5'
+regex = r'(?s).*thomson.*'
+
+# step #1
+get('http://{routerip}/submitForm(document.PPPConn,13,0,"Internet","",0,"")', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/submitForm(document.PPPConn,12,0,"Internet","",0,"")', auth=("{username}", "{password}"))
+

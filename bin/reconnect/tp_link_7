@@ -1,0 +1,32 @@
+"""
+TL-WR641G
+"""
+
+vendor = 'TP-Link'
+name = 'TL-WR641G'
+regex = r'(?s).*(TP-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/frames/top.htm?')
+
+# step #4
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #5
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #6
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #7
+get('http://{routerip}/userRpm/StatusRpm.htm?Disconnect=Disconnect&wan=1')
+
+# step #8
+get('http://{routerip}/userRpm/StatusRpm.htm?Connect=Connect&wan=1')
+

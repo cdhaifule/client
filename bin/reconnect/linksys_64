@@ -1,0 +1,19 @@
+"""
+Linksys&nbsp;WRT&nbsp;54GL
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT&nbsp;54GL'
+regex = r''
+
+# step #1
+data = u'submit_button=Status_Router&submit_type=Disconnect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=Status_Router&submit_type=Connect_pppoe&change_action=gozila_cgi&wan_proto=pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #3
+get('http://{routerip}/apply.cgi')
+

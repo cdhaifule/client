@@ -1,0 +1,29 @@
+"""
+BEFSR41 V3 Firmware 1.05.00
+"""
+
+vendor = 'LinkSys'
+name = 'BEFSR41 V3 Firmware 1.05.00'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Status_Router.htm?')
+
+# step #3
+get('http://{routerip}/Gozila.cgi?pppoeAct=2')
+
+# step #4
+get('http://{routerip}/Status_Router.htm?')
+
+# step #5
+get('http://{routerip}/Gozila.cgi?pppoeAct=1')
+
+# step #6
+get('http://{routerip}/Status_Router.htm?')
+
+# step #7
+get('http://{routerip}/Status_Router.htm?')
+

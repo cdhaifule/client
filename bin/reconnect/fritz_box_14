@@ -1,0 +1,41 @@
+"""
+Fon WLAN 7170 FW 29.04.57
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7170 FW 29.04.57'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #3
+get('http://{routerip}/search?sourceid=navclient-ff&features=Rank&client=navclient-auto-ff&googleip=O;74.125.43.99;109&ch=8f9d4ebb0&q=info:http%3A%2F%2Ffritz.box%2F')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1210723750%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1210723751%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=konfig&var%3Apagemaster=&time%3Asettings%2Ftime=1210723758%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Aweckernr=1')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=enhsettings&var%3Aerrorpagename=enhsettings&var%3Amenu=enhsettings&var%3Apagemaster=&time%3Asettings%2Ftime=1210723760%2C-120&connection0%3Apppoe%3Asettings%2Fmode=lcp&connection0%3Asettings%2Ftcom_targetarch=0&var%3AUseSip=&var%3AUseRouter=&var%3AUseFlat=&var%3APppProvider=&var%3APppUser=&var%3APppPassword=&var%3APppPin=&var%3APppTimeout=&var%3APppTelenode=&var%3AVoipUser=&var%3AVoipPassword=&var%3ATcomTargetarch=&var%3AEncapsulation=&var%3AAtaMode=&var%3AUseDhcp=&var%3AIpaddr=&var%3ANetmask=&var%3AGateway=&var%3ADns0=&var%3ADns1=&var%3ASipProvider=&var%3ASipUser=&var%3ASipPassword=&var%3ASipRegistrar=&var%3ASipStun=&var%3ASipProxy=&var%3ASipRufnr=&var%3ASipRegType=&var%3ASipUseOKZ=&var%3ASipMsn=&var%3ASipPassThrough=&var%3ASipShowOKZ=&var%3ASipOKZ=&var%3ASipUseLKZ=&var%3ASipKeepOKZPrefix=&var%3ASipKeepLKZPrefix=&var%3ASipPstn=&var%3AUseODA=&var%3AAcceptAGB=&var%3AHTMLConfigAssiTyp=')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210723762%2C-120')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1210723765%2C-120&var%3Ashowall=&logger%3Asettings%2Ffilter=2')
+
+# step #10
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&var%3AtabReset=0&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

@@ -1,0 +1,14 @@
+"""
+Dell&nbsp;Router
+"""
+
+vendor = 'DELL'
+name = 'Dell&nbsp;Router'
+regex = r''
+
+# step #1
+get('http://{routerip}/release.asp')
+
+# step #2
+get('http://{routerip}/renew.asp')
+

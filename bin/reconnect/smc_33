@@ -1,0 +1,21 @@
+"""
+SMC 7004VWBR V.2 EU
+"""
+
+vendor = 'SMC'
+name = 'SMC 7004VWBR V.2 EU'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+post('http://{routerip}/page=status_main&button=pppoedisconnect&disconnect=Disconnect')
+
+# step #3
+post('http://{routerip}/page=status_main&button=pppoeconnect&connect=+Connect+')
+
+# step #4
+get('http://{routerip}/<POST>setup_top.htm?page=logout')
+

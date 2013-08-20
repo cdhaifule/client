@@ -1,0 +1,34 @@
+"""
+Skyracer WBR354G
+"""
+
+vendor = 'Topcom'
+name = 'Skyracer WBR354G'
+regex = r'(?s).*(Topcom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/status.htm?')
+
+# step #5
+data = 'disconnect=Disconnect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #6
+get('http://{routerip}/status.htm?')
+
+# step #7
+data = 'connect=Connect'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #8
+get('http://{routerip}/status.htm?')
+

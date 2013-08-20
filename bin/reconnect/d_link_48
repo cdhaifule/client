@@ -1,0 +1,14 @@
+"""
+D-Link DI-624 (HW C2, FW 2.44) Cable Modem
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624 (HW C2, FW 2.44) Cable Modem'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/status.cgi?Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?Connect', auth=("{username}", "{password}"))
+

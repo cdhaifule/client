@@ -1,0 +1,19 @@
+"""
+WGT624v1/v2  FW 4.2.6_101 buggy unit version - read info
+"""
+
+vendor = 'Netgear'
+name = 'WGT624v1/v2  FW 4.2.6_101 buggy unit version - read info'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Disconnect=Disconnect&close=Close Window&ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'Connect=  Connect  &close=Close Window&ConMethod=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

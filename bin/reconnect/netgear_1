@@ -1,0 +1,65 @@
+"""
+DG632 Firmware 3.40
+"""
+
+vendor = 'Netgear'
+name = 'DG632 Firmware 3.40'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+data = 'nextpage=..%2Fhtml%2Findextop.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'nextpage=..%2Fhtml%2Findextop.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/start.htm')
+
+# step #6
+get('http://{routerip}/html/top.htm?')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/s_status.htm&var:modemType=0')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/menu.htm')
+
+# step #9
+get('http://{routerip}/html/hwizard.htm?')
+
+# step #10
+get('http://{routerip}/html/hsstatus.htm?')
+
+# step #11
+get('http://{routerip}/b/ss/aolffxtoolbar/1/G.9-Pd-R/8551905986?=&t=4/5/2008%2021:33:58&pageName=fxt%20:%20status%20:%20enabled&ch=us.ffxtoolbar&c1=fxt%20:%20tb50ffwin&c2=fxt%20:%20status&c16=default&c17=12-22-2007&c20=1.0.0.1')
+
+# step #12
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/wanstat.htm&var:wanType=pppoa')
+
+# step #13
+get('http://{routerip}/cgi-bin/webcm?nextpage=../html/st_poe.htm&var:wanType=pppoa')
+
+# step #14
+data = 'var%3AactId=&var%3AnextTarget=&nextpage=..%2Fhtml%2Fst_poe.htm&var%3AwanType=pppoa&connection0%3Apppoa%3Acommand%2Fstop='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #15
+data = 'var%3AactId=delay3sec&var%3AnextTarget=..%2Fhtml%2Fst_poe.htm&nextpage=..%2Fhtml%2Fonload.htm&var%3AwanType=pppoa&connection0%3Apppoa%3Acommand%2Fstart='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #16
+data = 'var%3AactId=&nextpage=..%2Fhtml%2Fst_poe.htm&=&var%3AwanType=pppoa&=&=&=&='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #17
+data = 'var%3AactId=&var%3AnextTarget=&nextpage=..%2Fhtml%2Fst_poe.htm&var%3AwanType=pppoa'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

@@ -1,0 +1,17 @@
+"""
+7204BRB (FW4.1.0.9-002)
+"""
+
+vendor = 'SMC'
+name = '7204BRB (FW4.1.0.9-002)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=1')
+
+# step #3
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=0')
+

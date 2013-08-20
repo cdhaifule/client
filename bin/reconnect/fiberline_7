@@ -1,0 +1,14 @@
+"""
+fiberline CAS2040 Firmware 6.0
+"""
+
+vendor = 'fiberline'
+name = 'fiberline CAS2040 Firmware 6.0'
+regex = r'(?s).*fiberline.*'
+
+# step #1
+get('http://{routerip}/ipstatus?disconn=RELEASE / DISCONNECT', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/ipstatus?conn=RENEW / CONNECT', auth=("{username}", "{password}"))
+

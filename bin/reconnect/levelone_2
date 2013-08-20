@@ -1,0 +1,20 @@
+"""
+FBR-1415TX
+"""
+
+vendor = 'LevelOne'
+name = 'FBR-1415TX'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+data = '=NAME{username}&PASSWOR={password}'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #2
+data = 'RC=@&A=H&M=0&T=2000&rd=status'
+post('http://{routerip}/cgi-bin/dial', data=data)
+
+# step #3
+data = 'RC=@&A=D&M=0&T=10000&rd=status'
+post('http://{routerip}/cgi-bin/dial', data=data)
+

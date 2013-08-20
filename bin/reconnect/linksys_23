@@ -1,0 +1,14 @@
+"""
+Linksys RV042
+"""
+
+vendor = 'Linksys'
+name = 'Linksys RV042'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://http://www.t-online.de/')
+

@@ -1,0 +1,69 @@
+"""
+WDR-3460b
+"""
+
+vendor = 'LevelOne'
+name = 'WDR-3460b'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/js.cgi?pca=&r=32757')
+
+# step #5
+get('http://{routerip}/home_router.htm?')
+
+# step #6
+get('http://{routerip}/js.cgi?pca=&r=20037')
+
+# step #7
+get('http://{routerip}/menu.htm?')
+
+# step #8
+get('http://{routerip}/title.htm?')
+
+# step #9
+get('http://{routerip}/js.cgi?pca=&r=12859')
+
+# step #10
+get('http://{routerip}/js.cgi?pca=&r=8723')
+
+# step #11
+get('http://{routerip}/s_status.htm?')
+
+# step #12
+get('http://{routerip}/js.cgi?pca=&r=9741')
+
+# step #13
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #14
+get('http://{routerip}/js.cgi?pca=&r=27529')
+
+# step #15
+get('http://{routerip}/st_poe.htm?')
+
+# step #16
+get('http://{routerip}/js.cgi?pca=&r=778')
+
+# step #17
+get('http://{routerip}/st_poe.htm?')
+
+# step #18
+get('http://{routerip}/js.cgi?pca=&r=12316')
+
+# step #19
+data = 'todo=logout&message='
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #20
+get('http://{routerip}/js.cgi?pca=&r=3035')
+

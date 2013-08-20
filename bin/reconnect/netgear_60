@@ -1,0 +1,16 @@
+"""
+Netgear FWG114P  V1.0 Release 16
+"""
+
+vendor = 'Netgear'
+name = 'Netgear FWG114P  V1.0 Release 16'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=++Connect++'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

@@ -1,0 +1,46 @@
+"""
+DSL-G604 Firmware V2.00B01T01.BR.20060626
+"""
+
+vendor = 'D-Link'
+name = 'DSL-G604 Firmware V2.00B01T01.BR.20060626'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #9
+get('http://{routerip}/html/index.html?')
+
+# step #10
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #12
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+

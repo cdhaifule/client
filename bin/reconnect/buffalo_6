@@ -1,0 +1,16 @@
+"""
+Buffalo&nbsp;WHR-G54&nbsp;Ver&nbsp;140
+"""
+
+vendor = 'Buffalo'
+name = 'Buffalo&nbsp;WHR-G54&nbsp;Ver&nbsp;140'
+regex = r''
+
+# step #1
+data = u'req=inp&res=info.html&STOP0=Stopp'
+post('http://{routerip}/cgi-bin/cgi', data=data)
+
+# step #2
+data = u'req=inp&res=info.html&START0=Start'
+post('http://{routerip}/cgi-bin/cgi', data=data)
+

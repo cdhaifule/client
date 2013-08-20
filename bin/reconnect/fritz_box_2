@@ -1,0 +1,17 @@
+"""
+2030 (UI), Firmware-Version 17.03.93
+"""
+
+vendor = 'FRITZ!Box'
+name = '2030 (UI), Firmware-Version 17.03.93'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1209946135%2C-120&var%3Aactivtype=pppoe')
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1209946166%2C-120&var%3Aactivtype=pppoe')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1209946198%2C-120&var%3Aactivtype=pppoe')
+

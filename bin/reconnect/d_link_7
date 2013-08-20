@@ -1,0 +1,27 @@
+"""
+D-LINK&nbsp;DI-524
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DI-524'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/rebo?v0=@mis&v1=1183545542609&v2=&v3=&v4=&v5=&v6=show&rd=x&ZT=1183545543718')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1192648994609')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status&ZT=1192649018234')
+
+# step #4
+data = u'rc=%40&PN=admin&PS=admin&rd=menu            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1194962400078')
+
+# step #6
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status&ZT=1194962401000')
+

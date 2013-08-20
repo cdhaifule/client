@@ -1,0 +1,19 @@
+"""
+Netgear WGT624v2 - FW 4.2.10_1.0.1 - PPTP
+"""
+
+vendor = 'Netgear'
+name = 'Netgear WGT624v2 - FW 4.2.10_1.0.1 - PPTP'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Disconnect&close=Close Window'
+post('http://{routerip}/st_pptp.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=  Connect  &close=Close Window'
+post('http://{routerip}/st_pptp.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #3
+get('http://{routerip}/LGO_logout.htm', auth=("{username}", "{password}"))
+

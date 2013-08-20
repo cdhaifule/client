@@ -1,0 +1,20 @@
+"""
+Teledat&nbsp;Router&nbsp;530
+"""
+
+vendor = 'Teledat'
+name = 'Teledat&nbsp;Router&nbsp;530'
+regex = r''
+
+# step #1
+data = u'pws=deinpw'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = u'disconnect=Trennen'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = u'connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

@@ -1,0 +1,35 @@
+"""
+DI524 (v.2.07DE)
+"""
+
+vendor = 'D-Link'
+name = 'DI524 (v.2.07DE)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/menu1.htm?')
+
+# step #3
+get('http://{routerip}/hwiz.htm?')
+
+# step #4
+get('http://{routerip}/atbox.htm?')
+
+# step #5
+get('http://{routerip}/misc.htm?')
+
+# step #6
+get('http://{routerip}/x.htm?RC=@mis&ZT=1211033917796')
+
+# step #7
+get('http://{routerip}/cgi-bin/rebo?D=&ZT=1211033918000')
+
+# step #8
+get('http://{routerip}/x.htm?v0=@mis&v1=1211033917796&v2=&v3=&v4=&v5=&v6=show')
+
+# step #9
+get('http://{routerip}/misc.htm?rc=_&ZT=1211033923953')
+

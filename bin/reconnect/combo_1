@@ -1,0 +1,32 @@
+"""
+DB108
+"""
+
+vendor = 'Combo'
+name = 'DB108'
+regex = r'(?s).*(Combo).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/logo_0.html?')
+
+# step #4
+get('http://{routerip}/menu_0.html?')
+
+# step #5
+get('http://{routerip}/info_0.html?')
+
+# step #6
+get('http://{routerip}/footer.html?')
+
+# step #7
+get('http://{routerip}/resetrouter_0.html?')
+
+# step #8
+get('http://{routerip}/rebootinfo.cgi?')
+

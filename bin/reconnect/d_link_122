@@ -1,0 +1,26 @@
+"""
+DI-604 Fireware 2.31b02
+"""
+
+vendor = 'D-Link'
+name = 'DI-604 Fireware 2.31b02'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.htm?')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status&ZT=1208489449296')
+
+# step #4
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status&ZT=1208489450953')
+
+# step #5
+get('http://{routerip}/status.htm?RC=_&ZT=1208489454234')
+
+# step #6
+get('http://{routerip}/status.htm?RC=@&ZT=1208489457531')
+

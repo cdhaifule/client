@@ -1,0 +1,20 @@
+"""
+Sphairon Turbolink AR860E1-B (FW T360A.051121b2_36)
+"""
+
+vendor = 'Sphairon'
+name = 'Sphairon Turbolink AR860E1-B (FW T360A.051121b2_36)'
+regex = r'(?s).*sphairon.*'
+
+# step #1
+data = 'login:command/username={username}&login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'connection0:pppoe:command/stop=""'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'connection0:pppoe:command/start=""'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

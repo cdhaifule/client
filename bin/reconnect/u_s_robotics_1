@@ -1,0 +1,53 @@
+"""
+9110 Firmware 0,51
+"""
+
+vendor = 'U.S Robotics'
+name = '9110 Firmware 0,51'
+regex = r'(?s).*(U.S Robotics).*'
+
+# step #1
+data = 'pws='
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #4
+get('http://{routerip}/setupa_top.stm?')
+
+# step #5
+get('http://{routerip}/setupa_main.stm?')
+
+# step #6
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #7
+get('http://{routerip}/status.stm?')
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+get('http://{routerip}/status_menu.stm?')
+
+# step #10
+data = 'pvc=1&cur_if=11&dis1=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+
+# step #12
+data = 'pvc=1&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #13
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #14
+get('http://{routerip}/login.stm?')
+

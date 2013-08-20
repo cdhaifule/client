@@ -1,0 +1,71 @@
+"""
+gigaset 555
+"""
+
+vendor = 'Siemens'
+name = 'gigaset 555'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+data = 'your_password=filou06'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/home_security.stm?')
+
+# step #3
+get('http://{routerip}/home.stm?')
+
+# step #4
+get('http://{routerip}/home_internet.stm?')
+
+# step #5
+get('http://{routerip}/home_internet.stm?')
+
+# step #6
+get('http://{routerip}/home_internet.stm?')
+
+# step #7
+get('http://{routerip}/home_internet.stm?')
+
+# step #8
+get('http://{routerip}/home_internet.stm?')
+
+# step #9
+get('http://{routerip}/advanced.stm?')
+
+# step #10
+get('http://{routerip}/help/de/help_advanced.stm?')
+
+# step #11
+get('http://{routerip}/advanced_internet.stm?')
+
+# step #12
+get('http://{routerip}/help/de/help_advanced_internet.stm?')
+
+# step #13
+data = 'form_submission_type=normal&form_submission_parameter=&internet=disabled&multiple_pvc=disabled&registered_vpi_0=1&registered_vci_0=32&registered_comment_0=&new_vpi_manual=&new_vci_manual=&new_comment_manual='
+post('http://{routerip}/cgi-bin/advanced_internet.exe', data=data)
+
+# step #14
+get('http://{routerip}/apply_settings.stm?')
+
+# step #15
+get('http://{routerip}/advanced_internet.stm?')
+
+# step #16
+get('http://{routerip}/help/de/help_advanced_internet.stm?')
+
+# step #17
+data = 'form_submission_type=normal&form_submission_parameter=&internet=enabled&multiple_pvc=disabled&registered_vpi_0=1&registered_vci_0=32&registered_comment_0=&new_vpi_manual=&new_vci_manual=&new_comment_manual='
+post('http://{routerip}/cgi-bin/advanced_internet.exe', data=data)
+
+# step #18
+get('http://{routerip}/apply_settings.stm?')
+
+# step #19
+get('http://{routerip}/advanced_internet.stm?')
+
+# step #20
+get('http://{routerip}/help/de/help_advanced_internet.stm?')
+

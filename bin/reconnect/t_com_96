@@ -1,0 +1,23 @@
+"""
+speedport w 701 v firmware 33.04.56
+"""
+
+vendor = 'T-Com'
+name = 'speedport w 701 v firmware 33.04.56'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Averz=2&time%3Asettings%2Ftime=1210851879%2C-120&login%3Acommand%2Fpassword=xdc942'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_disconnect=1&var%3Astate=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_connect=1&var%3Astate=5'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

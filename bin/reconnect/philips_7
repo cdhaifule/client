@@ -1,0 +1,23 @@
+"""
+SNB5600
+"""
+
+vendor = 'Philips'
+name = 'SNB5600'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top.stm?pn1=sa3.gif&pn2=ad1.gif')
+
+# step #3
+get('http://{routerip}/status.stm?')
+
+# step #4
+get('http://{routerip}/status_menu.stm?')
+
+# step #5
+get('http://{routerip}/status_main.stm?')
+

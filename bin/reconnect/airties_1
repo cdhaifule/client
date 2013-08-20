@@ -1,0 +1,42 @@
+"""
+rt-111 fw 1.0.13
+"""
+
+vendor = 'Airties'
+name = 'rt-111 fw 1.0.13'
+regex = r'(?s).*(Airties).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/ustmenu_giris.html?')
+
+# step #3
+get('http://{routerip}/loginm.htm?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fhome%2Findex.html&errorpage=..%2Floginm.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&=%3C%3F+error+found+%3F%3E&login%3Acommand%2Fusername=&login%3Acommand%2Fpassword='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../top.htm')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/left.htm')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home.html')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/commands.html&var:menu=tools&var:pagename=commands')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/commands.html&var:menu=tools&var:pagename=commands')
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html')
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html')
+

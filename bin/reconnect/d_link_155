@@ -1,0 +1,17 @@
+"""
+DI-713P dial-up
+"""
+
+vendor = 'D-Link'
+name = 'DI-713P dial-up'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/logi?rc=@&PS={password}&rd=menu')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H1&M=0&T=2000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D1&M=0&T=10000')
+

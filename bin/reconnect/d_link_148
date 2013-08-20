@@ -1,0 +1,15 @@
+"""
+DI-624 4.04beta
+"""
+
+vendor = 'D-Link'
+name = 'DI-624 4.04beta'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_device.cgi', data=data)
+

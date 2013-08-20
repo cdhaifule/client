@@ -1,0 +1,24 @@
+"""
+AR7WRD firmware 0.50
+"""
+
+vendor = 'RouterTech'
+name = 'AR7WRD firmware 0.50'
+regex = r'(?s).*(RouterTech).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Findex.html&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Amenutitle=Home&var%3Apagetitle=Home&var%3Apagemaster=home&login%3Acommand%2Fusername=admin&login%3Acommand%2Fpassword=1234'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fstyle5/menus%2Fmenu.html&var:style=style5&var:main=menu&var:pagename=home&var:pagetitle=Home&var:menu=tools&var:menutitle=Tools')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var:style=style5&var:main=menu&var:menu=tools&var:menutitle=Tools&var:pagename=commands&var:pagetitle=System%20Commands')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?nextpage=../index.htm')
+

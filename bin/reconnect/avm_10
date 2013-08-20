@@ -1,0 +1,19 @@
+"""
+Fritz!Box Fon WLAN 7170 (FW 29.04.06/15)
+"""
+
+vendor = 'AVM'
+name = 'Fritz!Box Fon WLAN 7170 (FW 29.04.06/15)'
+regex = r'(?s).*(AVM).*'
+
+# step #1
+data = 'getpage=../html/de/menus/menu2.html&errorpage=../html/index.html&var:lang=de&var:pagename=home&var:menu=home&=&login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/de/menus/menu2.html&errorpage=../html/index.html&var:lang=de&var:pagename=home&var:menu=home&=&login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/http://www.avm.de?')
+

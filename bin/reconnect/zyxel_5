@@ -1,0 +1,51 @@
+"""
+P-335/P-335WT
+"""
+
+vendor = 'ZYXEL '
+name = 'P-335/P-335WT'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=027024318f887530555e22150bdf9f34&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #3
+get('http://{routerip}/rpSys.html?')
+
+# step #4
+get('http://{routerip}/top.html?')
+
+# step #5
+get('http://{routerip}/rpPanel.html?')
+
+# step #6
+get('http://{routerip}/mid.html?')
+
+# step #7
+get('http://{routerip}/FirstPage.html?')
+
+# step #8
+get('http://{routerip}/buttom.html?')
+
+# step #9
+get('http://{routerip}/mtenSysStatus.html?')
+
+# step #10
+get('http://{routerip}/buttom.html?')
+
+# step #11
+get('http://{routerip}/mtenRestart.html?')
+
+# step #12
+get('http://{routerip}/buttom.html?')
+
+# step #13
+post('http://{routerip}/Forms/mtenRestart_1')
+
+# step #14
+get('http://{routerip}/RestartDone.html?')
+

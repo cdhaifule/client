@@ -1,0 +1,68 @@
+"""
+WLAN 3070
+"""
+
+vendor = 'FRITZ!Box'
+name = 'WLAN 3070'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #2
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1209047276%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/search?sourceid=navclient-ff&features=Rank&client=navclient-auto-ff&googleip=F;209.85.129.99;1344&ch=8f9d4ebb0&q=info:http%3A%2F%2Ffritz.box%2F')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1209047277%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=home&var%3Aerrorpagename=home&var%3Amenu=home&var%3Apagemaster=&time%3Asettings%2Ftime=1209047284%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=1')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1209047290%2C-120&var%3Aactivtype=pppoe&var%3AtabInetstat=1&var%3Ashowsetup=1')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1209047295%2C-120&var%3Ashowall=&logger%3Asettings%2Ffilter=4')
+
+# step #8
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&var%3AtabReset=0&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #9
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0001-ABCDEFFEDCBA}&version=6.0.01&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #10
+get('http://{routerip}/firefox/update?guid={3112ca9c-de6d-4884-a869-9855de68056c}&version=3.0.20070525W&application={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appversion=2.0.0.7&dist=google')
+
+# step #11
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0002-ABCDEFFEDCBA}&version=6.0.02&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #12
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0015-0000-0014-ABCDEFFEDCBA}&version=5.0.14&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #13
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0003-ABCDEFFEDCBA}&version=6.0.03&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #14
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0000-ABCDEFFEDCBA}&version=6.0&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #15
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0005-ABCDEFFEDCBA}&version=6.0.05&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #16
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={8f8fe09b-0bd3-4470-bc1b-8cad42b8203a}&version=0.13.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #17
+get('http://{routerip}/blocklist/1/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/2.0.0.7/?')
+
+# step #18
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={27A2FD41-CB23-4518-AB5C-C25BAFFDE531}&version=1.4.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.7&appOS=WINNT&appABI=x86-msvc')
+
+# step #19
+get('http://{routerip}/mozilla/firefox/releases/2.0.0.12/update/win32/de/firefox-2.0.0.12.complete.mar?')
+

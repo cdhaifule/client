@@ -1,0 +1,20 @@
+"""
+Alice Gate 2 plus Wi-Fi V.AGA_3.2.4
+"""
+
+vendor = 'Pirelli'
+name = 'Alice Gate 2 plus Wi-Fi V.AGA_3.2.4'
+regex = r'(?s).*(Pirelli).*'
+
+# step #1
+get('http://{routerip}/Servizio.html?n=0')
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/Servizio.html?n=1')
+
+# step #4
+get('http://{routerip}/?')
+

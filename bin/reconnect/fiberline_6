@@ -1,0 +1,42 @@
+"""
+Firewall Broudband Router
+"""
+
+vendor = 'Fiberline'
+name = 'Firewall Broudband Router'
+regex = r'(?s).*(Fiberline).*'
+
+# step #1
+get('http://{routerip}/011.htm?')
+
+# step #2
+data = '046=Disconnect'
+post('http://{routerip}/011.htm', data=data)
+
+# step #3
+get('http://{routerip}/011.htm?001=1209602649906')
+
+# step #4
+data = '001=1209602649906&050=0005333032565200548809050001%40t-online.de&051=01002566&052=&055=555&040=Save+%26+Restart&049=1'
+post('http://{routerip}/011.htm', data=data)
+
+# step #5
+get('http://{routerip}/011.htm?001=7767682')
+
+# step #6
+data = '001=7767682&050=0005333032565200548809050001%40t-online.de&051=01002566&052=&055=666&040=Save+%26+Restart&049=1'
+post('http://{routerip}/011.htm', data=data)
+
+# step #7
+get('http://{routerip}/011.htm?001=7768141')
+
+# step #8
+data = '001=7768141&046=Connect'
+post('http://{routerip}/011.htm', data=data)
+
+# step #9
+get('http://{routerip}/011.htm?001=1209602671375')
+
+# step #10
+get('http://{routerip}/011.htm?001=1209602674562')
+

@@ -1,0 +1,14 @@
+"""
+ DSL-500T, firmware version : V1.00B02T02.TF.20041206
+"""
+
+vendor = 'D-Link'
+name = ' DSL-500T, firmware version : V1.00B02T02.TF.20041206'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

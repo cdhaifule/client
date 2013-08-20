@@ -1,0 +1,53 @@
+"""
+Easybox 300
+"""
+
+vendor = 'Arcor'
+name = 'Easybox 300'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:31,goog-white-url:1:371,goog-black-url:1:20602,goog-black-enchash:1:49926')
+
+# step #3
+data = 'user=mahe&pws=a1r4c0o698'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #4
+get('http://{routerip}/index.stm?')
+
+# step #5
+get('http://{routerip}/setupa_top.stm?')
+
+# step #6
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+get('http://{routerip}/menu.stm?')
+
+# step #9
+data = 'pvc=0&cur_if=11&disconnect.x=78&disconnect.y=9&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #10
+get('http://{routerip}/status_main.stm?')
+
+# step #11
+data = 'pvc=0&cur_if=3&connect.x=41&connect.y=11&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #12
+get('http://{routerip}/err_msg_inframe.stm?')
+
+# step #13
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #14
+get('http://{routerip}/login.stm?')
+

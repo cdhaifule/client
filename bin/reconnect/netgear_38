@@ -1,0 +1,16 @@
+"""
+NETGEAR WPN 824/ Firmware Version 2.0.11
+"""
+
+vendor = 'NETGEAR'
+name = 'NETGEAR WPN 824/ Firmware Version 2.0.11'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'Disconnect=Disconnect&close=Close Window&ConMethod=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'Connect=  Connect  &close=Close Window&ConMethod=  Connect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

@@ -1,0 +1,64 @@
+"""
+-Esay Box A300 WLAN Firmware 1.00.611
+"""
+
+vendor = 'Arcor'
+name = '-Esay Box A300 WLAN Firmware 1.00.611'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+get('http://{routerip}/wiki/?')
+
+# step #2
+get('http://{routerip}/wiki/wiki/Hauptseite?')
+
+# step #3
+get('http://{routerip}/wiki/wiki/Einen_Reconnect_aufzeichnen?')
+
+# step #4
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #5
+get('http://{routerip}/index.stm?')
+
+# step #6
+get('http://{routerip}/setupa_top.stm?')
+
+# step #7
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #8
+get('http://{routerip}/menu.stm?')
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+
+# step #10
+data = 'pvc=0&cur_if=11&disconnect.x=96&disconnect.y=16&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+
+# step #12
+data = 'pvc=0&cur_if=3&connect.x=59&connect.y=11&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #13
+get('http://{routerip}/status_main.stm?')
+
+# step #14
+data = 'pvc=0&cur_if=11&disconnect.x=124&disconnect.y=18&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #15
+get('http://{routerip}/status_main.stm?')
+
+# step #16
+data = 'pvc=0&cur_if=3&connect.x=59&connect.y=15&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #17
+get('http://{routerip}/err_msg_inframe.stm?')
+

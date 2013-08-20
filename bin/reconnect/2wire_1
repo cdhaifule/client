@@ -1,0 +1,11 @@
+"""
+2700HGV-2 Software 5.29.113.13
+"""
+
+vendor = '2wire'
+name = '2700HGV-2 Software 5.29.113.13'
+regex = r'(?s).*(2wire).*'
+
+# step #1
+get('http://{routerip}/xslt?PAGE=J21_ISP_RESET&RESET_PAGE=J21_ISP_RESET&NEXTPAGE=J02')
+

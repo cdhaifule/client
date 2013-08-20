@@ -1,0 +1,66 @@
+"""
+FBR-1418TX Firmware (R1.97g2)_2007-03-20
+"""
+
+vendor = 'LevelOne'
+name = 'FBR-1418TX Firmware (R1.97g2)_2007-03-20'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/banner.htm?')
+
+# step #3
+get('http://{routerip}/_status.htm?')
+
+# step #4
+get('http://{routerip}/status.htm?')
+
+# step #5
+data = 'rc=%40&PS=chany101&rd=banner'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #6
+get('http://{routerip}/_status.htm?rc=@&ZT=1211046264920')
+
+# step #7
+get('http://{routerip}/status.htm?RC=@&ZT=1211046264920')
+
+# step #8
+get('http://{routerip}/_status.htm?rc=@&ZT=1211046264920')
+
+# step #9
+get('http://{routerip}/status.htm?rc=@&ZT=1211046264920')
+
+# step #10
+get('http://{routerip}/_too.htm?rc=@&ZT=1211046264920')
+
+# step #11
+get('http://{routerip}/_toolbox.htm?rc=@&ZT=1211046264920')
+
+# step #12
+get('http://{routerip}/cgi-bin/rebo?D=&ZT=1211046291673')
+
+# step #13
+get('http://{routerip}/?')
+
+# step #14
+get('http://{routerip}/banner.htm?')
+
+# step #15
+get('http://{routerip}/_status.htm?')
+
+# step #16
+get('http://{routerip}/status.htm?')
+
+# step #17
+get('http://{routerip}/_status.htm?rc=@&ZT=1211046297474')
+
+# step #18
+get('http://{routerip}/status.htm?RC=@&ZT=1211046297474')
+
+# step #19
+get('http://{routerip}/status.htm?rc=@&ZT=1211046344134')
+

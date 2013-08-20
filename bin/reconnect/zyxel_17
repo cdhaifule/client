@@ -1,0 +1,18 @@
+"""
+Prestige 650H-E7 - V3.40 (PF.1) - englisch
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 650H-E7 - V3.40 (PF.1) - englisch'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Submit=  Reset ADSL Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+get('http://{routerip}/http://www.t-online.de?')
+

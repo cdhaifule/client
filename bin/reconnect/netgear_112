@@ -1,0 +1,14 @@
+"""
+Netgear&nbsp;WPN824&nbsp;V2
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WPN824&nbsp;V2'
+regex = r''
+
+# step #1
+get('http://{routerip}/st_pptp.cgi')
+
+# step #2
+get('http://{routerip}/st_pptp.cgi')
+

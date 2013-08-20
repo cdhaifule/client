@@ -1,0 +1,16 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE515&nbsp;dsl
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE515&nbsp;dsl'
+regex = r''
+
+# step #1
+data = u'wanId=1&Submit=Disconnect'
+post('http://{routerip}/lineconn.tri', data=data)
+
+# step #2
+data = u'wanId=1&Submit=Disconnect'
+post('http://{routerip}/lineconn.tri', data=data)
+

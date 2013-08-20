@@ -1,0 +1,12 @@
+"""
+Motorola&nbsp;Kabelmodem&nbsp;SBV5101
+"""
+
+vendor = 'Motorola'
+name = 'Motorola&nbsp;Kabelmodem&nbsp;SBV5101'
+regex = r''
+
+# step #1
+data = u'ResetReq=1'
+post('http://{routerip}/goform/RgConfig', data=data)
+

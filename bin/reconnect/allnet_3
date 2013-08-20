@@ -1,0 +1,17 @@
+"""
+ALL0277 Firmware Version 1.02 Release 5
+"""
+
+vendor = 'Allnet'
+name = 'ALL0277 Firmware Version 1.02 Release 5'
+regex = r'(?s).*(Allnet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Disconnect&change_action=gozila_cgi&wan_proto=pppoe')
+
+# step #3
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Connect&change_action=gozila_cgi&wan_proto=pppoe')
+

@@ -1,0 +1,18 @@
+"""
+OfficeConnect ADSL 3CRWDR101A-75
+"""
+
+vendor = '3Com'
+name = 'OfficeConnect ADSL 3CRWDR101A-75'
+regex = r'(?s).*(3Com).*'
+
+# step #1
+get('http://{routerip}/status.stm?')
+
+# step #2
+data = 'ifno=-1&cur_if=11&disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+get('http://{routerip}/status.stm?')
+

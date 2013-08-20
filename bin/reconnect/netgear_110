@@ -1,0 +1,9 @@
+"""
+Netgear&nbsp;WPN824
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;WPN824'
+regex = r''
+
+

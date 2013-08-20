@@ -1,0 +1,70 @@
+"""
+F@st 3202
+"""
+
+vendor = 'SAGEM'
+name = 'F@st 3202'
+regex = r'(?s).*(SAGEM).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/configleft.html?')
+
+# step #5
+get('http://{routerip}/blank.html?')
+
+# step #6
+get('http://{routerip}/blank.html?')
+
+# step #7
+get('http://{routerip}/bbaner.html?')
+
+# step #8
+get('http://{routerip}/welcome.html?')
+
+# step #9
+get('http://{routerip}/internetservices.html?')
+
+# step #10
+data = 'ACTION_DISCONNECT=D%E9connecter'
+post('http://{routerip}/SubmitInternetService', data=data)
+
+# step #11
+data = 'ACTION_CONNECT=Connecter'
+post('http://{routerip}/SubmitInternetService', data=data)
+
+# step #12
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #13
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #14
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #15
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #16
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #17
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #18
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #19
+get('http://{routerip}/quickconfpppcnxing.html?')
+
+# step #20
+get('http://{routerip}/internetservices.html?')
+

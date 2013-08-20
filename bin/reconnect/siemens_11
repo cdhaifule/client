@@ -1,0 +1,19 @@
+"""
+Gigaset SE515 dsl
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SE515 dsl'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/welcome.htm?')
+
+# step #2
+data = 'wanId=1'
+post('http://{routerip}/lineconn.tri', data=data)
+
+# step #3
+data = 'wanId=1&Submit=Connect'
+post('http://{routerip}/lineconn.tri', data=data)
+

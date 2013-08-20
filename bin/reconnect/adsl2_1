@@ -1,0 +1,44 @@
+"""
+:  A2pB021g.d19b Firmware:  3.29s
+"""
+
+vendor = 'ADSL2+'
+name = ':  A2pB021g.d19b Firmware:  3.29s'
+regex = r'(?s).*(ADSL2+).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172335656')
+
+# step #3
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172335687')
+
+# step #4
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172336656')
+
+# step #5
+get('http://{routerip}/constatus.html?')
+
+# step #6
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172347625')
+
+# step #7
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172347656')
+
+# step #8
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172348468')
+
+# step #9
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172359687')
+
+# step #10
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172359671')
+
+# step #11
+get('http://{routerip}/constatus.html?')
+
+# step #12
+get('http://{routerip}/ajax/ffcount.php?k=3sjo4x6h&t=1207172360500')
+

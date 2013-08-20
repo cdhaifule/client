@@ -1,0 +1,117 @@
+"""
+Michelangelo Home 54
+"""
+
+vendor = 'Digicom'
+name = 'Michelangelo Home 54'
+regex = r'(?s).*(Digicom).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/home_router.htm?')
+
+# step #5
+get('http://{routerip}/menu.htm?')
+
+# step #6
+get('http://{routerip}/title.htm?')
+
+# step #7
+get('http://{routerip}/robots.txt?')
+
+# step #8
+get('http://{routerip}/robots.txt?')
+
+# step #9
+get('http://{routerip}/robots.txt?')
+
+# step #10
+get('http://{routerip}/robots.txt?')
+
+# step #11
+get('http://{routerip}/robots.txt?')
+
+# step #12
+get('http://{routerip}/robots.txt?')
+
+# step #13
+get('http://{routerip}/robots.txt?')
+
+# step #14
+get('http://{routerip}/robots.txt?')
+
+# step #15
+get('http://{routerip}/robots.txt?')
+
+# step #16
+get('http://{routerip}/robots.txt?')
+
+# step #17
+get('http://{routerip}/robots.txt?')
+
+# step #18
+get('http://{routerip}/robots.txt?')
+
+# step #19
+get('http://{routerip}/robots.txt?')
+
+# step #20
+get('http://{routerip}/robots.txt?')
+
+# step #21
+get('http://{routerip}/robots.txt?')
+
+# step #22
+get('http://{routerip}/robots.txt?')
+
+# step #23
+get('http://{routerip}/robots.txt?')
+
+# step #24
+get('http://{routerip}/robots.txt?')
+
+# step #25
+get('http://{routerip}/robots.txt?')
+
+# step #26
+get('http://{routerip}/robots.txt?')
+
+# step #27
+get('http://{routerip}/robots.txt?')
+
+# step #28
+get('http://{routerip}/s_status.htm?')
+
+# step #29
+get('http://{routerip}/setup.cgi?next_file=st_poe.htm')
+
+# step #30
+get('http://{routerip}/st_poe.htm?')
+
+# step #31
+get('http://{routerip}/st_poe.htm?')
+
+# step #32
+get('http://{routerip}/st_poe.htm?')
+
+# step #33
+get('http://{routerip}/st_poe.htm?')
+
+# step #34
+get('http://{routerip}/st_poe.htm?')
+
+# step #35
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20739,goog-black-enchash:1:50300')
+
+# step #36
+data = 'todo=logout&message='
+post('http://{routerip}/setup.cgi', data=data)
+

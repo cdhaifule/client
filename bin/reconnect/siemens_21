@@ -1,0 +1,54 @@
+"""
+Gigaset se551 Firmware v0.590 (Sep 2 2005 13:55:21)
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset se551 Firmware v0.590 (Sep 2 2005 13:55:21)'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/welcome_login.stm?')
+
+# step #2
+data = 'your_password='
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #3
+get('http://{routerip}/home_security.stm?')
+
+# step #4
+get('http://{routerip}/home.stm?')
+
+# step #5
+get('http://{routerip}/home_internet.stm?')
+
+# step #6
+get('http://{routerip}/advanced.stm?')
+
+# step #7
+get('http://{routerip}/help/de/help_advanced.stm?')
+
+# step #8
+get('http://{routerip}/advanced_admin.stm?')
+
+# step #9
+get('http://{routerip}/help/de/help_advanced_admin.stm?')
+
+# step #10
+get('http://{routerip}/advanced_admin_reboot.stm?')
+
+# step #11
+get('http://{routerip}/help/de/help_advanced_admin_reboot.stm?')
+
+# step #12
+post('http://{routerip}/cgi-bin/restart.cgi')
+
+# step #13
+get('http://{routerip}/apply_settings.stm?')
+
+# step #14
+get('http://{routerip}/welcome_login.stm?')
+
+# step #15
+get('http://{routerip}/help/de/help_welcome_login.stm?')
+

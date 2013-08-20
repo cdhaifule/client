@@ -1,0 +1,9 @@
+"""
+D-LINK&nbsp;DGL-Serie
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DGL-Serie'
+regex = r''
+
+

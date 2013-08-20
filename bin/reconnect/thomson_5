@@ -1,0 +1,57 @@
+"""
+SpeedTouchPro
+"""
+
+vendor = 'Thomson'
+name = 'SpeedTouchPro'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+get('http://{routerip}/clr/?')
+
+# step #2
+post('http://{routerip}/clr2/')
+
+# step #3
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #4
+data = 'router=Speed+Touch'
+post('http://{routerip}/clr3/', data=data)
+
+# step #5
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #6
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #7
+get('http://{routerip}/home/?')
+
+# step #8
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #9
+get('http://{routerip}/clr/?')
+
+# step #10
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #11
+get('http://{routerip}/complete/search?output=firefox&client=firefox&qu=speed')
+
+# step #12
+get('http://{routerip}/complete/search?output=firefox&client=firefox&qu=speed+')
+
+# step #13
+get('http://{routerip}/search?q=speed+touch+pro&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:pt-BR:official&client=firefox-a')
+
+# step #14
+get('http://{routerip}/search?q=speed+touch+pro&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:pt-BR:official&client=firefox-a')
+
+# step #15
+get('http://{routerip}/manuais/m_alcatel.html?')
+
+# step #16
+get('http://{routerip}/complete/search?output=firefox&client=firefox&qu=speed+touch+pro+serial+')
+

@@ -1,0 +1,68 @@
+"""
+ZyWALL Series
+"""
+
+vendor = 'ZYXEL '
+name = 'ZyWALL Series'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=81dc9bdb52d04dc20036dbd8313ed055&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #3
+get('http://{routerip}/passWarning.html?')
+
+# step #4
+data = 'PassNew=&PassConfirm=&sysIgnoreBtn=Ignore'
+post('http://{routerip}/Forms/passWarning_1', data=data)
+
+# step #5
+get('http://{routerip}/rpSys.html?')
+
+# step #6
+get('http://{routerip}/top.html?')
+
+# step #7
+get('http://{routerip}/rpPanel.html?')
+
+# step #8
+get('http://{routerip}/home.html?')
+
+# step #9
+get('http://{routerip}/path.html?')
+
+# step #10
+get('http://{routerip}/buttom.html?')
+
+# step #11
+get('http://{routerip}/DiagGeneral.html?')
+
+# step #12
+get('http://{routerip}/buttom.html?')
+
+# step #13
+get('http://{routerip}/DiagADSL.html?')
+
+# step #14
+get('http://{routerip}/buttom.html?')
+
+# step #15
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #16
+get('http://{routerip}/DiagADSL.html?')
+
+# step #17
+get('http://{routerip}/buttom.html?')
+
+# step #18
+get('http://{routerip}/Logout.html?')
+
+# step #19
+get('http://{routerip}/rpSys.html?')
+

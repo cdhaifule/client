@@ -1,0 +1,35 @@
+"""
+220bxi
+"""
+
+vendor = 'Beetel'
+name = '220bxi'
+regex = r'(?s).*(Beetel).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/logo.html?')
+
+# step #5
+get('http://{routerip}/menu_en.html?')
+
+# step #6
+get('http://{routerip}/info_en.html?')
+
+# step #7
+get('http://{routerip}/footer_en.html?')
+
+# step #8
+get('http://{routerip}/resetrouter_en.html?')
+
+# step #9
+get('http://{routerip}/rebootinfo.cgi?')
+

@@ -1,0 +1,50 @@
+"""
+UTStarcom UT300R2U.0011.01
+"""
+
+vendor = 'Dataone'
+name = 'UTStarcom UT300R2U.0011.01'
+regex = r'(?s).*(Dataone).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/logo.html?')
+
+# step #4
+get('http://{routerip}/menu.html?')
+
+# step #5
+get('http://{routerip}/info.html?')
+
+# step #6
+get('http://{routerip}/footer.html?')
+
+# step #7
+get('http://{routerip}/backupsettings.html?')
+
+# step #8
+get('http://{routerip}/resetrouter.html?')
+
+# step #9
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #10
+get('http://{routerip}/main.html?')
+
+# step #11
+get('http://{routerip}/logo.html?')
+
+# step #12
+get('http://{routerip}/menu.html?')
+
+# step #13
+get('http://{routerip}/info.html?')
+
+# step #14
+get('http://{routerip}/footer.html?')
+

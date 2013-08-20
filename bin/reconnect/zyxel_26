@@ -1,0 +1,46 @@
+"""
+Prestige 661H-61
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 661H-61'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/rpAuth.html?')
+
+# step #3
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=b5a1aa36d59de50d2727ef333d3a8b19&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #4
+get('http://{routerip}/rpSys.html?')
+
+# step #5
+get('http://{routerip}/Title.html?')
+
+# step #6
+get('http://{routerip}/Panel.html?')
+
+# step #7
+get('http://{routerip}/FirstPage.html?')
+
+# step #8
+get('http://{routerip}/rpDiagnostic.html?')
+
+# step #9
+get('http://{routerip}/Panel_Mten_Diagnostic.html?')
+
+# step #10
+get('http://{routerip}/DiagADSL.html?')
+
+# step #11
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #12
+get('http://{routerip}/DiagADSL.html?')
+

@@ -1,0 +1,167 @@
+"""
+TL-WR642G
+"""
+
+vendor = 'TP-LINK'
+name = 'TL-WR642G'
+regex = r'(?s).*(TP-LINK).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/frames/top.htm?')
+
+# step #4
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #5
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #6
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #7
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #8
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=0')
+
+# step #9
+get('http://{routerip}/userRpm/DateTimeCfgRpm.htm?')
+
+# step #10
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3D9%26SubID%3D0')
+
+# step #11
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FDateTimeCfgRpm.htm')
+
+# step #12
+get('http://{routerip}/userRpm/DateTimeCfgHelpRpm.htm?')
+
+# step #13
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FDateTimeCfgHelpRpm.htm')
+
+# step #14
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=5')
+
+# step #15
+get('http://{routerip}/userRpm/SysRebootRpm.htm?')
+
+# step #16
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3D9%26SubID%3D5')
+
+# step #17
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootRpm.htm')
+
+# step #18
+get('http://{routerip}/userRpm/SysRebootHelpRpm.htm?')
+
+# step #19
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootHelpRpm.htm')
+
+# step #20
+get('http://{routerip}/userRpm/SysRebootRpm.htm?Reboot=Reboot')
+
+# step #21
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=Z&SubID=0')
+
+# step #22
+get('http://{routerip}/?')
+
+# step #23
+get('http://{routerip}/frames/top.htm?')
+
+# step #24
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #25
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #26
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #27
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #28
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootRpm.htm%3FReboot%3DReboot')
+
+# step #29
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #30
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3DZ%26SubID%3D0')
+
+# step #31
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=0')
+
+# step #32
+get('http://{routerip}/userRpm/DateTimeCfgRpm.htm?')
+
+# step #33
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3D9%26SubID%3D0')
+
+# step #34
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FDateTimeCfgRpm.htm')
+
+# step #35
+get('http://{routerip}/userRpm/DateTimeCfgHelpRpm.htm?')
+
+# step #36
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FDateTimeCfgHelpRpm.htm')
+
+# step #37
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=9&SubID=5')
+
+# step #38
+get('http://{routerip}/userRpm/SysRebootRpm.htm?')
+
+# step #39
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3D9%26SubID%3D5')
+
+# step #40
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootRpm.htm')
+
+# step #41
+get('http://{routerip}/userRpm/SysRebootHelpRpm.htm?')
+
+# step #42
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootHelpRpm.htm')
+
+# step #43
+get('http://{routerip}/userRpm/SysRebootRpm.htm?Reboot=Reboot')
+
+# step #44
+get('http://{routerip}/userRpm/MenuRpm.htm?MainID=Z&SubID=0')
+
+# step #45
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FMenuRpm.htm%3FMainID%3DZ%26SubID%3D0')
+
+# step #46
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2FuserRpm%2FSysRebootRpm.htm%3FReboot%3DReboot')
+
+# step #47
+get('http://{routerip}/?')
+
+# step #48
+get('http://{routerip}/frames/top.htm?')
+
+# step #49
+get('http://{routerip}/userRpm/MenuRpm.htm?')
+
+# step #50
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+
+# step #51
+get('http://{routerip}/userRpm/StatusHelpRpm.htm?')
+
+# step #52
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080327213956&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #53
+get('http://{routerip}/userRpm/StatusRpm.htm?')
+

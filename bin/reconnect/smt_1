@@ -1,0 +1,32 @@
+"""
+-G3010 Firmware 02.03
+"""
+
+vendor = 'SMT'
+name = '-G3010 Firmware 02.03'
+regex = r'(?s).*(SMT).*'
+
+# step #1
+get('http://{routerip}/blank.php?')
+
+# step #2
+get('http://{routerip}/cgi-bin/leftmenu.cgi?topmenu=5&leftmenu=6')
+
+# step #3
+get('http://{routerip}/contents/system/reboot.php?')
+
+# step #4
+get('http://{routerip}/board/shout.php?')
+
+# step #5
+post('http://{routerip}/contents/system/reboot.php')
+
+# step #6
+get('http://{routerip}/login/logout_page.php?')
+
+# step #7
+get('http://{routerip}/clr2/?')
+
+# step #8
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

@@ -1,0 +1,44 @@
+"""
+discus wireless VoIP AG
+"""
+
+vendor = 'Pirelli'
+name = 'discus wireless VoIP AG'
+regex = r'(?s).*(Pirelli).*'
+
+# step #1
+data = 'user=on&pws=mastor10'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/setupa_main.stm?')
+
+# step #7
+get('http://{routerip}/status_main.stm?')
+
+# step #8
+data = 'pvc=0&cur_if=11&disconnect=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #9
+get('http://{routerip}/status_main.stm?')
+
+# step #10
+data = 'pvc=1&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+

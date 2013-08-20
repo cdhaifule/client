@@ -1,0 +1,14 @@
+"""
+3Com&nbsp;Office&nbsp;Connect&nbsp;3CRWE754G72&nbsp;B
+"""
+
+vendor = '3COM'
+name = '3Com&nbsp;Office&nbsp;Connect&nbsp;3CRWE754G72&nbsp;B'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/statusprocess.exe?ifno=-1&connect=+Connect+')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?ifno=-1&disconnect=Disconnect')
+

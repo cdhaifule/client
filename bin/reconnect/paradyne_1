@@ -1,0 +1,16 @@
+"""
+6381 R3.00.10
+"""
+
+vendor = 'Paradyne'
+name = '6381 R3.00.10'
+regex = r'(?s).*(Paradyne).*'
+
+# step #1
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=pppoe&var%3Aerrorpagename=&var%3Amenu=setup&var%3Amenutitle=Setup&var%3Apagetitle=QK_CONN+Setup&var%3Apagemaster=&connection0%3Asettings%2Ftype=pppoe&connection0%3Afwan%3Asettings%2Fprivate%2Fmtu%2Fstate=1&connection0%3Apppoe%3Acommand%2Fstop=&logger%3Asettings%2Floglevel=notice&logger%3Asettings%2Ffacility%2Fuser=notice&var%3Aconid=connection0&var%3Amuxid=mux0&var%3Aencapsid=encaps0&var%3Aqkstart='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'var%3Amain=menu&var%3Astyle=style5&getpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fstyle5%2Fmenus%2Fmenu.html&var%3Apagename=pppoe&var%3Aerrorpagename=&var%3Amenu=setup&var%3Amenutitle=Setup&var%3Apagetitle=QK_CONN+Setup&var%3Apagemaster=&connection0%3Asettings%2Ftype=pppoe&connection0%3Afwan%3Asettings%2Fprivate%2Fmtu%2Fstate=1&connection0%3Apppoe%3Acommand%2Fstart=&logger%3Asettings%2Floglevel=notice&logger%3Asettings%2Ffacility%2Fuser=notice&connection0%3Asettings%2Fdescription=QK_CONN&fdb%3Asettings%2Fservice%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fnat%2Fstate=1&connection0%3Afwan%3Asettings%2Fprivate%2Fspi%2Fstate=1&var%3Aconid=connection0&var%3Amuxid=mux0&var%3Aencapsid=encaps0&var%3Aqkstart='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

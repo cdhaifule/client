@@ -1,0 +1,17 @@
+"""
+Free Control
+"""
+
+vendor = 'Pearl'
+name = 'Free Control'
+regex = r'(?s).*(Pearl).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=true')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=true')
+

@@ -1,0 +1,11 @@
+"""
+dr814
+"""
+
+vendor = 'Aolynk'
+name = 'dr814'
+regex = r'(?s).*(Aolynk).*'
+
+# step #1
+get('http://{routerip}/ctxtad/Keywords?ads=14&link=http%3A//www.raymond.cc/blog/archives/2007/10/23/finally-the-perfect-way-to-unlimited-rapidshare-downloading/&mode=prod&serveMode=Normal&type=textLinks&rq=623809089.4950134')
+

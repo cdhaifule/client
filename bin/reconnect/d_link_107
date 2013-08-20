@@ -1,0 +1,11 @@
+"""
+DI-524 V2.06DE
+"""
+
+vendor = 'D-Link'
+name = 'DI-524 V2.06DE'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

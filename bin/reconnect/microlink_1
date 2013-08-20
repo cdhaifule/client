@@ -1,0 +1,18 @@
+"""
+LAN Router
+"""
+
+vendor = 'MicroLink'
+name = 'LAN Router'
+regex = r'(?s).*(MicroLink).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=restart&typereset=0'
+post('http://{routerip}/de/restart.htm', data=data)
+
+# step #3
+get('http://{routerip}/de/index.htm?')
+

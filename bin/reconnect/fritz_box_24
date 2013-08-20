@@ -1,0 +1,74 @@
+"""
+WLAN 3170 Firmware-Version 49.04.53
+"""
+
+vendor = 'FRITZ!Box'
+name = 'WLAN 3170 Firmware-Version 49.04.53'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.12&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20750,goog-black-enchash:1:50322')
+
+# step #2
+get('http://{routerip}/diestaemme/update.rdf?')
+
+# step #3
+get('http://{routerip}/updates/?reqVersion=1&id={d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}&version=0.7.5.4&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #4
+get('http://{routerip}/updates/?reqVersion=1&id={D9808C4D-1CF5-4f67-8DB2-12CF78BBA23F}&version=2.5.7&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #5
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={5C2A336E-AF61-4fd5-90D7-9BDAC105D064}&version=0.3.1&maxAppVersion=3.0a1&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #6
+get('http://{routerip}/updates/?reqVersion=1&id={c50ca3c4-5656-43c2-a061-13e717f73fc8}&version=1.5&maxAppVersion=3.0b3&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #7
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=pcp-darkfox-3.0.0@pcpraxis.de&version=2.5.0&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #8
+get('http://{routerip}/updates/?reqVersion=1&id={19503e42-ca3c-4c27-b1e2-9cdb2170ee34}&version=0.9.7&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #9
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={DDC359D1-844A-42a7-9AA1-88A850A938A8}&version=1.0.1&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #10
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={D644F7E7-5141-4fac-A59C-21101C82C734}&version=0.4.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #11
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={3d7eb24f-2740-49df-8937-200b1cc08f8a}&version=1.5.5&maxAppVersion=3.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #12
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=google-cjk@partners.mozilla.com&version=1.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #13
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={e4a8a97b-f2ed-450b-b12d-ee082ba24781}&version=0.7.20080121.0&maxAppVersion=3.0b5&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #14
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id=foxyproxy@eric.h.jung&version=2.7.2&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #15
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0001-ABCDEFFEDCBA}&version=6.0.01&maxAppVersion=3.0pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #16
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0002-ABCDEFFEDCBA}&version=6.0.02&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #17
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={CAFEEFAC-0016-0000-0003-ABCDEFFEDCBA}&version=6.0.03&maxAppVersion=5.0%2B&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #18
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={8f8fe09b-0bd3-4470-bc1b-8cad42b8203a}&version=0.13.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #19
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={ac1e10b8-206d-4746-a18e-0483852dc20b}&version=2.1&maxAppVersion=2.0.0.*&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #20
+get('http://{routerip}/blocklist/1/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/2.0.0.12/?')
+
+# step #21
+get('http://{routerip}/update/VersionCheck.php?reqVersion=1&id={5e594888-3e8e-47da-b2c6-b0b545112f84}&version=1.2&maxAppVersion=3.0b5pre&status=userEnabled&appID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}&appVersion=2.0.0.12&appOS=WINNT&appABI=x86-msvc')
+
+# step #22
+get('http://{routerip}/firefox/releases/2.0.0.14/update/win32/de/firefox-2.0.0.14.complete.mar?')
+

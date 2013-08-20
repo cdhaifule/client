@@ -1,0 +1,16 @@
+"""
+ASUS WL-500GP
+"""
+
+vendor = 'ASUS'
+name = 'ASUS WL-500GP'
+regex = r'(?s).*asus.*'
+
+# step #1
+data = 'action_script=dhcpc_release'
+post('http://{routerip}/apply.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'action_script=dhcpc_renew'
+post('http://{routerip}/apply.cgi', data=data, auth=("{username}", "{password}"))
+

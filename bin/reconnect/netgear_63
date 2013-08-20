@@ -1,0 +1,16 @@
+"""
+Netgear MR814v3
+"""
+
+vendor = 'Netgear'
+name = 'Netgear MR814v3'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect="Verbindung trennen"'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect="  Verbinden  "'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+

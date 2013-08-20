@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WRT&nbsp;54G&nbsp;V5
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT&nbsp;54G&nbsp;V5'
+regex = r''
+
+# step #1
+data = u'action=Disconnect&wan_pro=2&conn_stats=300&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #2
+data = u'action=Connect&wan_pro=2&conn_stats=-1&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+

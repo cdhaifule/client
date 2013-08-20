@@ -1,0 +1,55 @@
+"""
+P-660H-D1 Firmware V3.40(AGD.2) | 04/26/2006
+"""
+
+vendor = 'ZYXEL '
+name = 'P-660H-D1 Firmware V3.40(AGD.2) | 04/26/2006'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=827ccb0eea8a706c4c34a16891f84e7b&Prestige_Login=Login'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #3
+get('http://{routerip}/rpSys.html?')
+
+# step #4
+get('http://{routerip}/top.html?')
+
+# step #5
+get('http://{routerip}/path.html?')
+
+# step #6
+get('http://{routerip}/rpPanel.html?')
+
+# step #7
+get('http://{routerip}/home.html?')
+
+# step #8
+get('http://{routerip}/buttom.html?')
+
+# step #9
+get('http://{routerip}/DiagGeneral.html?')
+
+# step #10
+get('http://{routerip}/buttom.html?')
+
+# step #11
+get('http://{routerip}/DiagADSL.html?')
+
+# step #12
+get('http://{routerip}/buttom.html?')
+
+# step #13
+data = 'LineInfoDisplay=Start+to+reset+ADSL%0D%0ALoading+ADSL+modem+F%2FW...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #14
+get('http://{routerip}/DiagADSL.html?')
+
+# step #15
+get('http://{routerip}/buttom.html?')
+

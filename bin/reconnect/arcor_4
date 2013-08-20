@@ -1,0 +1,12 @@
+"""
+-Easy Box A 600 WLAN Firmware 1.01.002
+"""
+
+vendor = 'Arcor'
+name = '-Easy Box A 600 WLAN Firmware 1.01.002'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+data = 'pvc=0&cur_if=11&disconnect.x=111&disconnect.y=8&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

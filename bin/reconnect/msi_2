@@ -1,0 +1,14 @@
+"""
+MSI&nbsp;RG54SE&nbsp;II
+"""
+
+vendor = 'MSI'
+name = 'MSI&nbsp;RG54SE&nbsp;II'
+regex = r''
+
+# step #1
+get('http://{routerip}/userRpm/StatusRpm.htm?Disconnect=Disconnect&wan=1')
+
+# step #2
+get('http://{routerip}/userRpm/StatusRpm.htm?Connect=Connect&wan=1')
+

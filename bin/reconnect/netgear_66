@@ -1,0 +1,14 @@
+"""
+Netgear RP614 Firmware 4.14
+"""
+
+vendor = 'Netgear'
+name = 'Netgear RP614 Firmware 4.14'
+regex = r'(?s).*netgear.*'
+
+# step #1
+get('http://{routerip}/post-query?pppoeAct=2&Load=Q', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/post-query?pppoeAct=1&Load=Q', auth=("{username}", "{password}"))
+

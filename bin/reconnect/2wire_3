@@ -1,0 +1,20 @@
+"""
+2701HG-B Gateway
+"""
+
+vendor = '2Wire'
+name = '2701HG-B Gateway'
+regex = r'(?s).*(2Wire).*'
+
+# step #1
+get('http://{routerip}/xslt?PAGE=A07&THISPAGE=A06&NEXTPAGE=A07')
+
+# step #2
+get('http://{routerip}/xslt?PAGE=A08&THISPAGE=A07&NEXTPAGE=A08')
+
+# step #3
+post('http://{routerip}/xslt')
+
+# step #4
+get('http://{routerip}/xslt?PAGE=A01&THISPAGE=A09&NEXTPAGE=A01')
+

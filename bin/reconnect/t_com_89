@@ -1,0 +1,19 @@
+"""
+T-Sinus 154 Komfort
+"""
+
+vendor = 'T-Com'
+name = 'T-Sinus 154 Komfort'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+data = 'disconnect=true'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'connect=true'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

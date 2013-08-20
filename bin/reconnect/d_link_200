@@ -1,0 +1,15 @@
+"""
+EBR2310
+"""
+
+vendor = 'D-Link'
+name = 'EBR2310'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'renew=DHCP+Renew'
+post('http://{routerip}/st_device.cgi', data=data)
+

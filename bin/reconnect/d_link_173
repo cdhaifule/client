@@ -1,0 +1,17 @@
+"""
+DIR-635 Firmware 2.21EU
+"""
+
+vendor = 'D-Link'
+name = 'DIR-635 Firmware 2.21EU'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #2
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #3
+get('http://{routerip}/wan_connection_status.sxml?')
+

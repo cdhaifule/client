@@ -1,0 +1,17 @@
+"""
+DN-11004
+"""
+
+vendor = 'Digitus'
+name = 'DN-11004'
+regex = r'(?s).*(Digitus).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Eng/WBConfig.cgi?SubPage=Status.htm&WhichButton=2')
+
+# step #3
+get('http://{routerip}/Eng/WBConfig.cgi?SubPage=Status.htm&WhichButton=3')
+

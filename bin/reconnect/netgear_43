@@ -1,0 +1,16 @@
+"""
+Netgear DG824MB
+"""
+
+vendor = 'Netgear'
+name = 'Netgear DG824MB'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect=++Connect++'
+post('http://{routerip}/st_poe.htm', data=data, auth=("{username}", "{password}"))
+

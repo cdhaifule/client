@@ -1,0 +1,14 @@
+"""
+D-Link DI-624 A/B 132b03
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624 A/B 132b03'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/status.cgi?disconnect=Disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?connect=Connect', auth=("{username}", "{password}"))
+

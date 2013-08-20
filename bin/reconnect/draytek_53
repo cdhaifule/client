@@ -1,0 +1,110 @@
+"""
+Vigor 2910G
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor 2910G'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/header.htm?')
+
+# step #5
+get('http://{routerip}/l_m.htm?')
+
+# step #6
+get('http://{routerip}/menu.htm?')
+
+# step #7
+get('http://{routerip}/act_sta.htm?')
+
+# step #8
+get('http://{routerip}/cgi-bin/V2X00.cgi?fid=2015')
+
+# step #9
+get('http://{routerip}/doc/empty.htm?')
+
+# step #10
+get('http://{routerip}/doc/status.htm?')
+
+# step #11
+get('http://{routerip}/doc/empty.htm?')
+
+# step #12
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #13
+get('http://{routerip}/doc/online.sht?')
+
+# step #14
+get('http://{routerip}/cgi-bin/online3.cgi?ifno=3')
+
+# step #15
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #16
+get('http://{routerip}/doc/online.sht?')
+
+# step #17
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #18
+get('http://{routerip}/doc/online.sht?')
+
+# step #19
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #20
+get('http://{routerip}/doc/online.sht?')
+
+# step #21
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #22
+get('http://{routerip}/doc/online.sht?')
+
+# step #23
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #24
+get('http://{routerip}/doc/online.sht?')
+
+# step #25
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #26
+get('http://{routerip}/doc/online.sht?')
+
+# step #27
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #28
+get('http://{routerip}/doc/online.sht?')
+
+# step #29
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #30
+get('http://{routerip}/doc/online.sht?')
+
+# step #31
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #32
+get('http://{routerip}/doc/online.sht?')
+
+# step #33
+get('http://{routerip}/cgi-bin/v2x00.cgi?fid=168')
+
+# step #34
+get('http://{routerip}/wiki/index.php/Einen_Reconnect_aufzeichnen?')
+

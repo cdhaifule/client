@@ -1,0 +1,14 @@
+"""
+Dlink DI-604 (HW: E1 Firmware:3.20)
+"""
+
+vendor = 'Dlink'
+name = 'Dlink DI-604 (HW: E1 Firmware:3.20)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/status.cgi?disconnect', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?connect', auth=("{username}", "{password}"))
+

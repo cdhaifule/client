@@ -1,0 +1,12 @@
+"""
+Eumex&nbsp;300&nbsp;IP
+"""
+
+vendor = 'EUMEX'
+name = 'Eumex&nbsp;300&nbsp;IP'
+regex = r''
+
+# step #1
+headers = {u'SoapAction': u'urn:schemas-upnp-org:service:WANIPConnection:1#ForceTermination', u'Content-Type': u'text/xml; charset="utf-8"'}
+post('http://{routerip}/upnp/control/WANIPConn1', headers=headers)
+

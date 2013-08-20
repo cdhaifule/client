@@ -1,0 +1,17 @@
+"""
+5.28.01r Build 0006
+"""
+
+vendor = 'i-smart'
+name = '5.28.01r Build 0006'
+regex = r'(?s).*(i-smart).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/discons.htm?')
+
+# step #3
+get('http://{routerip}/connects.htm?')
+

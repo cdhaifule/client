@@ -1,0 +1,18 @@
+"""
+DD-WRT
+"""
+
+post("http://{routerip}/apply.cgi", 
+     headers={
+        "Referer": "http://{routerip}/Diagnostics.asp",
+     },
+     auth = ("{username}", "{password}"),
+     data = {
+        "action": "Apply",
+        "submit_button": "Ping",
+        "submit_type": "start",
+        "change_action": "gozila_cgi",
+        "ping_times": "1",
+        "next_page": "Diagnostics.asp",
+        "ping_ip": "killall+-HUP+pppoecd",
+     })

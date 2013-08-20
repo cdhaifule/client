@@ -1,0 +1,17 @@
+"""
+Bipac 5102 Firmware 2.7.0.20(UE0.B1C)3.3.2.5
+"""
+
+vendor = 'Billion'
+name = 'Bipac 5102 Firmware 2.7.0.20(UE0.B1C)3.3.2.5'
+regex = r'(?s).*(Billion).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #3
+get('http://{routerip}/status/status_deviceinfo.htm?')
+

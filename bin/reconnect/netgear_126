@@ -1,0 +1,17 @@
+"""
+WGR614 V7
+"""
+
+vendor = 'Netgear'
+name = 'WGR614 V7'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+get('http://{routerip}/clr2/?')
+
+# step #2
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #3
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20365,goog-black-enchash:1:49374')
+

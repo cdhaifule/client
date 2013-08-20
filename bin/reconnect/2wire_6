@@ -1,0 +1,11 @@
+"""
+HomePortal 1700HW 3.5.15
+"""
+
+vendor = '2wire'
+name = 'HomePortal 1700HW 3.5.15'
+regex = r'(?s).*(2wire).*'
+
+# step #1
+get('http://{routerip}/portal/restart.html?')
+

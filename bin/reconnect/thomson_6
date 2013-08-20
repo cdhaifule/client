@@ -1,0 +1,16 @@
+"""
+Speedtouch 510
+"""
+
+vendor = 'Thomson'
+name = 'Speedtouch 510'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+data = 'ce=1&be=0&l0=1&l1=1&name=Internet&0=13&1=Internet&5=1'
+post('http://{routerip}/cgi/b/is/_pppoe_/ov/', data=data)
+
+# step #2
+data = 'ce=1&be=0&l0=1&l1=1&name=Internet&0=12&1=Internet&5=1&30=echrifb%40topnet.tn&31=08127204&32=1'
+post('http://{routerip}/cgi/b/is/_pppoe_/ov/', data=data)
+

@@ -1,0 +1,71 @@
+"""
+520+isdn
+"""
+
+vendor = 'jetspeed'
+name = '520+isdn'
+regex = r'(?s).*(jetspeed).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19822,goog-black-enchash:1:47963')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/MenuPage?')
+
+# step #6
+get('http://{routerip}/hag/pages/logo.htm?')
+
+# step #7
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #8
+get('http://{routerip}/index.html?')
+
+# step #9
+get('http://{routerip}/hag/pages/MenuHome.htm?')
+
+# step #10
+get('http://{routerip}/MainPage?id=6')
+
+# step #11
+get('http://{routerip}/hag/js/global.gsv?')
+
+# step #12
+get('http://{routerip}/MenuPage?MenuId=7')
+
+# step #13
+get('http://{routerip}/hag/pages/MenuAdm.htm?')
+
+# step #14
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2FMenuPage%3FMenuId%3D7')
+
+# step #15
+get('http://{routerip}/MainPage?id=3')
+
+# step #16
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2Fhag%2Fpages%2FMenuAdm.htm')
+
+# step #17
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2FMainPage%3Fid%3D3')
+
+# step #18
+get('http://{routerip}/MainPage?id=4')
+
+# step #19
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2FMainPage%3Fid%3D4')
+
+# step #20
+get('http://{routerip}/Action?reboot_loc=0&id=5&cmdReboot=Reboot')
+
+# step #21
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080228162641&url=http%3A%2F%2F192.168.1.1%2FAction%3Freboot_loc%3D0%26id%3D5%26cmdReboot%3DReboot')
+

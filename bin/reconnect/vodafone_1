@@ -1,0 +1,34 @@
+"""
+A 600 Firmware 2.01.005
+"""
+
+vendor = 'Vodafone'
+name = 'A 600 Firmware 2.01.005'
+regex = r'(?s).*(Vodafone).*'
+
+# step #1
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/status_main.stm?')
+
+# step #7
+data = 'pvc=0&cur_if=11&disconnect.x=89&disconnect.y=3&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+

@@ -1,0 +1,57 @@
+"""
+TCM420
+"""
+
+vendor = 'THOMSON'
+name = 'TCM420'
+regex = r'(?s).*(THOMSON).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/tce_side_banner.asp?')
+
+# step #3
+get('http://{routerip}/main_banner.asp?')
+
+# step #4
+get('http://{routerip}/m.asp?')
+
+# step #5
+get('http://{routerip}/m1.asp?')
+
+# step #6
+get('http://{routerip}/m2.asp?')
+
+# step #7
+get('http://{routerip}/m3.asp?')
+
+# step #8
+get('http://{routerip}/m4.asp?')
+
+# step #9
+get('http://{routerip}/m5.asp?')
+
+# step #10
+get('http://{routerip}/m2.asp?')
+
+# step #11
+get('http://{routerip}/set_scan_page.asp?')
+
+# step #12
+get('http://{routerip}/tce_side_banner.asp?')
+
+# step #13
+get('http://{routerip}/set_scan_banner.asp?')
+
+# step #14
+get('http://{routerip}/set_scan_body.asp?')
+
+# step #15
+data = 'CmInfoDsFreq1=586000000&CmInfoUsId1=4'
+post('http://{routerip}/goform/set_scan_body', data=data)
+
+# step #16
+get('http://{routerip}/set_scan_body.asp?')
+

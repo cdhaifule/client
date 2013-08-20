@@ -1,0 +1,17 @@
+"""
+SMC2404WBR Barricade Turbo
+"""
+
+vendor = 'SMC2404WBR'
+name = 'SMC2404WBR Barricade Turbo'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/login.cgi?pws={password}')
+
+# step #2
+get('http://{routerip}/status_main_1.cgi?disconnect="disconnect"')
+
+# step #3
+get('http://{routerip}/status_main_1.cgi?connect=connect')
+

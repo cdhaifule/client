@@ -1,0 +1,43 @@
+"""
+DSL 2540T
+"""
+
+vendor = 'D-Link'
+name = 'DSL 2540T'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #5
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #7
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #8
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&encaps0%3Asettings%2Fmanual_conn=1&var%3Aconid=encaps0&var%3Amycon=connection0&var%3Acontype=&connection0%3Apppoe%3Acommand%2Fstart=&var%3Ajudge=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #10
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

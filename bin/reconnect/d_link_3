@@ -1,0 +1,244 @@
+"""
+524 T
+"""
+
+vendor = 'D-Link'
+name = '524 T'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_upnp.htm')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #10
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #12
+get('http://{routerip}/html/index.html?')
+
+# step #13
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #14
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #15
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #16
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_upnp.htm')
+
+# step #17
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #18
+get('http://{routerip}/html/index.html?')
+
+# step #19
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #20
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #21
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #22
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #23
+get('http://{routerip}/html/index.html?')
+
+# step #24
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #25
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #26
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #27
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_upnp.htm')
+
+# step #28
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/status/status_deviceinfo.htm')
+
+# step #29
+data = 'getpage=..%2Fhtml%2Fstatus%2Fdeviceinfofile.htm&var%3Amycon=connection0&var%3Aconid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #30
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #31
+get('http://{routerip}/html/index.html?')
+
+# step #32
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #33
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #34
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #35
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/ddns.htm')
+
+# step #36
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_lan.htm')
+
+# step #37
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #38
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #39
+get('http://{routerip}/html/index.html?')
+
+# step #40
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #41
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #42
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #43
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wan.htm')
+
+# step #44
+data = 'getpage=..%2Fhtml%2Fhome%2FwanPPP.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3ApreForm=home&var%3Acontype=pppoe&var%3AcontypeReal='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #45
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_upnp.htm')
+
+# step #46
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/portforw.htm&var:pagename=fwan&var:category=categoryG')
+
+# step #47
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #48
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #49
+get('http://{routerip}/html/index.html?')
+
+# step #50
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #51
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #52
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #53
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wan.htm')
+
+# step #54
+data = 'getpage=..%2Fhtml%2Fhome%2FwanPPP.htm&var%3Aconid=encaps0&var%3Amycon=connection0&var%3ApreForm=home&var%3Acontype=pppoe&var%3AcontypeReal='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #55
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_lan.htm')
+
+# step #56
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/advanced/adv_upnp.htm')
+
+# step #57
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #58
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_system.htm')
+
+# step #59
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_misc.htm')
+
+# step #60
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_test.htm')
+
+# step #61
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/testmain.htm&var:conid=0&var:teststep=0')
+
+# step #62
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/closeWin.html')
+
+# step #63
+get('http://{routerip}/html/index.html?')
+
+# step #64
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #65
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #66
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+
+# step #67
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_lan.htm')
+
+# step #68
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_admin.htm')
+
+# step #69
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/tools/tools_system.htm')
+
+# step #70
+data = 'getpage=..%2Fhtml%2Ftools%2Frestartmodem.htm&var%3Acom=restart&var%3Aip=&var%3Arestart=1&logic%3Acommand%2Fsave=&logic%3Acommand%2Fppp_disconnect='
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #71
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html')
+
+# step #72
+data = 'getpage=..%2Fhtml%2Fframe.htm&login%3Acommand%2Fusername=Admin&login%3Acommand%2Fpassword=Admin'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #73
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_RelaodHref.htm&var:RelaodHref=')
+
+# step #74
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/home/home_wizard.htm')
+

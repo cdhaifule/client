@@ -1,0 +1,14 @@
+"""
+Trust&nbsp;SpeedShare&nbsp;ADSL&nbsp;2&nbsp;Modem-Router&nbsp;MD-4050
+"""
+
+vendor = 'Trust'
+name = 'Trust&nbsp;SpeedShare&nbsp;ADSL&nbsp;2&nbsp;Modem-Router&nbsp;MD-4050'
+regex = r''
+
+# step #1
+get('http://{routerip}/Forms/tools_system_1')
+
+# step #2
+get('http://{routerip}/Forms/tools_system_1')
+

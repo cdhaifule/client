@@ -1,0 +1,34 @@
+"""
+FBR1407A
+"""
+
+vendor = 'Level-one'
+name = 'FBR1407A'
+regex = r'(?s).*(Level-one).*'
+
+# step #1
+data = 'rc=%40&PS=lansee&rd=banner'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #2
+get('http://{routerip}/status.htm?RC=@&ZT=1207731251843')
+
+# step #3
+get('http://{routerip}/status.htm?RC=_&ZT=1207731255234')
+
+# step #4
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000&ZT=1207731256593')
+
+# step #5
+get('http://{routerip}/status.htm?RC=_&ZT=1207731259796')
+
+# step #6
+data = 'rc=%40&rd=banner'
+post('http://{routerip}/cgi-bin/logo', data=data)
+
+# step #7
+get('http://{routerip}/status.htm?RC=@&ZT=1207731261218')
+
+# step #8
+get('http://{routerip}/_status.htm?RC=@&ZT=1207731261218')
+

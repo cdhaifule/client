@@ -1,0 +1,14 @@
+"""
+Billion BIPAC-741 ADSL
+"""
+
+vendor = 'Billion'
+name = 'Billion BIPAC-741 ADSL'
+regex = r'(?s).*(billion|bipac).*'
+
+# step #1
+get('http://{routerip}/status?ppch=1&ppconn=2&scrollTop=&isclear=0', auth=("{username}", "{password}"))
+
+# step #2
+get('http://http://194.25.134.146/')
+

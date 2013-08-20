@@ -1,0 +1,60 @@
+"""
+Speedport 500V
+"""
+
+vendor = 'T-Com'
+name = 'Speedport 500V'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #2
+get('http://{routerip}/b_banner.htm?')
+
+# step #3
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #4
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #5
+get('http://{routerip}/js_menu.txt?')
+
+# step #6
+data = 'P1=0000'
+post('http://{routerip}/start.login', data=data)
+
+# step #7
+get('http://{routerip}/b_banner.htm?')
+
+# step #8
+get('http://{routerip}/m_startseite.htm?')
+
+# step #9
+get('http://{routerip}/hcti_startseite.htm?')
+
+# step #10
+get('http://{routerip}/js_fade.txt?')
+
+# step #11
+get('http://{routerip}/js_menu.txt?')
+
+# step #12
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #13
+get('http://{routerip}/js_fade.txt?')
+
+# step #14
+get('http://{routerip}/pppctl.cmd?action=1')
+
+# step #15
+get('http://{routerip}/js_fade.txt?')
+
+# step #16
+get('http://{routerip}/logout.cmd?')
+
+# step #17
+get('http://{routerip}/deletecookie.cmd?')
+

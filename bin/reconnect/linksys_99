@@ -1,0 +1,33 @@
+"""
+WRT54GC ver. 2.0
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54GC ver. 2.0'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/setup.htm?')
+
+# step #5
+get('http://{routerip}/Wireless.htm?')
+
+# step #6
+get('http://{routerip}/Status.htm?')
+
+# step #7
+data = 'renew=IP-Erneuerung&ctype=dhcp'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #8
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20234,goog-black-enchash:1:49076')
+

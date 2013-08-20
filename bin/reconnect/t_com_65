@@ -1,0 +1,16 @@
+"""
+T-Com&nbsp;Sinus&nbsp;154&nbsp;DSL
+"""
+
+vendor = 'T-Com'
+name = 'T-Com&nbsp;Sinus&nbsp;154&nbsp;DSL'
+regex = r''
+
+# step #1
+data = u'disconnect=Trennen'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+data = u'connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+

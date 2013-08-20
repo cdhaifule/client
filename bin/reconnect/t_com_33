@@ -1,0 +1,11 @@
+"""
+T-COM&nbsp;Router&nbsp;siehe&nbsp;Beschreibung&nbsp;fast&nbsp;alle&nbsp;Speedports
+"""
+
+vendor = 'T-Com'
+name = 'T-COM&nbsp;Router&nbsp;siehe&nbsp;Beschreibung&nbsp;fast&nbsp;alle&nbsp;Speedports'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/disconnect.exe')
+

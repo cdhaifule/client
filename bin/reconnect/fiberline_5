@@ -1,0 +1,16 @@
+"""
+Fiberline&nbsp;CAS-3040&nbsp;FW&nbsp;12004
+"""
+
+vendor = 'Fiberline'
+name = 'Fiberline&nbsp;CAS-3040&nbsp;FW&nbsp;12004'
+regex = r''
+
+# step #1
+data = u'page=statusp&pppoeflag=1'
+post('http://{routerip}/statusfix.htm', data=data)
+
+# step #2
+data = u'page=statusp&pppoeflag=0'
+post('http://{routerip}/statusfix.htm', data=data)
+

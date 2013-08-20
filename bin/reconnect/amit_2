@@ -1,0 +1,17 @@
+"""
+IP Sharer HiP400 (FW 1.93p)
+"""
+
+vendor = 'AMIT'
+name = 'IP Sharer HiP400 (FW 1.93p)'
+regex = r'(?s).*(AMIT).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=2000')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?RC=@&A=H&M=0&T=10000')
+

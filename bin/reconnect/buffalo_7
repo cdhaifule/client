@@ -1,0 +1,16 @@
+"""
+Buffalo&nbsp;WZR2-G300N&nbsp;FW&nbsp;101&nbsp;106
+"""
+
+vendor = 'Buffalo'
+name = 'Buffalo&nbsp;WZR2-G300N&nbsp;FW&nbsp;101&nbsp;106'
+regex = r''
+
+# step #1
+data = u'command=nothing&cur_ipaddr=192.168.11.1&next_page=Wizards.htm&reboot=0&data1=ConnectionOption+dial_ppp&ConnectionOption=release&dial_ppp=0&connect_dhcp='
+post('http://{routerip}/post.cgi', data=data)
+
+# step #2
+data = u'command=nothing&cur_ipaddr=192.168.11.1&next_page=Wizards.htm&reboot=0&data1=ConnectionOption+dial_ppp&ConnectionOption=renew&dial_ppp=1&connect_dhcp='
+post('http://{routerip}/post.cgi', data=data)
+

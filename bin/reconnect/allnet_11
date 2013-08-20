@@ -1,0 +1,16 @@
+"""
+Allnet ALL0196 Firmware Version 1.6 Release 07
+"""
+
+vendor = 'Allnet'
+name = 'Allnet ALL0196 Firmware Version 1.6 Release 07'
+regex = r'(?s).*allnet.*'
+
+# step #1
+data = 'hang_Up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data, auth=("{username}", "{password}"))
+

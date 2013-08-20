@@ -1,0 +1,17 @@
+"""
+WA3002g4
+"""
+
+vendor = 'Dataone'
+name = 'WA3002g4'
+regex = r'(?s).*(Dataone).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #3
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080215171544&url=http%3A%2F%2F192.168.1.1%2Frebootinfo.cgi')
+

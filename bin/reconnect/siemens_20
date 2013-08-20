@@ -1,0 +1,38 @@
+"""
+Gigaset SX763 WLAN dsl 2.3.52.2.0
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SX763 WLAN dsl 2.3.52.2.0'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+data = 'form_submission_type=login&form_submission_parameter=&current_page=welcome_login.html&next_page=home.html&i=1&admin_role_name=administrator&operator_role_name=operator&subscriber_role_name=subscriber&choose_role=0&your_password=47_jprb36%2B19&Login=OK'
+post('http://{routerip}/UE/ProcessForm', data=data)
+
+# step #2
+get('http://{routerip}/UE/home.html?')
+
+# step #3
+get('http://{routerip}/UE/home_internet.html?counter=0')
+
+# step #4
+data = 'form_submission_type=ok_submit&form_submission_parameter=&current_page=home.html&next_page=home.html&0_set_IGD.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.V_ActionConnect=1'
+post('http://{routerip}/UE/ProcessForm', data=data)
+
+# step #5
+get('http://{routerip}/UE/home.html?')
+
+# step #6
+get('http://{routerip}/UE/home_internet.html?counter=0')
+
+# step #7
+data = 'form_submission_type=ok_submit&form_submission_parameter=&current_page=home.html&next_page=home.html&0_set_IGD.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.V_ActionConnect=1'
+post('http://{routerip}/UE/ProcessForm', data=data)
+
+# step #8
+get('http://{routerip}/UE/home.html?')
+
+# step #9
+get('http://{routerip}/UE/home_internet.html?counter=0')
+

@@ -1,0 +1,9 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE551&nbsp;WLan&nbsp;Router
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE551&nbsp;WLan&nbsp;Router'
+regex = r''
+
+

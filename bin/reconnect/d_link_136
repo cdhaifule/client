@@ -1,0 +1,17 @@
+"""
+DI-624  (HW Ax, FW1.2d)
+"""
+
+vendor = 'D-Link'
+name = 'DI-624  (HW Ax, FW1.2d)'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?disconnect=')
+
+# step #3
+get('http://{routerip}/status.cgi?connect=')
+

@@ -1,0 +1,20 @@
+"""
+D-Link DSL-564T (V1.00B02T02.DE.20040813) -->Status: Allgemein | LAN | DSL
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DSL-564T (V1.00B02T02.DE.20040813) -->Status: Allgemein | LAN | DSL'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+data = 'getpage=../html/home_gm.htm&errorpage=../html/index.html&login:command/username={username}&login:command/password={password}&var:language=gm&var:errormsg=Error'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=../html/status_gm/connstatus.htm&var:language=gm&connection0:settings/manual_conn=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'getpage=../html/status_gm/connstatus.htm&var:language=gm&connection0:settings/manual_conn=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

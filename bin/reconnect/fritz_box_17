@@ -1,0 +1,12 @@
+"""
+Fon WLAN 7270 Firmware 54.04.53
+"""
+
+vendor = 'FRITZ!Box'
+name = 'Fon WLAN 7270 Firmware 54.04.53'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+data = 'router=FRITZ%21Box+Fon+WLAN+7270+Firmware+54.04.53'
+post('http://{routerip}/clr3/', data=data)
+

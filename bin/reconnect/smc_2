@@ -1,0 +1,17 @@
+"""
+7004FW
+"""
+
+vendor = 'SMC'
+name = '7004FW'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=Disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=Connect')
+

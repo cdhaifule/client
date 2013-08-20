@@ -1,0 +1,67 @@
+"""
+Speedport W700 V
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W700 V'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/search?sourceid=navclient-ff&features=Rank&client=navclient-auto-ff&googleip=O;209.85.129.104;109&ch=8dd0d7277&q=info:http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FEinen_Reconnect_aufzeichnen')
+
+# step #2
+data = 'pws='
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #3
+get('http://{routerip}/loginpserr.stm?')
+
+# step #4
+data = 'pws=0000'
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #5
+get('http://{routerip}/wait.stm?')
+
+# step #6
+get('http://{routerip}/index.stm?')
+
+# step #7
+get('http://{routerip}/b_banner.stm?')
+
+# step #8
+get('http://{routerip}/m_startseite.stm?')
+
+# step #9
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #10
+get('http://{routerip}/js_dsl.stm?')
+
+# step #11
+get('http://{routerip}/js_wan.stm?')
+
+# step #12
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #13
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #14
+get('http://{routerip}/search?sourceid=navclient-ff&features=Rank&client=navclient-auto-ff&googleip=O;74.125.39.147;110&ch=8dd0d7277&q=info:http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FEinen_Reconnect_aufzeichnen')
+
+# step #15
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #16
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20772,goog-black-enchash:1:50374')
+
+# step #17
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #18
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #19
+get('http://{routerip}/hcti_startseite.stm?')
+

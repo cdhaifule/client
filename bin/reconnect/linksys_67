@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WRT54G3G&nbsp;Mit&nbsp;Vodafone&nbsp;Branding
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT54G3G&nbsp;Mit&nbsp;Vodafone&nbsp;Branding'
+regex = r''
+
+# step #1
+data = u'submit_button=index&change_action=gozila_cgi&submit_type=Connect_wwan&next _page=index_wstatus2.asp'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #2
+data = u'submit_button=index&change_action=gozila_cgi&submit_type=Disconnect_wwan&n ext_page=index_wstatus2.asp'
+post('http://{routerip}/apply.cgi', data=data)
+

@@ -1,0 +1,32 @@
+"""
+DI-804 v2.05 B4
+"""
+
+vendor = 'D-Link'
+name = 'DI-804 v2.05 B4'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/bground.htm?')
+
+# step #5
+get('http://{routerip}/index.htm?')
+
+# step #6
+get('http://{routerip}/doc/m0.htm?')
+
+# step #7
+get('http://{routerip}/cgi-bin/di700.cgi?fid=1300')
+
+# step #8
+get('http://{routerip}/index.htm?')
+

@@ -1,0 +1,67 @@
+"""
+Sinus 154 DSL Basic 3 FW 1.18
+"""
+
+vendor = 'T-Com'
+name = 'Sinus 154 DSL Basic 3 FW 1.18'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #3
+get('http://{routerip}/b_banner.htm?')
+
+# step #4
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #5
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #6
+data = 'pws=almut'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #7
+get('http://{routerip}/wait.stm?')
+
+# step #8
+get('http://{routerip}/index.stm?')
+
+# step #9
+get('http://{routerip}/m_startseite.stm?')
+
+# step #10
+get('http://{routerip}/b_banner.htm?')
+
+# step #11
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #12
+post('http://{routerip}/cgi-bin/reset_qsetup.exe')
+
+# step #13
+get('http://{routerip}/hcti_startseite.stm?')
+
+# step #14
+get('http://{routerip}/hcti_status.stm?')
+
+# step #15
+get('http://{routerip}/hcti_status_internet.stm?')
+
+# step #16
+data = 'disconnect=Trennen'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #17
+get('http://{routerip}/wait.stm?')
+
+# step #18
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:31,goog-white-url:1:371,goog-black-url:1:20337,goog-black-enchash:1:49337')
+
+# step #19
+get('http://{routerip}/hcti_status_internet.stm?')
+

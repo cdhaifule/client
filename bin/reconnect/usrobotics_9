@@ -1,0 +1,12 @@
+"""
+USRobotics&nbsp;USR5461
+"""
+
+vendor = 'USRobotics'
+name = 'USRobotics&nbsp;USR5461'
+regex = r''
+
+# step #1
+data = u'page=device.asp&action=Reboot'
+post('http://{routerip}/apply.cgi', data=data)
+

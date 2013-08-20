@@ -1,0 +1,12 @@
+"""
+Netgear&nbsp;RP614&nbsp;V2
+"""
+
+vendor = 'Netgear'
+name = 'Netgear&nbsp;RP614&nbsp;V2'
+regex = r''
+
+# step #1
+data = u'Load=Q&connStatus=Connected&getIP=OK&pppoeAct=2&Button=Apply'
+post('http://{routerip}/ppoestatus.htm/post-query', data=data)
+

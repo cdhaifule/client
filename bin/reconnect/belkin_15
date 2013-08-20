@@ -1,0 +1,35 @@
+"""
+F5D7630 - 4B
+"""
+
+vendor = 'Belkin'
+name = 'F5D7630 - 4B'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+data = 'pws=passwort'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+data = 'disconnect=Abbruch'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #4
+get('http://{routerip}/index.stm?')
+
+# step #5
+data = 'connect=Verbinden'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #6
+get('http://{routerip}/index.stm?')
+
+# step #7
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #8
+get('http://{routerip}/login.stm?')
+

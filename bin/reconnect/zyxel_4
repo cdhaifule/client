@@ -1,0 +1,515 @@
+"""
+P-2602HWN-D7A
+"""
+
+vendor = 'ZYXEL '
+name = 'P-2602HWN-D7A'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/Success.html?')
+
+# step #2
+get('http://{routerip}/home.html?')
+
+# step #3
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095778392&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=JSMD4kA72dlL8QJKQbSmtjf0yxbX1vC%2Bumhz0t7G%2FYDkuDCB2N%2Fbh2v7&=')
+
+# step #4
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095778549&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=qf5fncXNNcBL%2FTATApS%2F5BiHjIYwvL2vHEzi5p9atiOj474N7cvh&=')
+
+# step #5
+get('http://{routerip}/detect.html?')
+
+# step #6
+get('http://{routerip}/detect.html?')
+
+# step #7
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095792939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=K7O38hn8p30Z02UvlYuAfDn6Nrmt3dX2%2FostwO5RET5TeR7dvOV8s8saFOiU&=')
+
+# step #8
+get('http://{routerip}/RebootSucc.html?')
+
+# step #9
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800486&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=9a05VoSFr88%2BFvnn2AMpCVH0MpnHU8fmMrGSxBI8kiH8Oa1af%2FVnAF%2Fzykl7P4Gu7U4AIFNTeslmN4B6wUGQnAZJgQ%3D%3D&=')
+
+# step #10
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800564&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=2uQCe0Ycr1UUBBqlA%2FLasu9GhLuyuv8jnuF5HGzyTu%2BQeoHbFK4%3D&=')
+
+# step #11
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800564&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=2uQCe0Ycr1UUBBqlA%2FLasu9GhLuyuv8jnuF5HGzySPCwNYfKFexajvEk&=')
+
+# step #12
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800596&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ur7ziD1YLiVhnHTTQMvc5sLC%2BR4bbrT7bfvRXYDwf1TRo0buD69Vm%2FvjlA3rGh2P0g%3D%3D&=')
+
+# step #13
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800596&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ur7ziD1YLiVhnHTTQMvc5sLC%2BR4bbrT7bfvRXYDwT0THuEb3crJClcc%3D&=')
+
+# step #14
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800471&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=3%2FNhhKsiYjSRXHxdFGjZWg9lyb74cdnljON9QUY%2FcDRj5xzm1wTpAA%3D%3D&=')
+
+# step #15
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=XmG0YrTF6Mzgv5c%2BBMj59l6plZ6MnB%2B07NtIhZ2F5VmmlfkHBsZDaHQ0&=')
+
+# step #16
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095800877&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=vdHWKHQWsC2vtG0klWFbPa3e4PefrSRB%2BLOpnW46%2BrIxZf789R%2B8dZAqQVdv&=')
+
+# step #17
+get('http://{routerip}/RebootSucc.html?')
+
+# step #18
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=vmI8aw0KPZ2kaDQmmycTKjku7RRuFZs3rR%2F8pR10%2BKTGxXYkGftcPA%3D%3D&=')
+
+# step #19
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=vmI8dAAdJM%2FuTjQnnCcTKi0lmQhuBpFf9EW58AoBy%2FGn%2BiA4N74IYkvwFhbH1UHpBu2sqrXd23ho6uPuuetgFmT6Ww%3D%3D&=')
+
+# step #20
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806674&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=gWvYFQxVBmYfamthM0M7qexWpUxWYsUol%2BZtHg5onKCgHy453WU%3D&=')
+
+# step #21
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806689&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=fykbbyZKT8xt7cc%2BbDLZZCb0R5iSGpYg%2FIOiYbM77LGOUjig95aDGsrf&=')
+
+# step #22
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806736&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=esP6Zmlnusq%2Fsr%2BpU7bqrc%2BE24uWQ7XYPBp8240QmkSXcnxNkDsj7ovnjV0XqwuJnw%3D%3D&=')
+
+# step #23
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806736&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=esP6Zmlnusq%2Fsr%2BpU7bqrc%2BE24uWQ7XYPBp8240QqlSBaXxU7SY04Lc%3D&=')
+
+# step #24
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095806752&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=VbHL4rcFMievRmBqNSjawmJN%2B%2F4s%2FjLSngupriPFD97ZkBZ%2BYWYDSbXv&=')
+
+# step #25
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095807002&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=fywWMWR%2B483QTKu18P7M8DUGd7BJa%2B%2BkjySLqwCf9NxrAQSAsGMMq2HBkl9S&=')
+
+# step #26
+get('http://{routerip}/RebootSucc.html?')
+
+# step #27
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810314&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=UJCrQuKo9gvJwjQg7UqBGCJpKzIvlG%2BQkbyaykGQaJ39wuaNLFuv27tvjlVIGozr%2FeE5GS80FYtlUKtO6ntsml5IUg%3D%3D&=')
+
+# step #28
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810361&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=V9O6awSVYJYL2ub%2B0Vb39XzM9teIjXgGIFhDvNrekKjBmhWYAgxuBg%3D%3D&=')
+
+# step #29
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810392&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=6jnMlPd4qZLUk8F4KIfSLXgpsJdCCKPI3Px3DOyhiA1zOYTmd1E%3D&=')
+
+# step #30
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810408&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=EPlcsestN4bAI8rJotnQZAr%2FsF%2FQ%2B5cnGY47eZ6rAJMdaZin3km%2Bx9RS&=')
+
+# step #31
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810424&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=vbMD6MiQset%2FGO0KmHk4nVNbqk5K2KCosvaVeS5P%2Ffct3m8%2FSYzueA2d0UAypP64fQ%3D%3D&=')
+
+# step #32
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810439&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=cHAqBYq6waYlCmqqcWRaxEvREqo5qjWC6kSlj7uAwMgUyr5W5DvLaqk%3D&=')
+
+# step #33
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810439&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=cHAqBYq6waYlCmqqcWRaxEvREqo5qjWC6kSlj7uA0NgGzLRIon3Xc6gW&=')
+
+# step #34
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095810892&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=AwIjd6kSC%2B%2Bgqi6s6GlQMKPg1rXMFOrmud4i7kKgYDo4HbXaklplmBgoUKTP&=')
+
+# step #35
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812783&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=wAy3Io%2BSZhkT0yPCkNXd9JGVMLsml9Puig9mlPC4DYbst63sgjvqqg%3D%3D&=')
+
+# step #36
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=owKNIazYR85a2MhVor%2FydEqhr2HCuPRHK4QnVe4O1ffUadzIclfbKm9EOL6eWdk1HcStfxO8gqFxzImaKwDd%2BRyeUw%3D%3D&=')
+
+# step #37
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812877&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=E3H%2FySgFiOaB1zzbsBROx7m1CnKMSRh4aZfNyPH9I9i8D%2BnKdPk%3D&=')
+
+# step #38
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812892&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=nWWNvls%2BYQt1NHkfu9BypunT0B8Np%2BbPwFCleXCDrgYlTp3v89kVem0a&=')
+
+# step #39
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812924&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=w%2BLUBAAum5BuUpBSnzyKePMWiy9v3zmi6sB8e2OcQQvesy0zQBvyKf%2FB5e3BVL%2FRoA%3D%3D&=')
+
+# step #40
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=0Zyj9wc0RPo5izAF9BQQkuZPNZPVZLRhgmLb4WP1R9WjHlKuK3Tj%2Bz0%3D&=')
+
+# step #41
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095812939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=0Zyj9wc0RPo5izAF9BQQkuZPNZPVZLRhgmLb4WP1V8WxGFiwbTL%2F4jxL&=')
+
+# step #42
+get('http://{routerip}/RebootSucc.html?')
+
+# step #43
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095816971&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=yrvI10c2gbUnWhsvlsDU80kQdyKB5cOSgXVAFl7N9nwKbCfUDDtEezNwQncH&=')
+
+# step #44
+get('http://{routerip}/RebootSucc.html?')
+
+# step #45
+get('http://{routerip}/RebootSucc.html?')
+
+# step #46
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826564&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=QtY2hF1ReODgMessTVO0cZT%2Btmhr63U%2FqeDaLsMad9oRfIZkDlAPnZ3L%2BcIQeCYeDjl0nN%2Bq%2FpRpUbAA2%2BzVifJ7SQ%3D%3D&=')
+
+# step #47
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826580&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=2D1ku8J9CcEI5RCNTriYA%2B%2BUCbGfmDEt78T6wtiIn4E4vkmFJtv%2B4Q%3D%3D&=')
+
+# step #48
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826674&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=pXjtYBiMQ9mCHOADfVpHpeb9yTv%2BDXfrdLHZtRoiXoqTIAZoDxQ%3D&=')
+
+# step #49
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826689&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=YUoz%2BkJOC8NGpISRKhP7Ety9H%2FUO6GtoaOqY83rfnXXlzHreNjkNV3LT&=')
+
+# step #50
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ngrMqmhNlblUzu%2F%2Fu2kw6hbXcdarTcOpMmdqc22VOVrWOnQgZecbTBhX3dbVG%2Fsj2g%3D%3D&=')
+
+# step #51
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ngrMqmhNlblUzu%2F%2Fu2kw6hbXcdarTcOpMmdqc22VCUrAIXQ5GPoMQiQ%3D&=')
+
+# step #52
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ngrMqmhNlblUzu%2F%2Fu2kw6hbXcdarTcOpMmdqc22VGVrSJ34nXrwQWyVJ&=')
+
+# step #53
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095826799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ngrMqmhNlblUzu%2F%2Fu2kw6hbXcdarTcOpMmdqc22VOVrWOnQgZecbTGZNzM2X&=')
+
+# step #54
+get('http://{routerip}/RebootSucc.html?')
+
+# step #55
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095827971&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=CjMn%2FsHoiCs4x3uSvtlAWLPzmfH5T%2BGU2pj3hLbdcpHJS0mrgdi%2Fyz5FOiRKMNIP0weSlR6e7WRwOmSjVng3IMZqpw%3D%3D&=')
+
+# step #56
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828189&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=G0MqzSJEnxJydVO0Cs2dCdKpfVyBnnGPW3T2T8B5%2B2B92FqDa1E%3D&=')
+
+# step #57
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828189&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=G0MqzSJEnxJydVO0Cs2dCdKpfVyBnnGPW3T2T8B5%2FX9ej0HZbknCVw%3D%3D&=')
+
+# step #58
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828189&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=G0MqzSJEnxJydVO0Cs2dCdKpfVyBnnGPW3T2T8B5%2FX9dl1ySahPHT909&=')
+
+# step #59
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828205&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ZyicvSknK4aQYm%2Bm%2BY7NLJ1YzLCMM0iCeVHsQG52RlJsD0rv%2BsCi5II5kbzvKQuLYA%3D%3D&=')
+
+# step #60
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828205&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ZyicvSknK4aQYm%2Bm%2BY7NLJ1YzLCMM0iCeVHsQG52ZlJoEkDowZup878n&=')
+
+# step #61
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828205&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ZyicvSknK4aQYm%2Bm%2BY7NLJ1YzLCMM0iCeVHsQG52dkJ6FEr2h9216r4%3D&=')
+
+# step #62
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095828314&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=mu%2Fmu5WJVkcVU%2BxVCogoQ8rj8SU9RJjZ1VBzdh5dFmxY6C6%2Baeg16j%2BzHIJ8&=')
+
+# step #63
+get('http://{routerip}/RebootSucc.html?')
+
+# step #64
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829424&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=CLjTC0S2Pu1ncrpL9oMvoWJnIzXYj5dJvg7qa1ZIj2BnsAyE9yq61g%3D%3D&=')
+
+# step #65
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829439&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=Ex9ZZfxSNKNU8ogX2djtP%2F%2BxRt0oDDGxn8hoXxi1XrYAbSRRzV8APkyp7by4zCflxre0Ur%2FhnafQE14QbvOnzYZwiw%3D%3D&=')
+
+# step #66
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=s86ukIkh0NdosZLoTmwQRzYJZ168xQmzaTOGSHn05angRsQgKWc%3D&=')
+
+# step #67
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829627&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=jloiMm7xWV9KWrCS8SOfNs8XtUhVzcK7Q1ia1DGbQt%2B9BPapM4mvTbHr6Li4r%2F5Cjw%3D%3D&=')
+
+# step #68
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=s86ukIkh0NdosZLoTmwQRzYJZ168xQmzaTOGSHn047bACcIxKCU%2FiLq%2F&=')
+
+# step #69
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829627&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=jloiMm7xWV9KWrCS8SOfNs8XtUhVzcK7Q1ia1DGbcs%2BrH%2FawTpS4Q40%3D&=')
+
+# step #70
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829642&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=Qp54a0t631Fr7wDm0dar78eT9tnUIgSGbUof%2FneuAJ7GAcpFXLPNSN2A&=')
+
+# step #71
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095829783&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=G0FBgz%2Bi7tpYW%2F8%2B61a600XIJbYjAoXB3YNUIgTFDrpLozPGB2QDceGhqhM1&=')
+
+# step #72
+get('http://{routerip}/RebootSucc.html?')
+
+# step #73
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830721&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=gP85GNnzvmia7qKPZtlxbMqbjvQNnb2k0zpvV%2BK6AEPGSb4vY0EC0KSEAN9t%2BTwhgfxRIjJq4VuLH%2FtfqAm4NJiRaA%3D%3D&=')
+
+# step #74
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830799&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=5bw6ExvCJ%2By3y99rzCIrO2nfg07FxMD%2Bq0B08FaDwukXUqxRyhiACg%3D%3D&=')
+
+# step #75
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830846&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NeAzQwdhbrAtxGI3dHQTArJmDUFwobmcZJdirKs%2BRIBRGMj60wo%3D&=')
+
+# step #76
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830846&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NeAzQwdhbrAtxGI3dHQTArJmDUFwobmcZJdirKs%2BQp9xV87r0kh28lMY&=')
+
+# step #77
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830846&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NeAzQwdhbrAtxGI3dHQTArJmDUFwobmcZJdirKs%2BUppVQs%2FjkA5q61I%3D&=')
+
+# step #78
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830861&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=%2BE4qYlFuEsD1DAkJQeo4uAsSyRuTMbd8rlro%2F55xcStznS327i3%2FC3Xb&=')
+
+# step #79
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095831189&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=E7%2FQhbkMm90do9iI1ZDWTWep%2Fcv8UXD4K3qFk555vqGlCegL3Is%2BALqEgd75&=')
+
+# step #80
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095830846&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NeAzQwdhbrAtxGI3dHQTArJmDUFwobmcZJdirKs%2BYopDWc%2F67RN95W4GyS9Q%2BhTrnw%3D%3D&=')
+
+# step #81
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095831939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=xtM4kQKfWEOSbKXLFfvrVtNkMYyIS%2FUDmZNF4dHBSAM%2BFaU2rjLOHJ5ncJ4xS2Jjn9kQG6JYhhDtfF9n62EjZdmfDQ%3D%3D&=')
+
+# step #82
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095831955&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=bwwNSShSMMa7myAKSTTWD0oSpJgFUmjex0%2FVq8o9JYiykudm8c86pA%3D%3D&=')
+
+# step #83
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832033&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=jq%2BmLC5HVHhgJt0jMtPH45LLn5xfo17BHXfSzxRG5lwEfPf%2BcNToV0SE&=')
+
+# step #84
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832049&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=7knh2VENdaS5KEu5GWrgUFjT%2FePWFYS9ZzWoZkuS2UDqGarKYY%2B6%2BEt8FhuhXsqI0A%3D%3D&=')
+
+# step #85
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832049&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=7knh2VENdaS5KEu5GWrgUFjT%2FePWFYS9ZzWoZkuS6VD8AqrTHJKt9nc%3D&=')
+
+# step #86
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832049&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=7knh2VENdaS5KEu5GWrgUFjT%2FePWFYS9ZzWoZkuS%2BUDuBKDNWtSx73Zi&=')
+
+# step #87
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832471&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=TTdcnm3j2bvqjv2936RFFHZQgRLca7uCTS5esQJ9u4JqJpC8RZW%2Fi0i7eEBW&=')
+
+# step #88
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095832002&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=it8zzLBQ3SnOySlmcfklk4YkQnFjvkWaOWr6AUqmpvLj3bsPqQM%3D&=')
+
+# step #89
+get('http://{routerip}/RebootSucc.html?')
+
+# step #90
+get('http://{routerip}/RebootSucc.html?')
+
+# step #91
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834517&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=yMzweVPla7wjGWlpNe7Nf%2BbnXRTQImrONadkNXjhykaA8x%2BtwU6yRw%3D%3D&=')
+
+# step #92
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834564&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=Qj5LOvlhsjxePzxQJqOJpVUQ8FiVRmdVDx8a5O8hDuPCMj3weAEYrK99JNZ1oeMOzzyjjevnBmU9gIdDmuZj32x%2Fag%3D%3D&=')
+
+# step #93
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834642&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NtplXnYKcmy1k4a%2BV%2F4eY8%2B3iKqCzCrLUH7EtcQRWQGB69sETHE%3D&=')
+
+# step #94
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834752&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=lon4wcL9E0sSTVLTqVNXSQZtC%2BT7X4fPqp%2BrIdWcjUkoxGp%2BMzsLr5XI&=')
+
+# step #95
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834752&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=lon4wcL9E0sSTVLTqVNXSQZtC%2BT7X4fPqp%2BrIdWcrVwaymtvDGAAuKjWZELagD62ZQ%3D%3D&=')
+
+# step #96
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834767&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=31tHYpMysGK0yun6DbkeggFakpq3dMKm7aphtmylVR51FSFEZeJykpY%3D&=')
+
+# step #97
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834767&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=31tHYpMysGK0yun6DbkeggFakpq3dMKm7aphtmylRQ5nEytaI6Rui5fu&=')
+
+# step #98
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095834877&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=wgGD9lG%2FVdYTH18RygjA0vnzHG7WuQqDRFUbtED9kv46%2F5mK0saHnpWQIzzL&=')
+
+# step #99
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835830&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=wqO0ZqxwTybpsUuR2%2FVPrsU9KsEVHNJQjp%2B2E9Y8rIrx6SApPfk%2BWlnlpeYi%2FBSEuRU2vD3ndski2Vz%2FrjMknIj9Pg%3D%3D&=')
+
+# step #100
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835830&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=wqO0eaFnVnSjl0uQ3PVPrtE2Xt0VD9g418XzRsFJn9%2BQ1nY1E7xqBA%3D%3D&=')
+
+# step #101
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835892&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=j%2FwGHfqG9bPIhQnIiSK6ofkVfyLkBEnPfe13nqoMvybB%2Fnj%2B0So%3D&=')
+
+# step #102
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835892&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=j%2FwGHfqG9bPIhQnIiSK6ofkVfyLkBEnPfe13nqoMuTnhsX7v0GiGIN0f&=')
+
+# step #103
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=CvR%2B7rirVTzQNn3AD5lirhM%2BgwbYn%2FD4mjaDDxzMr1fzpxgqY8D3S8wMGcfASwjr8A%3D%3D&=')
+
+# step #104
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835939&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=CvR%2B7rirVTzQNn3AD5lirhM%2BgwbYn%2FD4mjaDDxzMn0flvBgzHt3gRfA%3D&=')
+
+# step #105
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095835971&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=z01Dpqh%2F7MFtyTnOLXByYnYi3v92atCPef6jSJypUfH2hcdSq7txk4Ww&=')
+
+# step #106
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095836361&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=lRh0unOxOezzMY5zreRo%2BEsPO%2BjDjB%2Bxma0dj3VGqy9dNzuBzyivV0QUSFnZ&=')
+
+# step #107
+get('http://{routerip}/RebootSucc.html?')
+
+# step #108
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095837908&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=eqggfP%2BITvJNqBgIohJnfwmBArqWZ6NR%2FZw%2BHNBz%2BExnHrE3rwXKHg%3D%3D&=')
+
+# step #109
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095837908&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=eqggY%2FKfV6AHjhgJpRJnfx2KdqaWdKk5pMZ7SccGyxkGIecrgUCeQEgFr%2BgOc6fK7RKGGTjRKMCL4qrt17H2rQZo%2FA%3D%3D&=')
+
+# step #110
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095837971&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=phTmSk5apJJ7lBRSACvSZPPkmNJXFaJlkXAx%2FWcSAhovdN8H%2FNo%3D&=')
+
+# step #111
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095837986&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=BsIsVBoybf%2BXPIR3W94RrlcZM0vpKNEfbrEa%2FHCQ017O7tDb5xiughIr&=')
+
+# step #112
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095838017&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=4OVun6hjjMKkIbHLrg5UTdDcTFu3JOtTf9jyfszNgsYUSCDD2tWBvzNdNfSca2INWA%3D%3D&=')
+
+# step #113
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095838017&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=4OVun6hjjMKkIbHLrg5UTdDcTFu3JOtTf9jyfszNstYCUyDap8iWsQ8%3D&=')
+
+# step #114
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095838033&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ZhtYSLsRZz%2BcIRJfuW%2B9gZ5QQAWZXOYSgFWhpMkAB3QPb6BH3hoPknF8&=')
+
+# step #115
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095838361&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=X32EeI2ll5muEf9tx43D0Kaq52Anv1TjoZM3fMHrH3gAYMKD0ozJVCZQlb4r&=')
+
+# step #116
+get('http://{routerip}/RebootSucc.html?')
+
+# step #117
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856017&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=8Cxubq%2Be56Vn96259QbIQjzYKq4aGsY%2B9N7P1jhs7%2Bi%2BLIsJsRv6Ww%3D%3D&=')
+
+# step #118
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856033&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=AutQ%2FKdisEV1fMBw%2F0Ot%2BULSK2KMbSlQLcp2bGP81xMlrKxCM%2Bz7kew3QYKpSw3WrG5dW3y7SaTs6JOs%2FjdgIM3s9w%3D%3D&=')
+
+# step #119
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856314&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=aHQ5%2FXylRhxfXAqPYWJeSuxAIOSr3FnDSWJ%2BFUjqgEDFIqyX0as%3D&=')
+
+# step #120
+get('http://{routerip}/RebootSucc.html?')
+
+# step #121
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856502&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=xzw5ir2wjZXPnr2btsPWA%2BkYUwa84qzMcbE5cIpSZQySj9WjBfNo4LY3u9eDPjPjpg%3D%3D&=')
+
+# step #122
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856424&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=PKn91UVUvHvdGot3RmQQocQQj2mFt7%2BSEIjntqfEWuhdCh%2BQEURei7op&=')
+
+# step #123
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856533&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=hYQ3ygWO06zDh0SpQtGDkZJp%2Fx784TgWjINEEg2ail%2FNIChintafVWs%3D&=')
+
+# step #124
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856596&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NxsX6AKQGHJ24YBHk%2FoojEjtt6RNfQtVjx1Rw6QJOcnhvlDbfI2FPNWRPcN%2B&=')
+
+# step #125
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095856549&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=2IaKdHXk7LBxHIOl8W%2Fd3KcVsYFit3%2FM7FC9%2FlmmX4F3W7L1S5MnrSYC&=')
+
+# step #126
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857611&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=g%2BQt9UswBkq7SQ3suwK%2FnmuAQPx5f7BPDPGsxKLUpa0mLpToQV7p4w%3D%3D&=')
+
+# step #127
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857658&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=fXCvyd1hPmszVXQDIqmOdiTL4SpgVIJkFjqXLi2HSUOF8R8u%2FOauM8hZ88btzzYgp3hLqUgYCT1NUF9%2BFlEqR0MRgg%3D%3D&=')
+
+# step #128
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857689&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=29fMX7HPKs0%2B6Mt4%2FhzUJ%2FwKgx4Wqyzslm9dYgzC84HQZp2AUPg%3D&=')
+
+# step #129
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857705&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=V9wIpkLlwobFqUgro8bqWK7%2FV1%2B%2F%2BxjUJ%2FuVaBMZEteZGrStYlYDIlye&=')
+
+# step #130
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857736&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=E0EPN3ihvd7lLCJanKgf5DjfdjDHzXqTbls%2BhXcai%2Fh1Wf0QRlWfUtoOfA9bzV6tiQ%3D%3D&=')
+
+# step #131
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857736&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=E0EPN3ihvd7lLCJanKgf5DjfdjDHzXqTbls%2BhXcau%2BhjQv0JO0iIXOY%3D&=')
+
+# step #132
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095857736&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=E0EPN3ihvd7lLCJanKgf5DjfdjDHzXqTbls%2BhXcaq%2FhxRPcXfQ6URecQ&=')
+
+# step #133
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2095858221&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=V9M2%2B6Fp6PjPx9GD3ezUpuatesxgH%2F7BkeUYAaOfLrTBmKO%2F5lc4Xh2529ik&=')
+
+# step #134
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=6bcf0f063ee665422fe40bceec5b47a3&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #135
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=4d3d6fdf5398a58d62ce63c8ed328653&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #136
+get('http://{routerip}/rpAuth.html?')
+
+# step #137
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096171502&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=ugXg6IvJPzXyQ0MYzeuK4h85k2pKRu1xoijg7fIR%2FKFTRopYGRg0IEE%3D&=')
+
+# step #138
+data = 'LoginPassword=ZyXEL+ZyWALL+Series&hiddenPassword=a0ae15571eb4a97ac1c34a114f1bb179&Prestige_Login=Anmelden'
+post('http://{routerip}/Forms/rpAuth_1', data=data)
+
+# step #139
+get('http://{routerip}/rpSys.html?')
+
+# step #140
+get('http://{routerip}/top.html?')
+
+# step #141
+get('http://{routerip}/rpPanel.html?')
+
+# step #142
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096176533&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=6Haug641rmaUDY1qbnZn6JqfQ%2Fj5Rs0psNEJpr4Xv64HmZP7z1%2FPVA%3D%3D&=')
+
+# step #143
+get('http://{routerip}/path.html?')
+
+# step #144
+get('http://{routerip}/home.html?')
+
+# step #145
+get('http://{routerip}/buttom.html?')
+
+# step #146
+get('http://{routerip}/refresh.html?')
+
+# step #147
+get('http://{routerip}/home.html?')
+
+# step #148
+get('http://{routerip}/top.html?')
+
+# step #149
+get('http://{routerip}/refresh.html?')
+
+# step #150
+get('http://{routerip}/refresh.html?')
+
+# step #151
+get('http://{routerip}/home.html?')
+
+# step #152
+get('http://{routerip}/refresh.html?')
+
+# step #153
+get('http://{routerip}/refresh.html?')
+
+# step #154
+get('http://{routerip}/refresh.html?')
+
+# step #155
+get('http://{routerip}/refresh.html?')
+
+# step #156
+get('http://{routerip}/refresh.html?')
+
+# step #157
+get('http://{routerip}/refresh.html?')
+
+# step #158
+get('http://{routerip}/home.html?')
+
+# step #159
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096212986&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=OoE1ChGcJvA5LksVJs6LInPkWKEyziu45JUGypCIDovvbWwSPufsEvfH&=')
+
+# step #160
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096220517&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=o%2FToJsmLmplH4r9uOaYpVdwp8soIF0RVQMRZYUUmNIuRjgF1o6zejm3x&=')
+
+# step #161
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096225658&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=Wc7KauI9mYuDPP95jPmEgCgLZEK1Op5sHn8PMI0qwJ13rGETN8w9DPGq&=')
+
+# step #162
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096230814&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=a4bUVIOJeji85OdFtgM44KW8EGsrQNw3ZWJ28mTx2VwEalF60UNI4xDf&=')
+
+# step #163
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096236127&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=1ara4zEoJjmi6JWqRTiwXNDWwQ68%2BjGejIDidTgUAl1%2F9a9bIA2QeuFT&=')
+
+# step #164
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096237408&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=CBAzhBm0bEnEYfb8CfyEmBaFnb6F88H9iyeHQSWEjkAv%2BalCFjmtRDPueGs4t6ZyU2BFVaYv6Nja8InJ&=')
+
+# step #165
+get('http://{routerip}/refresh.html?')
+
+# step #166
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096241299&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=NgYIWCOZQ%2Bv5B16kLqzZyb37hE2%2ByEkqhdw3O6LabXXJZfmJP8vZFwYt&=')
+
+# step #167
+get('http://{routerip}/refresh.html?')
+
+# step #168
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2096246455&wrkey=MTo4nlhyHGJ8g1TGg_LdLn9M&encparams=JspHmYi6tj1GIWylHHii2PhCtoIGY8Jh6Jx%2B0c3IVKqYQ8%2BBn1P2EI26&=')
+

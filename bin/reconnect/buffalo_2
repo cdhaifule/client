@@ -1,0 +1,14 @@
+"""
+Buffalo WBR-G54
+"""
+
+vendor = 'Buffalo'
+name = 'Buffalo WBR-G54'
+regex = r'(?s).*buffalo.*'
+
+# step #1
+get('http://{routerip}/advance/apply.cgi?session=0&action_melco=wanlink&wanlink=down', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/advance/apply.cgi?session=0&action_melco=wanlink&wanlink=up', auth=("{username}", "{password}"))
+

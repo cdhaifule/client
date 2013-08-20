@@ -1,0 +1,28 @@
+"""
+-1 Edges W
+"""
+
+vendor = 'VPN'
+name = '-1 Edges W'
+regex = r'(?s).*(VPN).*'
+
+# step #1
+data = 'swcaller=Network.html&netconn=1&netver=&net0conn=1&net1conn=0'
+post('http://{routerip}/20', data=data)
+
+# step #2
+get('http://{routerip}/Network.html?msg=OK')
+
+# step #3
+get('http://{routerip}/StatBar.html?')
+
+# step #4
+get('http://{routerip}/StatBar.html?')
+
+# step #5
+data = 'swcaller=Network.html&netconn=0&netver=&net0conn=1&net1conn=0'
+post('http://{routerip}/20', data=data)
+
+# step #6
+get('http://{routerip}/Network.html?msg=OK')
+

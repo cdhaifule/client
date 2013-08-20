@@ -1,0 +1,12 @@
+"""
+Linksys&nbsp;WRT54G&nbsp;GL&nbsp;GS
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT54G&nbsp;GL&nbsp;GS'
+regex = r''
+
+# step #1
+data = u'submit_button=WanMAC&action=ApplyTake&change_action=&submit_type=&mac_clone_enable=1&def_hwaddr=6&def_hwaddr_0=00&def_hwaddr_1=1A&def_hwaddr_2=92&def_hwaddr_3=2D&def_hwaddr_4=6A&def_hwaddr_5=%time:~3,2%&def_whwaddr=6&def_whwaddr_0=00&def_whwaddr_1=14&def_whwaddr_2=BF&def_whwaddr_3=F7&def_whwaddr_4=69&def_whwaddr_5=D5'
+post('http://{routerip}/apply.cgi', data=data)
+

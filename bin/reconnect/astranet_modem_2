@@ -1,0 +1,17 @@
+"""
+Astranet-Modem SoftwareVersion1.2
+"""
+
+vendor = 'Astranet-Modem'
+name = 'Astranet-Modem SoftwareVersion1.2'
+regex = r'(?s).*astranet.*'
+
+# step #1
+get('http://{routerip}/f10')
+
+# step #2
+get('http://{routerip}/cgi-bin/action.cgi?connx=Trennen')
+
+# step #3
+get('http://{routerip}/cgi-bin/action.cgi?connx=Verbinden')
+

@@ -1,0 +1,139 @@
+"""
+TCW 710
+"""
+
+vendor = 'THOMSON'
+name = 'TCW 710'
+regex = r'(?s).*(THOMSON).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/clr2/?')
+
+# step #3
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #4
+get('http://{routerip}/RgSwInfo.asp?')
+
+# step #5
+get('http://{routerip}/RgSecurity.asp?')
+
+# step #6
+get('http://{routerip}/RgConnect.asp?')
+
+# step #7
+get('http://{routerip}/RgSecurity.asp?')
+
+# step #8
+get('http://{routerip}/RgDiagnostics.asp?')
+
+# step #9
+get('http://{routerip}/RgDiagnostics.asp?')
+
+# step #10
+get('http://{routerip}/RgEventLog.asp?')
+
+# step #11
+get('http://{routerip}/RgInitialScan.asp?')
+
+# step #12
+get('http://{routerip}/RgSetup.asp?')
+
+# step #13
+get('http://{routerip}/RgComputers.asp?')
+
+# step #14
+get('http://{routerip}/RgOptions.asp?')
+
+# step #15
+data = 'cbWanBlocking=0x10&cbIpsecPassThrough=0x20&cbPptpPassThrough=0x40&cbRemoteManagement=0x80&cbOptMulticast=0x20000&cbOptUPnP=0x200000'
+post('http://{routerip}/goform/RgOptions', data=data)
+
+# step #16
+get('http://{routerip}/RgOptions.asp?')
+
+# step #17
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #18
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #19
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #20
+get('http://{routerip}/search?client=firefox-a&rls=org.mozilla%3Ade%3Aofficial&channel=s&hl=de&q=remote+config+magment&meta=&btnG=Google-Suche')
+
+# step #21
+get('http://{routerip}/search?hl=de&client=firefox-a&channel=s&rls=org.mozilla:de:official&hs=Lj3&sa=X&oi=spell&resnum=0&ct=result&cd=1&q=remote+config+management&spell=1')
+
+# step #22
+get('http://{routerip}/url?sa=T&ct=res&cd=1&url=http%3A%2F%2Fwww.uibk.ac.at%2Flinuxdoc%2FLDP%2FLDP%2FEVMSUG%2Fhtml%2Fx2896.html&ei=cTcfSMK3BIqC-AK-0qD5DQ')
+
+# step #23
+get('http://{routerip}/linuxdoc/LDP/LDP/EVMSUG/html/x2896.html?')
+
+# step #24
+get('http://{routerip}/linuxdoc/LDP/LDP/EVMSUG/html/x2946.html?')
+
+# step #25
+get('http://{routerip}/RgMacFiltering.asp?')
+
+# step #26
+get('http://{routerip}/RgPortFiltering.asp?')
+
+# step #27
+get('http://{routerip}/RgForwarding.asp?')
+
+# step #28
+get('http://{routerip}/RgPortTriggering.asp?')
+
+# step #29
+get('http://{routerip}/RgDmzHost.asp?')
+
+# step #30
+get('http://{routerip}/RgRipSetup.asp?')
+
+# step #31
+get('http://{routerip}/RgContentFilter.asp?')
+
+# step #32
+get('http://{routerip}/RgUrlBlock.asp?')
+
+# step #33
+get('http://{routerip}/RgUrlBlock.asp?')
+
+# step #34
+get('http://{routerip}/wlanBasic.asp?')
+
+# step #35
+get('http://{routerip}/wlanBridging.asp?')
+
+# step #36
+get('http://{routerip}/wlanAdvanced.asp?')
+
+# step #37
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20654,goog-black-enchash:1:50099')
+
+# step #38
+get('http://{routerip}/wlanAccess.asp?')
+
+# step #39
+get('http://{routerip}/wlanSecurity.asp?')
+
+# step #40
+get('http://{routerip}/wlanBasic.asp?')
+
+# step #41
+get('http://{routerip}/RgOptions.asp?')
+
+# step #42
+data = 'cbWanBlocking=0x10&cbIpsecPassThrough=0x20&cbPptpPassThrough=0x40&cbRemoteManagement=0x80&cbOptMulticast=0x20000&cbOptUPnP=0x200000'
+post('http://{routerip}/goform/RgOptions', data=data)
+
+# step #43
+get('http://{routerip}/RgOptions.asp?')
+

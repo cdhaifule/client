@@ -1,0 +1,19 @@
+"""
+WGR614v5 FW V1.0.7_1.0.6
+"""
+
+vendor = 'Netgear'
+name = 'WGR614v5 FW V1.0.7_1.0.6'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Disconnect=disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = 'Connect=connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+

@@ -1,0 +1,16 @@
+"""
+Speedport W701V 33.04.45
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W701V 33.04.45'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_disconnect=1&var%3Astate=0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&errorpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Abi=2&connection0%3Asettings%2Fcmd_connect=1&var%3Astate=5'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

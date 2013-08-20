@@ -1,0 +1,18 @@
+"""
+Siemens Gigaset SE505 dsl/cable (3.01.05)
+"""
+
+vendor = 'Siemens'
+name = 'Siemens Gigaset SE505 dsl/cable (3.01.05)'
+regex = r'(?s).*(siemens|gigaset).*'
+
+# step #1
+data = 'page=login&pws={password}&bug=fixed'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #2
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Disconnect')
+
+# step #3
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Connect')
+

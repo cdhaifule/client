@@ -1,0 +1,17 @@
+"""
+Pheenet BIG 31/4P
+"""
+
+vendor = 'Pheenet'
+name = 'Pheenet BIG 31/4P'
+regex = r'(?s).*pheenet.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/logi?rc=@admin&ps=admin')
+
+# step #2
+get('http://{routerip}/cgi-bin/dial?rc=@&A=H0&rd=status')
+
+# step #3
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

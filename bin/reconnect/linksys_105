@@ -1,0 +1,19 @@
+"""
+WRT54GS HW: v6; FW: v1.50.9 (Original von Linksys)
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54GS HW: v6; FW: v1.50.9 (Original von Linksys)'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'action=Disconnect&wan_pro=2&conn_stats=300&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #3
+data = 'action=Connect&wan_pro=2&conn_stats=-1&layout=de'
+post('http://{routerip}/rstatus.tri', data=data)
+

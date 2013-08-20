@@ -1,0 +1,31 @@
+"""
+54G F5D7230-4 6000
+"""
+
+vendor = 'Belkin'
+name = '54G F5D7230-4 6000'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #2
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #3
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/ut_reset.html?')
+
+# step #6
+data = 'page=&logout=&action=submit&pws={password}'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #7
+data = 'webpage=ut_reset.html&action=Reboot&page=&logout=&reboot=Restart+Router'
+post('http://{routerip}/ut_reset.cgi', data=data)
+

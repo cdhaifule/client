@@ -1,0 +1,88 @@
+"""
+WNR 854T Firmware 1.4.23GR
+"""
+
+vendor = 'Netgear'
+name = 'WNR 854T Firmware 1.4.23GR'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/new/news.php?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/index.html?')
+
+# step #5
+get('http://{routerip}/index.html?')
+
+# step #6
+get('http://{routerip}/MNU_top.htm?')
+
+# step #7
+get('http://{routerip}/MNU_menu.htm?')
+
+# step #8
+get('http://{routerip}/blank_help.htm?')
+
+# step #9
+get('http://{routerip}/formframe.htm?')
+
+# step #10
+get('http://{routerip}/SaveNextPage.htm?')
+
+# step #11
+get('http://{routerip}/BAS_basic.htm?')
+
+# step #12
+get('http://{routerip}/BAS_basictop.htm?')
+
+# step #13
+get('http://{routerip}/BAS_ether.htm?')
+
+# step #14
+get('http://{routerip}/BAS_pppoe.htm?')
+
+# step #15
+get('http://{routerip}/BAS_pppoe_GR_h.htm?')
+
+# step #16
+get('http://{routerip}/RST_status.htm?')
+
+# step #17
+get('http://{routerip}/RST_status_GR_h.htm?')
+
+# step #18
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #19
+data = 'command=device_data&cur_ipaddr=192.168.1.1&next_page=RST_st_poe.htm&reboot=0&save=1&ConnectionOption=release&dial_ppp=0&do_wan_test=0&data1=dial_ppp+do_wan_test&Disconnect=Verbindung+beenden&ConMethod=Disconnect'
+post('http://{routerip}/post.cgi', data=data)
+
+# step #20
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #21
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #22
+get('http://{routerip}/RST_st_poe.htm?')
+
+# step #23
+get('http://{routerip}/clr2/?')
+
+# step #24
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #25
+data = 'router=Netgear+WNR+854T+Firmware+1.4.23GR'
+post('http://{routerip}/clr3/', data=data)
+
+# step #26
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

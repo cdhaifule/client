@@ -1,0 +1,21 @@
+"""
+Speedport W701V Firmware 33.04.45
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W701V Firmware 33.04.45'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'logic%3Acommand%2Freboot=1&getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fhcti_hilfsmittel_reboot.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html&var:foo=0.6440436391622626')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_startseite.htm')
+
+# step #4
+get('http://{routerip}/html/m_start_passwort.htm?')
+

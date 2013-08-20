@@ -1,0 +1,16 @@
+"""
+Sitecom&nbsp;WL-160&nbsp;54g&nbsp;Wireless&nbsp;Broadband&nbsp;Router
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom&nbsp;WL-160&nbsp;54g&nbsp;Wireless&nbsp;Broadband&nbsp;Router'
+regex = r''
+
+# step #1
+data = u'internetSta=Disconnect&buttonact1=Disconnect&buttonact=Disconnect&submit-url=/status.asp&wanMode=3'
+post('http://{routerip}/goform/formConnect', data=data)
+
+# step #2
+data = u'internetSta=Connect&buttonact1=Connect&buttonact=Connect&submit-url=/status.asp&wanMode=3'
+post('http://{routerip}/goform/formConnect', data=data)
+

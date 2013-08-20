@@ -1,0 +1,17 @@
+"""
+DI-624
+"""
+
+vendor = 'D-Link'
+name = 'DI-624'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?')
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

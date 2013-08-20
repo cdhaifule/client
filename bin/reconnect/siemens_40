@@ -1,0 +1,18 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE505&nbsp;dslcable
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE505&nbsp;dslcable'
+regex = r''
+
+# step #1
+data = u'page=login&pws=PASSWORD&bug=fixed&login=LOGIN'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #2
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Disconnect')
+
+# step #3
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Connect')
+

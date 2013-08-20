@@ -1,0 +1,14 @@
+"""
+T-Sinus 1054 DSL FirmWare 1.0 (2)
+"""
+
+vendor = 'T-Com'
+name = 'T-Sinus 1054 DSL FirmWare 1.0 (2)'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/pppctl.cmd?action=0')
+
+# step #2
+get('http://{routerip}/pppctl.cmd?action=1')
+

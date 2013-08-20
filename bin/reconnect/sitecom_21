@@ -1,0 +1,31 @@
+"""
+Sitecom&nbsp;DC-202
+"""
+
+vendor = 'Sitecom'
+name = 'Sitecom&nbsp;DC-202'
+regex = r''
+
+# step #1
+data = u'hang_Up=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #2
+data = u'dial=Connect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #3
+data = u'modem_log_st_poe=&hang_up_st_poe=Disconnect&message='
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #4
+data = u'modem_log_st_poe=&dial_st_poe=Connect&message='
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #5
+data = u'rc=@&PS=%PWD%&rd=menu'
+post('http://{routerip}/cgi-bin/logi', data=data)
+
+# step #6
+get('http://{routerip}/cgi-bin/dial?rc=@&A=D0&rd=status')
+

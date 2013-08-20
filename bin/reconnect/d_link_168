@@ -1,0 +1,38 @@
+"""
+DIR 625 Firmware 3.02
+"""
+
+vendor = 'D-Link'
+name = 'DIR 625 Firmware 3.02'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #2
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #3
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #4
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #5
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #6
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #7
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #8
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #9
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #10
+get('http://{routerip}/?')
+

@@ -1,0 +1,17 @@
+"""
+R3100EU-S
+"""
+
+vendor = 'Netopia'
+name = 'R3100EU-S'
+regex = r'(?s).*(Netopia).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Disconnect?2=')
+
+# step #3
+get('http://{routerip}/Connect?2=')
+

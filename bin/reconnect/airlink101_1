@@ -1,0 +1,25 @@
+"""
+v1.0.50
+"""
+
+vendor = 'AirLink101'
+name = 'v1.0.50'
+regex = r'(?s).*(AirLink101).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'command=nothing&cur_ipaddr=192.168.1.1&next_page=StatusRouterPPPoE.htm&reboot=0&ConnectionOption=release&action=Apply'
+post('http://{routerip}/post.cgi', data=data)
+
+# step #3
+get('http://{routerip}/StatusRouterPPPoE.htm?')
+
+# step #4
+data = 'command=nothing&cur_ipaddr=192.168.1.1&next_page=StatusRouterPPPoE.htm&reboot=0&ConnectionOption=renew&action=Apply'
+post('http://{routerip}/post.cgi', data=data)
+
+# step #5
+get('http://{routerip}/StatusRouterPPPoE.htm?')
+

@@ -1,0 +1,56 @@
+"""
+DLG-4300 FW 1.7w
+"""
+
+vendor = 'D-Link'
+name = 'DLG-4300 FW 1.7w'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/post_login.cgi?data=kP1TuC9byCrZOO6D3SpicUdTyKX.')
+
+# step #2
+get('http://{routerip}/Status_Device_Info.html?')
+
+# step #3
+get('http://{routerip}/connection_status.xml?')
+
+# step #4
+get('http://{routerip}/computer_list.xml?')
+
+# step #5
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #6
+get('http://{routerip}/connection_status.xml?')
+
+# step #7
+get('http://{routerip}/computer_list.xml?')
+
+# step #8
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #9
+get('http://{routerip}/pppoe.cgi?data=.f..')
+
+# step #10
+get('http://{routerip}/connection_status.xml?')
+
+# step #11
+get('http://{routerip}/computer_list.xml?')
+
+# step #12
+get('http://{routerip}/igmp_group_memberships.xml?')
+
+# step #13
+get('http://{routerip}/pppoe.cgi?data=.P..')
+
+# step #14
+get('http://{routerip}/connection_status.xml?')
+
+# step #15
+get('http://{routerip}/connection_status.xml?')
+
+# step #16
+get('http://{routerip}/Status_Device_Info.html?')
+

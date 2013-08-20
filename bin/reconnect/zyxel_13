@@ -1,0 +1,18 @@
+"""
+Prestige 650H-17 Firmware V3.40(GL.3)C0, 01/21/2003
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige 650H-17 Firmware V3.40(GL.3)C0, 01/21/2003'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = u'DiagResetADSL=ADSL Leitung zur\xc3\xbccksetzen'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

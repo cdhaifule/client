@@ -1,0 +1,10 @@
+"""
+Speedtouch 585iv6  5.4.4.1.0
+"""
+
+vendor = 'Speedtouch'
+name = 'Speedtouch 585iv6  5.4.4.1.0'
+regex = r'(?s).*speedtouch.*'
+
+# step #1
+post('http://{routerip}/cgi/b/is/_pppoe_/dt/', auth=("{username}", "{password}"))

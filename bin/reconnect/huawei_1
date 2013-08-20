@@ -1,0 +1,53 @@
+"""
+HG510 Telekom
+"""
+
+vendor = 'Huawei'
+name = 'HG510 Telekom'
+regex = r'(?s).*(Huawei).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/logo.html?')
+
+# step #5
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080513123419&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #6
+get('http://{routerip}/menu.html?')
+
+# step #7
+get('http://{routerip}/info.html?')
+
+# step #8
+get('http://{routerip}/footer.html?')
+
+# step #9
+get('http://{routerip}/status.html?')
+
+# step #10
+get('http://{routerip}/backupsettings.html?')
+
+# step #11
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080513123419&url=http%3A%2F%2F192.168.1.1%2Fbackupsettings.h tml')
+
+# step #12
+get('http://{routerip}/resetrouter.html?')
+
+# step #13
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080513123419&url=http%3A%2F%2F192.168.1.1%2Fresetrouter.html ')
+
+# step #14
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #15
+get('http://{routerip}/rebootinfo.html?')
+

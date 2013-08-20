@@ -1,0 +1,16 @@
+"""
+D-Link DI-624S (v1.10Rfix3, Thu Jan 4 18:46:35 CST 2007)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-624S (v1.10Rfix3, Thu Jan 4 18:46:35 CST 2007)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+data = 'set/runtime/wan/inf:1/Disconnect=1'
+post('http://{routerip}/st_devic.xgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'set/runtime/wan/inf:1/Connect=1'
+post('http://{routerip}/st_devic.xgi', data=data, auth=("{username}", "{password}"))
+

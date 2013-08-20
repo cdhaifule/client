@@ -1,0 +1,38 @@
+"""
+RoVo LinkSys BEFSR41
+"""
+
+vendor = 'LinkSys'
+name = 'RoVo LinkSys BEFSR41'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/index.htm?')
+
+# step #3
+get('http://{routerip}/robots.txt?')
+
+# step #4
+get('http://{routerip}/robots.txt?')
+
+# step #5
+get('http://{routerip}/robots.txt?')
+
+# step #6
+get('http://{routerip}/robots.txt?')
+
+# step #7
+get('http://{routerip}/robots.txt?')
+
+# step #8
+get('http://{routerip}/robots.txt?')
+
+# step #9
+get('http://{routerip}/robots.txt?')
+
+# step #10
+get('http://{routerip}/robots.txt?')
+

@@ -1,0 +1,40 @@
+"""
+Speedtouch 570
+"""
+
+vendor = 'Thomson'
+name = 'Speedtouch 570'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/index.htm?')
+
+# step #4
+get('http://{routerip}/header.htm?')
+
+# step #5
+get('http://{routerip}/menu.htm?menu=0')
+
+# step #6
+get('http://{routerip}/cgi/status/?')
+
+# step #7
+get('http://{routerip}/dial.htm?')
+
+# step #8
+data = '1=6&11=0363484000&12=********&14=on&21=0&22=PPPoA_1&23=PVC_1&24=-7A0B-0-0-0-0-0_7_1_1_1_0_0_A00000B_0_0_0_0_0&25=0363484000&26=OPKDGDGEPJEIOCJO&27=&28='
+post('http://{routerip}/cgi/dial/', data=data)
+
+# step #9
+data = '1=5&11=0363484000&12=********&14=on&21=0&22=PPPoA_1&23=PVC_1&24=-7A0B-0-0-0-0-0_1_0_0_1_0_0_A00000B_0_0_0_0_0&25=0363484000&26=OPKDGDGEPJEIOCJO&27=&28='
+post('http://{routerip}/cgi/dial/', data=data)
+
+# step #10
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19674,goog-black-enchash:1:47628')
+

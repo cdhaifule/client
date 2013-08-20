@@ -1,0 +1,49 @@
+"""
+WBR-3460B
+"""
+
+vendor = 'LevelOne'
+name = 'WBR-3460B'
+regex = r'(?s).*(LevelOne).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/home_router.htm?')
+
+# step #5
+get('http://{routerip}/title.htm?')
+
+# step #6
+get('http://{routerip}/menu.htm?')
+
+# step #7
+data = 'todo=reboot&message='
+post('http://{routerip}/setup.cgi', data=data)
+
+# step #8
+get('http://{routerip}/reboot_pg.htm?')
+
+# step #9
+get('http://{routerip}/index.htm?')
+
+# step #10
+get('http://{routerip}/home_router.htm?')
+
+# step #11
+get('http://{routerip}/menu.htm?')
+
+# step #12
+get('http://{routerip}/title.htm?')
+
+# step #13
+data = 'todo=logout&message='
+post('http://{routerip}/setup.cgi', data=data)
+

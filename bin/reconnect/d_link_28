@@ -1,0 +1,14 @@
+"""
+D-Link DI-604 (FW 3.13b07, German, DHCP-Config) 
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-604 (FW 3.13b07, German, DHCP-Config) '
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/rrip?rc=@&A=R&rd=status', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/rrip?rc=@&A=G&rd=status', auth=("{username}", "{password}"))
+

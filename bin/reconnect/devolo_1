@@ -1,0 +1,48 @@
+"""
+DSL 1100 W-LAN  Firmware V 2
+"""
+
+vendor = 'devolo'
+name = 'DSL 1100 W-LAN  Firmware V 2'
+regex = r'(?s).*(devolo).*'
+
+# step #1
+data = 'var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=home&var%3Alanguage=de&login%3Acommand%2Fusername=admin&login%3Acommand%2Fpassword=michaeljordan23'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=home_iframe')
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=home_iframe_hidden')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=w_prov_country')
+
+# step #5
+get('http://{routerip}/cgi-bin/webcm?var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=w_prov_provider&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=&var%3Alanguage=de&devolo%3Asettings%2Fw_prov_country=41&devolo%3Asettings%2Fw_prov_provider=ch_bluewin')
+
+# step #6
+get('http://{routerip}/cgi-bin/webcm?var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=w_prov_data&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=&var%3Alanguage=de&devolo%3Asettings%2Fw_prov_provider=ch_bluewin')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=w_prov_finish&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=&var%3Alanguage=de&devolo%3Asettings%2Fw_prov_country=41&devolo%3Asettings%2Fw_prov_provider=ch_bluewin&devolo%3Asettings%2Fw_prov_username=haneli%40bluewin.ch&devolo%3Asettings%2Fw_prov_password=678966&devolo%3Asettings%2Fw_prov_pppmode=0&devolo%3Asettings%2Fw_prov_protocol=pppoe&devolo%3Asettings%2Fw_prov_vpi=8&devolo%3Asettings%2Fw_prov_vci=35&devolo%3Asettings%2Fw_prov_mtu=1492&devolo%3Asettings%2Fw_prov_username_input=haneli&devolo%3Asettings%2Fw_prov_password_input=678966')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=w_prov_conntest&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=&var%3Alanguage=de&devolo%3Acommand%2Ffinishproviderwizard=1')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?var%3Amain=menu&var%3Astyle=devolo&getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&errorpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fmenu.html&var%3Apagename=home&var%3Aerrorpagename=&var%3Amenu=simple&var%3Amenutitle=&var%3Apagetitle=&var%3Apagemaster=&var%3Alanguage=de')
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=home_iframe')
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=home_iframe_hidden')
+
+# step #12
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&var:language=de&var:style=devolo&var:main=menu&var:menu=simple&var:pagename=home_iframe')
+
+# step #13
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fdefs%2Fdevolo%2Fmenus%2Fiframe.html&amp;var:language=de&amp;var:style=devolo&amp;var:main=menu&amp;var:menu=simple&amp;var:pagename=home_iframe_hidden&var:prevdslicon=up&var:prevwlanicon=up&var:prevwectmode=0')
+

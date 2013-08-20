@@ -1,0 +1,29 @@
+"""
+Gate 2 plus Wi-Fi V. AGA_3.2.4
+"""
+
+vendor = 'Alice'
+name = 'Gate 2 plus Wi-Fi V. AGA_3.2.4'
+regex = r'(?s).*(Alice).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/cp06_base_m_connmanual3.html?')
+
+# step #3
+get('http://{routerip}/Servizio.html?n=0')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/cp06_base_m_connmanual2.html?')
+
+# step #6
+get('http://{routerip}/Servizio.html?n=1')
+
+# step #7
+get('http://{routerip}/?')
+

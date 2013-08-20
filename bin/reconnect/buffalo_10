@@ -1,0 +1,85 @@
+"""
+wbrg54s dd-wrt-29.02.08
+"""
+
+vendor = 'Buffalo'
+name = 'wbrg54s dd-wrt-29.02.08'
+regex = r'(?s).*(Buffalo).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #3
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #4
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #5
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #6
+data = 'submit_button=Status_Router&action=Apply&change_action=gozila_cgi&submit_type=Disconnect_pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #7
+data = 'submit_button=Status_Router&action=Apply&change_action=gozila_cgi&submit_type=Connect_pppoe'
+post('http://{routerip}/apply.cgi', data=data)
+
+# step #8
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #9
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #10
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #11
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #12
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #13
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #14
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #15
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #16
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #17
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #18
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #19
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #20
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #21
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #22
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #23
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #24
+get('http://{routerip}/Status_Router.live.asp?')
+
+# step #25
+get('http://{routerip}/Status_Router.live.asp?')
+

@@ -1,0 +1,22 @@
+"""
+CGA3600N/TE
+"""
+
+vendor = 'Philips'
+name = 'CGA3600N/TE'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+data = 'pvc=9&cur_if=11&dis1=Disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #2
+get('http://{routerip}/status_main.stm?')
+
+# step #3
+data = 'pvc=9&cur_if=3&con1=Connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #4
+get('http://{routerip}/status_main.stm?')
+

@@ -1,0 +1,160 @@
+"""
+-PAR-720G Firmware 5.08b.dg7.ds1
+"""
+
+vendor = 'PowerNet'
+name = '-PAR-720G Firmware 5.08b.dg7.ds1'
+regex = r'(?s).*(PowerNet).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/customized/header_frame.html?')
+
+# step #4
+get('http://{routerip}/customized/bottom.html?')
+
+# step #5
+get('http://{routerip}/navigation.html?')
+
+# step #6
+get('http://{routerip}/welcome.html?')
+
+# step #7
+get('http://{routerip}/robots.txt?')
+
+# step #8
+get('http://{routerip}/robots.txt?')
+
+# step #9
+get('http://{routerip}/robots.txt?')
+
+# step #10
+get('http://{routerip}/robots.txt?')
+
+# step #11
+get('http://{routerip}/robots.txt?')
+
+# step #12
+get('http://{routerip}/robots.txt?')
+
+# step #13
+get('http://{routerip}/robots.txt?')
+
+# step #14
+get('http://{routerip}/robots.txt?')
+
+# step #15
+get('http://{routerip}/robots.txt?')
+
+# step #16
+get('http://{routerip}/robots.txt?')
+
+# step #17
+get('http://{routerip}/robots.txt?')
+
+# step #18
+get('http://{routerip}/robots.txt?')
+
+# step #19
+get('http://{routerip}/robots.txt?')
+
+# step #20
+get('http://{routerip}/robots.txt?')
+
+# step #21
+get('http://{routerip}/robots.txt?')
+
+# step #22
+get('http://{routerip}/robots.txt?')
+
+# step #23
+data = 'EmWeb_ns%3Avim%3A3=%2Fstatus.html&EmWeb_ns%3Avim%3A5.ImServices.wanlink.1%3Aenabled=false&EmWeb_ns%3Avim%3A20=true'
+post('http://{routerip}/status-welcome-common.html/disconnect', data=data)
+
+# step #24
+get('http://{routerip}/robots.txt?')
+
+# step #25
+get('http://{routerip}/robots.txt?')
+
+# step #26
+get('http://{routerip}/robots.txt?')
+
+# step #27
+get('http://{routerip}/robots.txt?')
+
+# step #28
+get('http://{routerip}/robots.txt?')
+
+# step #29
+get('http://{routerip}/robots.txt?')
+
+# step #30
+get('http://{routerip}/robots.txt?')
+
+# step #31
+get('http://{routerip}/robots.txt?')
+
+# step #32
+get('http://{routerip}/robots.txt?')
+
+# step #33
+get('http://{routerip}/robots.txt?')
+
+# step #34
+get('http://{routerip}/robots.txt?')
+
+# step #35
+get('http://{routerip}/robots.txt?')
+
+# step #36
+get('http://{routerip}/robots.txt?')
+
+# step #37
+data = 'EmWeb_ns%3Avim%3A3=%2Fstatus.html&EmWeb_ns%3Avim%3A5.ImServices.wanlink.1%3Aenabled=true&EmWeb_ns%3Avim%3A20=true'
+post('http://{routerip}/status-welcome-common.html/connect', data=data)
+
+# step #38
+get('http://{routerip}/robots.txt?')
+
+# step #39
+get('http://{routerip}/robots.txt?')
+
+# step #40
+get('http://{routerip}/robots.txt?')
+
+# step #41
+get('http://{routerip}/robots.txt?')
+
+# step #42
+get('http://{routerip}/robots.txt?')
+
+# step #43
+get('http://{routerip}/robots.txt?')
+
+# step #44
+get('http://{routerip}/robots.txt?')
+
+# step #45
+get('http://{routerip}/robots.txt?')
+
+# step #46
+get('http://{routerip}/robots.txt?')
+
+# step #47
+get('http://{routerip}/robots.txt?')
+
+# step #48
+get('http://{routerip}/robots.txt?')
+
+# step #49
+get('http://{routerip}/robots.txt?')
+
+# step #50
+get('http://{routerip}/robots.txt?')
+

@@ -1,0 +1,76 @@
+"""
+WLAN 300
+"""
+
+vendor = 'Arcor'
+name = 'WLAN 300'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20082,goog-black-enchash:1:48682')
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #4
+get('http://{routerip}/index.stm?')
+
+# step #5
+get('http://{routerip}/setupa_top.stm?')
+
+# step #6
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #7
+get('http://{routerip}/menu.stm?')
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+data = 'pvc=0&cur_if=11&disconnect.x=65&disconnect.y=4&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #10
+get('http://{routerip}/status_main.stm?')
+
+# step #11
+get('http://{routerip}/index.stm?')
+
+# step #12
+get('http://{routerip}/setupa_top.stm?')
+
+# step #13
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #14
+get('http://{routerip}/menu.stm?')
+
+# step #15
+get('http://{routerip}/status_main.stm?')
+
+# step #16
+get('http://{routerip}/index.stm?')
+
+# step #17
+get('http://{routerip}/setupa_top.stm?')
+
+# step #18
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #19
+get('http://{routerip}/menu.stm?')
+
+# step #20
+get('http://{routerip}/status_main.stm?')
+
+# step #21
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #22
+get('http://{routerip}/login.stm?')
+

@@ -1,0 +1,17 @@
+"""
+SMC 2804WBR "Barricade g" V.2 V1.00.007.1
+"""
+
+vendor = 'SMC'
+name = 'SMC 2804WBR "Barricade g" V.2 V1.00.007.1'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/login.htm?page=login&pws={password}')
+
+# step #2
+post('http://{routerip}/page=status_main&button=pppoedisconnect&disconnect=Disconnect')
+
+# step #3
+post('http://{routerip}/page=status_main&button=pppoeconnect&connect=+Connect+')
+

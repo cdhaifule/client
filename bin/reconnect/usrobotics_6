@@ -1,0 +1,17 @@
+"""
+USR808054 (FW 1.67) - PPPoE
+"""
+
+vendor = 'USRobotics'
+name = 'USR808054 (FW 1.67) - PPPoE'
+regex = r'(?s).*(USRobotics).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?dhcp=2')
+
+# step #3
+get('http://{routerip}/status.cgi?dhcp=3')
+

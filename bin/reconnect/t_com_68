@@ -1,0 +1,9 @@
+"""
+T-Com&nbsp;Speedport&nbsp;500V
+"""
+
+vendor = 'T-Com'
+name = 'T-Com&nbsp;Speedport&nbsp;500V'
+regex = r''
+
+

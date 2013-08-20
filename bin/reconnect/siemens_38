@@ -1,0 +1,20 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE&nbsp;555&nbsp;WLAN&nbsp;dsl
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE&nbsp;555&nbsp;WLAN&nbsp;dsl'
+regex = r''
+
+# step #1
+data = u'your_password=passwort'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = u'form_submission_type=disconnect'
+post('http://{routerip}/cgi-bin/home_internet.exe', data=data)
+
+# step #3
+data = u'form_submission_type=connect'
+post('http://{routerip}/cgi-bin/home_internet.exe', data=data)
+

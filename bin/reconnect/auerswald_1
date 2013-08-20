@@ -1,0 +1,14 @@
+"""
+Auerswald COMpact 4406 DSL
+"""
+
+vendor = 'Auerswald'
+name = 'Auerswald COMpact 4406 DSL'
+regex = r'(?s).*auerswald.*'
+
+# step #1
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=1', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/ppp.htm?WINDWEB_URL=/doc/ppp.htm&PPP_connection_number=1&New_PPP_Action=0', auth=("{username}", "{password}"))
+

@@ -1,0 +1,11 @@
+"""
+F5D5231-4 Cable/DSL Gateway Router
+"""
+
+vendor = 'Belkin'
+name = 'F5D5231-4 Cable/DSL Gateway Router'
+regex = r'(?s).*(Belkin).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:19868,goog-black-enchash:1:48133')
+

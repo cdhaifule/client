@@ -1,0 +1,67 @@
+"""
+2030 (UI) Firmware-Version 17.03.93
+"""
+
+vendor = 'FRITZ!Box'
+name = '2030 (UI) Firmware-Version 17.03.93'
+regex = r'(?s).*(FRITZ!Box).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #2
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078775652&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=5i5MWdZ9JOAsGtsgHTltHtcW%2FhvkWdA1Z96QsqxNm60%3D&=')
+
+# step #3
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1208964585%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #4
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078777886&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=32DmIH78U9H6FJslyLpHTrKWPwJ%2FdJt8DxRJRtpnU%2BXJCAHKVGkWnSbebUYR7AM%3D&=')
+
+# step #5
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1208964587%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #6
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078779980&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=4HhuXsFM5nh78aOu4dfqfNVVtWD57qDFEeEFCnVZOksml7naxNVyjx%2BR3odOxZo%3D&=')
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=syslog&var%3Aerrorpagename=syslog&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1208964599%2C-120&var%3Aactivtype=pppoe')
+
+# step #8
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078791433&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=UXbTpmLI2xhOiwyivxClcGORpgy2ho5B3Y7cpqMFqSqOf2bcVa4fpdQ%2B3p89CntDzVRsp7HhveHLPKQcFvy2Tllu59ONl7JyCLdABtIJM2jucw07ge7n4IJfmkFEA8F2WbKmNe2I8yzphG99nXpNYMtR%2BMR7vaV7TrxZEExFqKYgeGU7YAsFBHTJcyFgpeqZunBgNIR6iFbD65fsOOv4wWck6bpr4uo551%2B66JvzGDB7M67y%2Fymei8WL5Yf%2FVhEiLqg%2F0iqIoD5DrHnY%2Br6qZZETTgtegHWpTYnjSj%2Bdpv2Rny45IdjaUoXbw74z%2FrhZVWGK37YrOiVBfQdvnUHozksLFliKmSOUAGZAKoZSoOHKQtSM2zzNrq5g11nabq3c%2FhfyGuWPsF3v6QIBv5uzQXJ2Xd21QSIMume22WvhGoFvb%2BGQdgjk1VRrT3tjPaFu%2FPgPSAtdP7A%2BH7Gu4zI0LyhwgwBKExKfqdyMaIzjtKZK&=')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=1208964605%2C-120')
+
+# step #10
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078797949&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=FafS%2F3jUiM9rtAJSd8pMFFXlfI2m5o28vK7EInZACdQ1o9d4KvBYX2i0mmZba8l3LXT4I%2BV86o3Xl8cEmBdUD29gcvOqDducKzRaMgexC6vByPOfChQfg07FtwRFrJI8TsQaMWNDsma2sPg0XIwjQ0TEJELwgysGTaFSqCayNJwCP6RZ9eVjDO0LYvz37hpyVtvcSDbJAHtrGnBGlesOIkApgMqSqZvIB7EbtweBKbfjBWZsb7FwnPA27nJaaM1lqVWKvkh8XE1NobTjHpSFZ8eKHbuMv9%2FMoBZxUbEQeoqzQ7qbapWfqeYL5q9lPieQth%2FigVp5d09pLxUkgf3B605F5ePBvx5nQ9N%2BGbKZ%2FPheJ8NiTtrjpiRDSeNxofbT2g3xU%2F3N4obg8U17iG%2BCkJMcqRp2CtietAawLtT87Z8H%2FNAr61E%2FXpUoiVgPu%2BqzDZHg&=')
+
+# step #11
+data = 'getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=reset&var%3Aerrorpagename=reset&var%3Amenu=system&var%3Apagemaster=&time%3Asettings%2Ftime=&logic%3Acommand%2Freboot=..%2Fgateway%2Fcommands%2Fsaveconfig.html'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #12
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078803230&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=S0rpfVSWi4uYzKie5WwLk32Lj2C9lbbcl%2FXqTbtn8G8Fd7TWsW83iRn92QmRxMA%3D&=')
+
+# step #13
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index_inhalt.html')
+
+# step #14
+data = 'getpage=..%2Fhtml%2Flogincheck.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&var%3Amenutitle=Home&time%3Asettings%2Ftime=1208964718%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #15
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078908605&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=HzTl4g3TwjMO5mUNezz1EhxvJ%2B%2BWrQjNgdKDkSDDcB4%3D&=')
+
+# step #16
+data = 'getpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&errorpage=..%2Fhtml%2Findex.html&var%3Alang=de&var%3Apagename=home&var%3Amenu=home&time%3Asettings%2Ftime=1208964719%2C-120'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #17
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078910402&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=XZ8sHm1E4yT8lW%2FmKYNLm4wljtbnVbwiNVJJd3%2F8rx7hVk2b94TF9mWTTFQZouA%3D&=')
+
+# step #18
+get('http://{routerip}/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=2.0.0.14&encver=1&nonce=2078911495&wrkey=MTpdpk5uvOpPdcP897fB00KK&encparams=wgmhfeycwPcrfQ%2BXEd5YEivcOGG9dVKQ2yT67Ox%2FNGotXMdGjMwwrZGsXzfNpAk%3D&=')
+

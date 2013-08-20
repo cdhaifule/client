@@ -1,0 +1,16 @@
+"""
+US-Robotics USR8000A (8000-02) (FW 2.3)
+"""
+
+vendor = 'US-Robotics'
+name = 'US-Robotics USR8000A (8000-02) (FW 2.3)'
+regex = r'(?s).*robotics.*'
+
+# step #1
+data = 'rc=@&A=H0&rd=status'
+post('http://{routerip}/ cgi-bin/dial', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'rc=@&A=D0&rd=status'
+post('http://{routerip}/ cgi-bin/dial', data=data, auth=("{username}", "{password}"))
+

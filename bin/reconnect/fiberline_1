@@ -1,0 +1,19 @@
+"""
+CAS-3040 (FW: 1.20.04)
+"""
+
+vendor = 'Fiberline'
+name = 'CAS-3040 (FW: 1.20.04)'
+regex = r'(?s).*(Fiberline).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=statusp&pppoeflag=1'
+post('http://{routerip}/statusfix.htm', data=data)
+
+# step #3
+data = 'page=statusp&pppoeflag=0'
+post('http://{routerip}/statusfix.htm', data=data)
+

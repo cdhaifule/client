@@ -1,0 +1,23 @@
+"""
+T-Com Speedport 500V (FW 1.31)
+"""
+
+vendor = 'T-Com'
+name = 'T-Com Speedport 500V (FW 1.31)'
+regex = r'(?s).*speedport.*'
+
+# step #1
+data = 'P1={password}'
+post('http://{routerip}/start.login', data=data)
+
+# step #2
+data = 'action=0'
+post('http://{routerip}/pppctl.cmd', data=data)
+
+# step #3
+data = 'action=1'
+post('http://{routerip}/pppctl.cmd', data=data)
+
+# step #4
+get('http://{routerip}/<POST>logout.cmd?action=1')
+

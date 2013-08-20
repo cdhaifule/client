@@ -1,0 +1,9 @@
+"""
+D-LINK&nbsp;DI-804
+"""
+
+vendor = 'D-LINK'
+name = 'D-LINK&nbsp;DI-804'
+regex = r''
+
+

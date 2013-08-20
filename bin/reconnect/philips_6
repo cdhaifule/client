@@ -1,0 +1,23 @@
+"""
+Philips SNB6500
+"""
+
+vendor = 'Philips'
+name = 'Philips SNB6500'
+regex = r'(?s).*philips.*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+data = 'disconnect=disconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #3
+data = 'connect=connect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #4
+get('http://{routerip}/cgi-bin/logout.exe')
+

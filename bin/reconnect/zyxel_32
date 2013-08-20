@@ -1,0 +1,12 @@
+"""
+ZyXel&nbsp;P623ME-T1
+"""
+
+vendor = 'ZyXel'
+name = 'ZyXel&nbsp;P623ME-T1'
+regex = r''
+
+# step #1
+data = u'LineInfoDisplay=Start+to+reset+ADSL<br>Loading+ADSL+modem+F/W...&DiagResetADSL=Reset+ADSL+Line'
+post('http://{routerip}/Forms/DiagADSL_1', data=data)
+

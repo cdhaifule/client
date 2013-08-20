@@ -1,0 +1,14 @@
+"""
+DrayTek&nbsp;Vigor&nbsp;2820n&nbsp;FW&nbsp;313
+"""
+
+vendor = 'DrayTek'
+name = 'DrayTek&nbsp;Vigor&nbsp;2820n&nbsp;FW&nbsp;313'
+regex = r''
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi?ifno=3')
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi?ifno=3')
+

@@ -1,0 +1,28 @@
+"""
+Gigaset SX 541 WLAN dsl
+"""
+
+vendor = 'Siemens'
+name = 'Gigaset SX 541 WLAN dsl'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+data = 'pvc=0&cur_if=11&disconnect=Trennen'
+post('http://{routerip}/cgi-bin/conninfo.exe', data=data)
+
+# step #2
+get('http://{routerip}/conninfo.stm?')
+
+# step #3
+data = 'pvc=0&cur_if=3&connect=Verbinden'
+post('http://{routerip}/cgi-bin/conninfo.exe', data=data)
+
+# step #4
+get('http://{routerip}/conninfo.stm?')
+
+# step #5
+get('http://{routerip}/cgi-bin/logout.exe?')
+
+# step #6
+get('http://{routerip}/login.stm?')
+

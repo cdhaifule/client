@@ -1,0 +1,11 @@
+"""
+Firmware CX82xxx_4.1.0.9
+"""
+
+vendor = 'Crypto'
+name = 'Firmware CX82xxx_4.1.0.9'
+regex = r'(?s).*(Crypto).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+

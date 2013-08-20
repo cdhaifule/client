@@ -1,0 +1,50 @@
+"""
+-Easy Box A800 WLAN ISDN 1.01.211
+"""
+
+vendor = 'Arcor'
+name = '-Easy Box A800 WLAN ISDN 1.01.211'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071021181944&url=http%3A%2F%2F192.168.2.1%2F')
+
+# step #3
+data = 'user=root&pws=123456'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #4
+get('http://{routerip}/index.stm?')
+
+# step #5
+get('http://{routerip}/setupa_top.stm?')
+
+# step #6
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #7
+get('http://{routerip}/menu.stm?')
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071021181944&url=http%3A%2F%2F192.168.2.1%2Findex.stm')
+
+# step #10
+data = 'pvc=0&cur_if=11&disconnect.x=89&disconnect.y=1&disconnect=Neu+verbinden'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #11
+get('http://{routerip}/status_main.stm?')
+
+# step #12
+data = 'pvc=0&cur_if=3&connect.x=54&connect.y=6&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #13
+get('http://{routerip}/status_main.stm?')
+

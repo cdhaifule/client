@@ -1,0 +1,12 @@
+"""
+Speed Touch 585 Wireless
+"""
+
+vendor = 'Thomson'
+name = 'Speed Touch 585 Wireless'
+regex = r'(?s).*(Thomson).*'
+
+# step #1
+data = 'ce=1&be=0&l0=0&l1=0&tid=RESTART&0=17&1='
+post('http://{routerip}/cgi/b/info/restart/', data=data)
+

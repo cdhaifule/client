@@ -1,0 +1,16 @@
+"""
+Acer Warplink Firewall Router
+"""
+
+vendor = 'Acer'
+name = 'Acer Warplink Firewall Router'
+regex = r'(?s).*acer.*'
+
+# step #1
+data = 'page=status&Conn=Disconnect&ConnStatus=Connected&pptpConn=Disconnect&PPTPConnStatus=Disconnect&renew=&DHCPConnStatus=&scrollTop=&isclear=0'
+post('http://{routerip}/stat1.htm', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'page=status&Conn=Connect&ConnStatus=Disconnected&pptpConn=Connect&PPTPConnStatus=Connect&renew=&DHCPConnStatus=&scrollTop=&isclear=0'
+post('http://{routerip}/stat1.htm', data=data, auth=("{username}", "{password}"))
+

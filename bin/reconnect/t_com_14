@@ -1,0 +1,20 @@
+"""
+Speedport W 501 V (FW 28.04.07)
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 501 V (FW 28.04.07)'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+data = 'login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'connection0:settings/cmd_disconnect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'connection0:settings/cmd_connect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

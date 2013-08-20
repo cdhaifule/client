@@ -1,0 +1,25 @@
+"""
+WRT54G v8.00.5 build 002, Jan. 9, 2008
+"""
+
+vendor = 'LinkSys'
+name = 'WRT54G v8.00.5 build 002, Jan. 9, 2008'
+regex = r'(?s).*(LinkSys).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/StaRouter.htm?')
+
+# step #4
+data = 'action=Disconnect&wan_pro=2&conn_stats=300&layout=en'
+post('http://{routerip}/rstatus.tri', data=data)
+
+# step #5
+data = 'action=Connect&wan_pro=2&conn_stats=-1&layout=en'
+post('http://{routerip}/rstatus.tri', data=data)
+

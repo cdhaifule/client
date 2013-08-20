@@ -1,0 +1,17 @@
+"""
+WLAN AP-Router 2002
+"""
+
+vendor = '4MBO'
+name = 'WLAN AP-Router 2002'
+regex = r'(?s).*(4MBO).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/status.cgi?Disconnect=')
+
+# step #3
+get('http://{routerip}/status.cgi?Connect=')
+

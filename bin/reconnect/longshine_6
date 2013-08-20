@@ -1,0 +1,19 @@
+"""
+LCS-883R-WRP-4F (6.16.02l Build 0032 L:02)
+"""
+
+vendor = 'Longshine'
+name = 'LCS-883R-WRP-4F (6.16.02l Build 0032 L:02)'
+regex = r'(?s).*(Longshine).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Show-discons.htm=       Trennen'
+post('http://{routerip}/status.htm', data=data)
+
+# step #3
+data = 'Show-connects.htm=      Einw&auml;hlen='
+post('http://{routerip}/status.htm', data=data)
+

@@ -1,0 +1,32 @@
+"""
+Paradyne ADSL2 Bridge/Router
+"""
+
+vendor = 'Zhone'
+name = 'Paradyne ADSL2 Bridge/Router'
+regex = r'(?s).*(Zhone).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/banner.html?')
+
+# step #5
+get('http://{routerip}/menu.html?')
+
+# step #6
+get('http://{routerip}/info.html?')
+
+# step #7
+get('http://{routerip}/info.html?')
+
+# step #8
+get('http://{routerip}/info.html?')
+

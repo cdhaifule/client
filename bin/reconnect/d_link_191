@@ -1,0 +1,15 @@
+"""
+DSL-G624T
+"""
+
+vendor = 'D-Link'
+name = 'DSL-G624T'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'getpage=../html/status/status_deviceinfo_deviceinfofile.htm&var:mycon=connection0&var:conid=encaps0'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

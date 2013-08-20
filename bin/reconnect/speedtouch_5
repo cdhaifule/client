@@ -1,0 +1,9 @@
+"""
+Speedtouch&nbsp;780&nbsp;WLi
+"""
+
+vendor = 'Speedtouch'
+name = 'Speedtouch&nbsp;780&nbsp;WLi'
+regex = r''
+
+

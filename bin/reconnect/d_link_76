@@ -1,0 +1,14 @@
+"""
+D-Link DI-804 (Firmware v2.00 b4)
+"""
+
+vendor = 'D-Link'
+name = 'D-Link DI-804 (Firmware v2.00 b4)'
+regex = r'(?s).*d.?link.*'
+
+# step #1
+get('http://{routerip}/cgi-bin/online3.cgi', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/goinet.cgi', auth=("{username}", "{password}"))
+

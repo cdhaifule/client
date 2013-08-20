@@ -1,0 +1,17 @@
+"""
+fli4l
+"""
+
+vendor = 'fli4l'
+name = 'fli4l'
+regex = r'(?s).*(fli4l).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/admin/status.cgi?action=Trennen')
+
+# step #3
+get('http://{routerip}/admin/status.cgi?action=Verbinden')
+

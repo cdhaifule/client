@@ -1,0 +1,9 @@
+"""
+USRobotics&nbsp;USR5461
+"""
+
+vendor = '3COM'
+name = 'USRobotics&nbsp;USR5461'
+regex = r''
+
+

@@ -1,0 +1,31 @@
+"""
+FWG114P
+"""
+
+vendor = 'Netgear'
+name = 'FWG114P'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/st_poe.htm?')
+
+# step #3
+data = 'disconnect=Disconnect'
+post('http://{routerip}/st_poe.cgi', data=data)
+
+# step #4
+get('http://{routerip}/clr2/?')
+
+# step #5
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #6
+data = 'router=Netgear+FWG114P'
+post('http://{routerip}/clr3/', data=data)
+
+# step #7
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

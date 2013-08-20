@@ -1,0 +1,101 @@
+"""
+DIR-635
+"""
+
+vendor = 'D-Link'
+name = 'DIR-635'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #2
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #3
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #4
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #5
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #6
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #7
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #8
+get('http://{routerip}/wan_pppoe.cgi?connect=false')
+
+# step #9
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #10
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #11
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #12
+get('http://{routerip}/wan_pppoe.cgi?connect=true')
+
+# step #13
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #14
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #15
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #16
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #17
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #18
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #19
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #20
+get('http://{routerip}/Status/Device_Info.shtml?')
+
+# step #21
+get('http://{routerip}/i18n_language_codes.xsl?')
+
+# step #22
+get('http://{routerip}/languages.xml?')
+
+# step #23
+get('http://{routerip}/Status/lan_computers_table.sxsl?')
+
+# step #24
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #25
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #26
+get('http://{routerip}/Status/igmp_group_memberships.sxsl?')
+
+# step #27
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #28
+get('http://{routerip}/wan_connection_status.sxml?')
+
+# step #29
+get('http://{routerip}/cgi_ssi_igmp_group_memberships.xml?')
+
+# step #30
+get('http://{routerip}/dhcp_clients.xml?')
+
+# step #31
+get('http://{routerip}/wan_connection_status.sxml?')
+

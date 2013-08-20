@@ -1,0 +1,17 @@
+"""
+Prestige P660HW-T7 Firmware V3.40(ACU.0) | 12/23/2005
+"""
+
+vendor = 'ZYXEL '
+name = 'Prestige P660HW-T7 Firmware V3.40(ACU.0) | 12/23/2005'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/Forms/DiagADSL_1?DiagDSLDisconnect=PPPoE Trennung')
+
+# step #3
+get('http://{routerip}/http://www.google.de?')
+

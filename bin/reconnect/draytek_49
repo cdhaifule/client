@@ -1,0 +1,17 @@
+"""
+Vigor 2800Gi v2.7.1 EN, ADSL vE.74.2.26  Annex B
+"""
+
+vendor = 'DrayTek'
+name = 'Vigor 2800Gi v2.7.1 EN, ADSL vE.74.2.26  Annex B'
+regex = r'(?s).*(DrayTek).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/cgi-bin/online3.cgi?')
+
+# step #3
+get('http://{routerip}/cgi-bin/goinet.cgi?')
+

@@ -1,0 +1,44 @@
+"""
+Easybox A300 WLan
+"""
+
+vendor = 'Arcor'
+name = 'Easybox A300 WLan'
+regex = r'(?s).*(Arcor).*'
+
+# step #1
+data = 'user=smalldog&pws=tweety'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/menu.stm?')
+
+# step #6
+get('http://{routerip}/status_main.stm?')
+
+# step #7
+data = 'pvc=0&cur_if=11&disconnect.x=95&disconnect.y=9&disconnect=Reconnect'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #8
+get('http://{routerip}/status_main.stm?')
+
+# step #9
+data = 'pvc=0&cur_if=3&connect.x=61&connect.y=11&connect=+Verbinden+'
+post('http://{routerip}/cgi-bin/statusprocess.exe', data=data)
+
+# step #10
+get('http://{routerip}/status_main.stm?')
+
+# step #11
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.14&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:21042,goog-black-enchash:1:51001')
+

@@ -1,0 +1,36 @@
+"""
+DSL 2740B
+"""
+
+vendor = 'D-Link'
+name = 'DSL 2740B'
+regex = r'(?s).*(D-Link).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080406221918&url=http%3A%2F%2F192.168.1.1%2F')
+
+# step #3
+data = 'username=admin&password=admin'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #4
+get('http://{routerip}/banner.htm?')
+
+# step #5
+get('http://{routerip}/wan.htm?')
+
+# step #6
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080406221918&url=http%3A%2F%2F192.168.1.1%2Flogin.cgi')
+
+# step #7
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #8
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20080406221918&url=http%3A%2F%2F192.168.1.1%2Frebootinfo.cgi')
+
+# step #9
+get('http://{routerip}/login.htm?')
+

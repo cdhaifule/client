@@ -1,0 +1,20 @@
+"""
+T-Com Speedport W 900 V (FW 34.04.21)
+"""
+
+vendor = 'T-Com'
+name = 'T-Com Speedport W 900 V (FW 34.04.21)'
+regex = r'(?s).*t-com.*'
+
+# step #1
+data = 'login:command/password={password}'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #2
+data = 'connection0:settings/cmd_disconnect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+data = 'connection0:settings/cmd_connect=1'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+

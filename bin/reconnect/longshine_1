@@ -1,0 +1,57 @@
+"""
+883R-DSL-4F
+"""
+
+vendor = 'Longshine'
+name = '883R-DSL-4F'
+regex = r'(?s).*(Longshine).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/?')
+
+# step #4
+get('http://{routerip}/tframe.htm?')
+
+# step #5
+get('http://{routerip}/lframe.htm?')
+
+# step #6
+get('http://{routerip}/home.htm?')
+
+# step #7
+get('http://{routerip}/status.htm?')
+
+# step #8
+data = 'Show-discons.htm=+++++Disconnect+++++'
+post('http://{routerip}/status.htm', data=data)
+
+# step #9
+get('http://{routerip}/discons.htm?')
+
+# step #10
+data = 'Show-STATUS.HTM=Previous+Page'
+post('http://{routerip}/discons.htm', data=data)
+
+# step #11
+get('http://{routerip}/STATUS.HTM?')
+
+# step #12
+data = 'Show-connects.htm=++++++++Connect++++++++'
+post('http://{routerip}/STATUS.HTM', data=data)
+
+# step #13
+get('http://{routerip}/connects.htm?')
+
+# step #14
+data = 'Show-STATUS.HTM=Previous+Page'
+post('http://{routerip}/connects.htm', data=data)
+
+# step #15
+get('http://{routerip}/STATUS.HTM?')
+

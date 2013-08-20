@@ -1,0 +1,19 @@
+"""
+WGT624 v3  V1.1.125 Deutsch
+"""
+
+vendor = 'Netgear'
+name = 'WGT624 v3  V1.1.125 Deutsch'
+regex = r'(?s).*(Netgear).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+data = 'Disconnect=Disconnect&close=Close Window&ConMethod=Disconnect'
+post('http://{routerip}/st_pptp.cgi', data=data)
+
+# step #3
+data = 'Connect=  Connect  &close=Close Window&ConMethod=  Connect'
+post('http://{routerip}/st_pptp.cgi', data=data)
+

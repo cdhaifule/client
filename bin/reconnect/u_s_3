@@ -1,0 +1,20 @@
+"""
+U.S. Robotics Wireless Starter Kit Router USR5462 - PPTP
+"""
+
+vendor = 'U.S.'
+name = 'U.S. Robotics Wireless Starter Kit Router USR5462 - PPTP'
+regex = r'(?s).*robotics.*'
+
+# step #1
+data = 'page=login&pws={password}'
+post('http://{routerip}/login.htm', data=data)
+
+# step #2
+data = 'page=status_main&button=pptpcdisconnect'
+post('http://{routerip}/status_main.htm', data=data)
+
+# step #3
+data = 'page=status_main&button=pptpcconnect'
+post('http://{routerip}/status_main.htm', data=data)
+

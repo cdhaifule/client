@@ -1,0 +1,17 @@
+"""
+SMC 2804WBR "Barricade g"
+"""
+
+vendor = 'SMC'
+name = 'SMC 2804WBR "Barricade g"'
+regex = r'(?s).*(smc|barricade).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?disconnect=disconnect')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?connect=+connect+')
+

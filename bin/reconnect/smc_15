@@ -1,0 +1,17 @@
+"""
+Barricade (7004AWBR V2.0)
+"""
+
+vendor = 'SMC'
+name = 'Barricade (7004AWBR V2.0)'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+get('http://{routerip}/cgi-bin/login.exe?pws={password}')
+
+# step #2
+get('http://{routerip}/cgi-bin/statusprocess.exe?hangup=Hangup')
+
+# step #3
+get('http://{routerip}/cgi-bin/statusprocess.exe?dialcon= Dial ')
+

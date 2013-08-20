@@ -1,0 +1,18 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;Wireless&nbsp;Router
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;Wireless&nbsp;Router'
+regex = r''
+
+# step #1
+data = u'page=login&pws=DEIN_PASSWORT&bug=fixed&login=LOGIN'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #2
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Disconnect')
+
+# step #3
+get('http://{routerip}/pppoe.cgi?webpage=de%2FSetup.htm&rc_restart=6&action=Connect')
+

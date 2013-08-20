@@ -1,0 +1,14 @@
+"""
+Linksys WRT54GL (FW v4.71.1, Hyperwrt 2.1b1 + Thibor15c) by xtime
+"""
+
+vendor = 'Linksys'
+name = 'Linksys WRT54GL (FW v4.71.1, Hyperwrt 2.1b1 + Thibor15c) by xtime'
+regex = r'(?s).*linksys.*'
+
+# step #1
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Disconnect&change_action=gozila_cgi&wan_proto=pppoe', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/apply.cgi?submit_button=Status&submit_type=Connect&change_action=gozila_cgi&wan_proto=pppoe', auth=("{username}", "{password}"))
+

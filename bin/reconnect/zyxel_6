@@ -1,0 +1,18 @@
+"""
+P-630S EE
+"""
+
+vendor = 'ZYXEL '
+name = 'P-630S EE'
+regex = r'(?s).*(ZYXEL ).*'
+
+# step #1
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+
+# step #2
+data = 'router=Zyxel+P-630S+EE'
+post('http://{routerip}/clr3/', data=data)
+
+# step #3
+get('http://{routerip}/count_js.php?u=50224782&color=black')
+

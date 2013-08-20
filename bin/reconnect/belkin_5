@@ -1,0 +1,16 @@
+"""
+Belkin&nbsp;54G
+"""
+
+vendor = 'Belkin'
+name = 'Belkin&nbsp;54G'
+regex = r''
+
+# step #1
+data = u'page=&logout=&action=submit&pws=PWverschl\xfcsselt'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #2
+data = u'webpage=ut_reset.html&action=Reboot&page=&logout=&reboot=Restart+Router            Cookie: %%%Set-Cookie%%%'
+post('http://{routerip}/ut_reset.cgi', data=data)
+

@@ -1,0 +1,66 @@
+"""
+BIPAC 5112S Firmware 2.7.0.38(UE0.C2C)3.5.18.0
+"""
+
+vendor = 'Billion'
+name = 'BIPAC 5112S Firmware 2.7.0.38(UE0.C2C)3.5.18.0'
+regex = r'(?s).*(Billion).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/?')
+
+# step #3
+get('http://{routerip}/status.html?')
+
+# step #4
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2F192.168.1.254%2F')
+
+# step #5
+get('http://{routerip}/navigation-status.html?')
+
+# step #6
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #7
+get('http://{routerip}/maintenance/tools_admin.htm?')
+
+# step #8
+get('http://{routerip}/navigation-maintenance.html?')
+
+# step #9
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2F192.168.1.254%2Fmaintenance%2Ftools_admin.htm')
+
+# step #10
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2F192.168.1.254%2Fnavigation-maintenance.html')
+
+# step #11
+get('http://{routerip}/maintenance/tools_system.htm?')
+
+# step #12
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2F192.168.1.254%2Fmaintenance%2Ftools_system.htm')
+
+# step #13
+data = 'restoreFlag=0&RestartBtn=RESTART'
+post('http://{routerip}/Forms/tools_system_1', data=data)
+
+# step #14
+get('http://{routerip}/maintenance/tools_system.htm?')
+
+# step #15
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #16
+get('http://{routerip}/navigation-status.html?')
+
+# step #17
+get('http://{routerip}/status/status_deviceinfo.htm?')
+
+# step #18
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2Fcryptload.info%2Fclr%2F')
+
+# step #19
+get('http://{routerip}/data?cli=10&dat=nsa&ver=megaupload-megauploadtoolbar&uid=20071219212005&url=http%3A%2F%2Fcryptload.info%2Fwiki%2Findex.php%2FRecording_a_reconnect')
+

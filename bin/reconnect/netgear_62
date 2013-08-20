@@ -1,0 +1,16 @@
+"""
+Netgear MR814v2 PPTP-Verbindung
+"""
+
+vendor = 'Netgear'
+name = 'Netgear MR814v2 PPTP-Verbindung'
+regex = r'(?s).*netgear.*'
+
+# step #1
+data = 'disconnect="Disconnect"'
+post('http://{routerip}/st_pptp.cgi', data=data, auth=("{username}", "{password}"))
+
+# step #2
+data = 'connect="  Connect  "'
+post('http://{routerip}/st_pptp.cgi', data=data, auth=("{username}", "{password}"))
+

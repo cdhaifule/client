@@ -1,0 +1,18 @@
+"""
+T-Com Speedport W 700V (FW 1.16)
+"""
+
+vendor = 'T-Com'
+name = 'T-Com Speedport W 700V (FW 1.16)'
+regex = r'(?s).*speedport.*'
+
+# step #1
+data = 'pws={password}'
+post('http://{routerip}/cgi-bin/login.cgi', data=data)
+
+# step #2
+get('http://{routerip}/cgi-bin/disconnect.exe')
+
+# step #3
+get('http://{routerip}/cgi-bin/connect.exe')
+

@@ -1,0 +1,16 @@
+"""
+Linksys&nbsp;WRT&nbsp;54GC
+"""
+
+vendor = 'Linksys'
+name = 'Linksys&nbsp;WRT&nbsp;54GC'
+regex = r''
+
+# step #1
+data = u'release=Disconnect&ctype=pppoe'
+post('http://{routerip}/status.cgi', data=data)
+
+# step #2
+data = u'renew=+Connect+&ctype=pppoe'
+post('http://{routerip}/status.cgi', data=data)
+

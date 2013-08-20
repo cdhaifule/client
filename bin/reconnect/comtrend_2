@@ -1,0 +1,29 @@
+"""
+CT-5071T
+"""
+
+vendor = 'COMTREND'
+name = 'CT-5071T'
+regex = r'(?s).*(COMTREND).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/rebootinfo.cgi?')
+
+# step #3
+get('http://{routerip}/main.html?')
+
+# step #4
+get('http://{routerip}/logo.html?')
+
+# step #5
+get('http://{routerip}/menu.html?')
+
+# step #6
+get('http://{routerip}/info.html?')
+
+# step #7
+get('http://{routerip}/footer.html?')
+

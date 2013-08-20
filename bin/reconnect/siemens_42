@@ -1,0 +1,28 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE551&nbsp;WLAN&nbsp;dsl&nbsp;cable
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE551&nbsp;WLAN&nbsp;dsl&nbsp;cable'
+regex = r''
+
+# step #1
+data = u'your_password=dein passwort'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #2
+data = u'form_submission_type=disconnect'
+post('http://{routerip}/cgi-bin/home.cgi', data=data)
+
+# step #3
+data = u'form_submission_type=connect'
+post('http://{routerip}/cgi-bin/home.cgi', data=data)
+
+# step #4
+data = u'your_password=xxxxxxxxxxx'
+post('http://{routerip}/login.cgi', data=data)
+
+# step #5
+data = u'MAC1=00&MAC2=0D&MAC3=87&MAC4=08&MAC5=xx&MAC6=xx&mac_address=2&custom_mac_a ddress_1=00&custom_mac_address_2=0D&custom_mac_address_3=87&custom_mac_addr ess_4=08&custom_mac_address_5=xx&custom_mac_address_6=%zufall%'
+post('http://{routerip}/cgi-bin/gigaset_clMac.cgi', data=data)
+

@@ -1,0 +1,16 @@
+"""
+Siemens&nbsp;Gigaset&nbsp;SE&nbsp;105
+"""
+
+vendor = 'Siemens'
+name = 'Siemens&nbsp;Gigaset&nbsp;SE&nbsp;105'
+regex = r''
+
+# step #1
+data = u'page=status_main&button=pppoedisconnect'
+post('http://{routerip}/login.htm page=login&pws=DEINPASSWORT/status_main.htm', data=data)
+
+# step #2
+data = u'page=status_main&button=pppoeconnect'
+post('http://{routerip}/login.htm page=login&pws=DEINPASSWORT/status_main.htm', data=data)
+

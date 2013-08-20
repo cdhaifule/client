@@ -1,0 +1,11 @@
+"""
+CGA5720S/TE
+"""
+
+vendor = 'Philips'
+name = 'CGA5720S/TE'
+regex = r'(?s).*(Philips).*'
+
+# step #1
+get('http://{routerip}/safebrowsing/update?client=navclient-auto-ffox&appver=2.0.0.13&version=goog-white-domain:1:30,goog-white-url:1:371,goog-black-url:1:20173,goog-black-enchash:1:48945')
+

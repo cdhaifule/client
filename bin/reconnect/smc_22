@@ -1,0 +1,52 @@
+"""
+Barricade g SMC7904WBRA2
+"""
+
+vendor = 'SMC'
+name = 'Barricade g SMC7904WBRA2'
+regex = r'(?s).*(SMC).*'
+
+# step #1
+data = 'pws=smcadmin'
+post('http://{routerip}/cgi-bin/login.exe', data=data)
+
+# step #2
+get('http://{routerip}/index.stm?')
+
+# step #3
+get('http://{routerip}/setupa_top.stm?')
+
+# step #4
+get('http://{routerip}/setupa_brief.stm?')
+
+# step #5
+get('http://{routerip}/status_main.stm?')
+
+# step #6
+get('http://{routerip}/setupa_menu.stm?')
+
+# step #7
+get('http://{routerip}/tl.stm?')
+
+# step #8
+get('http://{routerip}/tl_menu.stm?')
+
+# step #9
+get('http://{routerip}/tl_main.stm?')
+
+# step #10
+get('http://{routerip}/system_r.stm?')
+
+# step #11
+data = 'page=tools_gateway&logout='
+post('http://{routerip}/cgi-bin/restart.exe', data=data)
+
+# step #12
+get('http://{routerip}/wait.stm?')
+
+# step #13
+get('http://{routerip}/?')
+
+# step #14
+get('http://{routerip}/?')
+

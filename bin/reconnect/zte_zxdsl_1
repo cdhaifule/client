@@ -1,0 +1,14 @@
+"""
+831 SERIES Firmware ZXDSL 831IIV5.5.0f_E09_CO
+"""
+
+vendor = 'ZTE ZXDSL'
+name = '831 SERIES Firmware ZXDSL 831IIV5.5.0f_E09_CO'
+regex = r'(?s).*(ZTE ZXDSL).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/constatus.html?')
+

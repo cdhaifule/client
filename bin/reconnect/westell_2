@@ -1,0 +1,101 @@
+"""
+versalink 327w
+"""
+
+vendor = 'westell'
+name = 'versalink 327w'
+regex = r'(?s).*(westell).*'
+
+# step #1
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #2
+get('http://{routerip}/indexHidden.htm?')
+
+# step #3
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #4
+get('http://{routerip}/indexHidden.htm?')
+
+# step #5
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #6
+get('http://{routerip}/indexHidden.htm?')
+
+# step #7
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #8
+get('http://{routerip}/indexHidden.htm?')
+
+# step #9
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #10
+get('http://{routerip}/indexHidden.htm?')
+
+# step #11
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #12
+get('http://{routerip}/indexHidden.htm?')
+
+# step #13
+data = 'PPPRequest=2&currentCnIndex=0&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexView.htm', data=data)
+
+# step #14
+get('http://{routerip}/indexView.htm?')
+
+# step #15
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #16
+get('http://{routerip}/indexHidden.htm?')
+
+# step #17
+get('http://{routerip}/indexView.htm?')
+
+# step #18
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #19
+get('http://{routerip}/indexHidden.htm?')
+
+# step #20
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #21
+get('http://{routerip}/indexHidden.htm?')
+
+# step #22
+data = 'ModemTime=14400&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexHidden.htm', data=data)
+
+# step #23
+get('http://{routerip}/indexHidden.htm?')
+
+# step #24
+data = 'PPPRequest=1&currentCnIndex=0&ModemId=MDVCNDA2ODQ5MTU5KjUzQkZFMA%3D%3D'
+post('http://{routerip}/indexView.htm', data=data)
+
+# step #25
+get('http://{routerip}/indexView.htm?')
+
+# step #26
+get('http://{routerip}/indexHidden.htm?')
+
+# step #27
+get('http://{routerip}/indexView.htm?')
+

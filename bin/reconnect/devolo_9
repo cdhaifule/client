@@ -1,0 +1,17 @@
+"""
+MicroLink ADSL Modem Router (FW 1.0)
+"""
+
+vendor = 'devolo'
+name = 'MicroLink ADSL Modem Router (FW 1.0)'
+regex = r'(?s).*(devolo).*'
+
+# step #1
+AUTH('http://{routerip}/?', auth=("{username}", "{password}"))
+
+# step #2
+get('http://{routerip}/doc/en/ppp.htm?PPP_virtual_circuit=0&PPP_Action=1&WINDWEB_URL=/doc/en/ppp.htm')
+
+# step #3
+get('http://{routerip}/doc/en/ppp.htm?PPP_virtual_circuit=0&PPP_Action=0&WINDWEB_URL=/doc/en/ppp.htm')
+

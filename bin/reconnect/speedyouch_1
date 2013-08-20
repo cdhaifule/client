@@ -1,0 +1,12 @@
+"""
+546
+"""
+
+vendor = 'Speedyouch'
+name = '546'
+regex = r'(?s).*(Speedyouch).*'
+
+# step #1
+data = 'router=Speedyouch+546'
+post('http://{routerip}/clr3/', data=data)
+

@@ -1,0 +1,79 @@
+"""
+Speedport W701V Firmware 33.04.56
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W701V Firmware 33.04.56'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/html/m_startonly.htm?')
+
+# step #2
+data = 'logic%3Acommand%2Freboot=1&getpage=..%2Fhtml%2Freboot.html&errorpage=..%2Fhtml%2Fhcti_hilfsmittel_reboot.htm'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #3
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/index.html&var:foo=0.40304992572259235')
+
+# step #4
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/hcti_startseite.htm')
+
+# step #5
+get('http://{routerip}/html/m_start_passwort.htm?')
+
+# step #6
+data = 'getpage=..%2Fhtml%2Fhcti_startseite.htm&var%3Averz=2&time%3Asettings%2Ftime=1210029359%2C-120&login%3Acommand%2Fpassword=mafc85138'
+post('http://{routerip}/cgi-bin/webcm', data=data)
+
+# step #7
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/m_startseite.htm')
+
+# step #8
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #9
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #10
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #11
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #12
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #13
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #14
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #15
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #16
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #17
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #18
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #19
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #20
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #21
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #22
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+
+# step #23
+get('http://{routerip}/cgi-bin/webcm?getpage=../html/query.txt&var:cnt=5&var:n0=connection0:status/connect&var:n1=sar:status/dsl_carrier_state&var:n2=box:status/hint_dsl_no_cable&var:n3=connection0:settings/username&var:n4=connection0:settings/enabled')
+

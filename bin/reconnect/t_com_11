@@ -1,0 +1,93 @@
+"""
+Speedport W 500 V Firmware 1.37
+"""
+
+vendor = 'T-Com'
+name = 'Speedport W 500 V Firmware 1.37'
+regex = r'(?s).*(T-Com).*'
+
+# step #1
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #2
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #3
+get('http://{routerip}/firefox?client=firefox-a&rls=org.mozilla:de:official')
+
+# step #4
+get('http://{routerip}/?')
+
+# step #5
+get('http://{routerip}/top_start_passwort.htm?')
+
+# step #6
+get('http://{routerip}/b_banner.htm?')
+
+# step #7
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #8
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #9
+get('http://{routerip}/js_menu.txt?')
+
+# step #10
+data = 'P1=0000'
+post('http://{routerip}/start.login', data=data)
+
+# step #11
+get('http://{routerip}/b_banner.htm?')
+
+# step #12
+get('http://{routerip}/m_startseite.htm?')
+
+# step #13
+get('http://{routerip}/hcti_startseite.htm?')
+
+# step #14
+get('http://{routerip}/js_menu.txt?')
+
+# step #15
+get('http://{routerip}/js_fade.txt?')
+
+# step #16
+get('http://{routerip}/hcti_hilfsmittel.htm?')
+
+# step #17
+get('http://{routerip}/js_fade.txt?')
+
+# step #18
+get('http://{routerip}/js_menu.txt?')
+
+# step #19
+get('http://{routerip}/hcti_hilfsmittel_reboot.htm?')
+
+# step #20
+get('http://{routerip}/js_menu.txt?')
+
+# step #21
+get('http://{routerip}/hcti_hilfsmittel_reboot_waiting.cgi?')
+
+# step #22
+get('http://{routerip}/js_menu.txt?')
+
+# step #23
+get('http://{routerip}/js_menu.txt?')
+
+# step #24
+get('http://{routerip}/top_restart_passwort.htm?')
+
+# step #25
+get('http://{routerip}/b_banner.htm?')
+
+# step #26
+get('http://{routerip}/m_start_passwort.htm?')
+
+# step #27
+get('http://{routerip}/hcti_start_passwort.htm?')
+
+# step #28
+get('http://{routerip}/js_menu.txt?')
+

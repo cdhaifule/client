@@ -1,0 +1,29 @@
+"""
+Speedstream-4200
+"""
+
+vendor = 'Siemens'
+name = 'Speedstream-4200'
+regex = r'(?s).*(Siemens).*'
+
+# step #1
+get('http://{routerip}/?')
+
+# step #2
+get('http://{routerip}/nav.htm?')
+
+# step #3
+get('http://{routerip}/disppic.htm?')
+
+# step #4
+get('http://{routerip}/title.htm?')
+
+# step #5
+get('http://{routerip}/summary.htm?')
+
+# step #6
+get('http://{routerip}/PPP_logout.cgi?ConnID=oe00')
+
+# step #7
+get('http://{routerip}/PPP_doLogin.cgi?ConnID=oe00')
+
