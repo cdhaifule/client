@@ -1452,6 +1452,14 @@ def init():
                     if isinstance(source, BasicSource) and source.enabled:
                         patch_group.spawn(source.check)
 
+    # delete useless repos
+    for extern in os.listdir(settings.external_plugins):
+        if extern not in sources or not sources[extern].enabled:
+            path = os.path.join(settings.external_plugins)
+            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
+                log.info('deleting useless external repo {}'.format(path))
+                really_clean_repo(path)
+
     # check and apply updates
     from gevent.queue import JoinableQueue
     y = JoinableQueue()
