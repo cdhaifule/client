@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import base64
+import gevent
 
 from bottle import Bottle, request, response
 from socketio import socketio_manage, server
@@ -44,10 +45,8 @@ class Namespace(BaseNamespace, BroadcastMixin):
         pass
     
     def on_message(self, message):
-        try:
-            proto.handle_message(self.send_message, message)
-        except:
-            log.unhandled_exception('on_message')
+        message = proto.unpack_message(message)
+        gevent.spawn(proto.process_message, self.send_message, message)
 
     def send_message(self, message):
         #print ">>> SEND DIRECT", message['flags'], message.get('command'), message['payload']

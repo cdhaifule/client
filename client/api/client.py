@@ -145,12 +145,8 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.send_message(message)
 
     def on_message(self, message):
-        try:
-            proto.handle_message(self.send_message, message)
-        except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
-            raise
-        except:
-            log.unhandled_exception('on_message')
+        message = proto.unpack_message(message)
+        gevent.spawn(proto.process_message, self.send_message, message)
 
     def handshake(self):
         """returns None on error or (node_host, node_port)
@@ -168,11 +164,12 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.login_results[rid] = result
         key = login.generate_backend_key()
         from .. import patch
-        payload = {'id': rid, 
-            'version': proto.VERSION, 
-            'branch': patch.config.branch, 
-            'commit_id': patch.core_source.version, 
-            'l': login.get('login'), 
+        payload = {
+            'id': rid,
+            'version': proto.VERSION,
+            'branch': patch.config.branch,
+            'commit_id': patch.core_source.version,
+            'l': login.get('login'),
             'system': data,
         }
         message_key = proto.pack_message('backend', 'api.set_key', payload=dict(key=key), encrypt="rsa")
