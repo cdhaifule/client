@@ -518,6 +518,8 @@ def patch_one(patches, source, timeout=180):
                     patches.append(p)
         except Timeout:
             source.log.error('patch function timed out')
+        except requests.ConnectionError:
+            source.log.error('patch error: {}'.format(e))
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             raise
         except BaseException as e:
@@ -543,22 +545,18 @@ def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
 
         log.debug('updating repos')
         # check for updates
-        try:
-            patches = list()
-            for source in sources.values():
-                if source.enabled:
-                    def _patch(patches, source, timeout):
-                        try:
-                            patch_one(patches, source, timeout)
-                        finally:
-                            if source_complete_callback is not None:
-                                source_complete_callback(source)
-                    g = group.spawn(_patch, patches, source, timeout)
-                    patch_group.add(g)
-            group.join()
-        finally:
-            if source_complete_callback is not None:
-                source_complete_callback(None)
+        patches = list()
+        for source in sources.values():
+            if source.enabled:
+                def _patch(patches, source, timeout):
+                    try:
+                        patch_one(patches, source, timeout)
+                    finally:
+                        if source_complete_callback is not None:
+                            source_complete_callback(source)
+                g = group.spawn(_patch, patches, source, timeout)
+                patch_group.add(g)
+        group.join()
         finalize_patches(patches, external_loaded=external_loaded)
 
 def patch_loop():
@@ -834,6 +832,8 @@ class ConfigUrl(object):
                 return
             try:
                 self._update()
+            except requests.ConnectionError:
+                self.log.error('update error: {}'.format(e))
             finally:
                 self.last_update = time.time()
 
@@ -1058,6 +1058,8 @@ class BasicPatchSource(BasicSource):
                     return
                 except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
                     raise
+                except requests.ConnectionError as e:
+                    self.log.error('error sending error: {}'.format(e))
                 except BaseException:
                     self.log.exception('error while sending error {} to backend'.format(id))
                     gevent.sleep(10)
@@ -1122,8 +1124,6 @@ class PatchSource(BasicPatchSource, PublicSource):
 
     def __init__(self, **kwargs):
         BasicPatchSource.__init__(self, **kwargs)
-        if not os.path.exists(self.basepath):
-            os.makedirs(self.basepath)
 
     def on_get_version(self, value):
         if not os.path.exists(self.basepath):
@@ -1259,6 +1259,8 @@ def add_config_source(url, config_url=None):
     try:
         resp.raise_for_status()
         data = yaml.load(resp.raw)
+    except:
+        log.exception('error adding config source')
     finally:
         resp.close()
     assert len(data.keys()) > 0
@@ -1343,7 +1345,7 @@ def idientify_source(url):
         resp = requests.get(url, allow_redirects=False)
         resp.raise_for_status()
     except:
-        pass
+        return
     else:
         # check for git
         if url.endswith('.git'):
@@ -1386,11 +1388,13 @@ def idientify_source(url):
             pass
 
     log.warning('could not identify source type. using default git')
-    return 'git', url
+    return None, url
 
 def add_source(url, config_url=None, type=None):
     if type is None:
         type, url = idientify_source(url)
+        if type is None:
+            return
         print "identify", type, url
     return source_types[type](url, config_url)
 
@@ -1458,7 +1462,10 @@ def init():
             path = os.path.join(settings.external_plugins)
             if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
                 log.info('deleting useless external repo {}'.format(path))
-                really_clean_repo(path)
+                try:
+                    really_clean_repo(path)
+                except:
+                    pass
 
     # check and apply updates
     from gevent.queue import JoinableQueue
@@ -1468,16 +1475,16 @@ def init():
     def source_complete_callback(source):
         complete.append(source)
         if len(complete) == len(sources):
-            y.put(None)
-        else:
             y.put('updating {} / {}'.format(len(complete), len(sources)))
 
     gevent.spawn(patch_all, 30, False, source_complete_callback=source_complete_callback)
+    gevent.sleep(0.2)
     yield 'updating {} / {}'.format(len(complete), len(sources))
-    while True:
-        x = y.get()
-        if x is None:
-            break
+    while len(patch_group):
+        try:
+            x = y.get(timeout=1)
+        except:
+            continue
         yield x
 
     patch_group.join()
