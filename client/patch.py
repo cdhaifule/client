@@ -849,6 +849,15 @@ class ConfigUrl(object):
         finally:
             resp.close()
         assert len(data.keys()) > 0
+        group = Group()
+
+        def _add_source(url):
+            try:
+                source = add_source(url, self.url)
+            except:
+                self.log.warning('error adding new repo {}'.format(url))
+            else:
+                found_sources.append(source)
         for name, url in data.iteritems():
             try:
                 Url(url)
@@ -858,12 +867,7 @@ class ConfigUrl(object):
                 source = sources[name]
             except KeyError:
                 self.log.info('adding new repo {}'.format(url))
-                try:
-                    source = add_source(url, self.url)
-                except:
-                    self.log.warning('error adding new repo {}'.format(url))
-                else:
-                    found_sources.append(source)
+                group.spawn(_add_source, url)
             else:
                 found_sources.append(source)
                 if source.url != url:
@@ -871,6 +875,7 @@ class ConfigUrl(object):
                     with transaction:
                         source.url = url
                     source.unlink()
+        group.join()
 
         for source in sources.values():
             if source.config_url == self.url and source not in found_sources:

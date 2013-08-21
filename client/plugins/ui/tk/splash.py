@@ -14,8 +14,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from .... import settings
+#import os
 from Tkinter import Tk, Frame, Label, StringVar, RAISED
+#from .animate import AnimatedImgLabel
+from .... import settings
 from PIL import Image, ImageTk
 
 class Splash(Tk):
@@ -27,10 +29,15 @@ class Splash(Tk):
         frame.pack()
 
         # image
-        img = ImageTk.PhotoImage(Image.open(settings.mainicon), master=self)
-        w = Label(frame, image=img, padx=5, pady=5)
-        w.image = img
+        img = self.img = ImageTk.PhotoImage(Image.open(settings.mainicon), master=self)
+        w = Label(frame, image=self.img, padx=5, pady=5)
+        w.image = self.img
         w.pack()
+        #with open(os.path.join(settings.img_dir, 'loading_tk.gif'), 'rb') as f:
+        #    data = f.read()
+        #self.img = AnimatedImgLabel(frame, data, 'raw', padx=5, pady=5)
+        #img = self.img.first
+        #self.img.pack()
 
         # status text
         self.text = StringVar()

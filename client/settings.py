@@ -67,9 +67,10 @@ except AttributeError:
 
 if sys.platform == "win32" and sys.frozen:
     app_dir = os.path.dirname(sys.executable)
-    mainicon = os.path.join(app_dir, 'img', 'dlam.ico')
+    img_dir = os.path.join(app_dir, 'img')
+    mainicon = os.path.join(img_dir, 'dlam.ico')
     taskbaricon = mainicon
-    taskbaricon_inactive = os.path.join(app_dir, 'img', 'dlam_red.ico')
+    taskbaricon_inactive = os.path.join(img_dir, 'dlam_red.ico')
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, 'img', 'menu')
     
@@ -80,20 +81,22 @@ if sys.platform == "win32" and sys.frozen:
 elif sys.platform == "darwin" and sys.frozen:
     app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
-    mainicon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam.icns")
-    taskbaricon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam_black.icns")
-    taskbaricon_inactive = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam_greyx32.png")
-    menuiconfolder = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img/menu")
+    img_dir = os.path.join(app_dir, 'Contents/Resources/lib/python2.7/client/img')
+    mainicon = os.path.join(img_dir, "dlam.icns")
+    taskbaricon = os.path.join(img_dir, "dlam_black.icns")
+    taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
+    menuiconfolder = os.path.join(img_dir, "menu")
 else:
     app_dir = os.getcwd()
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, "client/img/menu")
+    img_dir = os.path.join(app_dir, 'client/img')
     if sys.platform == "darwin":
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
-        taskbaricon = os.path.join(app_dir, "client/img/dlam_black.icns")
-        taskbaricon_inactive =os.path.join(app_dir, "client/img/dlam_greyx32.png")
-    else:
-        mainicon = os.path.join(app_dir, "client/img/dlam.ico")
+        taskbaricon = os.path.join(img_dir, "dlam_black.icns")
+        taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
+    else: # it's linux baby 
+        mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
 
