@@ -80,7 +80,7 @@ class ServicePlugin(plugintools.GreenletObject):
         return
 
 @interface.register
-class AccountInterface(interface.Interface):
+class ServiceInterface(interface.Interface):
     name = "service"
     
     def list_plugins():
