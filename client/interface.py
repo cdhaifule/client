@@ -85,12 +85,12 @@ class Interface(object):
         
 def guest_protected_dialog():
     from .input import Text, Choice, get, InputTimeout, InputError
-    elements = [Text('The Website wants to change or do something that could harm or damage your computer.')]
+    elements = [Text('The website wants to change or do something that could harm or damage your computer.')]
     elements += [Text('If you ordered it to do so, no need to worry.')]
     elements += [Choice('answer', choices=[
         {"value": "ok", "content": "I understand"},
         {"value": "cancel", "content": "No"}
-        ])]
+    ])]
     try:
         r = get(elements, type='guest_protected_api', timeout=120)
         result = r['answer']

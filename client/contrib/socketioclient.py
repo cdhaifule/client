@@ -334,33 +334,39 @@ class _SocketIO(object):
 
     def listener(self):
         while True:
+            #from ..api import proto
+            #print "........", proto.unpack_message()
             try:
-                code, packet_id, path, data = self.recv_packet()
-            except BaseException as e:
+                try:
+                    code, packet_id, path, data = self.recv_packet()
+                except BaseException as e:
+                    gevent.spawn(self.parent.disconnect, e)
+                    return
+                try:
+                    namespace = self.parent.namespaces[path]
+                except KeyError as e:
+                    #print 'Received unexpected path (%s)' % path
+                    # handle this as error
+                    self.parent.disconnect(e)
+                    continue
+                try:
+                    func = {
+                        '0': self.on_disconnect,
+                        '1': self.on_connect,
+                        '2': self.on_heartbeat,
+                        '3': self.on_message,
+                        '4': self.on_json,
+                        '5': self.on_event,
+                        '6': self.on_ack,
+                        '7': self.on_error,
+                    }[code]
+                except KeyError:
+                    print 'Received unexpected code (%s)' % code
+                    continue
+                func(packet_id, namespace._get_event_callback, data)
+            except:
                 gevent.spawn(self.parent.disconnect, e)
-                return
-            try:
-                namespace = self.parent.namespaces[path]
-            except KeyError as e:
-                #print 'Received unexpected path (%s)' % path
-                # handle this as error
-                self.parent.disconnect(e)
-                continue
-            try:
-                func = {
-                    '0': self.on_disconnect,
-                    '1': self.on_connect,
-                    '2': self.on_heartbeat,
-                    '3': self.on_message,
-                    '4': self.on_json,
-                    '5': self.on_event,
-                    '6': self.on_ack,
-                    '7': self.on_error,
-                }[code]
-            except KeyError:
-                print 'Received unexpected code (%s)' % code
-                continue
-            func(packet_id, namespace._get_event_callback, data)
+                raise
 
     def on_connect(self, packet_id, get_event_callback, data):
         get_event_callback('connect')()

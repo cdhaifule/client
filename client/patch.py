@@ -19,6 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
+import time
+import stat
+import yaml
 import gevent
 import struct
 import binascii
@@ -44,6 +47,7 @@ from gevent.threadpool import ThreadPool
 from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
 from collections import defaultdict
+
 from pygit2 import Repository, clone_repository
 
 from . import current, logger, input, settings, reconnect, db, interface, loader
@@ -123,20 +127,55 @@ def patch_source_bindiff(source, patch):
 # http request functions
 
 def patch_get(url, *args, **options):
-    url = "/".join([url]+map(str, args))
+    url = "/".join([url.split('#', 1)[0].rstrip('/')]+map(str, args))
     return requests.get(url, **options)
 
 def patch_post(url, *args, **options):
-    url = "/".join([url]+map(str, args))
+    url = "/".join([url.split('#', 1)[0].rstrip('/')]+map(str, args))
     return requests.post(url, **options)
 
-
 # the big bad patch process
+
+def rmtree_onerror(func, path, exc_info):
+    """
+    # http://www.voidspace.org.uk/downloads/pathutils.py
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    if not os.access(path, os.W_OK):
+        # Is the error an access error ?
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    else:
+        raise
+
+def really_clean_repo(path):
+    last_e = None
+    for i in xrange(10):
+        try:
+            shutil.rmtree(path, onerror=rmtree_onerror)
+            break
+        except OSError as e:
+            if e.errno == 2:
+                break
+            last_e = e
+        except BaseException as e:
+            last_e = e
+        gevent.sleep(0.1)
+    else:
+        raise last_e
 
 class BasicPatchWorker(object):
     def __init__(self, source):
         self.source = source
         self.external = defaultdict(list)
+
 
 class GitWorker(BasicPatchWorker):
     def __init__(self, source):
@@ -145,8 +184,16 @@ class GitWorker(BasicPatchWorker):
     def call_git(self, func, *args, **kwargs):
         """make a non-blocking call to a big pygit2 operation
         """
-        #return git_threadpool.spawn(func, *args, **kwargs).get()
-        def run(w):
+        def fn():
+            try:
+                return func(*args, **kwargs)
+            except BaseException as e:
+                return e
+        result = git_threadpool.spawn(fn).get()
+        if isinstance(result, BaseException):
+            raise result
+        return result
+        '''def run(w):
             try:
                 result = func(*args, **kwargs)
                 w.put(result)
@@ -174,39 +221,64 @@ class GitWorker(BasicPatchWorker):
         with git_lock:
             if loader._terminated:
                 return
-            return execute()
+            return execute()'''
 
     def patch(self):
         repo = self.source._open_repo()
-        if repo is None:
+        try:
+            if repo is None:
+                return self.clone()
+            else:
+                return self.fetch(repo)
+        finally:
+            if repo:
+                del repo
+
+    def clone(self):
+        really_clean_repo(self.source.basepath)
+        try:
             try:
-                shutil.rmtree(self.basepath)
+                os.makedirs(self.source.basepath)
             except:
                 pass
             try:
                 repo = self.call_git(clone_repository, self.source.url, self.source.basepath, bare=True)
-            except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
-                self.source.unlink() # it is possible that the clone process is broken when the operation was interrupted
-                raise
-            except:
-                self.source.unlink()
-                self.source.log.error('failed cloning repository')
-                return False
-            else:
-                if repo is None:
-                    return
+            except OSError as e:
+                if str(e) == 'SSL is not supported by this copy of libgit2.' and self.source.url.startswith('https://'):
+                    url = self.source.url.replace('https://', 'http://')
+                    repo = self.call_git(clone_repository, url, self.source.basepath, bare=True)
+                else:
+                    raise
+        except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
+            self.source.unlink() # it is possible that the clone process is broken when the operation was interrupted
+            raise
+        except BaseException as e:
+            self.source.unlink()
+            self.source.log.error('failed cloning repository')
+            with transaction:
+                self.source.last_error = 'failed cloning repository: {}'.format(e)
+            return False
+        else:
+            if repo is not None:
+                del repo
                 self.source.log.info('repository clone complete; branch {} is at {}'.format(self.source.get_branch(), self.source.version))
                 return True
 
+    def fetch(self, repo):
         old_version = self.source.version
         try:
-            result = self.call_git(repo.remotes[0].fetch)
+            try:
+                result = self.call_git(repo.remotes[0].fetch)
+            finally:
+                del repo
             assert result is not None
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
-        except:
+        except BaseException as e:
             self.source.log.error('failed fetching repository')
+            with transaction:
+                self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
         else:
             stats = ['{}: {}'.format(key, value) for key, value in result.iteritems()]
@@ -243,6 +315,8 @@ class PatchWorker(BasicPatchWorker):
             return
 
         self.old_version = self.source.version
+        if '<html>' in resp.content:
+            raise ValueError('invalid response from patch server')
         self.new_version = resp.content
         self.source.log.info('found new version: {}, current version: {}'.format(self.new_version, self.old_version))
 
@@ -435,6 +509,10 @@ class PatchWorker(BasicPatchWorker):
 
 def patch_one(patches, source, timeout=180):
     with source.lock:
+        if source.get_config_url() is not None:
+            source.get_config_url().update()
+            if source._table_deleted:
+                return
         try:
             p = source.get_worker()
             with Timeout(timeout):
@@ -449,15 +527,40 @@ def patch_one(patches, source, timeout=180):
                 source.last_error = str(e)
             source.log.exception('patch exception')
 
-def patch_all(timeout=180, external_loaded=True):
+def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
     with patch_all_lock:
-        group = Group()
-        patches = list()
+        # check config urls
+        log.debug('checking config urls')
+        todo = list()
         for source in sources.values():
-            if source.enabled:
-                g = group.spawn(patch_one, patches, source, timeout)
-                patch_group.add(g)
+            config_url = source.get_config_url()
+            if config_url is not None and config_url not in todo:
+                todo.append(config_url)
+
+        group = Group()
+        for config_url in todo:
+            g = group.spawn(config_url.update)
+            patch_group.add(g)
         group.join()
+
+        log.debug('updating repos')
+        # check for updates
+        try:
+            patches = list()
+            for source in sources.values():
+                if source.enabled:
+                    def _patch(patches, source, timeout):
+                        try:
+                            patch_one(patches, source, timeout)
+                        finally:
+                            if source_complete_callback is not None:
+                                source_complete_callback(source)
+                    g = group.spawn(_patch, patches, source, timeout)
+                    patch_group.add(g)
+            group.join()
+        finally:
+            if source_complete_callback is not None:
+                source_complete_callback(None)
         finalize_patches(patches, external_loaded=external_loaded)
 
 def patch_loop():
@@ -570,16 +673,16 @@ def _external_rename_bat(replace, delete, deltree):
     for file in replace:
         code.append('move /y "{}" "{}"'.format(file+'.new', file))
     for file in delete:
-        code.append('del "{}"'.format(file))
+        code.append('del /Q "{}"'.format(file))
     for file in deltree:
-        code.append('del /S "{}"'.format(file))
+        code.append('del /S/Q "{}"'.format(file))
 
     cmd = '"' + '" "'.join([sys.executable] + sys.argv[1:]) + '"'
     if not sys.__stdout__.isatty():
         cmd = 'start "" '+cmd
     code.append(cmd)
 
-    code.append('del "%0"')
+    code.append('del /Q "%0"')
     print '\r\n'.join(code)
 
     tmp = tempfile.NamedTemporaryFile(suffix=".bat", delete=False)
@@ -683,16 +786,20 @@ class GitIterator(object):
 
     def __iter__(self):
         from pygit2 import GIT_FILEMODE_TREE, GIT_FILEMODE_BLOB
+        results = list()
         for entry in self.tree:
             if entry.filemode & GIT_FILEMODE_TREE and (self.path or self.walk):
                 if not self.path or self.path[0] == entry.name:
                     tree = self.repo.get(entry.hex)
                     relpath = os.path.join(self.relpath, entry.name)
                     for file in GitIterator(self.repo, tree, self.path and self.path[1:], self.walk, relpath):
-                        yield file
+                        results.append(file)
             elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
                 blob = self.repo.get(entry.hex)
-                yield GitFile(self.relpath, entry.name, blob)
+                results.append(GitFile(self.relpath, entry.name, blob))
+        del self.repo
+        for file in results:
+            yield file
 
 class GitFile(object):
     def __init__(self, path, name, blob):
@@ -707,6 +814,68 @@ class GitFile(object):
 # source classes
 
 sources = dict()
+config_urls = dict()
+
+class ConfigUrl(object):
+    def __init__(self, url):
+        self.url = url
+        self.lock = Semaphore()
+        self.last_update = None
+
+    @property
+    def log(self):
+        if not hasattr(self, '_log'):
+            self._log = logger.get('patch.config_url.{}'.format(self.url))
+        return self._log
+
+    def update(self):
+        locked = self.lock.locked()
+        with self.lock:
+            if locked:
+                return
+            if self.last_update is not None and time.time() - self.last_update < 60:
+                return
+            try:
+                self._update()
+            finally:
+                self.last_update = time.time()
+
+    def _update(self):
+        found_sources = list()
+        resp = requests.get(self.url, stream=True)
+        try:
+            resp.raise_for_status()
+            data = yaml.load(resp.raw)
+        finally:
+            resp.close()
+        assert len(data.keys()) > 0
+        for name, url in data.iteritems():
+            try:
+                Url(url)
+            except:
+                self.log.warning('invalid patch source entry: {}'.format(url))
+            try:
+                source = sources[name]
+            except KeyError:
+                self.log.info('adding new repo {}'.format(url))
+                try:
+                    source = add_source(url, self.url)
+                except:
+                    self.log.warning('error adding new repo {}'.format(url))
+                else:
+                    found_sources.append(source)
+            else:
+                found_sources.append(source)
+                if source.url != url:
+                    source.log.info('changing url to {}'.format(url))
+                    with transaction:
+                        source.url = url
+                    source.unlink()
+
+        for source in sources.values():
+            if source.config_url == self.url and source not in found_sources:
+                source.log.info('erasing repo')
+                source.delete(True)
 
 class BasicSource(Table):
     _table_name = "patch_source"
@@ -716,8 +885,9 @@ class BasicSource(Table):
     enabled = Column(always_use_getter=True)
     last_error = Column(always_use_getter=True)
 
-    def __init__(self, enabled=True, **kwargs):
+    def __init__(self, enabled=True, config_url=None, **kwargs):
         self.enabled = enabled
+        self.config_url = config_url
 
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
@@ -732,6 +902,13 @@ class BasicSource(Table):
         if not hasattr(self, '_log'):
             self._log = logger.get('patch.source.{}'.format(self.id))
         return self._log
+
+    def get_config_url(self):
+        if self.config_url is None:
+            return None
+        if self.config_url not in config_urls:
+            config_urls[self.config_url] = ConfigUrl(self.config_url)
+        return config_urls[self.config_url]
 
     def on_get_enabled(self, value):
         if os.path.exists(os.path.join(self.basepath, '.git')):
@@ -765,6 +942,9 @@ class BasicSource(Table):
         raise NotImplementedError()
 
     def send_error(self, id, name, type, message, content):
+        raise NotImplementedError()
+
+    def unlink(self):
         raise NotImplementedError()
 
     def delete(self, erase):
@@ -927,6 +1107,7 @@ class CoreSource(BasicPatchSource):
 class PatchSource(BasicPatchSource, PublicSource):
     id = Column(('db', 'api'))
     url = Column(('db', 'api'))
+    config_url = Column(('db', 'api'))
     sig = Column('db')
     contact = Column(('db', 'api'))
 
@@ -942,18 +1123,23 @@ class PatchSource(BasicPatchSource, PublicSource):
             os.makedirs(self.basepath)
 
     def on_get_version(self, value):
+        if not os.path.exists(self.basepath):
+            return '0'*7
         return value
 
     def iter_files(self, path=None, walk=False):
         path = self.basepath if path is None else os.path.join(self.basepath, path)
         return HddIterator(path, walk)
 
+    def unlink(self):
+        try:
+            really_clean_repo(self.basepath)
+        except:
+            pending_external['deltree'].append(self.basepath)
+
     def delete(self, erase):
         if erase:
-            try:
-                shutil.rmtree(self.basepath)
-            except:
-                pending_external['deltree'].append(self.basepath)
+            self.unlink()
         with transaction:
             self.table_delete()
         self.log.info('deleted')
@@ -963,6 +1149,7 @@ class PatchSource(BasicPatchSource, PublicSource):
 class GitSource(BasicSource, PublicSource):
     id = Column(('db', 'api'))
     url = Column(('db', 'api'))
+    config_url = Column(('db', 'api'))
 
     branches = Column('api', always_use_getter=True)
     version = Column('api', always_use_getter=True)
@@ -985,15 +1172,21 @@ class GitSource(BasicSource, PublicSource):
         repo = self._open_repo()
         if repo is None:
             return list()
-        return repo.listall_branches()
+        try:
+            return repo.listall_branches()
+        finally:
+            del repo
 
     def on_get_version(self, value):
         repo = self._open_repo()
         if repo is None:
             return '0'*7
-        branch_name = self.get_branch()
-        branch = repo.lookup_branch(branch_name)
-        return branch.target.hex[:7]
+        try:
+            branch_name = self.get_branch()
+            branch = repo.lookup_branch(branch_name)
+            return branch.target.hex[:7]
+        finally:
+            del repo
 
     def get_worker(self):
         return GitWorker(self)
@@ -1020,7 +1213,7 @@ class GitSource(BasicSource, PublicSource):
 
     def unlink(self):
         try:
-            shutil.rmtree(self.basepath)
+            really_clean_repo(self.basepath)
         except:
             pending_external['deltree'].append(self.basepath)
 
@@ -1053,22 +1246,35 @@ def get_file_iterator(source_name, path=None, walk=False):
 
 ############### add sources
 
-def add_source(url, add_repo_prefix=True):
-    if url.endswith('.git'):
-        return add_git_source(url)
+def add_config_source(url, config_url=None):
+    if config_url is not None:
+        raise ValueError('config url not allowed on config sources')
+    resp = requests.get(url, stream=True)
+    try:
+        resp.raise_for_status()
+        data = yaml.load(resp.raw)
+    finally:
+        resp.close()
+    assert len(data.keys()) > 0
+    if url in config_urls:
+        config_urls[url].update()
     else:
-        return add_patch_source(url)
+        config_urls[url] = ConfigUrl(url)
+        config_urls[url].update()
 
-def add_git_source(url):
+def add_git_source(url, config_url=None):
     u = Url(url)
-    id = os.path.split(u.path)[1]
-    id = os.path.splitext(id)[0]
+    try:
+        id = os.path.split(u.path)[1]
+        id = os.path.splitext(id)[0]
+    except:
+        raise ValueError('not a git url')
     if id in sources:
         raise ValueError('source with name {} already exists'.format(id))
     with transaction:
-        return GitSource(id=id, url=url)
+        return GitSource(id=id, url=url, config_url=config_url)
 
-def add_patch_source(url, add_repo_prefix=True):
+def add_patch_source(url, config_url=None):
     if not url.startswith('http'):
         url = 'http://{}'.format(url)
     if '#' not in url and not url.endswith('/'):
@@ -1076,22 +1282,10 @@ def add_patch_source(url, add_repo_prefix=True):
 
     u = Url(url)
 
-    if add_repo_prefix and not u.host.startswith('repo.'):
-        old_host = u.host
-        u.host = 'repo.{}'.format(u.host)
-        try:
-            log.info('testing repo url {}'.format(u.to_string()))
-            return add_patch_source(u.to_string(), False)
-        except BaseException as e:
-            log.info('repo prefix check for {} failed: {}'.format(old_host, e))
-            u.host = old_host
-
     if not u.fragment:
         # try to add all repos from this server
-        resp = patch_get(url.rstrip('/'), 'expose', allow_redirects=True if add_repo_prefix else False)
+        resp = patch_get(url.rstrip('/'), 'expose')
         resp.raise_for_status()
-        if add_repo_prefix is False and resp.status_code in ('301, 302, 303'):
-            raise ValueError('status code {} not allowed with repo prefix'.format(resp.status_code))
         try:
             data = resp.json()
             for id in data['repos']:
@@ -1107,8 +1301,6 @@ def add_patch_source(url, add_repo_prefix=True):
         raise ValueError('source with name {} already exists'.format(u.fragment))
 
     id = u.fragment
-    u.fragment = None
-    url = u.to_string().rstrip('/')
 
     try:
         resp = patch_get(url, 'expose', id)
@@ -1124,7 +1316,75 @@ def add_patch_source(url, add_repo_prefix=True):
 
     data = json.loads(resp.content)
     with transaction:
-        return PatchSource(id=id, url=url, sig=data['sig'], contact=data['contact'], branches=data['repo'])
+        return PatchSource(id=id, url=url, config_url=config_url, sig=data['sig'], contact=data['contact'], branches=data['repo'])
+
+source_types = dict(
+    git=add_git_source,
+    patch=add_patch_source,
+    config=add_config_source)
+
+def idientify_source(url):
+    # repair url
+    if '://' not in url:
+        url = 'http://'+url
+        if not Url(url).path:
+            url = url+'/'
+
+    # make deep request
+    try:
+        resp = requests.get(url, allow_redirects=False)
+        resp.raise_for_status()
+    except:
+        pass
+    else:
+        # check for git
+        if url.endswith('.git'):
+            return 'git', url
+
+        # check for patch
+        if '<h2>Add to Download.am</h2>' in resp.text:
+            return 'patch', url
+
+        # check for config
+        if 'dlam-config.yaml' in url:
+            return 'config', url
+
+    # check direct dlam-config url
+    if 'dlam-config.yaml' not in url:
+        u = url.rstrip('/')+'/dlam-config.yaml'
+        try:
+            resp = requests.get(u, stream=True)
+            try:
+                resp.raise_for_status()
+                data = yaml.load(resp.raw)
+            finally:
+                resp.close()
+            assert len(data.keys()) > 0
+            return 'config', u
+        except:
+            traceback.print_exc()
+            pass
+
+    # check patch subdomain
+    u = Url(url)
+    if not u.host.startswith('repo.'):
+        u.host = 'repo.{}'.format(u.host)
+        try:
+            resp = requests.get(u.to_string())
+            resp.raise_for_status()
+            if '<h2>Add to Download.am</h2>' in resp.text:
+                return 'patch', u.to_string()
+        except:
+            pass
+
+    log.warning('could not identify source type. using default git')
+    return 'git', url
+
+def add_source(url, config_url=None, type=None):
+    if type is None:
+        type, url = idientify_source(url)
+        print "identify", type, url
+    return source_types[type](url, config_url)
 
 
 # startup/shutdown
@@ -1167,9 +1427,7 @@ def init():
                 traceback.print_exc()
 
     default_sources = dict(
-        hoster='http://github.com/downloadam/hoster.git',
-        crypter='http://github.com/downloadam/crypter.git',
-        websites='http://github.com/downloadam/websites.git'
+        downloadam='community.download.am'
     )
 
     if not test_mode:
@@ -1187,20 +1445,26 @@ def init():
                         patch_group.spawn(source.check)
 
     # check and apply updates
-    gevent.sleep(0.1)
-    check = len(patch_group)
-    g = gevent.spawn(patch_all, 30, False)
-    gevent.sleep(0.1)
-    total, last = len(patch_group) - check, None
-    while len(patch_group):
-        patch_group.join(timeout=0.1)
-        current = total - (len(patch_group) - check)
-        if last != current:
-            yield 'updating repos ({} / {})'.format(current, total)
-        last = current
+    from gevent.queue import JoinableQueue
+    y = JoinableQueue()
+    complete = list()
+
+    def source_complete_callback(source):
+        complete.append(source)
+        if len(complete) == len(sources):
+            y.put(None)
+        else:
+            y.put('updating {} / {}'.format(len(complete), len(sources)))
+
+    gevent.spawn(patch_all, 30, False, source_complete_callback=source_complete_callback)
+    yield 'updating {} / {}'.format(len(complete), len(sources))
+    while True:
+        x = y.get()
+        if x is None:
+            break
+        yield x
 
     patch_group.join()
-    g.join()
 
     # start the patch loop
     patch_loop_greenlet = gevent.spawn(patch_loop)
