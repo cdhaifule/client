@@ -54,7 +54,8 @@ class SysTrayIcon(object):
         message_map = {win32gui.RegisterWindowMessage("TaskbarCreated"): self.restart,
                        win32con.WM_DESTROY: self.destroy,
                        win32con.WM_COMMAND: self.command,
-                       win32con.WM_USER+20: self.notify}
+                       win32con.WM_USER+20: self.notify,
+                       win32con.WM_USER+21: self._refresh_icon_event}
         # Register the Window class.
         window_class = win32gui.WNDCLASS()
         hinst = window_class.hInstance = win32gui.GetModuleHandle(None)
@@ -82,8 +83,16 @@ class SysTrayIcon(object):
         self.refresh_icon()
         atexit.register(self.destroy, None, None, None, None)
         SysTrayIcon.instance = self
+        self.threadid = win32api.GetCurrentThreadId()
         win32gui.PumpMessages()
-
+        
+    def stop(self):
+        win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
+        
+    def switch_icon(self, icon):
+        self.icon = icon
+        win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
+        
     def _add_ids_to_menu_options(self, menu_options):
         result = []
         for menu_option in menu_options:
@@ -101,9 +110,10 @@ class SysTrayIcon(object):
             self._next_action_id += 1
         return result
         
-    def refresh_icon(self, icon=None):
-        if icon is not None:
-            self.icon = icon
+    def _refresh_icon_event(self,  hwnd, msg, wparam, lparam):
+        self.refresh_icon()
+        
+    def refresh_icon(self):
         # Try and find a custom icon
         hinst = win32gui.GetModuleHandle(None)
         if os.path.isfile(self.icon):

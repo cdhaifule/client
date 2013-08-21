@@ -95,7 +95,7 @@ else:
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
-    else: # it's linux baby :)
+    else: # it's linux baby 
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
