@@ -19,11 +19,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import time
 import socket
 
-from bottle import Bottle, request
+from bottle import Bottle, request, redirect
 import gevent
 from gevent import pywsgi
 
-from ... import service, core, container, localrpc
+from ... import service, core, container, localrpc, login
 
 cnl = Bottle()
 
@@ -60,6 +60,7 @@ def addcrypted():
     if not valid(urls):
         return "client declined\r\n"
     core.add_links(urls)
+    redirect(login.get_sso_url())
     return "success\r\n"
 
 @cnl.post("/flash/addcrypted2")
@@ -68,6 +69,7 @@ def addcrypted2():
     if not valid(urls):
         return "client declined\r\n"
     core.add_links(urls)
+    redirect(login.get_sso_url())
     return "success\r\n"
     
     
