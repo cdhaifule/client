@@ -101,7 +101,8 @@ class ApiListener(scheme.DelayedListener):
                         if data['url'].startswith('http://repo.download.am/#'):
                             data['url'] = data['url'].replace('http://repo.download.am/#', 'http://github.com/downloadam/')
                     if 'config_url' in data:
-                        data['config_url'] = data['config_url'].replace('dlam-config.yaml', '')
+                        if data['config_url'] is not None:
+                            data['config_url'] = data['config_url'].replace('dlam-config.yaml', '')
 
                 if data['table'] in ('account', 'package', 'file'):
                     rename('next_try', 'retry')
