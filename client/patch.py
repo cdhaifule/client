@@ -48,7 +48,7 @@ from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
 from collections import defaultdict
 
-from pygit2 import Repository, clone_repository
+from pygit2 import Repository, clone_repository, GIT_FILEMODE_TREE, GIT_FILEMODE_BLOB
 
 from . import current, logger, input, settings, reconnect, db, interface, loader
 from .plugintools import Url
@@ -225,14 +225,12 @@ class GitWorker(BasicPatchWorker):
 
     def patch(self):
         repo = self.source._open_repo()
+        if repo is None:
+            return self.clone()
         try:
-            if repo is None:
-                return self.clone()
-            else:
-                return self.fetch(repo)
+            return self.fetch(repo)
         finally:
-            if repo:
-                del repo
+            del repo
 
     def clone(self):
         really_clean_repo(self.source.basepath)
@@ -778,37 +776,36 @@ class GitIterator(object):
                 path, sub = os.path.split(path)
                 new_path.insert(0, sub)
             path = new_path
-        self.repo = repo
-        self.tree = tree
         self.path = path
         self.walk = walk
         self.relpath = relpath
+        self.results = list()
+        self.build_results(repo, tree)
 
-    def __iter__(self):
-        from pygit2 import GIT_FILEMODE_TREE, GIT_FILEMODE_BLOB
-        results = list()
-        for entry in self.tree:
+    def build_results(self, repo, tree):
+        for entry in tree:
             if entry.filemode & GIT_FILEMODE_TREE and (self.path or self.walk):
                 if not self.path or self.path[0] == entry.name:
-                    tree = self.repo.get(entry.hex)
+                    next_tree = repo.get(entry.hex)
                     relpath = os.path.join(self.relpath, entry.name)
-                    for file in GitIterator(self.repo, tree, self.path and self.path[1:], self.walk, relpath):
-                        results.append(file)
+                    for file in GitIterator(repo, next_tree, self.path and self.path[1:], self.walk, relpath):
+                        self.results.append(file)
             elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
-                blob = self.repo.get(entry.hex)
-                results.append(GitFile(self.relpath, entry.name, blob))
-        del self.repo
-        for file in results:
+                blob = repo.get(entry.hex)
+                self.results.append(GitFile(self.relpath, entry.name, blob.data))
+
+    def __iter__(self):
+        for file in self.results:
             yield file
 
 class GitFile(object):
-    def __init__(self, path, name, blob):
+    def __init__(self, path, name, contents):
         self.path = path
         self.name = name
-        self.blob = blob
+        self.contents = contents
 
     def get_contents(self):
-        return self.blob.data
+        return self.contents
 
 
 # source classes
@@ -901,6 +898,7 @@ class BasicSource(Table):
         self.basepath = os.path.join(settings.external_plugins, self.id)
 
         self.lock = Semaphore()
+        self.get_config_url()
 
     @property
     def log(self):
@@ -1212,9 +1210,12 @@ class GitSource(BasicSource, PublicSource):
             repo = self._open_repo()
             if repo is None:
                 return list()
-            branch = repo.lookup_branch(self.get_branch())
-            tree = branch.get_object().tree
-            return GitIterator(repo, tree, path, walk)
+            try:
+                branch = repo.lookup_branch(self.get_branch())
+                tree = branch.get_object().tree
+                return GitIterator(repo, tree, path, walk)
+            finally:
+                del repo
 
     def unlink(self):
         try:
@@ -1262,10 +1263,12 @@ def add_config_source(url, config_url=None):
         resp.close()
     assert len(data.keys()) > 0
     if url in config_urls:
-        config_urls[url].update()
+        #config_urls[url].update()
+        pass
     else:
         config_urls[url] = ConfigUrl(url)
         config_urls[url].update()
+    return config_urls[url]
 
 def add_git_source(url, config_url=None):
     u = Url(url)
@@ -1432,12 +1435,12 @@ def init():
                 traceback.print_exc()
 
     default_sources = dict(
-        downloadam='community.download.am'
+        downloadam='http://community.download.am/dlam-config.yaml'
     )
 
     if not test_mode:
         for id, url in default_sources.iteritems():
-            if id not in sources:
+            if id not in sources and url not in config_urls:
                 yield 'adding default repo {}'.format(id)
                 try:
                     source = add_source(url)
@@ -1446,7 +1449,7 @@ def init():
                 except:
                     traceback.print_exc()
                 else:
-                    if source.enabled:
+                    if isinstance(source, BasicSource) and source.enabled:
                         patch_group.spawn(source.check)
 
     # check and apply updates
