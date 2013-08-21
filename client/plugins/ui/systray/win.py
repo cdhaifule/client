@@ -58,10 +58,10 @@ def bmp_factory(name, path=None):
 
 class SysTray(SysTrayIcon):
     def __init__(self, *args, **kwargs):
-        SysTrayIcon.__init__(self, *args, **kwargs)
         event.add('api:connected', self._set_active_icon)
         event.add("api:disconnected", self._set_inactive_icon)
         event.add("api:connection_error", self._set_inactive_icon)
+        SysTrayIcon.__init__(self, *args, **kwargs)
         
     def _set_active_icon(self, *_):
         self.switch_icon(settings.taskbaricon)
