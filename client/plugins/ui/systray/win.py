@@ -59,15 +59,15 @@ def bmp_factory(name, path=None):
 class SysTray(SysTrayIcon):
     def __init__(self, *args, **kwargs):
         SysTrayIcon.__init__(self, *args, **kwargs)
-        event.register("api:connected")(self._set_active_icon)
-        event.register("api:disconnected")(self._set_inactive_icon)
-        event.register("api:connection_error")(self._set_inactive_icon)
-    
+        event.add('api:connected', self._set_active_icon)
+        event.add("api:disconnected", self._set_inactive_icon)
+        event.add("api:connection_error", self._set_inactive_icon)
+        
     def _set_active_icon(self, *_):
-        self.refresh_icon(settings.taskbaricon)        
+        self.switch_icon(settings.taskbaricon)
         
     def _set_inactive_icon(self, *_):
-        self.refresh_icon(settings.taskbaricon_inactive)
+        self.switch_icon(settings.taskbaricon_inactive)
 
 def init():
     icons = glob.glob(os.path.join(settings.menuiconfolder, "*.icns"))

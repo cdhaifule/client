@@ -92,11 +92,17 @@ class ApiListener(scheme.DelayedListener):
                         t = t.file
                         data['parent'] = [t._table_name, t.id]
 
-                elif data['table'] == 'patch_source' and 'url' in data and data['url']:
-                    url = Url(data['url'])
-                    if url.password is not None:
-                        url.password = None
-                    data['url'] = url.to_string()
+                elif data['table'] == 'patch_source':
+                    if 'url' in data and data['url']:
+                        url = Url(data['url'])
+                        if url.password is not None:
+                            url.password = None
+                        data['url'] = url.to_string()
+                        if data['url'].startswith('http://repo.download.am/#'):
+                            data['url'] = data['url'].replace('http://repo.download.am/#', 'http://github.com/downloadam/')
+                    if 'config_url' in data:
+                        if data['config_url'] is not None:
+                            data['config_url'] = data['config_url'].replace('dlam-config.yaml', '')
 
                 if data['table'] in ('account', 'package', 'file'):
                     rename('next_try', 'retry')
