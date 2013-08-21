@@ -87,11 +87,13 @@ class SysTrayIcon(object):
         win32gui.PumpMessages()
         
     def stop(self):
-        win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
+        win32api.PostThreadMessage(self.threadid, win32con.WM_DESTROY, 0, 0)
+        #win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
         
     def switch_icon(self, icon):
         self.icon = icon
-        win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
+        win32api.PostThreadMessage(self.threadid, win32con.WM_USER+21, 0, 0)
+        #win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
         
     def _add_ids_to_menu_options(self, menu_options):
         result = []
