@@ -193,3 +193,4 @@ def terminate():
             except:
                 traceback.print_exc()
                 log.critical('failed terminating module {}'.format(name), exc_info=sys.exc_info)
+    sys.exit(0)

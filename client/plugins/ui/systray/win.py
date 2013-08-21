@@ -29,7 +29,7 @@ from PIL import Image
 from .... import settings, event, login, localize
 from ....contrib.systrayicon import SysTrayIcon
 
-from .common import open_browser, relogin, quit
+from . import common
 
 _X = localize.X
 
@@ -55,6 +55,17 @@ def bmp_factory(name, path=None):
             raise RuntimeError("Loading of icon for action '{}' failed".format(name))
     return partial(create_icon, name, path)
 
+
+class SysTray(SysTrayIcon):
+    @event.register("api:connected")
+    def _set_active_icon(self, *_):
+        self.refresh_icon(settings.taskbaricon)        
+        
+    @event.register("api:disconnected")
+    @event.register("api:connection_error")
+    def _set_inactive_icon(self, *_):
+        self.refresh_icon(settings.taskbaricon_inactive)
+
 def init():
     icons = glob.glob(os.path.join(settings.menuiconfolder, "*.icns"))
     for i in icons:
@@ -64,19 +75,19 @@ def init():
     @login.config.register('username')
     def update_username():
         #options[0] = (login.config.username or _X("Open"), bmp_factory('open'), lambda _: event.call_from_thread(open_browser))
-        options[0] = (_X("Open"), bmp_factory('open'), lambda _: event.call_from_thread(open_browser))
+        options[0] = (_X("Open"), bmp_factory('open'), lambda *_ : event.call_from_thread(common.open_browser))
 
     thread = threadpool.ThreadPool(1)
     options = [
         None,
-        (_X("Logout"), bmp_factory('logout'), lambda _: event.call_from_thread(relogin, _)),
+        (_X("Logout"), bmp_factory('logout'), lambda *_: event.call_from_thread(common.relogin)),
         (_X("Quit"), bmp_factory('quit'), 'QUIT')
     ]
 
     update_username()
-    
-    icon = settings.mainicon
+
+    icon = settings.taskbaricon_inactive
     if not icon:
         return
 
-    thread.spawn(SysTrayIcon, icon, "Download.am Client", options, lambda _: event.call_from_thread(quit), 0, "download.am")
+    thread.spawn(SysTray, icon, "Download.am Client", options, lambda *_: event.call_from_thread(common.quit), 0, "download.am")

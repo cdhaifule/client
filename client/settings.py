@@ -69,6 +69,7 @@ if sys.platform == "win32" and sys.frozen:
     app_dir = os.path.dirname(sys.executable)
     mainicon = os.path.join(app_dir, 'img', 'dlam.ico')
     taskbaricon = mainicon
+    taskbaricon_inactive = os.path.join(app_dir, 'img', 'dlam_red.ico')
     bin_dir = os.path.join(app_dir, "bin")
     import requests
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
@@ -79,6 +80,7 @@ elif sys.platform == "darwin" and sys.frozen:
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
     mainicon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam.icns")
     taskbaricon = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam_black.icns")
+    taskbaricon_inactive = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img", "dlam_greyx32.png")
     menuiconfolder = os.path.join(app_dir, "Contents/Resources/lib/python2.7/client/img/menu")
 else:
     app_dir = os.getcwd()
@@ -87,9 +89,11 @@ else:
     if sys.platform == "darwin":
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(app_dir, "client/img/dlam_black.icns")
-    else: # it's linux baby :)
+        taskbaricon_inactive =os.path.join(app_dir, "client/img/dlam_greyx32.png")
+    else:
         mainicon = os.path.join(app_dir, "client/img/dlam.ico")
         taskbaricon = mainicon
+        taskbaricon_inactive = taskbaricon
 
 def _makedirs(path):
     try:

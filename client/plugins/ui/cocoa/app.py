@@ -21,32 +21,32 @@ import signal
 import atexit
 import os
 
-from gevent import event
+from gevent.event import Event
 import gevent
 
 from AppKit import NSMenuItem, NSMenu, NSStatusBar, NSImage, NSSize, NSApplication, NSWindow, NSObject, NSTimer, NSDate, NSRunLoop
 
 from PyObjCTools import AppHelper
 
-from .... import settings, patch, login, localize
-from ..systray.common import relogin, open_browser
+from .... import settings, patch, login, localize, event
+from ..systray import common
 from .window import Window
 
 NSDefaultRunLoopMode = u'kCFRunLoopDefaultMode'
 
-timerevent = event.Event()
+timerevent = Event()
 class Delegate(NSObject):
     def restart_(self, noti):
         gevent.spawn(patch.restart_app)
         
     def open_(self, notification):
-        open_browser()
+        common.open_browser()
         
     def logout_(self, notification):
-        relogin()
+        common.relogin()
     
     def test_(self, noti):
-        relogin()
+        common.relogin()
         
     def quit_(self, notification):
         exit(0)
@@ -88,9 +88,23 @@ def start_taskbar():
     icon.setMenu_(menu)
     for m in menuitems:
         menu.addItem_(m)
-    taskbarimg = NSImage.alloc().initByReferencingFile_(settings.taskbaricon)
-    taskbarimg.setSize_(NSSize(18, 18))
-    icon.setImage_(taskbarimg)
+        
+    def set_image(path):
+        taskbarimg = NSImage.alloc().initByReferencingFile_(path)
+        taskbarimg.setSize_(NSSize(18, 18))
+        icon.setImage_(taskbarimg)
+        
+    # taskbar icon switching
+    @event.register("api:connected")
+    def set_active(*_):
+        set_image(settings.taskbaricon)
+
+    @event.register("api:disconnected")
+    @event.register("api:connection_error")
+    def set_inactive(*_):
+        set_image(settings.taskbaricon_inactive)
+    
+    set_image(settings.taskbaricon_inactive)
     icon.setEnabled_(True)
     
     @login.config.register('username')
@@ -116,6 +130,7 @@ def exit(code=0):
     _exited = True
     
 def init():
+    print "init ui cocoa"
     global browserwindow
     app = NSApplication.sharedApplication()
     app.setActivationPolicy_(1)
