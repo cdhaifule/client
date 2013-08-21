@@ -211,7 +211,8 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
 
     def connection_error(self):
         try:
-            self._connection_error()
+            if not self.connect_error_dialog:
+                self.connect_error_dialog = gevent.spawn(self._connection_error)
         finally:
             self.connect_retry = 0
             self.connect_error_dialog = None
@@ -234,7 +235,6 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         elements.append(input.Text(''))
 
         elements.append(input.Float('center'))
-        elements.append([input.Input('dont_show_again', 'checkbox', default=False, label="Don't show this dialog again")])
         elements.append(input.Choice('result', choices=[
             dict(value='save', content='Save', ok=True),
             dict(value='retry', content='Retry', cancel=True),
@@ -247,16 +247,11 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         finally:
             self.connect_retry_last_msgbox = time.time()
 
-        if result.get('dont_show_again', False):
-            config['show_error_dialog'] = False
-
         if result.get('result') == 'save':
             if result['type'] == 'direct':
                 result['type'] = None
             result['enabled'] = True
             del result['result']
-            if 'dont_show_again' in result:
-                del result['dont_show_again']
             interface.call('proxy', 'set', **result)
         elif result.get('result') == 'retry':
             return
@@ -279,10 +274,6 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
 
             if error:
                 self.connect_retry += 1
-                if self.connect_retry >= 3 and self.connect_retry_last_msgbox + 60 < time.time():
-                    self.connect_retry = 0
-                    if self.connect_error_dialog is None and config.show_error_dialog:
-                        self.connect_error_dialog = gevent.spawn(self.connection_error)
                 error = False
             else:
                 self.connect_retry = 0

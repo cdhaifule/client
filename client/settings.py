@@ -70,6 +70,7 @@ if sys.platform == "win32" and sys.frozen:
     img_dir = os.path.join(app_dir, 'img')
     mainicon = os.path.join(img_dir, 'dlam.ico')
     taskbaricon = mainicon
+    taskbaricon_inactive = os.path.join(img_dir, 'dlam_red.ico')
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, 'img', 'menu')
     
@@ -83,19 +84,21 @@ elif sys.platform == "darwin" and sys.frozen:
     img_dir = os.path.join(app_dir, 'Contents/Resources/lib/python2.7/client/img')
     mainicon = os.path.join(img_dir, "dlam.icns")
     taskbaricon = os.path.join(img_dir, "dlam_black.icns")
+    taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     menuiconfolder = os.path.join(img_dir, "menu")
 else:
     app_dir = os.getcwd()
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, "client/img/menu")
+    img_dir = os.path.join(app_dir, 'client/img')
     if sys.platform == "darwin":
-        img_dir = os.path.join(app_dir, 'client/img')
-        mainicon = os.path.join(img_dir, "dlam.icns")
+        mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
+        taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     else: # it's linux baby :)
-        img_dir = os.path.join(app_dir, 'client/img')
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
+        taskbaricon_inactive = taskbaricon
 
 def _makedirs(path):
     try:

@@ -18,14 +18,31 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import webbrowser
+from functools import partial
+import gevent
 
 from ....login import logout, get_sso_url
+from .... import event
 
 def relogin(*_):
     logout()
-
-def open_browser(*_):
+    
+def _open_browser(*_):
     webbrowser.open_new_tab(get_sso_url())
+
+@event.register("api:connected")
+def set_open_browser(*_):
+    global open_browser
+    open_browser = _open_browser
+
+@event.register("api:disconnected")
+@event.register("api:connection_error")
+def set_connection_error(*_):
+    global open_browser
+    from ....api import client
+    open_browser = partial(gevent.spawn, client.connection_error)
+
+open_browser = _open_browser
     
 def quit(*_):
     sys.exit(0)

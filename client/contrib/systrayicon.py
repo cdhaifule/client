@@ -26,6 +26,7 @@ class SysTrayIcon(object):
     SPECIAL_ACTIONS = [QUIT]
     
     FIRST_ID = 1023
+    instance = None
     
     def __init__(self,
                  icon,
@@ -80,6 +81,7 @@ class SysTrayIcon(object):
         self.notify_id = None
         self.refresh_icon()
         atexit.register(self.destroy, None, None, None, None)
+        SysTrayIcon.instance = self
         win32gui.PumpMessages()
 
     def _add_ids_to_menu_options(self, menu_options):
@@ -99,7 +101,9 @@ class SysTrayIcon(object):
             self._next_action_id += 1
         return result
         
-    def refresh_icon(self):
+    def refresh_icon(self, icon=None):
+        if icon is not None:
+            self.icon = icon
         # Try and find a custom icon
         hinst = win32gui.GetModuleHandle(None)
         if os.path.isfile(self.icon):

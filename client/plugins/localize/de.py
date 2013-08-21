@@ -123,3 +123,5 @@ TEXT['Found #{num} links on #{domain}. Do you want to add them?'] = 'Es wurden #
 TEXT['Please input the following Captcha:'] = 'Bitte gebe das folgende Captcha ein:'
 TEXT['Please click on the right place:'] = 'Bitte klicke auf die richtige Stelle:'
 TEXT['Enter password:'] = 'Passwort eingeben:'
+TEXT['I understand'] = 'Ich verstehe'
+TEXT['Connect as guest'] = 'Als Gast verbinden'
