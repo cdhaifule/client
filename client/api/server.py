@@ -84,6 +84,8 @@ def route_index():
 
 @app.route('/downloadam.js')
 def route_downloadam_js():
+    if not login.has_login():
+        return
     response.headers['Content-Type'] = 'text/javascript'
     uuid = base64.b64encode(login.encrypt('frontend', settings.app_uuid))
     return 'var downloadam_client_id="{}";'.format(uuid)
