@@ -272,8 +272,7 @@ class GitWorker(BasicPatchWorker):
         old_version = self.source.version
         try:
             try:
-                #result = self.call_git(repo.remotes[0].fetch)
-                result = dict(fuckyou="yay")
+                result = self.call_git(repo.remotes[0].fetch)
             finally:
                 del repo
             assert result is not None
@@ -668,7 +667,7 @@ def execute_restart():
         else:
             cmd = 'cmd /c start "" "' + sys.executable + '"'
             if sys.argv[1:]:
-                cmd += '"' + '" "'.join(sys.argv[1:]) + '"'
+                cmd += ' "' + '" "'.join(sys.argv[1:]) + '"'
             replace_app(cmd)
 
 def _external_rename_bat(replace, delete, deltree):
