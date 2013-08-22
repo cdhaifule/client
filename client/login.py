@@ -119,8 +119,8 @@ def generate_backend_key():
         hashes['backend'] = key
     return key
     
-def get_sso_url():
-    return "http://{}/#sso!{}".format(settings.frontend_domain, get_auth_token())
+def get_sso_url(tab=None):
+    return "http://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab))
     
 def logout():
     if config.first_start is not None:
@@ -160,13 +160,15 @@ def get(type):
 def get_login():
     return get('login')
 
-def get_auth_token():
+def get_auth_token(tab=None):
     """returns base64 encoded auto token for automatic login to website
     """
     char_set = string.ascii_uppercase + string.ascii_lowercase + string.digits
     key = ''.join(random.sample(char_set*12, 12))
 
     data = "{};{};{};{}".format(config['username'], get('login'), get('frontend'), settings.app_uuid)
+    if tab is not None:
+        data = '{};{}'.format(data, tab)
     data = base64.b64encode(gibberishaes.encrypt(key, data))
     data = data.replace('+', '-').replace('/', '_').replace('=', ',')
     return data+'!'+key

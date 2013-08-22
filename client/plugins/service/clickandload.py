@@ -60,7 +60,7 @@ def addcrypted():
     if not valid(urls):
         return "client declined\r\n"
     core.add_links(urls)
-    redirect(login.get_sso_url())
+    redirect(login.get_sso_url('collect'))
     return "success\r\n"
 
 @cnl.post("/flash/addcrypted2")
@@ -69,7 +69,7 @@ def addcrypted2():
     if not valid(urls):
         return "client declined\r\n"
     core.add_links(urls)
-    redirect(login.get_sso_url())
+    redirect(login.get_sso_url('collect'))
     return "success\r\n"
     
     
