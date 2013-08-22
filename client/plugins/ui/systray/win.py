@@ -53,7 +53,7 @@ def bmp_factory(name, path=None):
         path = os.path.join(settings.menuiconfolder, '{}.icns'.format(name))
         if not os.path.exists(path):
             raise RuntimeError("Loading of icon for action '{}' failed".format(name))
-    return partial(create_icon(name, inputpath, width, height, bgcolor), name, path)
+    return partial(create_icon, name, path)
 
 
 class SysTray(SysTrayIcon):

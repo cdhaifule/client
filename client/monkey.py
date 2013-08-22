@@ -28,7 +28,7 @@ from requests.packages.urllib3 import poolmanager, connectionpool
 adapters.DEFAULT_POOLSIZE = 10
 adapters.DEFAULT_RETRIES = 3
 
-def _get_conn(self, timeout=None, retry=False): # timeout is ignored
+def _get_conn(self, timeout=None): # timeout is ignored
     with self.lock:
         conn = None
         try:
@@ -39,7 +39,7 @@ def _get_conn(self, timeout=None, retry=False): # timeout is ignored
 
         except connectionpool.Empty:
             #if self.block:
-            #   connectionpool.log.warning("Pool timeout reached. Creating new connection: %s" % self.host)
+                #connectionpool.log.warning("Pool timeout reached. Creating new connection: %s" % self.host)
             #    raise connectionpool.EmptyPoolError(self,
             #                         "Pool reached maximum size and no more "
             #                         "connections are allowed.")
@@ -55,10 +55,9 @@ def _get_conn(self, timeout=None, retry=False): # timeout is ignored
 class MyHTTPConnectionPool(connectionpool.HTTPConnectionPool):
     def __init__(self, host, port=None, strict=False, timeout=5, maxsize=adapters.DEFAULT_POOLSIZE, block=True, headers=None):
         block = True
-        self.maxsize = 0
         self.get_timeout = 1
         self.lock = Semaphore()
-        connectionpool.HTTPConnectionPool.__init__(self, host, port, strict, timeout, self.maxsize, block, headers)
+        connectionpool.HTTPConnectionPool.__init__(self, host, port, strict, timeout, maxsize, block, headers)
 
     def _get_conn(self, timeout=None): # timeout is ignored
         return _get_conn(self, timeout)
@@ -66,10 +65,9 @@ class MyHTTPConnectionPool(connectionpool.HTTPConnectionPool):
 class MyHTTPSConnectionPool(connectionpool.HTTPSConnectionPool):
     def __init__(self, host, port=None, strict=False, timeout=5, maxsize=adapters.DEFAULT_POOLSIZE, block=True, headers=None, key_file=None, cert_file=None, cert_reqs='CERT_NONE', ca_certs=None, ssl_version=None):
         block = True
-        self.maxsize = 0
         self.get_timeout = 1
         self.lock = Semaphore()
-        connectionpool.HTTPSConnectionPool.__init__(self, host, port, strict, timeout, self.maxsize, block, headers, key_file, cert_file, cert_reqs, ca_certs, ssl_version)
+        connectionpool.HTTPSConnectionPool.__init__(self, host, port, strict, timeout, maxsize, block, headers, key_file, cert_file, cert_reqs, ca_certs, ssl_version)
 
     def _get_conn(self, timeout=None): # timeout is ignored
         return _get_conn(self, timeout)
@@ -93,8 +91,8 @@ def connection_from_host(self, host, port=None, scheme='http'):
 
     # If the scheme, host, or port doesn't match existing open connections,
     # open a new ConnectionPool.
-    pool = self.pools.get(pool_key)
-    if pool and pool.pool:
+    pool = self.pools.get(pool_key, None)
+    if pool and pool.pool is not None:
         return pool
 
     # Make a fresh ConnectionPool of the desired type
