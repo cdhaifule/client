@@ -1002,7 +1002,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 self.table_delete()
         #self.log.debug('deleted')
         tempfile = self.get_download_file()
-        if os.path.exists(tempfile):
+        complete = self.get_complete_file()
+        if tempfile != complete and os.path.exists(tempfile):
             try:
                 os.remove(tempfile)
             except (IOError, OSError) as e:
