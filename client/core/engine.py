@@ -984,12 +984,6 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         for chunk in self.chunks[:]:
             chunk.table_delete()
         self.chunks = []
-        tempfile = self.get_download_file()
-        if os.path.exists(tempfile):
-            try:
-                os.remove(tempfile)
-            except (IOError, OSError) as e:
-                self.log.warning("could not delete temporary file {}: {}".format(tempfile, e))
 
     def delete(self, _package=False):
         if self.state == 'deleted':
@@ -1007,6 +1001,13 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             with lock:
                 self.table_delete()
         #self.log.debug('deleted')
+        tempfile = self.get_download_file()
+        if os.path.exists(tempfile):
+            try:
+                os.remove(tempfile)
+            except (IOError, OSError) as e:
+                self.log.warning("could not delete temporary file {}: {}".format(tempfile, e))
+        
 
     def delete_after_greenlet(self):
         self.run_after_greenlet(self.delete)
