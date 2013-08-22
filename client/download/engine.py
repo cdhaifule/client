@@ -407,6 +407,11 @@ class FileDownload(object):
         
         self.file.log.debug('download complete')
 
+        if self.file.filehandle.f is not None:
+            self.log.critical('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
+        elif self.file.filehandle.refcount != 0:
+            self.log.critical('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
+
         download_file = self.file.get_download_file()
 
         with transaction:
@@ -664,7 +669,7 @@ def download_file(file):
         except gevent.GreenletExit:
             pass
         except BaseException as e:
-            file.fatal('error finishing download: {}'.format(e))
+            file.unhandled_exception('error finishing download: {}'.format(e))
         if file.state == 'download_complete':
             file.reset_progress()
         event.fire('file:download_task_done', file)
