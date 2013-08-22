@@ -454,13 +454,17 @@ class FileDownload(object):
                 self.file.fatal("Error creating output directory: {}".format(e))
                 return
         try:
-            self.copypool.apply_e((IOError, OSError), shutil.move, (download_file, complete_file))
+            self.copypool.apply_e((BaseException,), shutil.move, (download_file, complete_file))
         except (OSError, IOError):
             self.file.log.info("error moving file, try to copy")
             try:
-                self.copypool.apply_e((IOError, OSError), shutil.copy, (download_file, complete_file))
+                self.copypool.apply_e((BaseException,), shutil.copy, (download_file, complete_file))
             except (IOError, OSError) as e:
                 self.file.fatal("Error creating complete file: {}".format(e))
+            except:
+                self.file.log.exception("unknown error in threadpool")
+        except:
+            self.file.log.exception("unknown error in threadpool")
         print 8
 
     def _error_handler(self, chunk, func, *args, **kwargs):
