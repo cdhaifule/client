@@ -272,7 +272,8 @@ class GitWorker(BasicPatchWorker):
         old_version = self.source.version
         try:
             try:
-                result = self.call_git(repo.remotes[0].fetch)
+                #result = self.call_git(repo.remotes[0].fetch)
+                result = dict(fuck='you')
             finally:
                 del repo
             assert result is not None
