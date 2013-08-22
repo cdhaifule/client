@@ -990,6 +990,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             return
         with transaction:
             self.stop()
+            tempfile = self.get_download_file()
+            complete = self.get_complete_file()
             self.state = 'deleted'
             # push changes to package
             self.size = None
@@ -1001,6 +1003,11 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             with lock:
                 self.table_delete()
         #self.log.debug('deleted')
+        if tempfile != complete and os.path.exists(tempfile):
+            try:
+                os.remove(tempfile)
+            except (IOError, OSError) as e:
+                self.log.warning("could not delete temporary file {}: {}".format(tempfile, e))
 
     def delete_after_greenlet(self):
         self.run_after_greenlet(self.delete)

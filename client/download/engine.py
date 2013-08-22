@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import time
 import math
+import shutil
 
 from .. import core, event, ratelimit, plugintools, logger
 from ..scheme import transaction, intervalled
@@ -27,6 +28,7 @@ from ..variablesizepool import VariableSizePool
 import gevent
 from gevent.lock import Semaphore
 from gevent.event import Event
+from gevent.threadpool import ThreadPool
 
 
 log = logger.get('download')
@@ -266,6 +268,8 @@ def close_stream(stream):
 ########################## the main stream download class
 
 class FileDownload(object):
+    copypool = ThreadPool(2)
+    
     def __init__(self, file):
         self.file = file
         self.account = self.file.account
@@ -429,13 +433,35 @@ class FileDownload(object):
         if os.path.exists(download_file):
             complete_file = self.file.get_complete_file()
             if download_file != complete_file:
-                path = os.path.dirname(complete_file)
-                if not os.path.exists(path):
-                    os.makedirs(path)
-                os.rename(download_file, complete_file)
+                try:
+                    self.forced_rename()
+                except:
+                    import traceback
+                    traceback.print_exc()
+                    raise
             # TODO: delete empty directories
 
     #########################################################
+    
+    def forced_rename(self):
+        download_file = self.file.get_download_file()
+        complete_file = self.file.get_complete_file()
+        path = os.path.dirname(complete_file)
+        if not os.path.exists(path):
+            try:
+                os.makedirs(path)
+            except (IOError, OSError) as e:
+                self.file.fatal("Error creating output directory: {}".format(e))
+                return
+        try:
+            self.copypool.apply_e(shutil.move, (download_file, complete_file))
+        except (OSError, IOError):
+            self.file.log.info("error moving file, try to copy")
+            try:
+                self.copypool.apply_e(shutil.copy, (download_file, complete_file))
+            except (IOError, OSError) as e:
+                self.file.fatal("Error creating complete file: {}".format(e))
+        print 8
 
     def _error_handler(self, chunk, func, *args, **kwargs):
         try:

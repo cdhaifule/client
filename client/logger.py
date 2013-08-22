@@ -287,7 +287,8 @@ def init_optparser(parser, OptionGroup):
     parser.add_option_group(group)
 
 def init(options):
-    sys.excepthook = lambda type, value, tb: excepthook(type, value, tb, 'unhandled exception in main loop')
+    if "nose" not in sys.argv[0]:
+        sys.excepthook = lambda type, value, tb: excepthook(type, value, tb, 'unhandled exception in main loop')
     gevent.hub.Hub = ErrorLoggingHub
     gevent.get_hub().__class__ = ErrorLoggingHub
 
