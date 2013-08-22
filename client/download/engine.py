@@ -174,7 +174,7 @@ def config_state_changed(value, old):
 
 ########################## the default stream download function (can be extended)
 
-class DownloadFunction(intervalled.Cache):    
+class DownloadFunction(intervalled.Cache):
     def __init__(self, input):
         self.input = input
         self.output = None
@@ -428,7 +428,12 @@ class FileDownload(object):
         if os.path.exists(download_file):
             complete_file = self.file.get_complete_file()
             if download_file != complete_file:
-                self.forced_rename()
+                try:
+                    self.forced_rename()
+                except:
+                    import traceback
+                    traceback.print_exc()
+                    raise
             # TODO: delete empty directories
 
     #########################################################
@@ -444,13 +449,14 @@ class FileDownload(object):
                 self.file.fatal("Error creating output directory: {}".format(e))
                 return
         try:
-            self.copypool.apply(shutil.move, (download_file, complete_file))
+            self.copypool.apply_e(shutil.move, (download_file, complete_file))
         except (OSError, IOError):
             self.file.log.info("error moving file, try to copy")
             try:
-                self.copypool.apply(shutil.copy, (download_file, complete_file))
+                self.copypool.apply_e(shutil.copy, (download_file, complete_file))
             except (IOError, OSError) as e:
                 self.file.fatal("Error creating complete file: {}".format(e))
+        print 8
 
     def _error_handler(self, chunk, func, *args, **kwargs):
         try:
