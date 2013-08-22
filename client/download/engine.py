@@ -444,11 +444,11 @@ class FileDownload(object):
                 self.file.fatal("Error creating output directory: {}".format(e))
                 return
         try:
-            self.copypool.spawn(shutil.move, download_file, complete_file).get()
+            self.copypool.apply(shutil.move, (download_file, complete_file))
         except (OSError, IOError):
             self.file.log.info("error moving file, try to copy")
             try:
-                self.copypool.spawn(shutil.copy, download_file, complete_file).get()
+                self.copypool.apply(shutil.copy, (download_file, complete_file))
             except (IOError, OSError) as e:
                 self.file.fatal("Error creating complete file: {}".format(e))
 
