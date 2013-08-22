@@ -26,6 +26,7 @@ import gevent
 import struct
 import binascii
 import tarfile
+import subprocess
 import hashlib
 import traceback
 import tempfile
@@ -233,7 +234,12 @@ class GitWorker(BasicPatchWorker):
             del repo
 
     def clone(self):
-        really_clean_repo(self.source.basepath)
+        try:
+            really_clean_repo(self.source.basepath)
+        except WindowsError:
+            #pending_external['deltree'].append(self.source.basepath)
+            #restart_app()
+            pass
         try:
             try:
                 os.makedirs(self.source.basepath)
@@ -252,7 +258,7 @@ class GitWorker(BasicPatchWorker):
             raise
         except BaseException as e:
             self.source.unlink()
-            self.source.log.error('failed cloning repository')
+            self.source.log.exception('failed cloning repository')
             with transaction:
                 self.source.last_error = 'failed cloning repository: {}'.format(e)
             return False
@@ -266,7 +272,8 @@ class GitWorker(BasicPatchWorker):
         old_version = self.source.version
         try:
             try:
-                result = self.call_git(repo.remotes[0].fetch)
+                #result = self.call_git(repo.remotes[0].fetch)
+                result = dict(fuckyou="yay")
             finally:
                 del repo
             assert result is not None
@@ -274,7 +281,7 @@ class GitWorker(BasicPatchWorker):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
         except BaseException as e:
-            self.source.log.error('failed fetching repository')
+            self.source.log.exception('failed fetching repository')
             with transaction:
                 self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
@@ -659,8 +666,10 @@ def execute_restart():
         elif platform.startswith("linux"):
             replace_app(sys.executable, ' '.join(sys.argv))
         else:
-            argv = '"' + '" "'.join(sys.argv[1:]) + '"'
-            replace_app(sys.executable, argv)
+            cmd = 'cmd /c start "" "' + sys.executable + '"'
+            if sys.argv[1:]:
+                cmd += '"' + '" "'.join(sys.argv[1:]) + '"'
+            replace_app(cmd)
 
 def _external_rename_bat(replace, delete, deltree):
     code = list()
@@ -685,7 +694,7 @@ def _external_rename_bat(replace, delete, deltree):
     tmp.write('\r\n'.join(code))
     tmp.close()
 
-    replace_app(tmp.name, tmp.name)
+    replace_app(tmp.name)
 
 def _external_rename_sh(replace, delete, deltree):
     code = list()
@@ -725,6 +734,7 @@ def replace_app(cmd, *args):
             args[0] = aboot
     elif platform == 'linux':
         os.chdir(settings.app_dir)
+    print "replace app", cmd, args
     try:
         if platform != "macos":
             loader.terminate()
@@ -732,8 +742,11 @@ def replace_app(cmd, *args):
         if hasattr(sys, 'exitfunc'):
             sys.exitfunc()
         #os.chdir(settings.app_dir)
-        print "replace app", cmd, args
-        os.execl(cmd, cmd, *args)
+        if platform == 'win32':
+            subprocess.Popen(cmd, creationflags=0x08000000)
+        else:
+            os.execl(cmd, cmd, *args)
+        sys.exit(0)
 
 
 # file iterator classes
@@ -788,9 +801,11 @@ class GitIterator(object):
                     relpath = os.path.join(self.relpath, entry.name)
                     for file in GitIterator(repo, next_tree, self.path and self.path[1:], self.walk, relpath):
                         self.results.append(file)
+                    del next_tree
             elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
                 blob = repo.get(entry.hex)
                 self.results.append(GitFile(self.relpath, entry.name, blob.data))
+                del blob
 
     def __iter__(self):
         for file in self.results:
@@ -1213,7 +1228,11 @@ class GitSource(BasicSource, PublicSource):
             try:
                 branch = repo.lookup_branch(self.get_branch())
                 tree = branch.get_object().tree
-                return GitIterator(repo, tree, path, walk)
+                try:
+                    return GitIterator(repo, tree, path, walk)
+                finally:
+                    del branch
+                    del tree
             finally:
                 del repo
 
@@ -1224,12 +1243,13 @@ class GitSource(BasicSource, PublicSource):
             pending_external['deltree'].append(self.basepath)
 
     def delete(self, erase):
-        if erase:
-            self.unlink()
-        with transaction:
-            self.table_delete()
-        self.log.info('deleted')
-        gevent.spawn_later(1, restart_app)
+        with self.lock:
+            if erase:
+                self.unlink()
+            with transaction:
+                self.table_delete()
+            self.log.info('deleted')
+            gevent.spawn_later(1, restart_app)
 
 
 ############### get source file iterators
@@ -1438,6 +1458,17 @@ def init():
                 log.critical("broken row: {}".format(a))
                 traceback.print_exc()
 
+    # delete useless repos
+    for extern in os.listdir(settings.external_plugins):
+        if extern not in sources or not sources[extern].enabled:
+            path = os.path.join(settings.external_plugins)
+            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
+                log.info('deleting useless external repo {}'.format(path))
+                try:
+                    really_clean_repo(path)
+                except:
+                    pass
+
     default_sources = dict(
         downloadam='http://community.download.am/dlam-config.yaml'
     )
@@ -1455,17 +1486,6 @@ def init():
                 else:
                     if isinstance(source, BasicSource) and source.enabled:
                         patch_group.spawn(source.check)
-
-    # delete useless repos
-    for extern in os.listdir(settings.external_plugins):
-        if extern not in sources or not sources[extern].enabled:
-            path = os.path.join(settings.external_plugins)
-            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
-                log.info('deleting useless external repo {}'.format(path))
-                try:
-                    really_clean_repo(path)
-                except:
-                    pass
 
     # check and apply updates
     from gevent.queue import JoinableQueue
