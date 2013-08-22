@@ -70,10 +70,9 @@ if sys.platform == "win32" and sys.frozen:
     img_dir = os.path.join(app_dir, 'img')
     mainicon = os.path.join(img_dir, 'dlam.ico')
     taskbaricon = mainicon
-    taskbaricon_inactive = os.path.join(img_dir, 'dlam_red.ico')
+    taskbaricon_inactive = os.path.join(img_dir, 'dlam_grey.ico')
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, 'img', 'menu')
-    
     import requests
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
@@ -86,6 +85,8 @@ elif sys.platform == "darwin" and sys.frozen:
     taskbaricon = os.path.join(img_dir, "dlam_black.icns")
     taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     menuiconfolder = os.path.join(img_dir, "menu")
+    os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
+    os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
 else:
     app_dir = os.getcwd()
     bin_dir = os.path.join(app_dir, "bin")
@@ -95,7 +96,7 @@ else:
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
-    else: # it's linux baby 
+    else:
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
