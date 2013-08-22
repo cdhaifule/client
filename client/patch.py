@@ -26,6 +26,7 @@ import gevent
 import struct
 import binascii
 import tarfile
+import subprocess
 import hashlib
 import traceback
 import tempfile
@@ -233,7 +234,12 @@ class GitWorker(BasicPatchWorker):
             del repo
 
     def clone(self):
-        really_clean_repo(self.source.basepath)
+        try:
+            really_clean_repo(self.source.basepath)
+        except WindowsError:
+            #pending_external['deltree'].append(self.source.basepath)
+            #restart_app()
+            pass
         try:
             try:
                 os.makedirs(self.source.basepath)
@@ -252,7 +258,7 @@ class GitWorker(BasicPatchWorker):
             raise
         except BaseException as e:
             self.source.unlink()
-            self.source.log.error('failed cloning repository')
+            self.source.log.exception('failed cloning repository')
             with transaction:
                 self.source.last_error = 'failed cloning repository: {}'.format(e)
             return False
@@ -274,7 +280,7 @@ class GitWorker(BasicPatchWorker):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
         except BaseException as e:
-            self.source.log.error('failed fetching repository')
+            self.source.log.exception('failed fetching repository')
             with transaction:
                 self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
@@ -659,8 +665,8 @@ def execute_restart():
         elif platform.startswith("linux"):
             replace_app(sys.executable, ' '.join(sys.argv))
         else:
-            argv = '"' + '" "'.join(sys.argv[1:]) + '"'
-            replace_app(sys.executable, argv)
+            argv = 'cmd /c start "' + sys.executable + '" "' + '" "'.join(sys.argv[1:]) + '"'
+            replace_app(argv)
 
 def _external_rename_bat(replace, delete, deltree):
     code = list()
@@ -685,7 +691,7 @@ def _external_rename_bat(replace, delete, deltree):
     tmp.write('\r\n'.join(code))
     tmp.close()
 
-    replace_app(tmp.name, tmp.name)
+    replace_app(tmp.name)
 
 def _external_rename_sh(replace, delete, deltree):
     code = list()
@@ -733,7 +739,14 @@ def replace_app(cmd, *args):
             sys.exitfunc()
         #os.chdir(settings.app_dir)
         print "replace app", cmd, args
-        os.execl(cmd, cmd, *args)
+        if platform == 'win32':
+            if 'download.am-cli' in cmd or '.bat' in cmd:
+                subprocess.Popen(cmd, creationflags=0x08000000)
+            else:
+                subprocess.Popen(cmd, shell=True)
+        else:
+            os.execl(cmd, cmd, *args)
+            sys.exit(0)
 
 
 # file iterator classes
@@ -788,9 +801,11 @@ class GitIterator(object):
                     relpath = os.path.join(self.relpath, entry.name)
                     for file in GitIterator(repo, next_tree, self.path and self.path[1:], self.walk, relpath):
                         self.results.append(file)
+                    del next_tree
             elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
                 blob = repo.get(entry.hex)
                 self.results.append(GitFile(self.relpath, entry.name, blob.data))
+                del blob
 
     def __iter__(self):
         for file in self.results:
@@ -1213,7 +1228,11 @@ class GitSource(BasicSource, PublicSource):
             try:
                 branch = repo.lookup_branch(self.get_branch())
                 tree = branch.get_object().tree
-                return GitIterator(repo, tree, path, walk)
+                try:
+                    return GitIterator(repo, tree, path, walk)
+                finally:
+                    del branch
+                    del tree
             finally:
                 del repo
 
