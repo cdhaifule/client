@@ -26,6 +26,7 @@ import gevent
 import struct
 import binascii
 import tarfile
+import subprocess
 import hashlib
 import traceback
 import tempfile
@@ -233,7 +234,12 @@ class GitWorker(BasicPatchWorker):
             del repo
 
     def clone(self):
-        really_clean_repo(self.source.basepath)
+        try:
+            really_clean_repo(self.source.basepath)
+        except WindowsError:
+            #pending_external['deltree'].append(self.source.basepath)
+            #restart_app()
+            pass
         try:
             try:
                 os.makedirs(self.source.basepath)
@@ -252,7 +258,7 @@ class GitWorker(BasicPatchWorker):
             raise
         except BaseException as e:
             self.source.unlink()
-            self.source.log.error('failed cloning repository')
+            self.source.log.exception('failed cloning repository')
             with transaction:
                 self.source.last_error = 'failed cloning repository: {}'.format(e)
             return False
@@ -274,7 +280,7 @@ class GitWorker(BasicPatchWorker):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
         except BaseException as e:
-            self.source.log.error('failed fetching repository')
+            self.source.log.exception('failed fetching repository')
             with transaction:
                 self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
@@ -518,6 +524,8 @@ def patch_one(patches, source, timeout=180):
                     patches.append(p)
         except Timeout:
             source.log.error('patch function timed out')
+        except requests.ConnectionError:
+            source.log.error('patch error: {}'.format(e))
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             raise
         except BaseException as e:
@@ -543,22 +551,18 @@ def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
 
         log.debug('updating repos')
         # check for updates
-        try:
-            patches = list()
-            for source in sources.values():
-                if source.enabled:
-                    def _patch(patches, source, timeout):
-                        try:
-                            patch_one(patches, source, timeout)
-                        finally:
-                            if source_complete_callback is not None:
-                                source_complete_callback(source)
-                    g = group.spawn(_patch, patches, source, timeout)
-                    patch_group.add(g)
-            group.join()
-        finally:
-            if source_complete_callback is not None:
-                source_complete_callback(None)
+        patches = list()
+        for source in sources.values():
+            if source.enabled:
+                def _patch(patches, source, timeout):
+                    try:
+                        patch_one(patches, source, timeout)
+                    finally:
+                        if source_complete_callback is not None:
+                            source_complete_callback(source)
+                g = group.spawn(_patch, patches, source, timeout)
+                patch_group.add(g)
+        group.join()
         finalize_patches(patches, external_loaded=external_loaded)
 
 def patch_loop():
@@ -661,8 +665,8 @@ def execute_restart():
         elif platform.startswith("linux"):
             replace_app(sys.executable, ' '.join(sys.argv))
         else:
-            argv = '"' + '" "'.join(sys.argv[1:]) + '"'
-            replace_app(sys.executable, argv)
+            argv = 'cmd /c start "' + sys.executable + '" "' + '" "'.join(sys.argv[1:]) + '"'
+            replace_app(argv)
 
 def _external_rename_bat(replace, delete, deltree):
     code = list()
@@ -687,7 +691,7 @@ def _external_rename_bat(replace, delete, deltree):
     tmp.write('\r\n'.join(code))
     tmp.close()
 
-    replace_app(tmp.name, tmp.name)
+    replace_app(tmp.name)
 
 def _external_rename_sh(replace, delete, deltree):
     code = list()
@@ -735,7 +739,14 @@ def replace_app(cmd, *args):
             sys.exitfunc()
         #os.chdir(settings.app_dir)
         print "replace app", cmd, args
-        os.execl(cmd, cmd, *args)
+        if platform == 'win32':
+            if 'download.am-cli' in cmd or '.bat' in cmd:
+                subprocess.Popen(cmd, creationflags=0x08000000)
+            else:
+                subprocess.Popen(cmd, shell=True)
+        else:
+            os.execl(cmd, cmd, *args)
+            sys.exit(0)
 
 
 # file iterator classes
@@ -790,9 +801,11 @@ class GitIterator(object):
                     relpath = os.path.join(self.relpath, entry.name)
                     for file in GitIterator(repo, next_tree, self.path and self.path[1:], self.walk, relpath):
                         self.results.append(file)
+                    del next_tree
             elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
                 blob = repo.get(entry.hex)
                 self.results.append(GitFile(self.relpath, entry.name, blob.data))
+                del blob
 
     def __iter__(self):
         for file in self.results:
@@ -834,6 +847,8 @@ class ConfigUrl(object):
                 return
             try:
                 self._update()
+            except requests.ConnectionError:
+                self.log.error('update error: {}'.format(e))
             finally:
                 self.last_update = time.time()
 
@@ -1058,6 +1073,8 @@ class BasicPatchSource(BasicSource):
                     return
                 except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
                     raise
+                except requests.ConnectionError as e:
+                    self.log.error('error sending error: {}'.format(e))
                 except BaseException:
                     self.log.exception('error while sending error {} to backend'.format(id))
                     gevent.sleep(10)
@@ -1122,8 +1139,6 @@ class PatchSource(BasicPatchSource, PublicSource):
 
     def __init__(self, **kwargs):
         BasicPatchSource.__init__(self, **kwargs)
-        if not os.path.exists(self.basepath):
-            os.makedirs(self.basepath)
 
     def on_get_version(self, value):
         if not os.path.exists(self.basepath):
@@ -1213,7 +1228,11 @@ class GitSource(BasicSource, PublicSource):
             try:
                 branch = repo.lookup_branch(self.get_branch())
                 tree = branch.get_object().tree
-                return GitIterator(repo, tree, path, walk)
+                try:
+                    return GitIterator(repo, tree, path, walk)
+                finally:
+                    del branch
+                    del tree
             finally:
                 del repo
 
@@ -1259,6 +1278,8 @@ def add_config_source(url, config_url=None):
     try:
         resp.raise_for_status()
         data = yaml.load(resp.raw)
+    except:
+        log.exception('error adding config source')
     finally:
         resp.close()
     assert len(data.keys()) > 0
@@ -1343,7 +1364,7 @@ def idientify_source(url):
         resp = requests.get(url, allow_redirects=False)
         resp.raise_for_status()
     except:
-        pass
+        return
     else:
         # check for git
         if url.endswith('.git'):
@@ -1386,11 +1407,13 @@ def idientify_source(url):
             pass
 
     log.warning('could not identify source type. using default git')
-    return 'git', url
+    return None, url
 
 def add_source(url, config_url=None, type=None):
     if type is None:
         type, url = idientify_source(url)
+        if type is None:
+            return
         print "identify", type, url
     return source_types[type](url, config_url)
 
@@ -1452,6 +1475,17 @@ def init():
                     if isinstance(source, BasicSource) and source.enabled:
                         patch_group.spawn(source.check)
 
+    # delete useless repos
+    for extern in os.listdir(settings.external_plugins):
+        if extern not in sources or not sources[extern].enabled:
+            path = os.path.join(settings.external_plugins)
+            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
+                log.info('deleting useless external repo {}'.format(path))
+                try:
+                    really_clean_repo(path)
+                except:
+                    pass
+
     # check and apply updates
     from gevent.queue import JoinableQueue
     y = JoinableQueue()
@@ -1460,16 +1494,16 @@ def init():
     def source_complete_callback(source):
         complete.append(source)
         if len(complete) == len(sources):
-            y.put(None)
-        else:
             y.put('updating {} / {}'.format(len(complete), len(sources)))
 
     gevent.spawn(patch_all, 30, False, source_complete_callback=source_complete_callback)
+    gevent.sleep(0.2)
     yield 'updating {} / {}'.format(len(complete), len(sources))
-    while True:
-        x = y.get()
-        if x is None:
-            break
+    while len(patch_group):
+        try:
+            x = y.get(timeout=1)
+        except:
+            continue
         yield x
 
     patch_group.join()
