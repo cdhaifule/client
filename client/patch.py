@@ -1457,6 +1457,17 @@ def init():
                 log.critical("broken row: {}".format(a))
                 traceback.print_exc()
 
+    # delete useless repos
+    for extern in os.listdir(settings.external_plugins):
+        if extern not in sources or not sources[extern].enabled:
+            path = os.path.join(settings.external_plugins, extern)
+            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
+                log.info('deleting useless external repo {}'.format(path))
+                try:
+                    really_clean_repo(path)
+                except:
+                    traceback.print_exc()
+
     default_sources = dict(
         downloadam='http://community.download.am/dlam-config.yaml'
     )
@@ -1474,17 +1485,6 @@ def init():
                 else:
                     if isinstance(source, BasicSource) and source.enabled:
                         patch_group.spawn(source.check)
-
-    # delete useless repos
-    for extern in os.listdir(settings.external_plugins):
-        if extern not in sources or not sources[extern].enabled:
-            path = os.path.join(settings.external_plugins)
-            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
-                log.info('deleting useless external repo {}'.format(path))
-                try:
-                    really_clean_repo(path)
-                except:
-                    pass
 
     # check and apply updates
     from gevent.queue import JoinableQueue
