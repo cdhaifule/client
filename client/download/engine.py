@@ -695,7 +695,8 @@ def download_file(file):
         except gevent.GreenletExit:
             pass
         except BaseException as e:
-            file.unhandled_exception('error finishing download: {}'.format(e))
+            #file.unhandled_exception('error finishing download: {}'.format(e))
+            file.unhandled_exception()
         if file.state == 'download_complete':
             file.reset_progress()
         event.fire('file:download_task_done', file)
