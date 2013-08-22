@@ -52,11 +52,19 @@ def init():
             for b in bb.fetchall():
                 try:
                     dict_json(b)
-                    File(**b)
+                    f = File(**b)
                 except RuntimeError:
                     pass
                 except TypeError:
                     pass
+                else:
+                    download = f.get_download_file()
+                    complete = f.get_complete_file()
+                    if "download" in f.completed_plugins and os.path.exists(complete) and os.path.exists(download):
+                        try:
+                            os.remove(download)
+                        except (OSError, IOError) as e:
+                            f.log.warning("could not remove file {}: {}".format(download, e))
 
             yield 'loading chunks'
             cc = cursor.execute("SELECT * FROM chunk")
