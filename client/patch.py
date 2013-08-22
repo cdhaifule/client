@@ -272,7 +272,8 @@ class GitWorker(BasicPatchWorker):
         old_version = self.source.version
         try:
             try:
-                result = self.call_git(repo.remotes[0].fetch)
+                #result = self.call_git(repo.remotes[0].fetch)
+                result = dict(fuckyou="yay")
             finally:
                 del repo
             assert result is not None
@@ -665,8 +666,10 @@ def execute_restart():
         elif platform.startswith("linux"):
             replace_app(sys.executable, ' '.join(sys.argv))
         else:
-            argv = 'cmd /c start "' + sys.executable + '" "' + '" "'.join(sys.argv[1:]) + '"'
-            replace_app(argv)
+            cmd = 'cmd /c start "" "' + sys.executable + '"'
+            if sys.argv[1:]:
+                cmd += '"' + '" "'.join(sys.argv[1:]) + '"'
+            replace_app(cmd)
 
 def _external_rename_bat(replace, delete, deltree):
     code = list()
@@ -731,6 +734,7 @@ def replace_app(cmd, *args):
             args[0] = aboot
     elif platform == 'linux':
         os.chdir(settings.app_dir)
+    print "replace app", cmd, args
     try:
         if platform != "macos":
             loader.terminate()
@@ -738,15 +742,11 @@ def replace_app(cmd, *args):
         if hasattr(sys, 'exitfunc'):
             sys.exitfunc()
         #os.chdir(settings.app_dir)
-        print "replace app", cmd, args
         if platform == 'win32':
-            if 'download.am-cli' in cmd or '.bat' in cmd:
-                subprocess.Popen(cmd, creationflags=0x08000000)
-            else:
-                subprocess.Popen(cmd, shell=True)
+            subprocess.Popen(cmd, creationflags=0x08000000)
         else:
             os.execl(cmd, cmd, *args)
-            sys.exit(0)
+        sys.exit(0)
 
 
 # file iterator classes
@@ -1243,12 +1243,13 @@ class GitSource(BasicSource, PublicSource):
             pending_external['deltree'].append(self.basepath)
 
     def delete(self, erase):
-        if erase:
-            self.unlink()
-        with transaction:
-            self.table_delete()
-        self.log.info('deleted')
-        gevent.spawn_later(1, restart_app)
+        with self.lock:
+            if erase:
+                self.unlink()
+            with transaction:
+                self.table_delete()
+            self.log.info('deleted')
+            gevent.spawn_later(1, restart_app)
 
 
 ############### get source file iterators
@@ -1460,13 +1461,13 @@ def init():
     # delete useless repos
     for extern in os.listdir(settings.external_plugins):
         if extern not in sources or not sources[extern].enabled:
-            path = os.path.join(settings.external_plugins, extern)
+            path = os.path.join(settings.external_plugins)
             if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
                 log.info('deleting useless external repo {}'.format(path))
                 try:
                     really_clean_repo(path)
                 except:
-                    traceback.print_exc()
+                    pass
 
     default_sources = dict(
         downloadam='http://community.download.am/dlam-config.yaml'
