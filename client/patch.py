@@ -212,7 +212,7 @@ class GitWorker(BasicPatchWorker):
         else:
             self.source.log.debug('fetch complete; fetched ({})'.format(', '.join(remote_refs)))
             new_version = self.source.version
-            print "new version is", new_version
+            print "old version", old_version, "new version is", new_version
             if old_version == new_version:
                 return False
             self.source.log.info('updated branch {} from {} to {}'.format(self.source.get_branch(), old_version, new_version))
