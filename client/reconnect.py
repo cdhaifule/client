@@ -167,6 +167,7 @@ reconnecting = False
 
 def init():
     for mod in plugintools.load("reconnect"):
+        print "loading...", mod
         print "Loading reconnect module:", mod.name
         manager.add(mod.name, mod)
     

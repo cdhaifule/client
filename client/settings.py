@@ -111,11 +111,12 @@ def _makedirs(path):
                 raise
     except BaseException as e:
         print >>sys.stderr, 'error creating file or directory {}: {}'.format(path, e)
-        raise SystemExit()
+        sys.exit(1)
 
 _makedirs(data_dir)
 _makedirs(torrent_dir)
 _makedirs(temp_dir)
+_makedirs(external_plugins)
 
 def init_pre():
     global log
