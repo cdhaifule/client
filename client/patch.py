@@ -700,13 +700,17 @@ class HddFile(object):
             return f.read()
 
 class GitIterator(object):
-    def __init__(self, repo, tree):
+    def __init__(self, repo, tree, startswith):
         self.repo = repo
         self.tree = tree
+        self.startswith = startswith
         
     def __iter__(self):
         for entry in self.repo.object_store.iter_tree_contents(self.tree):
             path = entry.in_path(self.repo.path).path
+            if not path.startswith(self.startswith):
+                continue
+            print "Path for git", path
             gevent.sleep(0)
             yield GitFile(path, self.repo[entry.sha].as_raw_string())
 
@@ -1128,7 +1132,7 @@ class GitSource(BasicSource, PublicSource):
             if repo is None:
                 return list()
             tree = repo["refs/heads/"+self.get_branch()].tree
-            return GitIterator(repo, tree)
+            return GitIterator(repo, tree, startswith=os.path.join(self.basepath, path))
 
     def unlink(self):
         try:
