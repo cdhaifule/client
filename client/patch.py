@@ -184,7 +184,6 @@ class GitWorker(BasicPatchWorker):
         BasicPatchWorker.__init__(self, source)
 
     def patch(self):
-        print "patch of git called"
         repo = self.source._open_repo()
         if repo is None:
             repo = self.create_repo()
@@ -197,14 +196,11 @@ class GitWorker(BasicPatchWorker):
         return Repo.init_bare(p)
 
     def fetch(self, repo):
-        print "fetch here"
         old_version = self.source.version
-        print "old version is", old_version, repo, repo.path
         try:
             client, host_path = get_transport_and_path(self.source.url)
             remote_refs = client.fetch(host_path, repo)
             repo["HEAD"] = remote_refs["HEAD"]
-            print "remote_refs are", remote_refs
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
@@ -593,7 +589,7 @@ def execute_restart():
         else:
             cmd = 'cmd /c start "" "' + sys.executable + '"'
             if sys.argv[1:]:
-                cmd += '"' + '" "'.join(sys.argv[1:]) + '"'
+                cmd += ' "' + '" "'.join(sys.argv[1:]) + '"'
             replace_app(cmd)
 
 def _external_rename_bat(replace, delete, deltree):

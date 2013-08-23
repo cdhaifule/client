@@ -91,16 +91,41 @@ def init():
     except (KeyboardInterrupt, SystemExit):
         raise
     except:
-        if 'patch' in modules_by_name:
-            message = 'trying recovery patch'
+        def log_exception(msg):
             if log:
-                log.info(message)
+                log.exception(msg)
             else:
-                print message
+                print msg
+                traceback.print_exc()
+
+        log_exception('trying recovery patch')
+
+        # load patch module
+        if 'patch' not in modules_by_name:
+            from . import patch
+            modules_by_name['patch'] = patch
+        else:
+            patch = modules_by_name['patch']
+
+        # initialize patch module
+        if not patch.module_initialized.is_set():
             try:
-                modules_by_name['patch'].patch_all()
+                for msg in patch.init():
+                    msg = 'initializing patch: {}'.format(msg)
+                    if log:
+                        log.info(msg)
+                    else:
+                        print msg
             except:
-                pass
+                log_exception('error initializing patch system')
+        else:
+            # apply patches
+            try:
+                patch.patch_all()
+            except:
+                log_exception('error running patch all')
+
+        # reraise exception
         raise
 
 def _init_pre(modules):
@@ -166,7 +191,7 @@ def _init(objects, options, args):
             raise
         except:
             log.critical('failed initializing {}'.format(name), exc_info=sys.exc_info)
-            sys.exit(0)
+            raise
     if objects == post_objects:
         event.fire('loader:initialized')
 
