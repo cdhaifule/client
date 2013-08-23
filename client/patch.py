@@ -707,6 +707,8 @@ class GitIterator(object):
     def __iter__(self):
         for entry in self.repo.object_store.iter_tree_contents(self.tree):
             path = entry.in_path(self.repo.path).path
+            if platform == 'win32':
+                path = path.replace('/', os.sep)
             if not path.startswith(self.startswith):
                 continue
             gevent.sleep(0)
