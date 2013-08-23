@@ -212,9 +212,9 @@ class GitWorker(BasicPatchWorker):
         else:
             self.source.log.debug('fetch complete; fetched ({})'.format(', '.join(remote_refs)))
             new_version = self.source.version
-            print "old version", old_version, "new version is", new_version
             if old_version == new_version:
                 return False
+            print "old version", old_version, "new version is", new_version    
             self.source.log.info('updated branch {} from {} to {}'.format(self.source.get_branch(), old_version, new_version))
             return True
 
@@ -655,7 +655,6 @@ def replace_app(cmd, *args):
             args[0] = aboot
     elif platform == 'linux':
         os.chdir(settings.app_dir)
-    print "replace app", cmd, args
     try:
         if platform != "macos":
             loader.terminate()
@@ -710,7 +709,6 @@ class GitIterator(object):
             path = entry.in_path(self.repo.path).path
             if not path.startswith(self.startswith):
                 continue
-            print "Path for git", path
             gevent.sleep(0)
             yield GitFile(path, self.repo[entry.sha].as_raw_string())
 
@@ -844,7 +842,6 @@ class BasicSource(Table):
 
     def get_branch(self):
         branches = self.branches
-        print branches
         for branch in (('{}-{}'.format(self.id, config.branch), config.branch), (config.branch, config.branch), ('{}-master'.format(self.id), 'master'), ('master', 'master')):
             if branch[0] in branches:
                 return branch[1]
@@ -1086,28 +1083,22 @@ class GitSource(BasicSource, PublicSource):
         if os.path.exists(os.path.join(self.basepath, '.git')):
             return None
         try:
-            print "open repo", self.basepath
             return Repo(self.basepath)
         except:
-            print "error open"
             return None
 
     def on_get_branches(self, value):
-        print "get_branches"
         repo = self._open_repo()
         if repo is None:
-            print "repo does not exist"
             return list()
         return list(i.rsplit("/", 1)[1] for i in repo.get_refs() if i.startswith("refs/heads/"))
 
     def on_get_version(self, value):
-        print "get_version"
         repo = self._open_repo()
         if repo is None:
             return '0'*7
         try:
             x = repo.get_refs()["refs/heads/" + self.get_branch()]
-            print repr(x)
             return x[:7]
         except KeyError:
             return '0'*7
@@ -1313,7 +1304,6 @@ def add_source(url, config_url=None, type=None):
         type, url = identify_source(url)
         if type is None:
             return
-        print "identify", type, url
     return source_types[type](url, config_url)
 
 
