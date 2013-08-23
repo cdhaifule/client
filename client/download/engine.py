@@ -181,6 +181,7 @@ class DownloadFunction(intervalled.Cache):
         self.chunk = None
         self.last_read = 0
         self.last_write = 0
+        self.retry = 0
 
     def get_read_size(self):
         if self.chunk.end is None:
@@ -195,7 +196,7 @@ class DownloadFunction(intervalled.Cache):
                         break
                     if self.chunk.file.can_resume:
                         progress = next.pos - next.begin
-                        if progress > (self.chunk.file.speed/self.chunk.file.chunks_working)*3:
+                        if progress > (self.chunk.file.speed/self.chunk.file.chunks_working)*5:
                             break
                     else:
                         progress = 0
@@ -209,7 +210,7 @@ class DownloadFunction(intervalled.Cache):
             size = remaining > config["blocksize"] and config["blocksize"] or remaining
         return size
 
-    def read(self):
+    def read(self, retry=0):
         """only register last read size"""
         size = self.get_read_size()
         if size == 0:

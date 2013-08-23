@@ -447,8 +447,10 @@ def ctx_error_handler(ctx, func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
     except requests.ConnectionError:
+        traceback.print_exc()
         ctx.retry('connection error', 60)
     except requests.HTTPError:
+        traceback.print_exc()
         ctx.retry('HTTP error', 60)
     except requests.TooManyRedirects:
         ctx.retry('HTTP error', 180)

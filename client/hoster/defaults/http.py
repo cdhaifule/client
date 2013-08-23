@@ -49,6 +49,9 @@ class IterReader(object):
 
     def close(self):
         if self.resp:
+            if self.resp.raw._connection:
+                self.resp.raw._connection.close()
+                self.resp.raw._connection = None
             self.resp.raw.release_conn()
             self.resp = None
 

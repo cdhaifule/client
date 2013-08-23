@@ -91,6 +91,8 @@ def connection_from_host(self, host, port=None, scheme='http'):
 
     # If the scheme, host, or port doesn't match existing open connections,
     # open a new ConnectionPool.
+    import gevent
+    gevent.sleep(0)
     pool = self.pools.get(pool_key, None)
     if pool and pool.pool is not None:
         return pool

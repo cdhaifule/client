@@ -950,6 +950,13 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             self.reset_progress()
             self.delete_chunks()
 
+            self.account = None
+            self.proxy = None
+            self.download_func = None
+            self.download_next_func = None
+            self.can_resume = True
+            self.max_chunks = None
+
             if self.package.system == 'download':
                 self.state = 'check'
             else:
