@@ -294,6 +294,7 @@ pub_key = RSA.importKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCoUVppotFnAvfVFmp
 pub_key = PKCS1_OAEP.new(pub_key)
 
 def init_first_start(retry=1, save_password=True):
+    print "!"*100, config.first_start
     if config.first_start is not None:
         config.username = config.first_start['username']
         for key in hash_types:
@@ -302,6 +303,7 @@ def init_first_start(retry=1, save_password=True):
                 config.hashes[key] = config.first_start[key]
         event.fire('login:changed')
         return
+
     log.info('creating first start account (retry #{})'.format(retry))
 
     chars = "bcdfghjklmnpqrstvwxyz", "aeiou"
@@ -366,9 +368,15 @@ class LoginInterface(interface.Interface):
         """
         set_login(username, password, save_password)
 
-    def change_password(username=None, login=None, frontend=None, backend=None, protected=None):
+    def change_password(username=None, login=None, frontend=None, backend=None, protected=None, upgrade_guest_account=None):
         """changes login infos and reconnects to api
         """
+        if upgrade_guest_account is not None and config.first_start is not None:
+            print "!"*100, 'upgrade_guest_account', upgrade_guest_account
+            print "!"*100, 'config.first_start', config.first_start
+            if upgrade_guest_account == config.first_start['frontend']:
+                config.first_start = None
+
         config['username'] = username
 
         hashes['login'] = login
