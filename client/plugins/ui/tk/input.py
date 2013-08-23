@@ -237,6 +237,7 @@ class _Input(Tk):
         ctx = Context(self, self, input.elements)
         ctx.frame.pack()
 
+        self.wm_attributes("-topmost", 1)
         self.focus_force()
 
     def mainloop(self):

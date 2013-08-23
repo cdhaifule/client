@@ -91,7 +91,7 @@ def add_dialog(count):
     global _dialog_open
     try:
         from ... import input
-        if cnl_service.config.add:
+        if cnl_service.config.add or True: # skip the dialog
             return True
         try:
             elements = list()
