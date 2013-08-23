@@ -49,7 +49,8 @@ from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
 from collections import defaultdict
 
-from pygit2 import Repository, clone_repository, GIT_FILEMODE_TREE, GIT_FILEMODE_BLOB
+from dulwich.repo import Repo
+from dulwich.client import get_transport_and_path
 
 from . import current, logger, input, settings, reconnect, db, interface, loader
 from .plugintools import Url
@@ -182,101 +183,28 @@ class GitWorker(BasicPatchWorker):
     def __init__(self, source):
         BasicPatchWorker.__init__(self, source)
 
-    def call_git(self, func, *args, **kwargs):
-        """make a non-blocking call to a big pygit2 operation
-        """
-        def fn():
-            try:
-                return func(*args, **kwargs)
-            except BaseException as e:
-                return e
-        result = git_threadpool.spawn(fn).get()
-        if isinstance(result, BaseException):
-            raise result
-        return result
-        '''def run(w):
-            try:
-                result = func(*args, **kwargs)
-                w.put(result)
-            except BaseException as e:
-                try:
-                    w.put(e)
-                except:
-                    pass
-
-        def execute():
-            with gipc.pipe(duplex=False) as (r, w):
-                p = None
-                try:
-                    p = gipc.start_process(target=run, args=(w,), daemon=True)
-                    result = r.get()
-                    if isinstance(result, BaseException):
-                        raise result
-                    return result
-                except (KeyboardInterrupt, SystemExit, gevent.GreenletExit, EOFError, OSError):
-                    raise
-                finally:
-                    if p:
-                        p.terminate()
-
-        with git_lock:
-            if loader._terminated:
-                return
-            return execute()'''
-
     def patch(self):
+        print "patch of git called"
         repo = self.source._open_repo()
         if repo is None:
-            return self.clone()
-        try:
-            return self.fetch(repo)
-        finally:
-            del repo
-
-    def clone(self):
-        try:
-            really_clean_repo(self.source.basepath)
-        except WindowsError:
-            #pending_external['deltree'].append(self.source.basepath)
-            #restart_app()
-            pass
-        try:
-            try:
-                os.makedirs(self.source.basepath)
-            except:
-                pass
-            try:
-                repo = self.call_git(clone_repository, self.source.url, self.source.basepath, bare=True)
-            except OSError as e:
-                if str(e) == 'SSL is not supported by this copy of libgit2.' and self.source.url.startswith('https://'):
-                    url = self.source.url.replace('https://', 'http://')
-                    repo = self.call_git(clone_repository, url, self.source.basepath, bare=True)
-                else:
-                    raise
-        except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
-            self.source.unlink() # it is possible that the clone process is broken when the operation was interrupted
-            raise
-        except BaseException as e:
-            self.source.unlink()
-            self.source.log.exception('failed cloning repository')
-            with transaction:
-                self.source.last_error = 'failed cloning repository: {}'.format(e)
-            return False
-        else:
-            if repo is not None:
-                del repo
-                self.source.log.info('repository clone complete; branch {} is at {}'.format(self.source.get_branch(), self.source.version))
-                return True
+            repo = self.create_repo()
+        return self.fetch(repo)
+        
+    def create_repo(self):
+        p = self.source.basepath
+        if not os.path.exists(p):
+            os.mkdir(p)
+        return Repo.init_bare(p)
 
     def fetch(self, repo):
+        print "fetch here"
         old_version = self.source.version
+        print "old version is", old_version, repo, repo.path
         try:
-            try:
-                #result = self.call_git(repo.remotes[0].fetch)
-                result = dict(fuckyou="yay")
-            finally:
-                del repo
-            assert result is not None
+            client, host_path = get_transport_and_path(self.source.url)
+            remote_refs = client.fetch(host_path, repo)
+            repo["HEAD"] = remote_refs["HEAD"]
+            print "remote_refs are", remote_refs
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
@@ -286,9 +214,9 @@ class GitWorker(BasicPatchWorker):
                 self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
         else:
-            stats = ['{}: {}'.format(key, value) for key, value in result.iteritems()]
-            self.source.log.debug('fetch complete; {}'.format(', '.join(stats)))
+            self.source.log.debug('fetch complete; fetched ({})'.format(', '.join(remote_refs)))
             new_version = self.source.version
+            print "new version is", new_version
             if old_version == new_version:
                 return False
             self.source.log.info('updated branch {} from {} to {}'.format(self.source.get_branch(), old_version, new_version))
@@ -300,8 +228,6 @@ class PatchWorker(BasicPatchWorker):
         self.new_version = None
         self.patch_data = None
         self.backups = list()
-
-    # functions to download the patch
 
     def patch(self):
         try:
@@ -525,7 +451,7 @@ def patch_one(patches, source, timeout=180):
                     patches.append(p)
         except Timeout:
             source.log.error('patch function timed out')
-        except requests.ConnectionError:
+        except requests.ConnectionError as e:
             source.log.error('patch error: {}'.format(e))
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             raise
@@ -636,7 +562,6 @@ def restart_app():
             log.exception('input was aborted')
             result = 'later'
         break
-
     if result == 'never':
         log.info('will not restart to apply the update')
     elif result == 'later':
@@ -748,7 +673,6 @@ def replace_app(cmd, *args):
             os.execl(cmd, cmd, *args)
         sys.exit(0)
 
-
 # file iterator classes
 
 class HddIterator(object):
@@ -775,46 +699,24 @@ class HddFile(object):
         self.name = name
 
     def get_contents(self):
-        with open(os.path.join(self.path, self.name), 'r') as f:
+        gevent.sleep(0)
+        with open(os.path.join(self.path, self.name), 'rb') as f:
             return f.read()
 
-
 class GitIterator(object):
-    def __init__(self, repo, tree, path, walk, relpath=''):
-        if isinstance(path, basestring):
-            new_path = list()
-            while path:
-                path, sub = os.path.split(path)
-                new_path.insert(0, sub)
-            path = new_path
-        self.path = path
-        self.walk = walk
-        self.relpath = relpath
-        self.results = list()
-        self.build_results(repo, tree)
-
-    def build_results(self, repo, tree):
-        for entry in tree:
-            if entry.filemode & GIT_FILEMODE_TREE and (self.path or self.walk):
-                if not self.path or self.path[0] == entry.name:
-                    next_tree = repo.get(entry.hex)
-                    relpath = os.path.join(self.relpath, entry.name)
-                    for file in GitIterator(repo, next_tree, self.path and self.path[1:], self.walk, relpath):
-                        self.results.append(file)
-                    del next_tree
-            elif entry.filemode & GIT_FILEMODE_BLOB and (not self.path or (len(self.path) == 1 and self.path[0] == entry.name)):
-                blob = repo.get(entry.hex)
-                self.results.append(GitFile(self.relpath, entry.name, blob.data))
-                del blob
-
+    def __init__(self, repo, tree):
+        self.repo = repo
+        self.tree = tree
+        
     def __iter__(self):
-        for file in self.results:
-            yield file
+        for entry in self.repo.object_store.iter_tree_contents(self.tree):
+            path = entry.in_path(self.repo.path).path
+            gevent.sleep(0)
+            yield GitFile(path, self.repo[entry.sha].as_raw_string())
 
 class GitFile(object):
-    def __init__(self, path, name, contents):
-        self.path = path
-        self.name = name
+    def __init__(self, path, contents):
+        self.path, self.name = os.path.split(path)
         self.contents = contents
 
     def get_contents(self):
@@ -847,7 +749,7 @@ class ConfigUrl(object):
                 return
             try:
                 self._update()
-            except requests.ConnectionError:
+            except requests.ConnectionError as e:
                 self.log.error('update error: {}'.format(e))
             finally:
                 self.last_update = time.time()
@@ -942,10 +844,12 @@ class BasicSource(Table):
 
     def get_branch(self):
         branches = self.branches
+        print branches
         for branch in (('{}-{}'.format(self.id, config.branch), config.branch), (config.branch, config.branch), ('{}-master'.format(self.id), 'master'), ('master', 'master')):
             if branch[0] in branches:
                 return branch[1]
-        raise ValueError("repo has no master branch")
+        return "master"
+        #raise ValueError("repo has no master branch")
 
     def iter_files(self, path=None):
         raise NotImplementedError()
@@ -1182,30 +1086,32 @@ class GitSource(BasicSource, PublicSource):
         if os.path.exists(os.path.join(self.basepath, '.git')):
             return None
         try:
-            return Repository(self.basepath)
+            print "open repo", self.basepath
+            return Repo(self.basepath)
         except:
+            print "error open"
             return None
 
     def on_get_branches(self, value):
+        print "get_branches"
         repo = self._open_repo()
         if repo is None:
+            print "repo does not exist"
             return list()
-        try:
-            return repo.listall_branches()
-        finally:
-            del repo
+        return list(i.rsplit("/", 1)[1] for i in repo.get_refs() if i.startswith("refs/heads/"))
 
     def on_get_version(self, value):
+        print "get_version"
         repo = self._open_repo()
         if repo is None:
             return '0'*7
         try:
-            branch_name = self.get_branch()
-            branch = repo.lookup_branch(branch_name)
-            return branch.target.hex[:7]
-        finally:
-            del repo
-
+            x = repo.get_refs()["refs/heads/" + self.get_branch()]
+            print repr(x)
+            return x[:7]
+        except KeyError:
+            return '0'*7
+    
     def get_worker(self):
         return GitWorker(self)
 
@@ -1225,16 +1131,8 @@ class GitSource(BasicSource, PublicSource):
             repo = self._open_repo()
             if repo is None:
                 return list()
-            try:
-                branch = repo.lookup_branch(self.get_branch())
-                tree = branch.get_object().tree
-                try:
-                    return GitIterator(repo, tree, path, walk)
-                finally:
-                    del branch
-                    del tree
-            finally:
-                del repo
+            tree = repo["refs/heads/"+self.get_branch()].tree
+            return GitIterator(repo, tree)
 
     def unlink(self):
         try:
@@ -1353,7 +1251,7 @@ source_types = dict(
     patch=add_patch_source,
     config=add_config_source)
 
-def idientify_source(url):
+def identify_source(url):
     # repair url
     if '://' not in url:
         url = 'http://'+url
@@ -1412,7 +1310,7 @@ def idientify_source(url):
 
 def add_source(url, config_url=None, type=None):
     if type is None:
-        type, url = idientify_source(url)
+        type, url = identify_source(url)
         if type is None:
             return
         print "identify", type, url
