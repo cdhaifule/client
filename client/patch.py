@@ -1176,7 +1176,7 @@ def add_config_source(url, config_url=None):
         resp.close()
     assert len(data.keys()) > 0
     if url in config_urls:
-        #config_urls[url].update()
+        config_urls[url].update()
         pass
     else:
         config_urls[url] = ConfigUrl(url)
@@ -1256,22 +1256,28 @@ def identify_source(url):
         resp = requests.get(url, allow_redirects=False)
         resp.raise_for_status()
     except:
-        return
+        pass
     else:
         # check for git
         if url.endswith('.git'):
             return 'git', url
 
-        # check for patch
-        if '<h2>Add to Download.am</h2>' in resp.text:
-            return 'patch', url
-
         # check for config
         if 'dlam-config.yaml' in url:
             return 'config', url
 
+        # check for redirect
+        if resp.status_code in (301, 302):
+            result = identify_source(resp.headers['Location'])
+            if result[0] is not None:
+                return result
+
+        # check for patch
+        if '<h2>Add to Download.am</h2>' in resp.text:
+            return 'patch', url
+
     # check direct dlam-config url
-    if 'dlam-config.yaml' not in url:
+    if url.endswith('/') and 'dlam-config.yaml' not in url:
         u = url.rstrip('/')+'/dlam-config.yaml'
         try:
             resp = requests.get(u, stream=True)
@@ -1283,22 +1289,17 @@ def identify_source(url):
             assert len(data.keys()) > 0
             return 'config', u
         except:
-            traceback.print_exc()
             pass
 
-    # check patch subdomain
+    # check repo subdomain
     u = Url(url)
     if not u.host.startswith('repo.'):
+        if u.host.startswith('www.'):
+            u.host = u.host[4:]
         u.host = 'repo.{}'.format(u.host)
-        try:
-            resp = requests.get(u.to_string())
-            resp.raise_for_status()
-            if '<h2>Add to Download.am</h2>' in resp.text:
-                return 'patch', u.to_string()
-        except:
-            pass
+        return identify_source(u.to_string())
 
-    log.warning('could not identify source type. using default git')
+    log.warning('could not identify source {}'.format(url))
     return None, url
 
 def add_source(url, config_url=None, type=None):
@@ -1415,7 +1416,7 @@ def terminate():
 class ExternalSource(interface.Interface):
     name = "patch"
 
-    @interface.protected
+    #@interface.protected
     def add_source(url=None):
         if add_source(url):
             gevent.spawn_later(1, patch_all)
