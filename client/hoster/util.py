@@ -237,8 +237,8 @@ def ask_buy_premium_dialog(hoster, url):
                     input.Float('center'),
                     input.Text(''),
                     input.Choice('answer', choices=[
-                        {"value": 'add', "content": "Add Account", ok=True},
-                        {"value": 'cancel', "content": "Cancel", cancel=True}
+                        {"value": 'add', "content": "Add Account", 'ok': True},
+                        {"value": 'cancel', "content": "Cancel", 'cancel': True}
                     ])
                 ]
                 result = input.get(elements, close_aborts=True)
