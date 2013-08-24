@@ -756,12 +756,14 @@ class ConfigUrl(object):
 
     def _update(self):
         found_sources = list()
-        resp = requests.get(self.url, stream=True)
-        try:
-            resp.raise_for_status()
-            data = yaml.load(resp.raw)
-        finally:
-            resp.close()
+        resp = requests.get(self.url)
+        resp.raise_for_status()
+
+        buf = StringIO()
+        buf.write(resp.content)
+        buf.seek(0)
+        data = yaml.load(buf)
+
         assert len(data.keys()) > 0
         group = Group()
 
@@ -1166,12 +1168,16 @@ def get_file_iterator(source_name, path=None, walk=False):
 def add_config_source(url, config_url=None):
     if config_url is not None:
         raise ValueError('config url not allowed on config sources')
-    resp = requests.get(url, stream=True)
+    resp = requests.get(url)
     try:
         resp.raise_for_status()
-        data = yaml.load(resp.raw)
+        buf = StringIO()
+        buf.write(resp.content)
+        buf.seek(0)
+        data = yaml.load(buf)
     except:
         log.exception('error adding config source')
+        raise
     finally:
         resp.close()
     assert len(data.keys()) > 0
@@ -1244,7 +1250,7 @@ source_types = dict(
     patch=add_patch_source,
     config=add_config_source)
 
-def identify_source(url):
+def identify_source(url, baseurl=None):
     # repair url
     if '://' not in url:
         url = 'http://'+url
@@ -1252,6 +1258,9 @@ def identify_source(url):
             url = url+'/'
 
     # make deep request
+    if baseurl is None:
+        baseurl = url
+
     try:
         resp = requests.get(url, allow_redirects=False)
         resp.raise_for_status()
@@ -1260,21 +1269,32 @@ def identify_source(url):
     else:
         # check for git
         if url.endswith('.git'):
-            return 'git', url
+            return 'git', baseurl
 
         # check for config
         if 'dlam-config.yaml' in url:
-            return 'config', url
+            return 'config', baseurl
 
         # check for redirect
         if resp.status_code in (301, 302):
-            result = identify_source(resp.headers['Location'])
+            result = identify_source(resp.headers['Location'], baseurl or url)
             if result[0] is not None:
                 return result
 
         # check for patch
         if '<h2>Add to Download.am</h2>' in resp.text:
-            return 'patch', url
+            return 'patch', baseurl
+
+        if resp.content:
+            buf = StringIO()
+            buf.write(resp.content)
+            buf.seek(0)
+            try:
+                data = yaml.load(buf)
+                if isinstance(data, dict) and len(data) > 0:
+                    return 'config', baseurl
+            except:
+                pass
 
     # check direct dlam-config url
     if url.endswith('/') and 'dlam-config.yaml' not in url:
@@ -1287,7 +1307,7 @@ def identify_source(url):
             finally:
                 resp.close()
             assert len(data.keys()) > 0
-            return 'config', u
+            return 'config', baseurl
         except:
             pass
 
@@ -1297,10 +1317,11 @@ def identify_source(url):
         if u.host.startswith('www.'):
             u.host = u.host[4:]
         u.host = 'repo.{}'.format(u.host)
-        return identify_source(u.to_string())
+        u = u.to_string()
+        return identify_source(u, u)
 
     log.warning('could not identify source {}'.format(url))
-    return None, url
+    return None, baseurl
 
 def add_source(url, config_url=None, type=None):
     if type is None:
