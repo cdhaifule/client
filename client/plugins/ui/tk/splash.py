@@ -30,15 +30,15 @@ class Splash(Tk):
         frame.pack()
 
         # logo
-        self.logo = Image.open(os.path.join(settings.img_dir, 'logo_big.png'))
-        self.logo = self.logo.convert('RGBA')
-        r, g, b, self.logo_alpha = self.logo.split()
+        logo = Image.open(os.path.join(settings.img_dir, 'logo_big.png'))
+        logo = logo.convert('RGBA')
+        r, g, b, logo_alpha = logo.split()
 
         # loading image
         self.angle = 0
-        self.oimg = Image.open(os.path.join(settings.img_dir, 'circle_big.png'))
-        self.oimg = self.oimg.convert('RGBA')
-        img = ImageTk.PhotoImage(self.oimg, master=self)
+        circle = Image.open(os.path.join(settings.img_dir, 'circle_big.png'))
+        circle = circle.convert('RGBA')
+        img = ImageTk.PhotoImage(circle, master=self)
         self.w = Label(frame, image=img, padx=5, pady=5)
         self.w.image = img
         self.w.pack()
@@ -53,18 +53,28 @@ class Splash(Tk):
         self.focus_force()
 
         self.update()
-        self.greenlet = gevent.spawn_later(0.08, self.animate)
+
+        self.index = 0
+        self.angles = list()
+        for i in xrange(0, 360, 5):
+            img = circle.rotate(i)
+            img.paste(logo, mask=logo_alpha)
+            img = ImageTk.PhotoImage(img, master=self)
+            self.angles.append(img)
+
+        self.greenlet = gevent.spawn_later(0.015, self.animate)
 
     def animate(self):
-        img = self.oimg.rotate(self.angle)
-        img.paste(self.logo, mask=self.logo_alpha)
-        img = ImageTk.PhotoImage(img, master=self)
+        self.index += 1
+        if len(self.angles) == self.index:
+            self.index = 0
+        img = self.angles[self.index]
         self.w.config(image=img)
         self.update()
         self.angle += 4
         if self.angle > 360:
             self.angle = 0
-        self.greenlet = gevent.spawn_later(0.0040, self.animate)
+        self.greenlet = gevent.spawn_later(0.02, self.animate)
 
     def set_text(self, text):
         pass
