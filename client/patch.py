@@ -1416,7 +1416,7 @@ def terminate():
 class ExternalSource(interface.Interface):
     name = "patch"
 
-    #@interface.protected
+    @interface.protected
     def add_source(url=None):
         if add_source(url):
             gevent.spawn_later(1, patch_all)
