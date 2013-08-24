@@ -11,6 +11,6 @@ We provide standalone versions for Microsoft Windows starting from XP and MacOS 
 
 ## Using the development version
 
-If you are useing a platform that is targeted by our standalone builds you can also use that version together with this git repository.
+If you are using a platform that is targeted by our standalone builds you can also use that version together with this git repository.
 On Windows create a file named `download_am_dev.txt` in your home directory (enter `%HOMEPATH%` in your filebrowser to find) and write the full path where you cloned this repository into.
 On other systems do the same with a file called `.download.am.dev` also in your home directory.
