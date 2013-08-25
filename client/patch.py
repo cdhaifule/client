@@ -774,7 +774,12 @@ class ConfigUrl(object):
             buf = StringIO()
             buf.write(resp.content)
             buf.seek(0)
-            data = yaml.load(buf)
+            try:
+                data = yaml.load(buf)
+            except:
+                if not url.endswith('dlam-config.yaml'):
+                    return self._update(url.rstrip('/')+'/dlam-config.yaml')
+                raise
 
         assert len(data.keys()) > 0
         group = Group()
