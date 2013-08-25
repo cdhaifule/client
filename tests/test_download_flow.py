@@ -17,11 +17,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import loader
 loader.init()
 
-import os
 import sys
 import gevent
 
-from client import debugtools, scheme, loader, event, interface, core
+from client import scheme, loader, event, interface, core
 
 import httpserver
 
