@@ -151,7 +151,10 @@ def _run(responder, search, ctx, todo):
     ctx.position = ctx.next
     ctx.next = None
     try:
-        plugin.on_search(ctx, search.query)
+        if (not search.query or search.query=="_EMPTY") and plugin.search.get("empty"):
+            plugin.on_search_empty(ctx)
+        else:
+            plugin.on_search(ctx, search.query)
     finally:
         del ctx.account
         todo[ctx.name] = 1

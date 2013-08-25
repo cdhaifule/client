@@ -132,9 +132,7 @@ class Hoster(object):
         return self.accounts.get_best(task, file)
 
     def __getattr__(self, item):
-        #print "getattr", item
         if hasattr(self.module.this.options, item):
-            #print "\toptions access"
             return getattr(self.module.this.options, item)
         for i in self.chain():
             try:
@@ -145,8 +143,10 @@ class Hoster(object):
                 if callable(f):
                     f = wrap(self, f)
                 return f
-        return getattr(self.module.this, item)
-        
+        try:
+            return getattr(self.module.this, item)
+        except AttributeError:
+            raise AttributeError("plugin '{}' has no attribute '{}'".format(self.name, item))
     def chain(self, ignore_module=False):
         if not ignore_module:
             yield self.module
