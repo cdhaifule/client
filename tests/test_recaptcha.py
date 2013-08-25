@@ -38,7 +38,7 @@ def test_recaptcha():
     resp = browser.post("http://www.google.com/recaptcha/demo/", data=data)
 
     try:
-        assert "Correct" in resp.text or "Incorrect" in resp.text or "Richtig" in resp.text or "Falsch" in resp.text or "Rangt." in resp.text or u"Rétt!" in resp.text or u"Feil." in resp.text
+        assert "Correct" in resp.text or "Incorrect" in resp.text or "Richtig" in resp.text or "Falsch" in resp.text or "Rangt." in resp.text or u"Rétt!" in resp.text or u"Feil." in resp.text or u"Fel." in resp.text
     except:
         print resp.text
         raise

@@ -29,7 +29,7 @@ from .input import Text, Choice, get as get_input, InputTimeout, InputError
 log = logger.get("reconnect")
 
 config = globalconfig.new("reconnect")
-config.default("method", None, str)  # script|extern
+config.default("method", 'script', str)  # script|extern
 config.default("auto", False, bool)
 config.default("timeout", 60, int)
 config.default("retry", 2, int)
@@ -167,7 +167,6 @@ reconnecting = False
 
 def init():
     for mod in plugintools.load("reconnect"):
-        print "Loading reconnect module:", mod.name
         manager.add(mod.name, mod)
     
 

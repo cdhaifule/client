@@ -21,6 +21,8 @@ import gevent
 
 from . import event, logger
 
+ignore_protected_functions = False
+
 try:
     import pyotp
 except ImportError:
@@ -101,6 +103,9 @@ def guest_protected_dialog():
     return result == "ok"
 
 def protected(func):
+    if ignore_protected_functions:
+        return func
+
     def fn(protected_key=None, *args, **kwargs):
         from . import login
         if protected_key == "guest" and login.is_guest:

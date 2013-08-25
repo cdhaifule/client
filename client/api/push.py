@@ -103,6 +103,7 @@ class ApiListener(scheme.DelayedListener):
                     if 'config_url' in data:
                         if data['config_url'] is not None:
                             data['config_url'] = data['config_url'].replace('dlam-config.yaml', '')
+                            data['config_url'] = data['config_url'].replace('://repo.', '://')
                             data['config_url'] = data['config_url'].replace('http://community.download.am/', 'http://download.am/')
 
                 if data['table'] in ('account', 'package', 'file'):

@@ -662,7 +662,7 @@ class FileDownload(object):
             dlfunc.output = output
             dlfunc.process()
 
-        if not chunk.end is None and chunk.end != chunk.pos:
+        if (chunk.end is not None and chunk.end != chunk.pos) or not chunk.pos:
             chunk.retry('chunk is incomplete (pos {} != end {})'.format(chunk.pos, chunk.end), 60)
 
         with transaction:

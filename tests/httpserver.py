@@ -155,6 +155,34 @@ def route_anyname(name):
     return _resume(name=name)
 
 
+########## patch repo tests
+
+@http.route('/repotest/redir/config')
+def repotest_redir_config():
+    response.status = 302
+    response.headers['Location'] = '/repotest/redir/config2'
+
+@http.route('/repotest/redir/config2')
+def repotest_redir_config2():
+    response.status = 302
+    response.headers['Location'] = '/repotest/config'
+
+@http.route('/repotest/config')
+def repotest_config():
+    response.status = 200
+    return 'hoster: http://github.com/downloadam/hoster.git'
+
+@http.route('/repotest/redir/git')
+def repotest_redir_git():
+    response.status = 302
+    response.headers['Location'] = '/repotest/git'
+
+@http.route('/repotest/git')
+def repotest_git():
+    response.status = 302
+    response.headers['Location'] = 'http://github.com/downloadam/hoster.git'
+
+
 host = '127.0.0.1'
 port = 4567
 url = 'http://{}:{}'.format(host, port)

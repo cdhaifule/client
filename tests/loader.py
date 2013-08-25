@@ -20,13 +20,18 @@ from client import monkey
 monkey.init()
 
 from gevent.event import Event
-from client import settings, db, api, ui, service, loader, login, logger, localrpc, config, interface, core, scheme, patch
+
+from client import interface
+interface.ignore_protected_functions = True
+
+from client import settings, db, api, ui, service, loader, login, logger, localrpc, config, interface, patch
 
 api.is_connected = lambda: True
 api.init = lambda: None
 ui.init = lambda: None
 service.init = lambda: None
 localrpc.init = lambda: None
+
 
 original_loader_init = loader.init
 loader_initialized = False

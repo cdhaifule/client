@@ -364,9 +364,9 @@ class _SocketIO(object):
                     print 'Received unexpected code (%s)' % code
                     continue
                 func(packet_id, namespace._get_event_callback, data)
-            except:
+            except BaseException as e:
                 gevent.spawn(self.parent.disconnect, e)
-                raise
+                return
 
     def on_connect(self, packet_id, get_event_callback, data):
         get_event_callback('connect')()
