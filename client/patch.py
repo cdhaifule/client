@@ -41,9 +41,11 @@ import logging
 import gipc.gipc
 
 from gevent import Timeout
+from urlparse import urljoin
 from cStringIO import StringIO
 from gevent.pool import Group
 from gevent.lock import Semaphore
+from gevent.event import AsyncResult
 from gevent.threadpool import ThreadPool
 from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
@@ -195,7 +197,29 @@ class GitWorker(BasicPatchWorker):
             os.makedirs(p)
         return Repo.init_bare(p)
 
-    def fetch(self, repo):
+    def fetch(self, repo, retry=False):
+        def do_retry(e):
+            if not retry:
+                self.source.log.error('failed fetching repository, removing repo files and retrying: {}'.format(e))
+                self.source.unlink()
+                return self.fetch(repo, True)
+            else:
+                return do_error(e)
+
+        def do_error(e):
+            self.source.log.exception('failed fetching repository')
+            with transaction:
+                self.source.last_error = 'failed fetching repository: {}'.format(e)
+            return False
+
+        if os.path.exists(self.source.basepath):
+            try:
+                for file in ('branches', 'hooks', 'info', 'objects', 'refs', 'config', 'description', 'HEAD'):
+                    assert os.path.exists(os.path.join(self.source.basepath, file)) is True
+            except AssertionError:
+                self.source.log.info('found an incomplete repo clone. deleting')
+                self.source.unlink()
+
         old_version = self.source.version
         try:
             client, host_path = get_transport_and_path(self.source.url)
@@ -204,6 +228,15 @@ class GitWorker(BasicPatchWorker):
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
+        except IOError as e:
+            # IOError: [Errno 2] No such file or directory: 'C:\\Users\\xxx\\AppData\\Local\\download.am-data\\extern\\xxx\\objects\\pack\\pack-xxx.idx'
+            if e.errno == 2:
+                return do_retry(e)
+            else:
+                return do_error(e)
+        except KeyError as e:
+            # KeyError: ['4932b89d113c258446efb1c46df315c62e2e2874', 'b7f201e14d005d61feb05b58c3c63ae6672bdf47', 'a5411cb3482bc5173fce0dffafa7d78758b56076']
+            return do_retry(e)
         except BaseException as e:
             self.source.log.exception('failed fetching repository')
             with transaction:
@@ -214,7 +247,7 @@ class GitWorker(BasicPatchWorker):
             new_version = self.source.version
             if old_version == new_version:
                 return False
-            print "old version", old_version, "new version is", new_version    
+            print "old version", old_version, "new version is", new_version
             self.source.log.info('updated branch {} from {} to {}'.format(self.source.get_branch(), old_version, new_version))
             return True
 
@@ -754,14 +787,31 @@ class ConfigUrl(object):
             finally:
                 self.last_update = time.time()
 
-    def _update(self):
+    def _update(self, url=None):
+        if url is None:
+            url = self.url
+
         found_sources = list()
-        resp = requests.get(self.url, stream=True)
-        try:
-            resp.raise_for_status()
-            data = yaml.load(resp.raw)
-        finally:
-            resp.close()
+        resp = requests.get(url, allow_redirects=False)
+        resp.raise_for_status()
+
+        if resp.status_code in (301, 302):
+            u = urljoin(resp.url, resp.headers['Location'])
+            if not u.endswith('.git'):
+                return self._update(u)
+            name = os.path.splitext(os.path.split(u)[1])[1]
+            data = dict(name=u)
+        else:
+            buf = StringIO()
+            buf.write(resp.content)
+            buf.seek(0)
+            try:
+                data = yaml.load(buf)
+            except:
+                if not url.endswith('dlam-config.yaml'):
+                    return self._update(url.rstrip('/')+'/dlam-config.yaml')
+                raise
+
         assert len(data.keys()) > 0
         group = Group()
 
@@ -769,9 +819,10 @@ class ConfigUrl(object):
             try:
                 source = add_source(url, self.url)
             except:
-                self.log.warning('error adding new repo {}'.format(url))
+                self.log.exception('error adding new repo {}'.format(url))
             else:
                 found_sources.append(source)
+
         for name, url in data.iteritems():
             try:
                 Url(url)
@@ -1171,21 +1222,9 @@ def get_file_iterator(source_name, path=None, walk=False):
 def add_config_source(url, config_url=None):
     if config_url is not None:
         raise ValueError('config url not allowed on config sources')
-    resp = requests.get(url, stream=True)
-    try:
-        resp.raise_for_status()
-        data = yaml.load(resp.raw)
-    except:
-        log.exception('error adding config source')
-    finally:
-        resp.close()
-    assert len(data.keys()) > 0
-    if url in config_urls:
-        #config_urls[url].update()
-        pass
-    else:
+    if url not in config_urls:
         config_urls[url] = ConfigUrl(url)
-        config_urls[url].update()
+    config_urls[url].update()
     return config_urls[url]
 
 def add_git_source(url, config_url=None):
@@ -1249,7 +1288,7 @@ source_types = dict(
     patch=add_patch_source,
     config=add_config_source)
 
-def identify_source(url):
+def identify_source(group, result, url, baseurl=None, deepness=0):
     # repair url
     if '://' not in url:
         url = 'http://'+url
@@ -1257,58 +1296,93 @@ def identify_source(url):
             url = url+'/'
 
     # make deep request
-    try:
-        resp = requests.get(url, allow_redirects=False)
-        resp.raise_for_status()
-    except:
-        return
-    else:
-        # check for git
-        if url.endswith('.git'):
-            return 'git', url
+    if baseurl is None:
+        baseurl = url
 
-        # check for patch
-        if '<h2>Add to Download.am</h2>' in resp.text:
-            return 'patch', url
+    def identify_current():
+        try:
+            resp = requests.get(url, allow_redirects=False)
+            resp.raise_for_status()
+        except:
+            pass
+        else:
+            # check for git
+            if url.endswith('.git'):
+                if baseurl != url:
+                    result.set(('config', baseurl))
+                else:
+                    result.set(('git', baseurl))
 
-        # check for config
-        if 'dlam-config.yaml' in url:
-            return 'config', url
+            # check for config
+            elif 'dlam-config.yaml' in url:
+                result.set(('config', baseurl))
+
+            # check for redirect
+            elif resp.status_code in (301, 302):
+                u = urljoin(resp.url, resp.headers['Location'])
+                identify_source(group, result, u, baseurl or url, deepness=deepness+1)
+
+            # check for patch
+            elif '<h2>Add to Download.am</h2>' in resp.text:
+                result.set(('patch', baseurl))
+
+            elif resp.content:
+                buf = StringIO()
+                buf.write(resp.content)
+                buf.seek(0)
+                try:
+                    data = yaml.load(buf)
+                    if isinstance(data, dict) and len(data) > 0:
+                        result.set(('config', baseurl))
+                except:
+                    pass
 
     # check direct dlam-config url
-    if 'dlam-config.yaml' not in url:
-        u = url.rstrip('/')+'/dlam-config.yaml'
-        try:
-            resp = requests.get(u, stream=True)
+    def identify_config_yaml():
+        if url.endswith('/') and not url.endswith('dlam-config.yaml'):
+            u = url.rstrip('/')+'/dlam-config.yaml'
             try:
-                resp.raise_for_status()
-                data = yaml.load(resp.raw)
-            finally:
-                resp.close()
-            assert len(data.keys()) > 0
-            return 'config', u
-        except:
-            traceback.print_exc()
-            pass
+                resp = requests.get(u, stream=True)
+                try:
+                    resp.raise_for_status()
+                    data = yaml.load(resp.raw)
+                finally:
+                    resp.close()
+                assert len(data.keys()) > 0
+                result.set(('config', baseurl))
+            except:
+                pass
 
-    # check patch subdomain
-    u = Url(url)
-    if not u.host.startswith('repo.'):
-        u.host = 'repo.{}'.format(u.host)
-        try:
-            resp = requests.get(u.to_string())
-            resp.raise_for_status()
-            if '<h2>Add to Download.am</h2>' in resp.text:
-                return 'patch', u.to_string()
-        except:
-            pass
+    # check repo subdomain
+    def identify_subdomain():
+        u = Url(url)
+        if not u.host.startswith('repo.'):
+            if u.host.startswith('www.'):
+                u.host = u.host[4:]
+            u.host = 'repo.{}'.format(u.host)
+            identify_source(group, result, u.to_string(), deepness=deepness+1)
 
-    log.warning('could not identify source type. using default git')
-    return None, url
+    g = group.spawn(identify_current)
+    g.join()
+    group.spawn(identify_config_yaml)
+    group.spawn(identify_subdomain)
+    if deepness == 0:
+        group.join()
+        result.set((None, url))
 
 def add_source(url, config_url=None, type=None):
     if type is None:
-        type, url = identify_source(url)
+        group = Group()
+        result = AsyncResult()
+        gevent.spawn(identify_source, group, result, url)
+        try:
+            with Timeout(30):
+                type, url = result.get()
+        except Timeout:
+            log.warning('add source check timed out')
+            return
+        finally:
+            group.kill()
         if type is None:
             return
     return source_types[type](url, config_url)
@@ -1445,7 +1519,7 @@ class ExternalSource(interface.Interface):
     @interface.protected
     def remove_source(erase=True, **filter):
         filter_objects_callback([s for s in sources.values() if isinstance(s, PublicSource)], filter, lambda obj: obj.delete(erase))
-    
+
     @interface.protected
     def sync_sources(clients=None):
         for source in sources.values():
