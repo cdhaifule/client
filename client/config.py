@@ -244,7 +244,7 @@ class Interface(interface.Interface):
     name = 'config'
 
     def set(key, value):
-        if key in _defaults and (_defaults[key]['private'] or _defaults['key']['protected']):
+        if key in _defaults and (_defaults[key]['private'] or _defaults[key]['protected']):
             raise ValueError('access denied')
         with transaction:
             _config[key] = value
