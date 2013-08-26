@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import re
 import sys
 import time
 import stat
@@ -195,7 +196,13 @@ class GitWorker(BasicPatchWorker):
             os.makedirs(p)
         return Repo.init_bare(p)
 
-    def fetch(self, repo):
+    def fetch(self, repo, retry=False):
+        def on_error(e):
+            self.source.log.exception('failed fetching repository')
+            with transaction:
+                self.source.last_error = 'failed fetching repository: {}'.format(e)
+            return False
+
         old_version = self.source.version
         try:
             client, host_path = get_transport_and_path(self.source.url)
@@ -204,11 +211,32 @@ class GitWorker(BasicPatchWorker):
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
+        except (KeyError, OSError) as e:
+            if retry:
+                return on_error(e)
+            self.source.log.exception('failed fetching repository; deleting repo')
+            try:
+                really_clean_repo(self.source.basepath)
+            except:
+                m = re.match('^(.+)-tmp(\d+)$', self.source.basepath)
+                if m:
+                    basepath = m.group(1)
+                    tmp = int(m.group(2)) + 1
+                else:
+                    basepath = self.source.basepath
+                    tmp = 1
+                while True:
+                    p = '{}-tmp{}'.format(basepath, tmp)
+                    if not os.path.exists(p):
+                        break
+                    tmp += 1
+                self.source.log.error('failed deleting broken repo, trying alternative base path {}'.format(p))
+                self.source.basepath = p
+                repo = self.create_repo()
+            else:
+                return self.fetch(repo, True)
         except BaseException as e:
-            self.source.log.exception('failed fetching repository')
-            with transaction:
-                self.source.last_error = 'failed fetching repository: {}'.format(e)
-            return False
+            return on_error(e)
         else:
             self.source.log.debug('fetch complete; fetched ({})'.format(', '.join(remote_refs)))
             new_version = self.source.version
