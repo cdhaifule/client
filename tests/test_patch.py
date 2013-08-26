@@ -22,7 +22,10 @@ def tearDown():
 class Test(object):
     def setUp(self):
         interface.call('patch', 'remove_source', erase=True)
-        shutil.rmtree(settings.external_plugins)
+        try:
+            shutil.rmtree(settings.external_plugins)
+        except:
+            pass
         print "up"
 
     def tearDown(self):
