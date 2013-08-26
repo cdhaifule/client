@@ -53,7 +53,7 @@ from collections import defaultdict
 from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
 
-from . import current, logger, input, settings, reconnect, db, interface, loader
+from . import current, logger, input, settings, reconnect, db, interface, loader, event
 from .plugintools import Url
 from .config import globalconfig
 from .scheme import transaction, Table, Column, filter_objects_callback
@@ -63,7 +63,7 @@ config = globalconfig.new('patch')
 config.default('branch', 'stable', str)
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
-config.default('patch_check_interval', 2*3600, int)
+config.default('patch_check_interval', 300, int)
 
 log = logger.get("patch")
 
@@ -77,6 +77,12 @@ test_mode = False
 gipc.gipc.log.setLevel(logging.INFO)
 git_lock = Semaphore(5)
 
+
+# update patch interval
+
+@event.register('config:loaded')
+def on_config_loaded(e):
+    config.patch_check_interval = 600
 
 # get our platform
 
