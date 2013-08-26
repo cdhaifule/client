@@ -62,7 +62,11 @@ def itermodules(type, load_external=True):
         if not os.path.isdir(path):
             continue
 
-        files = patch.get_file_iterator(extern, type, False)
+        try:
+            files = patch.get_file_iterator(extern, type, False)
+        except:
+            traceback.print_exc()
+            continue
 
         try:
             files = list(files)

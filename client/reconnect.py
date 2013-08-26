@@ -34,6 +34,11 @@ config.default("auto", False, bool)
 config.default("timeout", 60, int)
 config.default("retry", 2, int)
 
+@event.register('config:before_load')
+def before_config_loaded(e, data):
+    if 'reconnect.method' in data and data['reconnect.method'] is None:
+        data['reconnect.method'] = 'script'
+
 @config.register('method')
 def check_method(value):
     if value is None:
@@ -128,12 +133,13 @@ class Reconnect(object):
                 log.info('reconnect failed after {} retries'.format(i + 1))
                 event.fire('reconnect:failed')
                 try:
-                    elements = [Text("Reconnect failed."), 
+                    elements = [
+                        Text("Reconnect failed."),
                         Choice('answer', choices=[
                             {"value": 'ignore', "content": "Ignore"},
                             {"value": 'stop', "content": "Deactivate Auto-Reconnect?"}
-                            ])
-                        ]
+                        ])
+                    ]
                     result = get_input(elements)["answer"]
                 except KeyError:
                     result = 'stop'
@@ -166,7 +172,7 @@ reconnect = manager.reconnect
 reconnecting = False
 
 def init():
-    for mod in plugintools.load("reconnect"):
+    for mod in plugintools.itermodules("reconnect"):
         manager.add(mod.name, mod)
     
 
