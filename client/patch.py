@@ -191,18 +191,9 @@ class GitWorker(BasicPatchWorker):
         BasicPatchWorker.__init__(self, source)
 
     def patch(self):
-        repo = self.source._open_repo()
-        if repo is None:
-            repo = self.create_repo()
-        return self.fetch(repo)
+        return self.fetch()
         
-    def create_repo(self):
-        p = self.source.basepath
-        if not os.path.exists(p):
-            os.makedirs(p)
-        return Repo.init_bare(p)
-
-    def fetch(self, repo, retry=False):
+    def fetch(self, retry=False):
         def on_error(e):
             self.source.log.exception('failed fetching repository')
             with transaction:
@@ -211,6 +202,13 @@ class GitWorker(BasicPatchWorker):
 
         old_version = self.source.version
         try:
+            repo = self.source._open_repo()
+            if repo is None:
+                p = self.source.basepath
+                if not os.path.exists(p):
+                    os.makedirs(p)
+                repo = Repo.init_bare(p)
+
             client, host_path = get_transport_and_path(self.source.url)
             remote_refs = client.fetch(host_path, repo)
             repo["HEAD"] = remote_refs["HEAD"]
@@ -221,6 +219,7 @@ class GitWorker(BasicPatchWorker):
             if retry:
                 return on_error(e)
             self.source.log.exception('failed fetching repository; deleting repo')
+            del repo
             try:
                 really_clean_repo(self.source.basepath)
             except:
@@ -238,9 +237,7 @@ class GitWorker(BasicPatchWorker):
                     tmp += 1
                 self.source.log.error('failed deleting broken repo, trying alternative base path {}'.format(p))
                 self.source.basepath = p
-                repo = self.create_repo()
-            else:
-                return self.fetch(repo, True)
+            return self.fetch(True)
         except BaseException as e:
             return on_error(e)
         else:
@@ -248,7 +245,6 @@ class GitWorker(BasicPatchWorker):
             new_version = self.source.version
             if old_version == new_version:
                 return False
-            print "old version", old_version, "new version is", new_version
             self.source.log.info('updated branch {} from {} to {}'.format(self.source.get_branch(), old_version, new_version))
             return True
 
