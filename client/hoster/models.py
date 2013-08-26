@@ -104,6 +104,13 @@ class Hoster(object):
         # setup log
         self.log = logger.get("hoster:{}:".format(module.this.name))
         
+        # setup config
+        config = self.config
+        if config:
+            realconfig = pluginconfig.new(self.name)
+            _compile_config(realconfig, config)
+            module.this.options.config = realconfig
+        
         search = self.search
         if search:
             try:
@@ -118,13 +125,12 @@ class Hoster(object):
                     if isinstance(tags, basestring):
                         tags = map(str.strip, tags.split(","))
                 search["tags"] = tags
-
-        # setup config
-        config = self.config
-        if config:
-            realconfig = pluginconfig.new(self.name)
-            _compile_config(realconfig, config)
-            module.this.options.config = realconfig
+                if not config:
+                    realconfig = pluginconfig.new(self.name)
+                    module.this.options.config = realconfig
+                realconfig.default("default_phrase", 
+                    search.get("default_phrase", ""), str, 
+                    description="Default search phrase")
 
     def get_account(self, task, file):
         if self.accounts is None:
