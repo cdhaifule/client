@@ -215,7 +215,7 @@ class GitWorker(BasicPatchWorker):
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
-        except (KeyError, OSError) as e:
+        except BaseException as e:
             if retry:
                 return on_error(e)
             self.source.log.exception('failed fetching repository; deleting repo')
@@ -238,8 +238,8 @@ class GitWorker(BasicPatchWorker):
                 self.source.log.error('failed deleting broken repo, trying alternative base path {}'.format(p))
                 self.source.basepath = p
             return self.fetch(True)
-        except BaseException as e:
-            return on_error(e)
+        #except BaseException as e:
+        #    return on_error(e)
         else:
             self.source.log.debug('fetch complete; fetched ({})'.format(', '.join(remote_refs)))
             new_version = self.source.version
