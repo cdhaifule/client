@@ -159,7 +159,7 @@ class ClipboardMonitor(service.ServicePlugin):
                 current = new
                 links = read_links(current)
                 if links:
-                    core.add_links(links)
+                    core.add_links(links, ignore_plugins=['http', 'ftp'])
         self.log.info("stopped")
 
 service.register(ClipboardMonitor('clipboard_monitor'))
