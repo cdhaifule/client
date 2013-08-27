@@ -50,14 +50,20 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     hoster = None       # must be set before hoster.register()
 
+    # none means use defaults from hoster class, some value means account.foo > hoster.foo and hoster.foo or account.foo
+    max_check_tasks = Column(always_use_getter=True)
+    max_download_tasks = Column(always_use_getter=True)
+    max_chunks = Column(always_use_getter=True)
+    can_resume = Column(always_use_getter=True)
+
     def __init__(self, **kwargs):
         self.account = self # needed for InputFunctions.solve_* functions
 
         self.multi_account = False
 
         self.lock = Semaphore()
-        self.check_pool = VariableSizePool(size=self.hoster.max_check_tasks)
-        self.download_pool = VariableSizePool(size=self.hoster.max_download_tasks)
+        self.check_pool = VariableSizePool(size=self.max_check_tasks)
+        self.download_pool = VariableSizePool(size=self.max_download_tasks)
         self.search_pool = VariableSizePool(size=10)
         self.reset()
 
@@ -81,8 +87,12 @@ class Account(Table, ErrorFunctions, InputFunctions):
             self.on_reset()
 
     def on_reset(self):
-        self.check_pool.set(self.hoster.max_check_tasks)
-        self.download_pool.set(self.hoster.max_download_tasks)
+        self.max_check_tasks = None
+        self.max_download_tasks = None
+        self.max_chunks = None
+        self.can_resume = None
+        self.check_pool.set(self.max_check_tasks)
+        self.download_pool.set(self.max_download_tasks)
         self.enabled = True
         self.reset_retry()
         self._initialized = False
@@ -95,7 +105,9 @@ class Account(Table, ErrorFunctions, InputFunctions):
     def on_get_next_try(self, value):
         return None if value is None else value.eta
 
-    def boot(self):
+    def boot(self, return_when_locked=False):
+        if return_when_locked and self.lock.locked():
+            return
         with self.lock:
             if not self.enabled:
                 #TODO: raise GreenletExit ?
@@ -107,6 +119,8 @@ class Account(Table, ErrorFunctions, InputFunctions):
                 self.last_error = None
             if not self._initialized or self._last_check is None or self._last_check + config['recheck_interval'] < time.time():
                 self.initialize()
+                self.check_pool.set(self.max_check_tasks)
+                self.download_pool.set(self.max_download_tasks)
                 
     def reboot(self):
         self.reset()
@@ -187,11 +201,6 @@ class Account(Table, ErrorFunctions, InputFunctions):
             self.next_try = None
             self.last_error = None
 
-    @property
-    def max_simultan_downloads(self):
-        """none means unlimited"""
-        return None
-
     def get_task_pool(self, task):
         if task == 'check':
             return self.check_pool
@@ -204,21 +213,24 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     # preferences from hoster.this
 
-    @property
-    def max_check_tasks(self):
-        return self.hoster.max_check_tasks
+    # max_check_tasks
+    def on_get_max_check_tasks(self, value):
+        self.boot(True)
+        return self.hoster.max_check_tasks if value is None else min(value, self.hoster.max_check_tasks)
 
-    @property
-    def max_download_tasks(self):
-        return self.hoster.max_download_tasks
+    # max_download_tasks
+    def on_get_max_download_tasks(self, value):
+        self.boot(True)
+        return self.hoster.max_download_tasks if value is None else min(value, self.hoster.max_download_tasks)
 
-    @property
-    def max_chunks(self):
-        return self.hoster.max_chunks
+    # max_chunks
+    def on_get_max_chunks(self, value):
+        self.boot(True)
+        return self.hoster.max_chunks if value is None else min(value, self.hoster.max_chunks)
 
-    @property
-    def can_resume(self):
-        return self.hoster.can_resume
+    def on_get_can_resume(self, value):
+        self.boot(True)
+        return self.hoster.can_resume if value is None else value and self.hoster.can_resume
 
     @property
     def max_filesize(self):
@@ -236,11 +248,9 @@ class Account(Table, ErrorFunctions, InputFunctions):
     def waiting_time(self):
         return self.hoster.waiting_time
 
-    def on_check_decorator(self, func, *args, **kwargs):
-        return func(*args, **kwargs)
-
     def on_download_decorator(self, func, *args, **kwargs):
         return func(*args, **kwargs)
+
     on_download_next_decorator = on_download_decorator
 
 class Profile(Account):
@@ -352,19 +362,14 @@ class PremiumAccount(HosterAccount):
         return isinstance(other, HosterAccount) and self.name == other.name and self.username == other.username
 
     def on_reset(self):
-        """reset (logout ...) account"""
+        """reset (logout ...) account
+        """
         HosterAccount.on_reset(self)
-        self.check_pool.set(self.hoster.max_check_tasks_free)
-        self.download_pool.set(self.hoster.max_download_tasks_free)
         self.premium = None
         self.expires = None
         self.traffic = None
-
-    def boot(self):
-        HosterAccount.boot(self)
-        if self.premium:
-            self.check_pool.set(self.hoster.max_check_tasks_premium)
-            self.download_pool.set(self.hoster.max_download_tasks_premium)
+        self.check_pool.set(self.hoster.max_check_tasks_free)
+        self.download_pool.set(self.hoster.max_download_tasks_free)
 
     def on_initialize(self):
         raise NotImplementedError()
@@ -404,25 +409,25 @@ class PremiumAccount(HosterAccount):
 
     # preferences from hoster.this
 
-    @property
-    def max_check_tasks(self):
-        self.boot()
-        return self.hoster.max_check_tasks_premium if self.premium else self.hoster.max_check_tasks_free
+    def on_get_max_check_tasks(self, value):
+        self.boot(True)
+        h = self.hoster.max_check_tasks_premium if self.premium else self.hoster.max_check_tasks_free
+        return h if value is None else min(value, h)
 
-    @property
-    def max_download_tasks(self):
-        self.boot()
-        return self.hoster.max_download_tasks_premium if self.premium else self.hoster.max_download_tasks_free
+    def on_get_max_download_tasks(self, value):
+        self.boot(True)
+        h = self.hoster.max_download_tasks_premium if self.premium else self.hoster.max_download_tasks_free
+        return h if value is None else min(value, h)
 
-    @property
-    def max_chunks(self):
-        self.boot()
-        return self.hoster.max_chunks_premium if self.premium else self.hoster.max_chunks_free
+    def on_get_max_chunks(self, value):
+        self.boot(True)
+        h = self.hoster.max_chunks_premium if self.premium else self.hoster.max_chunks_free
+        return h if value is None else min(value, h)
 
-    @property
-    def can_resume(self):
-        self.boot()
-        return self.hoster.can_resume_premium if self.premium else self.hoster.can_resume_free
+    def on_get_can_resume(self, value):
+        self.boot(True)
+        h = self.hoster.can_resume_premium if self.premium else self.hoster.can_resume_free
+        return h if value is None else value and h
 
     @property
     def max_filesize(self):
