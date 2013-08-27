@@ -176,19 +176,28 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         message = proto.pack_message('backend', 'api.login', payload=payload)
 
         def send_login():
-            for i in xrange(5):
-                self.send_message(message_key)
-                self.send_message(message)
-                gevent.sleep(10)
-                log.info("\ttimeout for answer {}".format(i))
+            for i in xrange(7):
+                try:
+                    v = result.value
+                except AttributeError:
+                    return
+                if v is None:
+                    try:
+                        self.send_message(message_key)
+                        self.send_message(message)
+                    except AttributeError:
+                        return
+                    gevent.sleep(10)
+                    log.info("\ttimeout for answer {}".format(i))
+                else:
+                    return
             result.set([False, 'Login timed out'])
 
-        g = gevent.spawn(send_login)
+        gevent.spawn(send_login)
         try:
             result = result.get()
         finally:
             del self.login_results[rid]
-            g.kill()
 
         if not result[0]:
             log.error('login failed: {}'.format(result[1]))
