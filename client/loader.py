@@ -204,8 +204,10 @@ def terminate():
     _terminated = True
     gevent.signal(signal.SIGINT, None)
     gevent.signal(signal.SIGTERM, None)
-    ui.set_splash_text('terminating...')
-    event.fire('loader:terminating')
+    if ui:
+        ui.set_splash_text('terminating...')
+    if event:
+        event.fire('loader:terminating')
     for obj in reversed(pre_objects + main_objects + post_objects):
         if hasattr(obj, 'terminate'):
             name = re.sub(r'^client\.', '', obj.__name__)

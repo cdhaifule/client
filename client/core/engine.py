@@ -675,13 +675,19 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             'retry': 2,
             'waiting_account': 3,
             'waiting': 4,
-            'input': 5}
+            'input': 5,
+            'running': 6}
         get_priority = lambda s: s and priority.get(s[0], 0) or 0
         substate = substate, get_priority(substate)
+        none_exists = False
         for chunk in self.chunks:
             p = get_priority(chunk.substate)
+            if chunk.substate[0] is None and chunk.working:
+                none_exists = True
             if substate[1] < p:
                 substate = chunk.substate, p
+        if none_exists and substate[0] == 'init':
+            return [None]
         return substate[0]
 
     def on_get_next_try(self, value):
@@ -1023,6 +1029,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         self.run_after_greenlet(self.erase)
 
     def erase(self, _package=False):
+        if self.state == 'deleted':
+            return
         with transaction:
             self.reset(_package=_package)
             self.delete(_package=_package)
