@@ -177,9 +177,9 @@ class Interface(interface.Interface):
             finally:
                 return list(links)
 
-    def read_clipboard():
+    def read_clipboard(ignore_plugins=[]):
         if paste is not None:
             data = paste()
             links = read_links(data)
             if links:
-                core.add_links(links)
+                core.add_links(links, ignore_plugins=ignore_plugins)

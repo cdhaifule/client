@@ -89,16 +89,16 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.connected_event.wait()
 
     def close(self):
-        if self.greenlet and gevent.getcurrent() != self.greenlet:
-            self.greenlet.kill()
         if self.io:
+            if self.greenlet and gevent.getcurrent() != self.greenlet:
+                self.greenlet.kill()
             io = self.io
             self.io = None
             try:
                 io.disconnect()
             except:
                 pass
-            log.info('closed api connection')
+            log.info('\tclosed api connection')
         self.disconnected_event.set()
 
     def on_connect(self, *args, **kwargs):
@@ -176,8 +176,11 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         message = proto.pack_message('backend', 'api.login', payload=payload)
 
         def send_login():
-            for i in xrange(5):
-                if result.value is not None:
+            for i in xrange(7):
+                try:
+                    if result.value is not None:
+                        return
+                except AttributeError:
                     return
                 msg = 'logging in (retry {})'.format(i)
                 if i > 0:
@@ -185,8 +188,12 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                         self.connection_state.put(msg)
                     else:
                         log.info(msg)
-                self.send_message(message_key)
-                self.send_message(message)
+                ty:
+                    self.send_message(message_key)
+                    self.send_message(message)
+                except AttributeError:
+                    result.set([False, 'Client login error'])
+                    return
                 secs = 5*i
                 if secs < 10:
                     secs = 10

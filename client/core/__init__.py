@@ -105,7 +105,7 @@ class Interface(interface.Interface):
                 #    print "        ", chunk.id, chunk.working, chunk.state, chunk, chunk.last_error, chunk.substate
         print "-------------------------------------------------------------"
 
-    def add_links(links=None, package_name=None, extract_passwords=None):
+    def add_links(links=None, package_name=None, extract_passwords=None, ignore_plugins=[]):
         """
         links:
             ["link1", "link2", ...]
@@ -116,7 +116,7 @@ class Interface(interface.Interface):
             package_name and extract_passwords are optional
             extract_passwords is a list of possible extract passwords
         """
-        return add_links(links, package_name, extract_passwords)
+        return add_links(links, package_name, extract_passwords, ignore_plugins=ignore_plugins)
         
     def accept_collected(file_filter=None, **filter):
         """accepts collected packages
