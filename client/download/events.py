@@ -208,8 +208,11 @@ def account_created(e, account):
 # account deleted/disabled event
 
 @event.register('account:deleted')
+def on_accounts_deleted(account, *args, **kwargs):
+    on_account_changed(account)
+
 @account.Account.enabled.changed
-def accounts_changed(account, *args, **kwargs):
+def on_account_changed(account, *args, **kwargs):
     if not account._table_deleted and account.enabled:
         return
     for f in working_downloads:
