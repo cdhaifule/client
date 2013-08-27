@@ -26,23 +26,23 @@ class Splash(Tk):
         Tk.__init__(self)
 
         # frame
-        frame = Frame(self, padx=10, pady=10, bd=1, relief=RAISED)
-        frame.pack()
+        self.frame = Frame(self, padx=10, pady=10, bd=1, relief=RAISED)
+        self.frame.pack()
 
         # logo
         logo = Image.open(os.path.join(settings.img_dir, 'logo_big.png'))
         logo = logo.convert('RGBA')
         r, g, b, logo_alpha = logo.split()
 
-        # loading image
+        # load image
         self.angle = 0
         circle = Image.open(os.path.join(settings.img_dir, 'circle_big.png'))
         circle = circle.convert('RGBA')
         img = ImageTk.PhotoImage(circle, master=self)
-        self.w = Label(frame, image=img, padx=5, pady=5)
-        self.w.image = img
-        self.w.pack()
 
+        # status text
+        self.text = StringVar()
+        
         # center window to screen
         x = (self.winfo_screenwidth() - img.width()) // 2
         y = (self.winfo_screenheight() - img.height()) // 2
@@ -62,7 +62,12 @@ class Splash(Tk):
             img = ImageTk.PhotoImage(img, master=self)
             self.angles.append(img)
 
+        self.w = Label(self.frame, padx=5, pady=5)
+        self.w.image = img
+        self.w.pack()
+        
         self.greenlet = gevent.spawn_later(0.015, self.animate)
+        self.info_greenlet = gevent.spawn_later(10, self.show_info)
 
     def animate(self):
         self.index += 1
@@ -76,10 +81,14 @@ class Splash(Tk):
             self.angle = 0
         self.greenlet = gevent.spawn_later(0.02, self.animate)
 
+    def show_info(self):
+        w = Label(self.frame, textvariable=self.text, padx=5, pady=5)
+        w.pack()
+        self.update()
+
     def set_text(self, text):
-        pass
-        #self.text.set(text)
-        #self.update()
+        self.text.set('\n'.join(text.split(': ', 1)))
+        self.update()
 
     def show(self):
         self.deiconify()
@@ -90,4 +99,6 @@ class Splash(Tk):
 
     def close(self):
         self.greenlet.kill()
+        if self.info_greenlet:
+            self.info_greenlet.kill()
         self.destroy()

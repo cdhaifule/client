@@ -653,7 +653,7 @@ class FileDownload(object):
         if isinstance(input, DownloadFunction) or hasattr(input, "process"):
             dlfunc = input
         else:
-            # use default download function. dlfunc is a stream
+            # use default download function. input is a stream
             dlfunc = DownloadFunction(input)
 
         dlfunc.chunk = chunk
