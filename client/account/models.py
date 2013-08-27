@@ -618,7 +618,7 @@ class Http(object):
     on_download_next_decorator = on_download_decorator
 
 
-class Multi(object):
+class MultiAccount(PremiumAccount):
     multi_account = Column('api')
     compatible_hostnames = Column('api')
 
@@ -626,8 +626,9 @@ class Multi(object):
     compatible_hosts = []   # regex matched hosts
 
     def __init__(self, *args, **kwargs):
+        PremiumAccount.__init__(self, *args, **kwargs)
         self.multi_account = True
-
+    
     def set_compatible_hosts(self, hosts):
         self.compatible_plugins = []
         self.compatible_hosts = []
@@ -674,33 +675,14 @@ class HttpPremiumAccount(Http, PremiumAccount):
         PremiumAccount.on_reset(self)
         Http.on_reset(self)
 
-
-class MultiAccount(Multi, Account):
+class HttpMultiAccount(Http, MultiAccount):
+    
     def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        Account.__init__(self, *args, **kwargs)
-
-class MultiHosterAccount(Multi, HosterAccount):
-    def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        HosterAccount.__init__(self, *args, **kwargs)
-
-class MultiHttpAccount(Multi, HttpAccount):
-    def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        HttpAccount.__init__(self, *args, **kwargs)
-
-class MultiHttpHosterAccount(Multi, HttpHosterAccount):
-    def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        HttpHosterAccount.__init__(self, *args, **kwargs)
-
-class MultiPremiumAccount(Multi, PremiumAccount):
-    def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        HttpPremiumAccount.__init__(self, *args, **kwargs)
-
-class MultiHttpPremiumAccount(Multi, HttpPremiumAccount):
-    def __init__(self, *args, **kwargs):
-        Multi.__init__(self, *args, **kwargs)
-        HttpPremiumAccount.__init__(self, *args, **kwargs)
+        MultiAccount.__init__(self, *args, **kwargs)
+        Http.__init__(self)
+        self.multi_account = True
+        
+        
+    def on_reset(self):
+        MultiAccount.on_reset(self)
+        Http.on_reset(self)

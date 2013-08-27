@@ -75,14 +75,18 @@ def get_download_context(file):
             download_next_func=this.on_download_premium_next,
             can_resume=this.can_resume_premium)
     else:
+        print "try to use multiaccount", this.name, file.retry_num
         if file.retry_num == 0:
             # check if we have a multi hoster premium account
             def multi_match(acc, hostname):
+                print "multi_match:", hostname, this.name
+                print acc.compatible_plugins
                 if not this.name in acc.compatible_plugins:
                     return False
                 return True
 
             acc = util.get_multihoster_account('download', multi_match, file)
+            print "acc is:", acc
             if acc:
                 try:
                     file.log.info('trying multihoster {}'.format(acc.name))

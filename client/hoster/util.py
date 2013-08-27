@@ -147,12 +147,14 @@ def serialize_html_form(form):
 
 def get_multihoster_account(task, multi_match, file):
     if not account.config.use_useraccounts:
+        print "No multiaccount: use_useraccounts is False"
         return
     
     group = Group()
     for pool in account.manager.values():
         for acc in pool:
             if acc.multi_account:
+                print "Booting Multiaccount:", acc.name
                 group.spawn(acc.boot)
     group.join()
 
@@ -162,12 +164,16 @@ def get_multihoster_account(task, multi_match, file):
     for pool in account.manager.values():
         for acc in pool:
             if acc._private_account:
+                print "Skip account: _private_account", acc.name
                 continue
             if not acc.multi_account:
+                print "Skip account: no multi_account", acc.name
                 continue
             if hasattr(acc, 'premium') and not acc.premium:
+                print "Skip account: no premium", acc.name
                 continue
             if not multi_match(acc, hostname):
+                print "Skip account: no match", acc.name
                 continue
             try:
                 weight = acc.weight
@@ -186,6 +192,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
+    else:
+        print "multi: no accounts found"
 
 ######## premium accounts...
 

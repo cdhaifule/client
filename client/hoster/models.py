@@ -177,19 +177,12 @@ class HttpPremiumHoster(_Http, PremiumHoster):
     defaults = _Http.defaults + PremiumHoster.defaults
     account_model = account.HttpPremiumAccount
 
-
-class MultiHoster(Hoster):
+class MultiHoster(PremiumHoster):
     multihoster = True
     account_model = account.MultiAccount
 
-class MultiHttpHoster(HttpHoster):
+class MultiHttpHoster(HttpPremiumHoster):
     multihoster = True
-    account_model = account.MultiHttpAccount
+    account_model = account.HttpMultiAccount
 
-class MultiPremiumHoster(PremiumHoster):
-    multihoster = True
-    account_model = account.MultiPremiumAccount
-
-class MultiHttpPremiumHoster(HttpPremiumHoster):
-    multihoster = True
-    account_model = account.MultiHttpPremiumAccount
+MultiHttpPremiumHoster = MultiHttpHoster
