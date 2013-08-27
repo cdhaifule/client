@@ -39,9 +39,6 @@ class Splash(Tk):
         circle = Image.open(os.path.join(settings.img_dir, 'circle_big.png'))
         circle = circle.convert('RGBA')
         img = ImageTk.PhotoImage(circle, master=self)
-        self.w = Label(self.frame, image=img, padx=5, pady=5)
-        self.w.image = img
-        self.w.pack()
 
         # status text
         self.text = StringVar()
@@ -65,6 +62,10 @@ class Splash(Tk):
             img = ImageTk.PhotoImage(img, master=self)
             self.angles.append(img)
 
+        self.w = Label(self.frame, padx=5, pady=5)
+        self.w.image = img
+        self.w.pack()
+        
         self.greenlet = gevent.spawn_later(0.015, self.animate)
         self.info_greenlet = gevent.spawn_later(10, self.show_info)
 
