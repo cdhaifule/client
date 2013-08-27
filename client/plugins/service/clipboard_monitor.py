@@ -143,6 +143,9 @@ def read_links(data):
 
 class ClipboardMonitor(service.ServicePlugin):
     default_enabled = False
+    def __init__(self, name):
+        service.ServicePlugin.__init__(self, name)
+        self.config.default("ignore_plugins", list(), list, description="List of ignored plugins for clipboard monitor.")
     
     def run(self):
         if not callable(paste):
@@ -162,7 +165,8 @@ class ClipboardMonitor(service.ServicePlugin):
                     core.add_links(links, ignore_plugins=['http', 'ftp'])
         self.log.info("stopped")
 
-service.register(ClipboardMonitor('clipboard_monitor'))
+cpmonitor = ClipboardMonitor('clipboard_monitor')
+service.register(cpmonitor)
 
 @interface.register
 class Interface(interface.Interface):
@@ -182,4 +186,4 @@ class Interface(interface.Interface):
             data = paste()
             links = read_links(data)
             if links:
-                core.add_links(links, ignore_plugins=ignore_plugins)
+                core.add_links(links, ignore_plugins=ignore_plugins or cpmonitor.config.ignore_plugins)

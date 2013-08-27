@@ -36,7 +36,8 @@ from ..contrib import contentdisposition
 from .manager import add as register, find, find_by_name, collect_links
 from . import manager, search
 from .this import host
-from .models import Hoster, HttpHoster, PremiumHoster, HttpPremiumHoster, MultiHoster, MultiHttpHoster, MultiPremiumHoster, MultiHttpPremiumHoster, cfg
+from .models import Hoster, HttpHoster, PremiumHoster, HttpPremiumHoster, \
+    MultiHoster, MultiHttpHoster, MultiHttpPremiumHoster, cfg
 from .util import http_response_errors, _get_content_range_bytes, \
     http_response, serialize_html_form, get_multihoster_account, localctx, \
     buy_premium, check_download_url, find_favicon, generate_icon, add_extra, \
