@@ -68,7 +68,7 @@ def spawn_tasks(e):
                 if pool.full():
                     return
 
-def _spawn_task(file, blocked_hosts):
+def _spawn_task(file, blocked_hosts, retry=False):
     if file.state != 'download':
         return False
     if not file.enabled:
@@ -169,6 +169,13 @@ def _spawn_task(file, blocked_hosts):
             except:
                 pass
 
+    if file.account is None: # this can happen during a race condition
+        if retry:
+            file.log.warning(u'account of file becomes null, even after retry. spawning file later')
+            return False
+        else:
+            _spawn_task(file, blocked_hosts, True)
+
     file.log.debug(u'downloading {} via account {} {}'.format(file.url, file.account.name, file.account.id))
 
     with transaction:
@@ -176,7 +183,7 @@ def _spawn_task(file, blocked_hosts):
         file.spawn(download_file, file)
         pool.add(file.greenlet)
         file.host.download_pool.add(file.greenlet)
-        file.account.download_pool.add(file.greenlet) # http://patch.download.am/errors#ea5defd
+        file.account.download_pool.add(file.greenlet)
 
     return True
 
