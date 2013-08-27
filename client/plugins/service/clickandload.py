@@ -91,7 +91,7 @@ def add_dialog(count):
     global _dialog_open
     try:
         from ... import input
-        if cnl_service.config.add or True: # skip the dialog
+        if cnl_service.config.add:
             return True
         try:
             elements = list()
@@ -135,6 +135,7 @@ class ClickAndLoad(service.ServicePlugin):
         service.ServicePlugin.__init__(self, name)
         self.config.default("add", False, bool, description="Always add the links without asking.")
         self.config.default("add_block_for", 5, int, description="Block the clickandload feature for this amount of seconds.")
+
     def stop(self):
         if self.server:
             try:
