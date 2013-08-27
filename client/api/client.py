@@ -188,7 +188,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                         self.connection_state.put(msg)
                     else:
                         log.info(msg)
-                ty:
+                try:
                     self.send_message(message_key)
                     self.send_message(message)
                 except AttributeError:
