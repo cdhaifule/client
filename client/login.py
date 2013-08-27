@@ -47,7 +47,7 @@ config.default('save_password', True, bool, private=True)
 hashes = dict()
 for h in hash_types:
     hashes[h] = None
-    config.hashes.default('login', None, str, private=True)
+    config.hashes.default(h, None, str, private=True)
 
 _config_loaded = False
 
