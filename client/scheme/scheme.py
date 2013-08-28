@@ -46,35 +46,35 @@ def _patch_method(dst, cls, name):
 class PatchedObject(object):
     pass
 
-_patch_method(PatchedObject, set, '__delattr__')
-_patch_method(PatchedObject, set, '__isub__')
-_patch_method(PatchedObject, set, '__ixor__')
-_patch_method(PatchedObject, set, '__rand__')
-_patch_method(PatchedObject, set, '__reduce__')
-_patch_method(PatchedObject, set, '__ror__')
-_patch_method(PatchedObject, set, '__rsub__')
-_patch_method(PatchedObject, set, '__rxor__')
-_patch_method(PatchedObject, set, '__setattr__')
-_patch_method(PatchedObject, set, '__sub__')
-_patch_method(PatchedObject, set, '__xor__')
-_patch_method(PatchedObject, set, 'add')
-_patch_method(PatchedObject, set, 'clear')
-_patch_method(PatchedObject, set, 'difference')
-_patch_method(PatchedObject, set, 'difference_update')
-_patch_method(PatchedObject, set, 'discard')
-_patch_method(PatchedObject, set, 'intersection')
-_patch_method(PatchedObject, set, 'intersection_update')
-_patch_method(PatchedObject, set, 'pop')
-_patch_method(PatchedObject, set, 'remove')
-_patch_method(PatchedObject, set, 'symmetric_difference')
-_patch_method(PatchedObject, set, 'symmetric_difference_update')
-_patch_method(PatchedObject, set, 'union')
-_patch_method(PatchedObject, set, 'update')
+class PatchedSet(PatchedObject, set):
+    def __init__(self, col, *args, **kwargs):
+        self.__dict__['_table_column'] = col
+        set.__init__(self, *args, **kwargs)
 
-_patch_method(PatchedObject, dict, '__delattr__')
-_patch_method(PatchedObject, dict, '__delitem__')
-_patch_method(PatchedObject, dict, '__setattr__')
-_patch_method(PatchedObject, dict, '__setitem__')
+_patch_method(PatchedSet, set, '__isub__')
+_patch_method(PatchedSet, set, '__ixor__')
+_patch_method(PatchedSet, set, '__rand__')
+_patch_method(PatchedSet, set, '__reduce__')
+_patch_method(PatchedSet, set, '__ror__')
+_patch_method(PatchedSet, set, '__rsub__')
+_patch_method(PatchedSet, set, '__rxor__')
+_patch_method(PatchedSet, set, '__sub__')
+_patch_method(PatchedSet, set, '__xor__')
+_patch_method(PatchedSet, set, 'add')
+_patch_method(PatchedSet, set, 'clear')
+_patch_method(PatchedSet, set, 'difference')
+_patch_method(PatchedSet, set, 'difference_update')
+_patch_method(PatchedSet, set, 'discard')
+_patch_method(PatchedSet, set, 'intersection')
+_patch_method(PatchedSet, set, 'intersection_update')
+_patch_method(PatchedSet, set, 'pop')
+_patch_method(PatchedSet, set, 'remove')
+_patch_method(PatchedSet, set, 'symmetric_difference')
+_patch_method(PatchedSet, set, 'symmetric_difference_update')
+_patch_method(PatchedSet, set, 'union')
+_patch_method(PatchedSet, set, 'update')
+_patch_method(PatchedSet, set, '__delattr__')
+_patch_method(PatchedSet, set, '__setattr__')
 
 class PatchedList(PatchedObject, list):
     def __init__(self, col, *args, **kwargs):
@@ -94,6 +94,10 @@ _patch_method(PatchedList, list, '__iadd__')
 _patch_method(PatchedList, list, '__imul__')
 _patch_method(PatchedList, list, '__rmul__')
 _patch_method(PatchedList, list, '__setslice__')
+_patch_method(PatchedList, list, '__delattr__')
+_patch_method(PatchedList, list, '__setattr__')
+_patch_method(PatchedList, list, '__delitem__')
+_patch_method(PatchedList, list, '__setitem__')
 
 class PatchedDict(PatchedObject, dict):
     def __init__(self, col, *args, **kwargs):
@@ -106,6 +110,10 @@ _patch_method(PatchedDict, dict, 'pop')
 _patch_method(PatchedDict, dict, 'popitem')
 _patch_method(PatchedDict, dict, 'setdefault')
 _patch_method(PatchedDict, dict, 'update')
+_patch_method(PatchedDict, dict, '__delattr__')
+_patch_method(PatchedDict, dict, '__setattr__')
+_patch_method(PatchedDict, dict, '__delitem__')
+_patch_method(PatchedDict, dict, '__setitem__')
 
 def patch(col, value):
     if isinstance(value, PatchedObject):
@@ -114,6 +122,8 @@ def patch(col, value):
         return PatchedList(col, value)
     elif isinstance(value, dict):
         return PatchedDict(col, value)
+    elif isinstance(value, set):
+        return PatchedSet(col, value)
     else:
         return value
 
