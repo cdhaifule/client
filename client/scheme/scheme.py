@@ -38,7 +38,7 @@ def _patch_method(dst, cls, name):
     def func(self, *args, **kwargs):
         if self._table_column.table._table_deleted:
             raise TransactionError('trying to set value on a deleted table')
-        transaction.set_dirty(self._table_column)
+        transaction.set_dirty(self._table_column) # can this cause an exception with foreign keys?
         return fn(self, *args, **kwargs)
 
     setattr(dst, name, func)

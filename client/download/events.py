@@ -81,6 +81,8 @@ def _spawn_task(file, blocked_hosts, retry=False):
         return False
     if file.last_error:
         return False
+    if file.name is None: # do not download files without name (any soltion for that?)
+        return False
     if file.host in blocked_hosts:
         return False
     if file.host.download_pool.full():

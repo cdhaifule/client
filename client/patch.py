@@ -587,6 +587,9 @@ def restart_app():
         except input.InputError:
             log.exception('input was aborted')
             result = 'later'
+        except BaseException as e:
+            log.exception('input was aborted due to exception: {}'.format(e))
+            result = 'later'
         break
     if result == 'never':
         log.info('will not restart to apply the update')

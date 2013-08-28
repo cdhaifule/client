@@ -22,8 +22,6 @@ import struct
 
 from functools import partial
 
-import gevent
-
 from ... import fileplugin
 from ...scheme import intervalled
 
@@ -40,8 +38,6 @@ class ProgressTrack(intervalled.Cache):
         self.updated = 0
         self.total = total
         self.file = file
-        self.async = gevent.get_hub().loop.async()
-        #self.async.start(self.update_file)
         self.start()
         
     def start(self):
@@ -54,7 +50,6 @@ class ProgressTrack(intervalled.Cache):
     def update(self, data):
         self.check.update(data)
         self.updated += len(data)
-        #self.async.send() # runs in thread, async updates call update_file
         
     def close(self):
         # update end state in file

@@ -231,7 +231,7 @@ class Package(Table):
         return self.files and list(set(file.host.name for file in self.files if file.host)) or list()
     
     def on_get_size(self, value):
-        return self.files and sum(f.get_any_size() or 0 for f in self.files) or 0
+        return sum((f.get_any_size() or 0) for f in self.files) if self.files else 0
 
     def on_get__progress(self, value):
         files = {f.get_download_file(): f for f in self.files if f._max_progress and f.enabled}.values()

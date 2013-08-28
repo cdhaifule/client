@@ -78,7 +78,7 @@ def init():
     @login.config.register('username')
     def update_username():
         #options[0] = (login.config.username or _X("Open"), bmp_factory('open'), lambda _: event.call_from_thread(open_browser))
-        options[0] = (_X("Open"), bmp_factory('open'), lambda *_ : event.call_from_thread(common.open_browser))
+        options[0] = (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser))
 
     thread = threadpool.ThreadPool(1)
     options = [
