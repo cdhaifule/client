@@ -25,6 +25,7 @@ from functools import partial
 import gevent
 
 from ... import fileplugin
+from ...scheme import intervalled
 
 name = 'checksum'
 priority = 50
@@ -33,40 +34,42 @@ config.default('enabled', True, bool)
 
 algorithms = set(hashlib.algorithms)
 
-class ProgressTrack(object):
+class ProgressTrack(intervalled.Cache):
     def __init__(self, check, file, total):
         self.check = check
         self.updated = 0
         self.total = total
         self.file = file
         self.async = gevent.get_hub().loop.async()
-        self.async.start(self.update_file)
+        #self.async.start(self.update_file)
         self.start()
         
     def start(self):
         # setup file state that it is checked
         self.file.init_progress(self.total)
         
-    def update_file(self):
+    def commit(self):
         self.file.set_progress(self.updated)
         
     def update(self, data):
         self.check.update(data)
         self.updated += len(data)
-        self.async.send() # runs in thread, async updates call update_file
+        #self.async.send() # runs in thread, async updates call update_file
         
     def close(self):
         # update end state in file
         if self.check.hexdigest() != self.file.hash_value:
+            print self.file.get_download_file()
             print "Checked:", self.check.hexdigest()
             print "Set:", self.file.hash_value
-            self.file.fatal('error while checking file checksum')
+            self.file.fatal('file checksum invalid')
             
 class CRC32(object):
     """hashlib compatible interface to crc32"""
     name = 'crc32'
     digest_size = 4
     block_size = 64
+
     def __init__(self, init=""):
         self._hash = 0
         self.update(init)
@@ -86,6 +89,8 @@ hashlib.crc32 = CRC32
 def hashfile(path, check, bs=64*1024):
     with open(path) as f:
         for data in iter(partial(f.read, bs), ""):
+            if not data:
+                break
             check.update(data)
 
 def match(path, file):
@@ -111,6 +116,7 @@ def process(path, file, hddsem, threadpool):
             hash_func = getattr(hashlib, file.hash_type)()
         else:
             hash_func = hashlib.new(file.hash_type)
-        tracker = ProgressTrack(hash_func, file, size)
-        threadpool.spawn(hashfile, path, tracker).wait()
-        tracker.close()
+
+        with ProgressTrack(hash_func, file, size) as tracker:
+            threadpool.spawn(hashfile, path, tracker).wait()
+            tracker.close()
