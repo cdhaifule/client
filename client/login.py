@@ -36,7 +36,7 @@ from Crypto import Random
 
 log = logger.get("login")
 
-hash_types = ['login', 'frontend', 'backend', 'client', 'protected', 'gasecret']
+hash_types = ['login', 'frontend', 'backend', 'client', 'protected']
 
 config = globalconfig.new('login')
 config.default('first_start', None, dict, private=True)
@@ -75,9 +75,6 @@ def hash_protected(password, hash_frontend):
 def hash_client(hash_login, hash_frontend):
     return sha256(hash_login + hash_frontend)
 
-def hash_gasecret(*args):
-    return sha256("".join(args))[:16].upper()
-
 def set_login(username, password, save_password=True):
     global _config_loaded, is_guest
     is_guest = False
@@ -94,7 +91,6 @@ def set_login(username, password, save_password=True):
             hashes['backend'] = None
             hashes['protected'] = hash_protected(password, hashes['frontend'])
             hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
-            hashes['gasecret'] = hash_gasecret(hashes['login'], hashes['frontend'], hashes['protected'])
 
             if save_password:
                 for h in hash_types:
@@ -389,7 +385,6 @@ class LoginInterface(interface.Interface):
         hashes['backend'] = backend
         hashes['protected'] = protected
         hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
-        hashes['gasecret'] = hash_gasecret(hashes['login'], hashes['frontend'], hashes['protected'])
 
         if config['save_password']:
             for h in hash_types:

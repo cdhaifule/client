@@ -23,10 +23,7 @@ from . import event, logger
 
 ignore_protected_functions = False
 
-try:
-    import pyotp
-except ImportError:
-    pyotp = False
+pyotp = False
 
 log = logger.get('interface')
 
@@ -114,9 +111,7 @@ def protected(func):
             if guest_protected_dialog():
                 return func(*args, **kwargs)
         if pyotp and protected_key.isdigit():
-            totp = pyotp.TOTP(login.get("gasecret"))
-            if totp.verify(int(protected_key)):
-                return func(*args, **kwargs)
+            raise NotImplementedError()
         if protected_key != login.get('protected'):
             raise ValueError('Invalid protected key')
         return func(*args, **kwargs)
