@@ -248,6 +248,9 @@ class Account(Table, ErrorFunctions, InputFunctions):
     def waiting_time(self):
         return self.hoster.waiting_time
 
+    def on_check_decorator(self, func, *args, **kwargs):
+        return func(*args, **kwargs)
+
     def on_download_decorator(self, func, *args, **kwargs):
         return func(*args, **kwargs)
 
