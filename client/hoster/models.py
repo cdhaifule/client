@@ -150,6 +150,7 @@ class Hoster(object):
                     f = wrap(self, f)
                 return f
         try:
+            localctx.hoster = None
             return getattr(self.module.this, item)
         except AttributeError:
             raise AttributeError("plugin '{}' has no attribute '{}'".format(self.name, item))
