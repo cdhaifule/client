@@ -142,6 +142,8 @@ class Context(object):
     def input_input_checkbox(self, e):
         var = IntVar(master=self.frame)
         self.master.serialized[e.name] = lambda: var.get() and True or False
+        if e.default is not None:
+            var.set(e.default)
         w = Checkbutton(self.frame, text=self.compile_text(e.label), variable=var)
         self.pack_element(w)
 

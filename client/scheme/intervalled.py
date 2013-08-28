@@ -34,6 +34,7 @@ class Cache(object):
     def __enter__(self):
         objects.append(self)
         event.fire_once_later(config and config["commit"] or 1.0, 'scheme.intervalled:commit')
+        return self
     enter = __enter__
 
     def __exit__(self, *args):

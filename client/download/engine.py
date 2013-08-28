@@ -51,7 +51,7 @@ config.default('rate_limit', 0, int)
 @config.register('max_simultan_downloads')
 def config_max_simultan_downloads(value):
     if value <= 0:
-        config.max_simultan_downloads = 0
+        config.max_simultan_downloads = 1
     if value > 20:
         config.max_simultan_downloads = 20
     pool.set(config.max_simultan_downloads)
@@ -412,10 +412,8 @@ class FileDownload(object):
         
         self.file.log.debug('download complete')
 
-        if self.file.filehandle.f is not None:
-            self.log.critical('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
-        elif self.file.filehandle.refcount != 0:
-            self.log.critical('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
+        if self.file.filehandle is not None and self.file.filehandle.f is not None or self.file.filehandle.refcount != 0:
+            self.file.log.unhandled_exception('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
 
         download_file = self.file.get_download_file()
 

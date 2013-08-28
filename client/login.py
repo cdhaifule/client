@@ -85,7 +85,7 @@ def set_login(username, password, save_password=True):
 
     with transaction:
         config['username'] = username
-        if not save_password is None and save_password:
+        if save_password is not None and save_password:
             config['save_password'] = save_password
 
         if username is not None:
@@ -180,18 +180,24 @@ def encrypt(destination, data):
     else:
         return data
 
+source_decrypt_retries = dict()
+
 def decrypt(source, data):
     key = get(source)
     if key:
         try:
             return gibberishaes.decrypt(key, data)
         except:
-            logout()
+            source_decrypt_retries[source] = source_decrypt_retries.get(source, 0) + 1
+            if source_decrypt_retries[source] > 3:
+                source_decrypt_retries.clear()
+                logout()
             log.critical('encryption key for source {} seems to be invalid'.format(source))
-            if source == "backend":
-                sys.exit(1)
-            else:
-                raise
+            raise
+            #if source == "backend":
+            #    sys.exit(1)
+            #else:
+            #    raise
     else:
         return data
 
@@ -294,7 +300,6 @@ pub_key = RSA.importKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCoUVppotFnAvfVFmp
 pub_key = PKCS1_OAEP.new(pub_key)
 
 def init_first_start(retry=1, save_password=True):
-    print "!"*100, config.first_start
     if config.first_start is not None:
         config.username = config.first_start['username']
         for key in hash_types:

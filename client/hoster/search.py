@@ -106,7 +106,10 @@ class Context(object):
 
     @property
     def plugin(self):
-        plugin = manager.find_by_name(self.name)
+        try:
+            plugin = manager.find_by_name(self.name)
+        except KeyError:
+            plugin = None
         if plugin is None:
             raise ValueError('plugin {} not found'.format(self.name))
         return plugin

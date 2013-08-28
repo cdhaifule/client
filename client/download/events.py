@@ -62,6 +62,8 @@ def spawn_tasks(e):
             return
         if config.state != 'started':
             return
+        if pool.full():
+            return
         blocked_hosts = set()
         for file in core.files():
             if _spawn_task(file, blocked_hosts):
@@ -78,6 +80,8 @@ def _spawn_task(file, blocked_hosts, retry=False):
     if file.package.system == 'torrent':
         return False
     if file.last_error:
+        return False
+    if file.name is None: # do not download files without name (any soltion for that?)
         return False
     if file.host in blocked_hosts:
         return False
@@ -178,12 +182,12 @@ def _spawn_task(file, blocked_hosts, retry=False):
 
     file.log.debug(u'downloading {} via account {} {}'.format(file.url, file.account.name, file.account.id))
 
+    working_downloads.append(file)
     with transaction:
-        working_downloads.append(file)
         file.spawn(download_file, file)
-        pool.add(file.greenlet)
-        file.host.download_pool.add(file.greenlet)
-        file.account.download_pool.add(file.greenlet)
+    pool.add(file.greenlet)
+    file.host.download_pool.add(file.greenlet)
+    file.account.download_pool.add(file.greenlet)
 
     return True
 

@@ -231,7 +231,7 @@ class Package(Table):
         return self.files and list(set(file.host.name for file in self.files if file.host)) or list()
     
     def on_get_size(self, value):
-        return self.files and sum(f.get_any_size() or 0 for f in self.files) or 0
+        return sum((f.get_any_size() or 0) for f in self.files) if self.files else 0
 
     def on_get__progress(self, value):
         files = {f.get_download_file(): f for f in self.files if f._max_progress and f.enabled}.values()
@@ -829,16 +829,17 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def init_progress(self, max, init=0.0):
         self._max_progress = float(max)
-        with transaction:
-            self.progress = float(init)
+        if self.progress != init:
+            with transaction:
+                self.progress = float(init)
 
     def add_progress(self, current):
-        if not self.progress is None:
+        if self.progress is not None:
             with transaction:
                 self.progress += current
 
     def set_progress(self, current):
-        if not self.progress is None:
+        if self.progress is not None:
             with transaction:
                 if current < 0:
                     self.progress = self._max_progress + current
@@ -847,8 +848,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def reset_progress(self):
         self._max_progress = None
-        with transaction:
-            self.progress = None
+        if self.progress is not None:
+            with transaction:
+                self.progress = None
 
     ####################### speed
 

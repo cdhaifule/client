@@ -89,16 +89,16 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.connected_event.wait()
 
     def close(self):
+        if self.greenlet and gevent.getcurrent() != self.greenlet:
+            self.greenlet.kill()
         if self.io:
-            if self.greenlet and gevent.getcurrent() != self.greenlet:
-                self.greenlet.kill()
             io = self.io
             self.io = None
             try:
                 io.disconnect()
             except:
                 pass
-            log.info('\tclosed api connection')
+            log.info('closed api connection')
         self.disconnected_event.set()
 
     def on_connect(self, *args, **kwargs):
@@ -299,6 +299,10 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             else:
                 self.connect_retry = 0
 
+            sleep_time = (self.connect_retry + 1)*3
+            if sleep_time > 15:
+                sleep_time = 15
+
             if self.connection_state is not None:
                 self.connection_state.put('connecting')
             try:
@@ -315,7 +319,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 self.close()
                 event.fire('api:connection_error')
                 error = True
-                gevent.sleep(3)
+                gevent.sleep(sleep_time)
                 continue
             finally:
                 self.kill()
@@ -335,7 +339,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 log.error('error handshaking: {}'.format(str(e)))
                 self.close()
                 error = True
-                gevent.sleep(3)
+                gevent.sleep(sleep_time)
                 continue
             finally:
                 self.kill()
@@ -344,7 +348,9 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 log.warning('api bootstrap done but not connected. this is strange...')
                 if self.connection_state is not None:
                     self.connection_state.put('connection error')
-                gevent.sleep(3)
+                self.close()
+                error = True
+                gevent.sleep(sleep_time)
                 continue
 
             self.connect_retry = 0
@@ -356,7 +362,16 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 self.connection_state.put('sending infos')
             payload = interface.call('api', 'expose_all')
             message = proto.pack_message('frontend', 'api.expose_all', payload=payload)
-            self.send_message(message)
+            try:
+                self.send_message(message)
+            except AttributeError:
+                log.warning('api closed unexpected')
+                if self.connection_state is not None:
+                    self.connection_state.put('connection error')
+                self.close()
+                error = True
+                gevent.sleep(sleep_time)
+                continue
 
             self.connected_event.set()
             self.disconnected_event.clear()
