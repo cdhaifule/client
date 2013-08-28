@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import ssl
 from gevent import monkey
 monkey.patch_all(subprocess=True)
 
@@ -64,6 +65,7 @@ class MyHTTPConnectionPool(connectionpool.HTTPConnectionPool):
 
 class MyHTTPSConnectionPool(connectionpool.HTTPSConnectionPool):
     def __init__(self, host, port=None, strict=False, timeout=5, maxsize=adapters.DEFAULT_POOLSIZE, block=True, headers=None, key_file=None, cert_file=None, cert_reqs='CERT_NONE', ca_certs=None, ssl_version=None):
+        ssl_version = ssl.PROTOCOL_TLSv1
         block = True
         self.get_timeout = 1
         self.lock = Semaphore()

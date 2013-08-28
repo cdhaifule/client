@@ -247,19 +247,14 @@ def get_download_context(file):
     # check if we have a multi hoster account for this file
     acc = hoster.get_multihoster_account('download', multi_match, file)
     if acc:
-        try:
-            file.log.info('trying multihoster {}'.format(acc.name))
-            acc.hoster.get_download_context(file)
-        except gevent.GreenletExit:
-            raise
-        except BaseException as e:
-            log.exception(e)
-
-    # default http download
-    file.set_download_context(
-        account=this.get_account('download', file),
-        download_func=on_download,
-        download_next_func=this.on_download_next)
+        # context already set
+        return
+    else:
+        # default http download
+        file.set_download_context(
+            account=this.get_account('download', file),
+            download_func=on_download,
+            download_next_func=this.on_download_next)
 
 def on_download(chunk):
     return chunk.file.url

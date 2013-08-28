@@ -207,7 +207,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         finally:
             try:
                 del self.login_results[rid]
-            except:
+            except KeyError:
                 pass
             g.kill()
 
