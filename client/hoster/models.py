@@ -150,10 +150,22 @@ class Hoster(object):
                     f = wrap(self, f)
                 return f
         try:
-            localctx.hoster = None
             return getattr(self.module.this, item)
-        except AttributeError:
+        except (AttributeError, RuntimeError):
+            _safe = localctx.hoster
+            # cross call from module that does not have attributes
+            # fallback to this hoster instead of original caller
+            localctx.hoster = None
+            try:
+                res = getattr(self.module.this, item)
+            except (AttributeError, RuntimeError):
+                pass
+            else:
+                return res
+            finally:
+                localctx.hoster = _safe
             raise AttributeError("plugin '{}' has no attribute '{}'".format(self.name, item))
+    
     def chain(self, ignore_module=False):
         if not ignore_module:
             yield self.module
@@ -180,10 +192,12 @@ class HttpPremiumHoster(_Http, PremiumHoster):
 
 class MultiHoster(PremiumHoster):
     multihoster = True
+    defaults = [default_premium] + Hoster.defaults
     account_model = account.MultiAccount
 
 class MultiHttpHoster(HttpPremiumHoster):
     multihoster = True
+    defaults = _Http.defaults + PremiumHoster.defaults
     account_model = account.HttpMultiAccount
 
 MultiHttpPremiumHoster = MultiHttpHoster

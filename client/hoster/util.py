@@ -153,6 +153,8 @@ def get_multihoster_account(task, multi_match, file):
     for pool in account.manager.values():
         for acc in pool:
             if acc.multi_account:
+                from . import manager
+                acc.hoster = manager.find_by_name(acc.name)
                 group.spawn(acc.boot)
     group.join()
 
@@ -172,6 +174,7 @@ def get_multihoster_account(task, multi_match, file):
             try:
                 weight = acc.weight
             except gevent.GreenletExit:
+                print "greenlet exit"
                 continue
             if weight > best_weight:
                 accounts = []
@@ -186,8 +189,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
-    #else:
-    #    print "multi: no accounts found"
+    else:
+        print "multi: no accounts found"
 
 ######## premium accounts...
 

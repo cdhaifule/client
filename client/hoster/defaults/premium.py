@@ -56,8 +56,9 @@ class this:
 def can_download(file):
     return True
 
-def get_download_context(file):
-    file.set_download_context(account=this.get_account('download', file))
+def get_download_context(file, account=None):
+    account = account or this.get_account('download', file)
+    file.set_download_context(account=account)
 
     premium = file.account.premium
     if premium:

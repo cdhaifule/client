@@ -123,20 +123,21 @@ def on_check(file):
     # check if we have a multi hoster account for this file
     acc = hoster.get_multihoster_account('check', multi_match, file)
     if acc:
+        oldacc = file.account
         try:
-            file.log.info('trying multihoster {}'.format(acc.name))
-            acc.hoster.on_check(file)
+            file.log.info('trying multihoster {}, on_check of {}'.format(acc.name, file.url))
+            acc.hoster.get_download_context(file, acc)
+            return acc.hoster.on_check(file)
         except gevent.GreenletExit:
             raise
         except BaseException as e:
             log.exception(e)
+            file.account = oldacc
 
     # default check code
     with closing(file.account.get(file.url, referer=file.referer, stream=True)) as resp:
         if resp.status_code in (301, 302, 303, 307):
-            core.add_links([hoster.urljoin(file.url, resp.headers['Location'])])
-            file.delete_after_greenlet()
-            return
+            return [hoster.urljoin(file.url, resp.headers['Location'])]
         hoster.http_response_errors(file, resp)
 
         content_type = None
