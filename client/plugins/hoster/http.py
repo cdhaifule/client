@@ -220,7 +220,8 @@ def _on_check_crawl(file, resp, content_type, content_length, content_dispositio
         if host:
             link['host'], link['pmatch'] = host
             hoster_links.append(link)
-        elif re.search(r'\.(jpe?g|gif|png|avi|flv|mkv|rar|zip|vob|srt|sub|mp3|mp4|ogg|opus)$', url):
+        #elif re.search(r'\.(jpe?g|gif|png|avi|flv|mkv|rar|zip|vob|srt|sub|mp3|mp4|ogg|opus)$', url):
+        elif re.search(r'\.(avi|flv|mkv|rar|zip|vob|srt|sub|mp3|mp4|ogg|opus)$', url):
             anonymous_links.append(link)
 
     if hoster_links:
