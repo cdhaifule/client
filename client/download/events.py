@@ -62,6 +62,8 @@ def spawn_tasks(e):
             return
         if config.state != 'started':
             return
+        if pool.full():
+            return
         blocked_hosts = set()
         for file in core.files():
             if _spawn_task(file, blocked_hosts):

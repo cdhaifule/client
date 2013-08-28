@@ -51,7 +51,7 @@ config.default('rate_limit', 0, int)
 @config.register('max_simultan_downloads')
 def config_max_simultan_downloads(value):
     if value <= 0:
-        config.max_simultan_downloads = 0
+        config.max_simultan_downloads = 1
     if value > 20:
         config.max_simultan_downloads = 20
     pool.set(config.max_simultan_downloads)
