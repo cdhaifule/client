@@ -442,6 +442,7 @@ class Package(Table):
                 continue
             if value:
                 value = u' - {}'.format(value)
+            # TODO: handle files with name = None
             if self.name.endswith(value):
                 continue
             targets[value].append(file)

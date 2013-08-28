@@ -67,8 +67,12 @@ class AccountInterface(interface.Interface):
     def remove(id=None):
         """removes an account"""
         with transaction:
-            pool, account = manager.get_account_by_id(int(id))
-            pool.remove(account)
+            try:
+                pool, account = manager.get_account_by_id(int(id))
+            except ValueError:
+                pass # account already deleted (not found)
+            else:
+                pool.remove(account)
 
     def reset(id=None):
         """resets an account (logout and clear infos ...)"""

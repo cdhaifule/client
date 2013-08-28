@@ -49,7 +49,8 @@ class Interface(interface.Interface):
     def login(id=None, success=None, listen=None, err=None, c=None, ip=None, guest=None, authenticator=None):
         if id not in client.login_results:
             proto.log.critical('login request {} not found'.format(id))
-            return 'login request not found'
+            #return 'login request not found'
+            return
         if guest:
             from .. import login
             login.set_guest_state(True)

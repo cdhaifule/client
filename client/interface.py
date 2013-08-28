@@ -100,6 +100,8 @@ def guest_protected_dialog():
         result = 'cancel'
     except InputError:
         result = 'cancel'
+    except KeyError: # don't know why this can happen
+        result = 'cancel'
     return result == "ok"
 
 def protected(func):

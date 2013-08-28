@@ -89,7 +89,10 @@ class Reconnect(object):
             return 'already_connecting'
         if config["method"] is None:
             return 'method_not_set'
-        method = self.methods[config["method"]]
+        try:
+            method = self.methods[config["method"]]
+        except KeyError:
+            return 'unknown_method'
         if not method.is_configured():
             return 'method_not_set'
         reconnecting = self.reconnecting = True
