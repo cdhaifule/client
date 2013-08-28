@@ -829,16 +829,17 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def init_progress(self, max, init=0.0):
         self._max_progress = float(max)
-        with transaction:
-            self.progress = float(init)
+        if self.progress != init:
+            with transaction:
+                self.progress = float(init)
 
     def add_progress(self, current):
-        if not self.progress is None:
+        if self.progress is not None:
             with transaction:
                 self.progress += current
 
     def set_progress(self, current):
-        if not self.progress is None:
+        if self.progress is not None:
             with transaction:
                 if current < 0:
                     self.progress = self._max_progress + current
@@ -847,8 +848,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def reset_progress(self):
         self._max_progress = None
-        with transaction:
-            self.progress = None
+        if self.progress is not None:
+            with transaction:
+                self.progress = None
 
     ####################### speed
 

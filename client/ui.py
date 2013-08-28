@@ -89,7 +89,6 @@ def init(options=None):
     # start splash screen
     if hasattr(ui, 'Splash') and not options.disable_splash:
         splash = ui.Splash()
-
         event.add('loader:initialized', terminate_splash)
 
 def terminate():

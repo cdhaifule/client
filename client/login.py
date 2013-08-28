@@ -300,7 +300,6 @@ pub_key = RSA.importKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCoUVppotFnAvfVFmp
 pub_key = PKCS1_OAEP.new(pub_key)
 
 def init_first_start(retry=1, save_password=True):
-    print "!"*100, config.first_start
     if config.first_start is not None:
         config.username = config.first_start['username']
         for key in hash_types:
