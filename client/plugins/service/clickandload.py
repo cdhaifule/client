@@ -97,11 +97,12 @@ def add_dialog(count):
             elements = list()
             elements.append(input.Text(["An external website wants to add #{count} links.", dict(count=count)]))
             elements.append(input.Input('always_add', 'checkbox', default=False, label='Always add links without asking.'))
-            elements.append(input.Choice('answer',
+            elements.append(
+                input.Choice('answer',
                 choices=[
-                    {"value": "true", "content": "Add"}, 
+                    {"value": "true", "content": "Add"},
                     {"value": "false", "content": "Discard once"},
-                    {"value": "stop", "content": "Stop service"}
+                    #{"value": "stop", "content": "Stop service"}
                 ]
             ))
             result = input.get(elements, type='remember_boolean')
@@ -135,6 +136,8 @@ class ClickAndLoad(service.ServicePlugin):
         service.ServicePlugin.__init__(self, name)
         self.config.default("add", False, bool, description="Always add the links without asking.")
         self.config.default("add_block_for", 5, int, description="Block the clickandload feature for this amount of seconds.")
+        if not self.config.enabled: # TODO: remove this and make config setting on website
+            self.config.enabled = True
 
     def stop(self):
         if self.server:

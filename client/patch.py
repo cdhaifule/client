@@ -1029,7 +1029,7 @@ class CoreSource(BasicPatchSource):
         self.basepath = settings.app_dir
 
     def on_get_version(self, value):
-        return reload(current).current[:7]
+        return current.current[:7]
 
     def on_set_version(self, value):
         # just ignore this call. version is set over current.py
