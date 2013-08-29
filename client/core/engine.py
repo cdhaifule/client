@@ -279,14 +279,15 @@ class Package(Table):
         return self.files and sum(f.chunks_working for f in self.files) or 0
 
     def on_get_working(self, value):
-        return any(True for f in self.files if f.working) if self.files else False
+        #return any(True for f in self.files if f.working) if self.files else False
+        return self.files_working > 0
 
     def on_get_tab(self, value):
         if self.state is None or self.state == 'collect' or self.files is None:
             return 'collect'
         if self.state == 'download':
             return self.system
-        if not self.enabled or any(True for f in self.files if f.working or (f.enabled and not f.state.endswith('_complete'))):
+        if not self.enabled or self.working or any(True for f in self.files if f.enabled and not f.state.endswith('_complete')):
             return self.system
         return 'complete'
 
@@ -491,7 +492,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     substate = Column('api', getter_cached=True, change_affects=['next_try', 'last_error'])
     last_substate = None
 
-    url = Column(('db', 'api'))
+    url = Column(('db', 'api'), getter_cached=True)
     extra = Column('db')
     referer = Column('db')
     hash_type = Column('db')

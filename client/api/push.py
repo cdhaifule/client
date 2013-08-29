@@ -78,7 +78,7 @@ class ApiListener(scheme.DelayedListener):
                     if t._private_account:
                         continue
                     if 'expires' in data and data['expires']:
-                        data['expires'] = int(data['expires']*1000)
+                        data['expires'] = int(data['expires'])*1000
 
                 elif data['table'] == 'input':
                     try:

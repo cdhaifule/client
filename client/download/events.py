@@ -212,7 +212,7 @@ def account_created(e, account):
 # account deleted/disabled event
 
 @event.register('account:deleted')
-def on_accounts_deleted(account, *args, **kwargs):
+def on_accounts_deleted(e, account, *args, **kwargs):
     on_account_changed(account)
 
 @account.Account.enabled.changed

@@ -754,7 +754,7 @@ class TorrentJob(Torrent):
 
             # check if download is complete
             #if any(f._state_download_incomplete or f.working for f in self.package.files if f.enabled and f.state == 'download'):
-            if any(f._state_download_incomplete or f.working for f in self.package.files):
+            if self.package.working or any(f._state_download_incomplete for f in self.package.files):
                 print "!"*100, 'finish called but rule not matching'
                 print "!"*100, 'finish called but rule not matching state', [g.state for g in self.package.files]
                 print "!"*100, 'finish called but rule not matching enabled', [g.enabled for g in self.package.files]
