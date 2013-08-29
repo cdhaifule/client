@@ -16,12 +16,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
+import traceback
 
 from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
 
-if sys.platform == "win32":
+try:
     import win32file, win32api
+    def get_free_space(path):
+        try:
+            path = os.path.dirname(path)
+            return win32file.GetDiskFreeSpaceEx(path)[0]
+        except OSError:
+            traceback.print_exc()
+            return
+
     def allocate_file(path, size):
         handle = win32file.CreateFile(path, win32file.GENERIC_WRITE, 
             win32file.FILE_SHARE_WRITE, None, 
@@ -29,12 +38,29 @@ if sys.platform == "win32":
         win32file.SetFilePointer(handle, size, win32file.FILE_BEGIN)
         win32file.SetEndOfFile(handle)
         win32api.CloseHandle(handle)
-else:
+except ImportError:
+    def get_free_space(path):
+        try:
+            path = os.path.dirname(path)
+            st = os.statvfs(path)
+            return st.f_bavail * st.f_frsize
+        except OSError:
+            traceback.print_exc()
+            return
+            
     def allocate_file(path, size):
         f = os.open(path, os.O_CREAT|os.O_RDWR)
         os.lseek(f, size - 1, os.SEEK_SET)
         os.write(f, b'\x00')
         os.close(f)
+
+def check_space(path, size):
+    free = get_free_space(path)
+    if free is None:
+        return
+    if free < (size + 100*1024*1024):
+        raise IOError(28, "Disk is full.")
+    
 
 open_lock = Semaphore()
 allocate_pool = ThreadPool(1)
@@ -65,6 +91,7 @@ class SeekingFile:
             if self.refcount == 0:
                 exists = os.path.exists(self.filepath)
                 if not exists and self.size and self.size > 1:
+                    check_space(self.filepath, self.size)
                     allocate_pool.apply(allocate_file, (self.filepath, self.size))
                 flags = os.O_RDWR | os.O_CREAT
                 if sys.platform == "win32":

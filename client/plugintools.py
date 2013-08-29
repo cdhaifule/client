@@ -302,9 +302,9 @@ class InputFunctions(object):
             elements = list()
             elements.append(input.Text(text))
             elements.append(input.Input('remember', 'checkbox', default=False, label='Remember decision?'))
-            elements.append(input.Choice('answer', choices=[{"value": "true", "content": "Yes"}, {"value": "false", "content": "No"}]))
+            elements.append(input.Choice('answer', choices=[{"value": "yes", "content": "Yes"}, {"value": "no", "content": "No"}]))
             result = input.get(elements, type='remember_boolean', parent=self, **kwargs)
-            return result.get('remember', False), result.get("answer", "false") == "true"
+            return result.get('remember', False), result.get("answer", "no") == "yes"
         except input.InputAborted:
             return None, None
         except input.InputTimeout:
