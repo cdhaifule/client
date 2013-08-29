@@ -20,7 +20,7 @@ import gevent
 import base64
 import webbrowser
 
-from Tkinter import Tk, Frame, Label, Checkbutton, OptionMenu, Button, StringVar, IntVar, Entry, FALSE, LEFT
+from Tkinter import Tk, Frame, Label, Checkbutton, Radiobutton, OptionMenu, Button, StringVar, IntVar, Entry, FALSE, LEFT
 from PIL import ImageTk
 
 from gevent.lock import Semaphore
@@ -146,6 +146,15 @@ class Context(object):
             var.set(e.default)
         w = Checkbutton(self.frame, text=self.compile_text(e.label), variable=var)
         self.pack_element(w)
+
+    def input_radio(self, e):
+        var = StringVar(master=self.frame)
+        self.master.serialized[e.name] = var.get
+        var.set(e.value[0][0] if e.default is None else e.default)
+        for value, text in e.value:
+            w = Radiobutton(self.frame, text=self.compile_text(text), variable=var, value=value)
+            self.pack_element(w)
+            self.row += 1
 
     def input_select_dropdown(self, e):
         var = StringVar(master=self.frame)

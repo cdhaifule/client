@@ -26,6 +26,9 @@ from .... import event
 
 def relogin(*_):
     logout()
+
+def select_browser(*_):
+    event.fire('registry:select_browser', True)
     
 def _open_browser(*_):
     webbrowser.open_new_tab(get_sso_url())

@@ -38,7 +38,7 @@ from types import GeneratorType
 
 pre_objects = ['settings', 'event', 'logger', 'localize', 'config', 'db', 'interface', 'localrpc']
 main_objects = ['ui']
-post_objects = ['proxy', 'patch', 'login', 'api', 'ratelimit', 'reconnect', 'hoster', 'account', 'fileplugin', 'core', 'check', 'torrent', 'download', 'service', 'browser']
+post_objects = ['proxy', 'patch', 'registry', 'login', 'api', 'ratelimit', 'reconnect', 'hoster', 'account', 'fileplugin', 'core', 'check', 'torrent', 'download', 'service', 'browser']
 
 ui = None
 log = None
@@ -211,7 +211,8 @@ def terminate():
     for obj in reversed(pre_objects + main_objects + post_objects):
         if hasattr(obj, 'terminate'):
             name = re.sub(r'^client\.', '', obj.__name__)
-            log.debug('terminating module {}'.format(name))
+            if log:
+                log.debug('terminating module {}'.format(name))
             try:
                 obj.terminate()
             except (AssertionError, SystemExit, KeyboardInterrupt, gevent.GreenletExit):
@@ -219,5 +220,6 @@ def terminate():
                 pass
             except:
                 traceback.print_exc()
-                log.critical('failed terminating module {}'.format(name), exc_info=sys.exc_info)
+                if log:
+                    log.critical('failed terminating module {}'.format(name), exc_info=sys.exc_info)
     sys.exit(0)
