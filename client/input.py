@@ -139,7 +139,14 @@ class Input(BaseInput):
         self['value'] = value
         self['default'] = default
         self['label'] = label
-        
+
+class Radio(BaseInput):
+    def __init__(self, name, default=None, value=None):
+        self['element'] = 'radio'
+        self['name'] = name
+        self['default'] = default
+        self['value'] = value
+
 class Select(BaseInput):
     def __init__(self, name, options, type="dropdown", default=None):
         """type options: dropdown: show only one, list: expanded list,
