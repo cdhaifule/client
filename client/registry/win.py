@@ -101,18 +101,13 @@ def register_protocol(proto):
             (subkey, "", command)]:
             with create_key(HKEY_CLASSES_ROOT, subkey) as key:
                 winreg.SetValueEx(key, value, 0, REG_SZ, data)
-            
 
-# HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer\Version Ablehnen wenn nicht startet mit 9. oder 10.
-# read_reg_key(HKEY_CLASSES_ROOT, r"http\shell\open\command") findet default browser
-# HKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternet finden sich alle browser, Enum zeug durchgehen
-
-#print read_reg_key(HKEY_LOCAL_MACHINE, 'SOFTWARE\\Clients\\StartMenuInternet\\FIREFOX.EXE\\shell\\open\\command')
 
 browser_translate = {
     'FIREFOX.EXE': 'Mozilla Firefox',
     'IEXPLORE.EXE': 'Internet Explorer',
     'OperaStable': 'Opera',
+    'OperaNext': 'Opera Next'
 }
 browser_priority = ['chromium', 'chrome', 'opera', 'firefox']
 
@@ -139,6 +134,8 @@ def iterate_browsers(default=None):
             version = int(read_reg_key(HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
             if version < 9:
                 outdated = True
+        elif key == 'OperaStable':
+            outdated = True
         else:
             outdated = False
 
@@ -197,19 +194,23 @@ def ask_user(outdated):
         try:
             result = input.get(elements, type='browser_select', timeout=None, close_aborts=True, ignore_api=True)
             config.webbrowser = result['browser']
+            return True
         except:
-            config.webbrowser = values[0][0]
-        return True
+            if outdated:
+                config.webbrowser = values[0][0]
+                return True
+        return False
     else:
         if outdated:
             elements.append([input.Text('')])
         elements.append([input.Text('You have no compatible webbrowser installed.')])
-        elements.append([input.Text('The best choice is Chrome, Firefox or Opera. You find the download links below.')])
+        elements.append([input.Text('The best choice is Chrome, Firefox or Opera Next. You find the download links below.')])
         elements.append([input.Text('')])
         elements.append([input.Link('https://www.google.com/chrome/', 'Google Chrome - https://www.google.com/chrome/')])
         elements.append([input.Link('https://www.mozilla.org/‎', 'Mozilla Firefox - https://www.mozilla.org/')])
-        elements.append([input.Link('http://www.opera.com/‎', 'Opera - http://www.opera.com/')])
+        elements.append([input.Link('http://www.opera.com/computer/next‎', 'Opera Next - http://www.opera.com/computer/next')])
         elements.append([input.Text('')])
+        elements.append([input.Submit('OK')])
         try:
             input.get(elements, type='browser_download', timeout=None, close_aborts=True, ignore_api=True)
         except:
