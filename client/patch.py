@@ -625,8 +625,12 @@ def execute_restart():
             replace_app(sys.executable, ' '.join(sys.argv))
         else:
             cmd = 'cmd /c start "" "' + sys.executable + '"'
-            if sys.argv[1:]:
-                cmd += ' "' + '" "'.join(sys.argv[1:]) + '"'
+            argv = sys.argv[1:]
+            if '--no-browser' not in argv:
+                argv.append('--no-browser')
+            if '--disable-splash' not in argv:
+                argv.append('--disable-splash')
+            cmd += ' "' + '" "'.join(argv) + '"'
             replace_app(cmd)
 
 def _external_rename_bat(replace, delete, deltree):
@@ -640,7 +644,12 @@ def _external_rename_bat(replace, delete, deltree):
     for file in deltree:
         code.append('del /S/Q "{}"'.format(file))
 
-    cmd = '"' + '" "'.join([sys.executable] + sys.argv[1:]) + '"'
+    argv = sys.argv[1:]
+    if '--no-browser' not in argv:
+        argv.append('--no-browser')
+    if '--disable-splash' not in argv:
+        argv.append('--disable-splash')
+    cmd = '"' + '" "'.join([sys.executable] + argv) + '"'
     if not sys.__stdout__.isatty():
         cmd = 'start "" '+cmd
     code.append(cmd)
