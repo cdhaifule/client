@@ -51,8 +51,6 @@ for h in hash_types:
 
 _config_loaded = False
 
-is_guest = False
-
 def sha256(s):
     if isinstance(s, unicode):
         s = s.encode("utf-8")
@@ -76,8 +74,7 @@ def hash_client(hash_login, hash_frontend):
     return sha256(hash_login + hash_frontend)
 
 def set_login(username, password, save_password=True):
-    global _config_loaded, is_guest
-    is_guest = False
+    global _config_loaded
     _config_loaded = True
 
     with transaction:
@@ -102,10 +99,6 @@ def set_login(username, password, save_password=True):
 
     event.fire('login:changed')
     
-def set_guest_state(value):
-    global is_guest
-    is_guest = bool(value)
-
 def generate_backend_key():
     if not has_login():
         raise RuntimeError('setting backend key while no login is set')
@@ -146,7 +139,7 @@ def has_login():
             return False
     return True
 
-def is_guest_account():
+def is_guest():
     if not has_login():
         return False
     if config.first_start and config.first_start['login'] == hashes['login']:

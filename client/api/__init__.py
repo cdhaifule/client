@@ -51,9 +51,8 @@ class Interface(interface.Interface):
             proto.log.critical('login request {} not found'.format(id))
             #return 'login request not found'
             return
-        if guest:
-            from .. import login
-            login.set_guest_state(True)
+        from .. import login
+        assert guest == login.is_guest(), 'Remote guest state: {}, local guest state {}'.format(guest, login.is_gueat())
         if not success or err:
             client.login_results[id].set([False, err, None])
         else:

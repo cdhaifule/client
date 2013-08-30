@@ -82,7 +82,7 @@ def init():
 
     @event.register('login:changed')
     def on_login_changed(*_):
-        guest = login.is_guest_account() or not login.has_login()
+        guest = login.is_guest() or not login.has_login()
         if guest and len(options) == 4:
             options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
         elif not guest and len(options) == 5:

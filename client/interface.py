@@ -107,7 +107,7 @@ def protected(func):
 
     def fn(protected_key=None, *args, **kwargs):
         from . import login
-        if protected_key == "guest" and login.is_guest:
+        if protected_key == "guest" and login.is_guest():
             if guest_protected_dialog():
                 return func(*args, **kwargs)
         if pyotp and protected_key.isdigit():
