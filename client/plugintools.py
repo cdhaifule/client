@@ -464,6 +464,11 @@ def ctx_error_handler(ctx, func, *args, **kwargs):
         raise
     except RangeNotSatisfiedError:
         raise
+    except IOError as e:
+        if e.errno == 28:
+            ctx.retry('Disk is full.', 5*60)
+        else:
+            raise
     except:
         try:
             ctx.unhandled_exception()
