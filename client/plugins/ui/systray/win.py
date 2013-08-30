@@ -100,11 +100,11 @@ def init():
         guest = login.is_guest() or not login.has_login()
         if guest and len(options) == 4:
             with lock:
-                options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
+                options.insert(2, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
                 SysTray.instance.init_menu_options(options)
         elif not guest and len(options) == 5:
             with lock:
-                options.pop(1)
+                options.pop(2)
                 SysTray.instance.init_menu_options(options)
 
     on_login_changed()
