@@ -138,10 +138,19 @@ def browser_to_focus(open_new_tab=True, has_focus=None):
         return True
     return False
 
-@event.register('loader:initialized')
-def loader_initialized(e):
-    if open_browser is True and config.open_browser is True:
+login_has_changed = False
+
+@event.register('login:changed')
+def on_login_changed(e):
+    global login_has_changed
+    login_has_changed = True
+
+@event.register('api:connected')
+def on_api_connected(e):
+    global login_has_changed
+    if login_has_changed and open_browser is True and config.open_browser is True:
         from . import api, loader
         if api in loader.post_objects:
             api.wait_connected()
             browser_to_focus(True)
+    login_has_changed = False
