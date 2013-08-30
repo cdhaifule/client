@@ -109,7 +109,7 @@ def generate_backend_key():
     return key
     
 def get_sso_url(tab=None):
-    return "http://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab))
+    return "https://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab))
     
 def logout():
     if config.first_start is not None:
@@ -245,8 +245,8 @@ def on_login_changed(e):
         elements.append([input.Text('')])
         elements.append([input.Text('E-Mail:'), input.Input('username', value=config.username)])
         elements.append([input.Text('Password:'), input.Input('password', 'password')])
-        elements.append([input.Text(''), input.Link('http://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
-        elements.append([input.Text(''), input.Link('http://{}/#register'.format(settings.frontend_domain), 'Register')])
+        elements.append([input.Text(''), input.Link('https://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
+        elements.append([input.Text(''), input.Link('https://{}/#register'.format(settings.frontend_domain), 'Register')])
         elements.append([input.Float('right')])
         elements.append([input.Text('')])
 

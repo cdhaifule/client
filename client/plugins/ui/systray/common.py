@@ -32,7 +32,7 @@ def select_browser(*_):
     event.fire('registry:select_browser', True)
     
 def register(*_):
-    webbrowser.open_new_tab('http://{}/#register'.format(settings.frontend_domain))
+    webbrowser.open_new_tab('https://{}/#register'.format(settings.frontend_domain))
     
 def _open_browser(*_):
     webbrowser.open_new_tab(get_sso_url())
