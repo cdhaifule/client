@@ -19,7 +19,7 @@ import time
 import math
 import shutil
 
-from .. import core, event, ratelimit, plugintools, logger
+from .. import core, event, ratelimit, plugintools, logger, seekingfile
 from ..scheme import transaction, intervalled
 from ..config import globalconfig
 from ..contrib import sizetools
@@ -614,8 +614,17 @@ class FileDownload(object):
     def download(self, chunk):
         chunk.set_substate('init')
 
+        if self.file.get_any_size() is not None:
+            seekingfile.check_space(self.file.get_download_file(), self.file.get_any_size())
+            space_checked = True
+        else:
+            space_checked = False
+
         result = self.file.account.on_download_decorator(self.file.download_func, chunk)
         stream, next_data = self.file.host.handle_download_result(chunk, result)
+
+        if space_checked is False:
+            seekingfile.check_space(self.file.get_download_file(), self.file.get_any_size() or 100*1024*1024)
 
         return stream, next_data
 
