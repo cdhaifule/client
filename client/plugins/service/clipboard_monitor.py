@@ -118,7 +118,10 @@ try:
                 else:
                     return data
         finally:
-            w.CloseClipboard()
+            try:
+                w.CloseClipboard()
+            except:
+                pass
 except ImportError:
     w = False
     if sys.platform == "darwin":

@@ -52,7 +52,10 @@ class Interface(interface.Interface):
             #return 'login request not found'
             return
         from .. import login
-        assert guest == login.is_guest(), 'Remote guest state: {}, local guest state {}'.format(guest, login.is_gueat())
+        try:
+            assert guest == login.is_guest()
+        except:
+            proto.log.unhandled_exception('Remote guest state: {}, local guest state {}'.format(guest, login.is_guest()))
         if not success or err:
             client.login_results[id].set([False, err, None])
         else:

@@ -113,9 +113,12 @@ browser_priority = ['chromium', 'chrome', 'opera', 'firefox']
 
 
 def _parse_browser_path(path):
-    if path.startswith('"'):
-        path = path[1:].split('"', 1)[0]
-    return path
+    try:
+        if path.startswith('"'):
+            path = path[1:].split('"', 1)[0]
+        return path
+    except:
+        return None
 
 def get_default_browser():
     return _parse_browser_path(read_reg_key(HKEY_CLASSES_ROOT, 'http\\shell\\open\\command')[0])
@@ -125,11 +128,13 @@ def get_browser_path(key):
 
 def iterate_browsers(default=None):
     if default is None:
-        default = get_default_browser()
+        default = get_default_browser() or ''
     default = default.lower()
     for key in enum_reg_keys(HKEY_LOCAL_MACHINE, 'SOFTWARE\\Clients\\StartMenuInternet'):
         name = browser_translate.get(key, key)
         path = get_browser_path(key)
+        if not path:
+            continue
         if key == 'IEXPLORE.EXE':
             version = int(read_reg_key(HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
             if version < 9:

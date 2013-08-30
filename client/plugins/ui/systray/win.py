@@ -107,4 +107,7 @@ def init():
                 options.pop(2)
                 SysTray.instance.init_menu_options(options)
 
-    on_login_changed()
+    try:
+        on_login_changed()
+    except:
+        pass

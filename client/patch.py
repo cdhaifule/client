@@ -37,7 +37,6 @@ import json
 import requests
 import bsdiff4
 import shutil
-import logging
 
 from gevent import Timeout
 from cStringIO import StringIO
@@ -1040,7 +1039,7 @@ class CoreSource(BasicPatchSource):
         return None
 
     def on_get_enabled(self, value):
-        if reload(current).current == 'DEV':
+        if current.current == 'DEV':
             return False
         return BasicPatchSource.on_get_enabled(self, value)
 
