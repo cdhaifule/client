@@ -134,6 +134,8 @@ def iterate_browsers(default=None):
             version = int(read_reg_key(HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
             if version < 9:
                 outdated = True
+            else:
+                outdated = False
         elif key == 'OperaStable':
             outdated = True
         else:
