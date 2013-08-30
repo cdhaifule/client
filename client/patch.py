@@ -37,9 +37,7 @@ import json
 import requests
 import bsdiff4
 import shutil
-import gipc
 import logging
-import gipc.gipc
 
 from gevent import Timeout
 from cStringIO import StringIO
@@ -73,9 +71,6 @@ patch_all_lock = Semaphore()
 git_threadpool = ThreadPool(10)
 
 test_mode = False
-
-gipc.gipc.log.setLevel(logging.INFO)
-git_lock = Semaphore(5)
 
 
 # update patch interval
