@@ -67,7 +67,7 @@ class Splash(Tk):
         self.w.pack()
         
         self.greenlet = gevent.spawn_later(0.015, self.animate)
-        self.info_greenlet = gevent.spawn_later(10, self.show_info)
+        self.info_greenlet = gevent.spawn_later(50, self.show_info)
 
     def animate(self):
         self.index += 1
