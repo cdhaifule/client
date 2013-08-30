@@ -557,13 +557,17 @@ def finalize_patches(patches, external_loaded=True):
 # restart functions
 
 def restart_app():
-    from . import download
+    from . import download, core
     if download.strategy.has('patch'):
         return
 
     while True:
+        if not core.global_status.files_working:
+            result = "now"
+            break
         if config.restart is not None:
-            result = config.restart
+            if config.restart != "never":
+                result = config.restart
             break
 
         elements = list()
@@ -578,7 +582,7 @@ def restart_app():
         ])]
         try:
             r = input.get(elements, type='patch', timeout=120)
-            result = r['answer']
+            result = r.get('answer', 'later')
             if r.get('remember', False):
                 config.restart = result
         except input.InputTimeout:
