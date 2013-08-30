@@ -34,57 +34,66 @@ class SysTrayIcon(object):
                  menu_options,
                  on_quit=None,
                  default_menu_index=None,
-                 window_class_name=None,):
+                 window_class_name=None,
+                 lock=None,
+                 init_callback=None):
         
         self.icon = icon
         self.hover_text = hover_text
         self.on_quit = on_quit
         
         #menu_options = menu_options + [('Quit', None, self.QUIT)]
-        menu_options = menu_options
+        self.init_menu_options(menu_options)
+        
+        self.default_menu_index = (default_menu_index or 0)
+        self.window_class_name = window_class_name or "SysTrayIconPy"
+        self.lock = lock
+
+        try:
+            message_map = {win32gui.RegisterWindowMessage("TaskbarCreated"): self.restart,
+                           win32con.WM_DESTROY: self.destroy,
+                           win32con.WM_COMMAND: self.command,
+                           win32con.WM_USER+20: self.notify,
+                           win32con.WM_USER+21: self._refresh_icon_event}
+            # Register the Window class.
+            window_class = win32gui.WNDCLASS()
+            hinst = window_class.hInstance = win32gui.GetModuleHandle(None)
+            window_class.lpszClassName = self.window_class_name
+            window_class.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW
+            window_class.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
+            window_class.hbrBackground = win32con.COLOR_WINDOW
+            window_class.lpfnWndProc = message_map # could also specify a wndproc.
+            classAtom = win32gui.RegisterClass(window_class)
+            # Create the Window.
+            style = win32con.WS_OVERLAPPED | win32con.WS_SYSMENU
+            self.hwnd = win32gui.CreateWindow(classAtom,
+                                              self.window_class_name,
+                                              style,
+                                              0,
+                                              0,
+                                              win32con.CW_USEDEFAULT,
+                                              win32con.CW_USEDEFAULT,
+                                              0,
+                                              0,
+                                              hinst,
+                                              None)
+            win32gui.UpdateWindow(self.hwnd)
+            self.notify_id = None
+            self.refresh_icon()
+            atexit.register(self.destroy, None, None, None, None)
+            SysTrayIcon.instance = self
+            self.threadid = win32api.GetCurrentThreadId()
+        finally:
+            if init_callback is not None:
+                init_callback(self)
+        win32gui.PumpMessages()
+
+    def init_menu_options(self, menu_options):
         self._next_action_id = self.FIRST_ID
         self.menu_actions_by_id = set()
         self.menu_options = self._add_ids_to_menu_options(list(menu_options))
         self.menu_actions_by_id = dict(self.menu_actions_by_id)
         del self._next_action_id
-        
-        self.default_menu_index = (default_menu_index or 0)
-        self.window_class_name = window_class_name or "SysTrayIconPy"
-        
-        message_map = {win32gui.RegisterWindowMessage("TaskbarCreated"): self.restart,
-                       win32con.WM_DESTROY: self.destroy,
-                       win32con.WM_COMMAND: self.command,
-                       win32con.WM_USER+20: self.notify,
-                       win32con.WM_USER+21: self._refresh_icon_event}
-        # Register the Window class.
-        window_class = win32gui.WNDCLASS()
-        hinst = window_class.hInstance = win32gui.GetModuleHandle(None)
-        window_class.lpszClassName = self.window_class_name
-        window_class.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW
-        window_class.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
-        window_class.hbrBackground = win32con.COLOR_WINDOW
-        window_class.lpfnWndProc = message_map # could also specify a wndproc.
-        classAtom = win32gui.RegisterClass(window_class)
-        # Create the Window.
-        style = win32con.WS_OVERLAPPED | win32con.WS_SYSMENU
-        self.hwnd = win32gui.CreateWindow(classAtom,
-                                          self.window_class_name,
-                                          style,
-                                          0,
-                                          0,
-                                          win32con.CW_USEDEFAULT,
-                                          win32con.CW_USEDEFAULT,
-                                          0,
-                                          0,
-                                          hinst,
-                                          None)
-        win32gui.UpdateWindow(self.hwnd)
-        self.notify_id = None
-        self.refresh_icon()
-        atexit.register(self.destroy, None, None, None, None)
-        SysTrayIcon.instance = self
-        self.threadid = win32api.GetCurrentThreadId()
-        win32gui.PumpMessages()
         
     def stop(self):
         win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
@@ -154,7 +163,11 @@ class SysTrayIcon(object):
         if lparam==win32con.WM_LBUTTONDBLCLK:
             self.execute_menu_option(self.default_menu_index + self.FIRST_ID)
         elif lparam==win32con.WM_RBUTTONUP:
-            self.show_menu()
+            if self.lock is not None:
+                with self.lock:
+                    self.show_menu()
+            else:
+                self.show_menu()
         elif lparam==win32con.WM_LBUTTONUP:
             pass
         return True

@@ -25,6 +25,8 @@ import win32gui, win32con
 import glob
 from PIL import IcnsImagePlugin, BmpImagePlugin # preload for py2exe
 from PIL import Image
+from gevent.event import Event
+from gevent._threading import Lock as ThreadingLock
 
 from .... import settings, event, login, localize
 from ....contrib.systrayicon import SysTrayIcon
@@ -70,6 +72,9 @@ class SysTray(SysTrayIcon):
         self.switch_icon(settings.taskbaricon_inactive)
 
 def init():
+    lock = ThreadingLock()
+    init_event = Event()
+
     icons = glob.glob(os.path.join(settings.menuiconfolder, "*.icns"))
     for i in icons:
         name = os.path.basename(i)
@@ -83,10 +88,18 @@ def init():
     @event.register('login:changed')
     def on_login_changed(*_):
         guest = login.is_guest() or not login.has_login()
+        print "!"*100, 'GUEST', guest
+        print "!"*100, 'LEN', len(options)
         if guest and len(options) == 4:
+            print "!"*100, 'ADD OPTION'
             options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
+            with lock:
+                SysTray.instance.init_menu_options(options)
         elif not guest and len(options) == 5:
-            del options[2]
+            print "!"*100, 'REMOVE OPTION'
+            options.pop(1)
+            with lock:
+                SysTray.instance.init_menu_options(options)
 
     thread = threadpool.ThreadPool(1)
     options = [
@@ -97,10 +110,11 @@ def init():
     ]
 
     update_username()
-    on_login_changed()
 
     icon = settings.taskbaricon_inactive
     if not icon:
         return
 
-    thread.spawn(SysTray, icon, "Download.am Client", options, lambda *_: event.call_from_thread(common.quit), 0, "download.am")
+    thread.spawn(SysTray, icon, "Download.am Client", options, lambda *_: event.call_from_thread(common.quit), 0, "download.am", lock=lock, init_callback=lambda _: event.call_from_thread(init_event.set))
+    init_event.wait()
+    on_login_changed()
