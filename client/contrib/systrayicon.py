@@ -228,4 +228,3 @@ def non_string_iterable(obj):
         return False
     else:
         return not isinstance(obj, basestring)
-

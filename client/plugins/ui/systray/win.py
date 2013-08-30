@@ -80,6 +80,14 @@ def init():
         #options[0] = (login.config.username or _X("Open"), bmp_factory('open'), lambda _: event.call_from_thread(open_browser))
         options[0] = (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser))
 
+    @event.register('login:changed')
+    def on_login_changed(*_):
+        guest = login.is_guest_account() or not login.has_login()
+        if guest and len(options) == 4:
+            options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
+        elif not guest and len(options) == 5:
+            del options[2]
+
     thread = threadpool.ThreadPool(1)
     options = [
         None,
@@ -89,6 +97,7 @@ def init():
     ]
 
     update_username()
+    on_login_changed()
 
     icon = settings.taskbaricon_inactive
     if not icon:
