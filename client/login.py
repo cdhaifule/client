@@ -146,6 +146,13 @@ def has_login():
             return False
     return True
 
+def is_guest_account():
+    if not has_login():
+        return False
+    if config.first_start and config.first_start['login'] == hashes['login']:
+        return True
+    return False
+
 def wait():
     login_event.wait()
 

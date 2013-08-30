@@ -18,17 +18,21 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import webbrowser
-from functools import partial
 import gevent
 
+from functools import partial
+
 from ....login import logout, get_sso_url
-from .... import event
+from .... import event, settings
 
 def relogin(*_):
     logout()
 
 def select_browser(*_):
     event.fire('registry:select_browser', True)
+    
+def register(*_):
+    webbrowser.open_new_tab('http://{}/#register'.format(settings.frontend_domain))
     
 def _open_browser(*_):
     webbrowser.open_new_tab(get_sso_url())
