@@ -41,13 +41,14 @@ class SysTrayIcon(object):
         self.icon = icon
         self.hover_text = hover_text
         self.on_quit = on_quit
+
+        self.hmenu = None
+        self.lock = lock
         
-        #menu_options = menu_options + [('Quit', None, self.QUIT)]
         self.init_menu_options(menu_options)
         
         self.default_menu_index = (default_menu_index or 0)
         self.window_class_name = window_class_name or "SysTrayIconPy"
-        self.lock = lock
 
         try:
             message_map = {win32gui.RegisterWindowMessage("TaskbarCreated"): self.restart,
@@ -89,6 +90,15 @@ class SysTrayIcon(object):
         win32gui.PumpMessages()
 
     def init_menu_options(self, menu_options):
+        self.hide_menu()
+        self._init_menu_options(menu_options)
+        #if self.lock is not None:
+        #    with self.lock:
+        #        self._init_menu_options(menu_options)
+        #else:
+        #    self._init_menu_options(menu_options)
+
+    def _init_menu_options(self, menu_options):
         self._next_action_id = self.FIRST_ID
         self.menu_actions_by_id = set()
         self.menu_options = self._add_ids_to_menu_options(list(menu_options))
@@ -160,27 +170,31 @@ class SysTrayIcon(object):
         win32gui.PostQuitMessage(0) # Terminate the app.
 
     def notify(self, hwnd, msg, wparam, lparam):
-        if lparam==win32con.WM_LBUTTONDBLCLK:
+        if lparam == win32con.WM_LBUTTONDBLCLK:
             self.execute_menu_option(self.default_menu_index + self.FIRST_ID)
-        elif lparam==win32con.WM_RBUTTONUP:
-            if self.lock is not None:
-                with self.lock:
-                    self.show_menu()
-            else:
-                self.show_menu()
-        elif lparam==win32con.WM_LBUTTONUP:
+        elif lparam == win32con.WM_RBUTTONUP:
+            self.show_menu()
+        elif lparam == win32con.WM_LBUTTONUP:
             pass
         return True
         
     def show_menu(self):
-        menu = win32gui.CreatePopupMenu()
-        self.create_menu(menu, self.menu_options)
-        #win32gui.SetMenuDefaultItem(menu, 1000, 0)
+        self._show_menu()
+        #if self.lock is not None:
+        #    with self.lock:
+        #        self._show_menu()
+        #else:
+        #    self._show_menu()
+
+    def _show_menu(self):
+        self.hmenu = win32gui.CreatePopupMenu()
+        self.create_menu(self.hmenu, self.menu_options)
+        #win32gui.SetMenuDefaultItem(self.hmenu, 1000, 0)
         
         pos = win32gui.GetCursorPos()
         # See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/menus_0hdi.asp
         win32gui.SetForegroundWindow(self.hwnd)
-        win32gui.TrackPopupMenu(menu,
+        win32gui.TrackPopupMenu(self.hmenu,
                                 win32con.TPM_LEFTALIGN,
                                 pos[0],
                                 pos[1],
@@ -188,6 +202,22 @@ class SysTrayIcon(object):
                                 self.hwnd,
                                 None)
         win32gui.PostMessage(self.hwnd, win32con.WM_NULL, 0, 0)
+
+    def hide_menu(self):
+        self._hide_menu()
+        #if self.lock is not None:
+        #    with self.lock:
+        #        self._hide_menu()
+        #else:
+        #    self._hide_menu()
+
+    def _hide_menu(self):
+        if self.hmenu is not None:
+            try:
+                win32gui.DestroyMenu(self.hmenu)
+            except:
+                pass
+            self.hmenu = None
     
     def create_menu(self, menu, menu_options):
         for option_text, option_icon, option_action, option_id in menu_options[::-1]:

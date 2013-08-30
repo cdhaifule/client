@@ -80,36 +80,13 @@ def init():
         name = os.path.basename(i)
         name = name[:name.rfind(".")]
     
-    @login.config.register('username')
-    def update_username():
-        #options[0] = (login.config.username or _X("Open"), bmp_factory('open'), lambda _: event.call_from_thread(open_browser))
-        options[0] = (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser))
-
-    @event.register('login:changed')
-    def on_login_changed(*_):
-        guest = login.is_guest() or not login.has_login()
-        print "!"*100, 'GUEST', guest
-        print "!"*100, 'LEN', len(options)
-        if guest and len(options) == 4:
-            print "!"*100, 'ADD OPTION'
-            options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
-            with lock:
-                SysTray.instance.init_menu_options(options)
-        elif not guest and len(options) == 5:
-            print "!"*100, 'REMOVE OPTION'
-            options.pop(1)
-            with lock:
-                SysTray.instance.init_menu_options(options)
-
     thread = threadpool.ThreadPool(1)
     options = [
-        None,
+        (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser)),
         (_X("Select browser"), bmp_factory('browser'), lambda *_: event.call_from_thread(common.select_browser)),
         (_X("Logout"), bmp_factory('logout'), lambda *_: event.call_from_thread(common.relogin)),
         (_X("Quit"), bmp_factory('quit'), 'QUIT')
     ]
-
-    update_username()
 
     icon = settings.taskbaricon_inactive
     if not icon:
@@ -117,4 +94,17 @@ def init():
 
     thread.spawn(SysTray, icon, "Download.am Client", options, lambda *_: event.call_from_thread(common.quit), 0, "download.am", lock=lock, init_callback=lambda _: event.call_from_thread(init_event.set))
     init_event.wait()
+
+    @event.register('login:changed')
+    def on_login_changed(*_):
+        guest = login.is_guest() or not login.has_login()
+        if guest and len(options) == 4:
+            with lock:
+                options.insert(1, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
+                SysTray.instance.init_menu_options(options)
+        elif not guest and len(options) == 5:
+            with lock:
+                options.pop(1)
+                SysTray.instance.init_menu_options(options)
+
     on_login_changed()
