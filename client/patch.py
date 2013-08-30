@@ -61,7 +61,7 @@ config = globalconfig.new('patch')
 config.default('branch', 'stable', str)
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
-config.default('patch_check_interval', 300, int)
+config.default('patch_check_interval', 3600, int)
 
 log = logger.get("patch")
 
@@ -77,7 +77,7 @@ test_mode = False
 
 @event.register('config:loaded')
 def on_config_loaded(e):
-    config.patch_check_interval = 600
+    config.patch_check_interval = 3600
 
 # get our platform
 
