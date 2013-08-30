@@ -245,13 +245,12 @@ def on_login_changed(e):
         elements.append([input.Text('')])
         elements.append([input.Text('E-Mail:'), input.Input('username', value=config.username)])
         elements.append([input.Text('Password:'), input.Input('password', 'password')])
+        elements.append([input.Text(''), input.Link('http://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
+        elements.append([input.Text(''), input.Link('http://{}/#register'.format(settings.frontend_domain), 'Register')])
         elements.append([input.Float('right')])
         elements.append([input.Text('')])
-        sub = input.Subbox()
-        sub.elements.append([input.Float('left')])
-        sub.elements.append([input.Link('http://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
-        sub.elements.append([input.Link('http://{}/#register'.format(settings.frontend_domain), 'Register')])
-        elements.append([sub, input.Input('save_password', 'checkbox', default=config.save_password, label='Save password')])
+
+        #elements.append([sub, input.Input('save_password', 'checkbox', default=config.save_password, label='Save password')])
         elements.append([input.Choice('action', choices=[
             dict(value='ok', content='OK', ok=True),
             dict(value='cancel', content='Cancel', cancel=True),
@@ -266,28 +265,29 @@ def on_login_changed(e):
                 if result['action'] == 'cancel':
                     sys.exit(1)
                 elif result['action'] == 'guest':
-                    init_first_start(1, result.get('save_password', False))
+                    init_first_start(1, result.get('save_password', True))
                 else:
-                    set_login(result['username'], result['password'], result.get('save_password', False))
+                    set_login(result['username'], result['password'], result.get('save_password', True))
         login_input = gevent.spawn(_login_input)
 
 def init_optparser(parser, OptionGroup):
     group = OptionGroup(parser, _T.login__options)
     group.add_option('--username', dest="username", help=_T.login__username)
     group.add_option('--password', dest="password", help=_T.login__password)
-    group.add_option('--save-password', dest="save_password", action="store_true", default=False, help=_T.login__save_password)
+    #group.add_option('--save-password', dest="save_password", action="store_true", default=False, help=_T.login__save_password)
     parser.add_option_group(group)
 
 def init_options(options):
     if options.username is not None:
         if options.password:
-            set_login(options.username, options.password, options.save_password)
+            #set_login(options.username, options.password, options.save_password)
+            set_login(options.username, options.password)
             return
         raise SystemExit('you have to specify --username with --password')
     elif options.password:
         raise SystemExit('you have to specify --password with --username')
-    elif options.save_password:
-        raise SystemExit('you have to specify --username and --password with --save-password')
+    #elif options.save_password:
+    #    raise SystemExit('you have to specify --username and --password with --save-password')
     else:
         event.fire_later(0, 'login:changed')
         return
@@ -373,8 +373,6 @@ class LoginInterface(interface.Interface):
         """changes login infos and reconnects to api
         """
         if upgrade_guest_account is not None and config.first_start is not None:
-            print "!"*100, 'upgrade_guest_account', upgrade_guest_account
-            print "!"*100, 'config.first_start', config.first_start
             if upgrade_guest_account == config.first_start['frontend']:
                 config.first_start = None
 

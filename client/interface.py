@@ -54,7 +54,7 @@ class InterfaceManager(dict):
         #argnames = func.func_code.co_varnames
         #kwargs = {k:v for k, v in kwargs.iteritems() if k in argnames}
         try:
-            print "EXEC", _name+'.'+_funcname, args, kwargs
+            #print "EXEC", _name+'.'+_funcname, args, kwargs
             result = func(*args, **kwargs)
             if isinstance(result, types.GeneratorType):
                 result = list(result)
