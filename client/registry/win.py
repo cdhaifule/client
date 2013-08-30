@@ -114,7 +114,7 @@ browser_translate = {
     'IEXPLORE.EXE': 'Internet Explorer',
     'OperaStable': 'Opera',
 }
-browser_priority = ['chromium', 'chrome', 'firefox']
+browser_priority = ['chromium', 'chrome', 'opera', 'firefox']
 
 
 def _parse_browser_path(path):
@@ -161,17 +161,17 @@ class DLAMBrowser(webbrowser.BaseBrowser):
         else:
             path, outdated = None, False
         if path is None or outdated:
-            ask_user(outdated and name)
+            if not ask_user(outdated and name):
+                return
             return self.open(url, new, autoraise)
         subprocess.Popen([path, url])
 
 def ask_user(outdated):
     elements = list()
     if outdated:
-        elements.append([input.Text('Your current default browser {} is not compatible with Download.am.'.format(outdated))])
-    elements.append([input.Text('Please select a browser you like to use with Download.am.')])
-    elements.append([input.Text('')])
+        elements.append([input.Text(['Your current default browser #{browser} is not compatible with Download.am.', dict(browser=outdated)])])
     values = list()
+    default_value = None
     for key, name, path, default, outdated in iterate_browsers():
         if not outdated:
             for i, p in enumerate(browser_priority):
@@ -180,19 +180,41 @@ def ask_user(outdated):
                     break
             else:
                 priority = 999
+            if key == config.webbrowser:
+                default_value = key
+            elif config.webbrowser is None and default:
+                default_value = key
             bisect.insort(values, (priority, (key, name)))
     values = [v for p, v in values]
-    elements.append([input.Float('left')])
-    elements.append([input.Radio('browser', value=values)])
-    elements.append([input.Float('center')])
-    elements.append([input.Text('')])
-    elements.append([input.Submit('OK')])
-    try:
-        result = input.get(elements, type='browser_select', timeout=None, close_aborts=True, ignore_api=True)
-        config.webbrowser = result['browser']
-    except:
-        config.webbrowser = values[0][0]
-
+    if values:
+        elements.append([input.Text('Please select a browser you like to use with Download.am.')])
+        elements.append([input.Text('')])
+        elements.append([input.Float('left')])
+        elements.append([input.Radio('browser', value=values, default=default_value)])
+        elements.append([input.Float('center')])
+        elements.append([input.Text('')])
+        elements.append([input.Submit('OK')])
+        try:
+            result = input.get(elements, type='browser_select', timeout=None, close_aborts=True, ignore_api=True)
+            config.webbrowser = result['browser']
+        except:
+            config.webbrowser = values[0][0]
+        return True
+    else:
+        if outdated:
+            elements.append([input.Text('')])
+        elements.append([input.Text('You have no compatible webbrowser installed.')])
+        elements.append([input.Text('The best choice is Chrome, Firefox or Opera. You find the download links below.')])
+        elements.append([input.Text('')])
+        elements.append([input.Link('https://www.google.com/chrome/', 'Google Chrome - https://www.google.com/chrome/')])
+        elements.append([input.Link('https://www.mozilla.org/‎', 'Mozilla Firefox - https://www.mozilla.org/')])
+        elements.append([input.Link('http://www.opera.com/‎', 'Opera - http://www.opera.com/')])
+        elements.append([input.Text('')])
+        try:
+            input.get(elements, type='browser_download', timeout=None, close_aborts=True, ignore_api=True)
+        except:
+            pass
+        return False
 
 webbrowser._browsers = {}
 webbrowser._tryorder = []

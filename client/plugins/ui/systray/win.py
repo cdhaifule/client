@@ -83,8 +83,8 @@ def init():
     thread = threadpool.ThreadPool(1)
     options = [
         None,
+        (_X("Select browser"), bmp_factory('browser'), lambda *_: event.call_from_thread(common.select_browser)),
         (_X("Logout"), bmp_factory('logout'), lambda *_: event.call_from_thread(common.relogin)),
-        (_X("Select browser"), None, lambda *_: event.call_from_thread(common.select_browser)), # bmp_factory('browser')
         (_X("Quit"), bmp_factory('quit'), 'QUIT')
     ]
 

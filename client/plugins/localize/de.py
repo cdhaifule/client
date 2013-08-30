@@ -81,6 +81,7 @@ api__api_log = 'Logge den API Datenverkehr'
 
 TEXT["Open"] = 'Öffnen'
 TEXT["Logout"] = 'Abmelden'
+TEXT["Select browser"] = 'Browser ändern'
 TEXT["Quit"] = 'Beenden'
 
 # general
@@ -125,3 +126,10 @@ TEXT['Please click on the right place:'] = 'Bitte klicke auf die richtige Stelle
 TEXT['Enter password:'] = 'Passwort eingeben:'
 TEXT['I understand'] = 'Ich verstehe'
 TEXT['Connect as guest'] = 'Als Gast verbinden'
+
+# webbrowser
+
+TEXT['Your current default browser #{browser} is not compatible with Download.am.'] = 'Dein aktueller Standartbrowser #{browser} ist nicht mit Download.am kompatibel.'
+TEXT['Please select a browser you like to use with Download.am.'] = 'Bitte wähle einen Browser den Du mit Download.am nutzen möchtest.'
+TEXT['You have no compatible webbrowser installed.'] = 'Du hast keinen kompatibelen Browser installiert.'
+TEXT['The best choice is Chrome, Firefox or Opera. You find the download links below.'] = 'Die beste Wahl ist Chrome, Firefox oder Opera. Nachfolgend findest du die Downloadlinks.'
