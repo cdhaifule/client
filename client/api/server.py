@@ -99,10 +99,13 @@ handle = None
 
 def init():
     global handle
-    handle = server.SocketIOServer(('127.0.0.1', 9090), app, policy_server=False, heartbeat_interval=4, heartbeat_timeout=20, close_timeout=300)
-    if not handle.started:
-        handle.start()
-    localrpc.prevent_socket_inheritance(handle.socket)
+    try:
+        handle = server.SocketIOServer(('127.0.0.1', 9090), app, policy_server=False, heartbeat_interval=4, heartbeat_timeout=20, close_timeout=300)
+        if not handle.started:
+            handle.start()
+        localrpc.prevent_socket_inheritance(handle.socket)
+    except:
+        log.unhandled_exception('error starting local socketio server')
 
 def terminate():
     global handle

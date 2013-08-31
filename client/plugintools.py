@@ -296,7 +296,6 @@ class InputFunctions(object):
         except input.InputFailed as e:
             getattr(self, '{}_invalid'.format(type))(msg=str(e) or None)
 
-
     def input_remember_boolean(self, text, seconds=None, **kwargs):
         try:
             elements = list()
@@ -333,7 +332,6 @@ class InputFunctions(object):
             return None, None
         except input.InputTimeout:
             return None, None
-
 
     def solve_password(self, seconds=None, **kwargs):
         return self.iter_input('password', func=input.password, seconds=seconds, **kwargs)
