@@ -717,7 +717,7 @@ class TorrentJob(Torrent):
                 n += 1
 
                 if self.state == 'check' or not file.progress_initialized or file.progress is None or file._max_progress is None:
-                    file.init_progress(file.get_any_size())
+                    file.init_progress(file.get_any_size() or 0) # TODO: any size should never be none here
                     file.set_progress(progress)
                     file.progress_initialized = True
                 elif file.working:
