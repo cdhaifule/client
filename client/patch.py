@@ -1445,7 +1445,7 @@ def init():
         yield x
 
     patch_group.join()
-    execute_restart()
+    
     # start the patch loop
     patch_loop_greenlet = gevent.spawn(patch_loop)
 
