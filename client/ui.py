@@ -19,9 +19,13 @@ import sys
 import gevent
 import webbrowser
 
+from gevent.event import Event
+
 from . import logger, event
 from .config import globalconfig
 from .localize import _T
+
+module_initialized = Event()
 
 config = globalconfig.new('ui')
 config.default('open_browser', True, bool, description="Open browser after client start")

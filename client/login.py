@@ -34,6 +34,8 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 
+module_initialized = Event()
+
 log = logger.get("login")
 
 hash_types = ['login', 'frontend', 'backend', 'client', 'protected']

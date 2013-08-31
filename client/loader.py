@@ -103,6 +103,7 @@ def init():
         # load patch module
         if 'patch' not in modules_by_name:
             from . import patch
+            _init_pre(patch)
             modules_by_name['patch'] = patch
         else:
             patch = modules_by_name['patch']
@@ -136,7 +137,6 @@ def _init_pre(modules):
         modules_by_name[module] = obj
         globals()[module] = obj
         
-        obj.module_initialized = Event()
         if hasattr(obj, 'init_pre') and callable(obj.init_pre):
             obj.init_pre()
 
@@ -186,7 +186,8 @@ def _init(objects, options, args):
                     t = '{}: {}'.format(text, t)
                     ui.set_splash_text(t)
                     log.debug(t)
-            obj.module_initialized.set()
+            if hasattr(obj, 'module_initialized'):
+                obj.module_initialized.set()
         except (KeyboardInterrupt, SystemExit):
             raise
         except:

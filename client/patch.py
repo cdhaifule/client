@@ -41,6 +41,7 @@ import shutil
 from gevent import Timeout
 from cStringIO import StringIO
 from gevent.pool import Group
+from gevent.event import Event
 from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
 from Crypto.PublicKey import DSA
@@ -71,6 +72,8 @@ git_threadpool = ThreadPool(10)
 
 test_mode = False
 
+
+module_initialized = Event()
 
 # update patch interval
 
@@ -620,10 +623,11 @@ def execute_restart():
         else:
             cmd = 'cmd /c start "" "' + sys.executable + '"'
             argv = sys.argv[1:]
-            if '--no-browser' not in argv:
-                argv.append('--no-browser')
-            if '--disable-splash' not in argv:
-                argv.append('--disable-splash')
+            if not module_initialized.is_set():
+                if '--no-browser' not in argv:
+                    argv.append('--no-browser')
+                if '--disable-splash' not in argv:
+                    argv.append('--disable-splash')
             cmd += ' "' + '" "'.join(argv) + '"'
             replace_app(cmd)
 
@@ -1441,7 +1445,7 @@ def init():
         yield x
 
     patch_group.join()
-
+    execute_restart()
     # start the patch loop
     patch_loop_greenlet = gevent.spawn(patch_loop)
 
