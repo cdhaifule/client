@@ -1106,6 +1106,9 @@ class PatchSource(BasicPatchSource, PublicSource):
         self.log.info('deleted')
         gevent.spawn_later(1, restart_app)
 
+    def send_error(self, id, name, type, message, content):
+        return core_source.send_error(self, id, name, type, message, content)
+
 
 class GitSource(BasicSource, PublicSource):
     id = Column(('db', 'api'))

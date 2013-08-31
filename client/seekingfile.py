@@ -22,7 +22,9 @@ from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
 
 try:
-    import win32file, win32api
+    import win32api
+    import win32file
+    
     def get_free_space(path):
         try:
             path = os.path.dirname(path)
@@ -32,8 +34,10 @@ try:
             return
 
     def allocate_file(path, size):
-        handle = win32file.CreateFile(path, win32file.GENERIC_WRITE, 
-            win32file.FILE_SHARE_WRITE, None, 
+        handle = win32file.CreateFile(
+            path,
+            win32file.GENERIC_WRITE,
+            win32file.FILE_SHARE_WRITE, None,
             win32file.CREATE_ALWAYS, 0, None)
         win32file.SetFilePointer(handle, size, win32file.FILE_BEGIN)
         win32file.SetEndOfFile(handle)
@@ -42,6 +46,8 @@ except ImportError:
     def get_free_space(path):
         try:
             path = os.path.dirname(path)
+            if not os.path.exists(path):
+                path = os.path.split(path)[0]
             st = os.statvfs(path)
             return st.f_bavail * st.f_frsize
         except OSError:
