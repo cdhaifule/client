@@ -102,7 +102,7 @@ def init():
     handle = server.SocketIOServer(('127.0.0.1', 9090), app, policy_server=False, heartbeat_interval=4, heartbeat_timeout=20, close_timeout=300)
     if not handle.started:
         handle.start()
-        localrpc.prevent_socket_inheritance(handle.socket)
+    localrpc.prevent_socket_inheritance(handle.socket)
 
 def terminate():
     global handle
