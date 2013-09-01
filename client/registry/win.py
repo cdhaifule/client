@@ -218,11 +218,20 @@ def ask_user(outdated):
         elements.append([input.Link('http://www.opera.com/computer/next‎', 'Opera Next - http://www.opera.com/computer/next')])
         elements.append([input.Text('')])
         elements.append([input.Submit('OK')])
+        webbrowser._browsers = _old_browsers
+        webbrowser._tryorder = _old_tryorder
         try:
             input.get(elements, type='browser_download', timeout=None, close_aborts=True, ignore_api=True)
         except:
             pass
+        finally:
+            webbrowser._browsers = {}
+            webbrowser._tryorder = []
+            webbrowser.register('dlam-default', DLAMBrowser)
         return False
+
+_old_browsers = webbrowser._browsers
+_old_tryorder = webbrowser._tryorder
 
 webbrowser._browsers = {}
 webbrowser._tryorder = []
