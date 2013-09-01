@@ -14,11 +14,14 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from . import event
+from . import event, logger
 from .api import proto
+
+log = logger.get('notify')
 
 def _send(type, message, seconds=None, local=True, remote=True):
     payload = dict(type=type, message=message, seconds=seconds)
+    getattr(log, type)(message)
     if local:
         event.fire('notify', payload)
     if remote:
