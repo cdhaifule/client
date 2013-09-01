@@ -209,7 +209,6 @@ class GitWorker(BasicPatchWorker):
                 repo = Repo.init_bare(p)
 
             client, host_path = get_transport_and_path(self.source.url)
-            print self.source.url
             remote_refs = client.fetch(host_path, repo)
             repo["HEAD"] = remote_refs["HEAD"]
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):

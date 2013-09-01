@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import sys
 import urlparse
 import shelve
 import time
@@ -157,7 +158,7 @@ def check_dependencies(module, retry):
 def init():
     global icon_cache
     
-    icon_cache = shelve.open(icon_cache_path, writeback=True)
+    icon_cache = shelve.open(icon_cache_path.encode(sys.getfilesystemencoding()), writeback=True)
     icon_cache.close = icon_cache.sync
     try:
         a, (b, c) = icon_cache.iteritems().next() # reset cache if format not correct.

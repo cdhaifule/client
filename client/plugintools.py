@@ -91,7 +91,7 @@ def itermodules(type, load_external=True):
             log.debug("loading external {}".format(display_name))
             try:
                 module = new_module(name)
-                module.__file__ = os.path.join(path, file.name)
+                module.__file__ = os.path.join(path, file.name).encode(sys.getfilesystemencoding())
                 code = compile(file.get_contents(), module.__file__, 'exec')
                 exec code in module.__dict__
                 sys.modules[name] = module
