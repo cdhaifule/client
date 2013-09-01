@@ -91,7 +91,7 @@ def itermodules(type, load_external=True):
             log.debug("loading external {}".format(display_name))
             try:
                 module = new_module(name)
-                module.__file__ = os.path.join(path, file.name)
+                module.__file__ = os.path.join(path, file.name).encode(sys.getfilesystemencoding())
                 code = compile(file.get_contents(), module.__file__, 'exec')
                 exec code in module.__dict__
                 sys.modules[name] = module
@@ -296,7 +296,6 @@ class InputFunctions(object):
         except input.InputFailed as e:
             getattr(self, '{}_invalid'.format(type))(msg=str(e) or None)
 
-
     def input_remember_boolean(self, text, seconds=None, **kwargs):
         try:
             elements = list()
@@ -333,7 +332,6 @@ class InputFunctions(object):
             return None, None
         except input.InputTimeout:
             return None, None
-
 
     def solve_password(self, seconds=None, **kwargs):
         return self.iter_input('password', func=input.password, seconds=seconds, **kwargs)

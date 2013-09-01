@@ -37,10 +37,13 @@ import json
 import requests
 import bsdiff4
 import shutil
+import dns
+import dns.resolver
 
 from gevent import Timeout
 from cStringIO import StringIO
 from gevent.pool import Group
+from gevent.event import Event
 from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
 from Crypto.PublicKey import DSA
@@ -71,6 +74,8 @@ git_threadpool = ThreadPool(10)
 
 test_mode = False
 
+
+module_initialized = Event()
 
 # update patch interval
 
@@ -620,10 +625,11 @@ def execute_restart():
         else:
             cmd = 'cmd /c start "" "' + sys.executable + '"'
             argv = sys.argv[1:]
-            if '--no-browser' not in argv:
-                argv.append('--no-browser')
-            if '--disable-splash' not in argv:
-                argv.append('--disable-splash')
+            if not module_initialized.is_set():
+                if '--no-browser' not in argv:
+                    argv.append('--no-browser')
+                if '--disable-splash' not in argv:
+                    argv.append('--disable-splash')
             cmd += ' "' + '" "'.join(argv) + '"'
             replace_app(cmd)
 
@@ -795,23 +801,36 @@ class ConfigUrl(object):
                 self.last_update = time.time()
 
     def _update(self):
-        found_sources = list()
-        resp = requests.get(self.url, stream=True)
-        try:
+        if 'dlam-config.yaml' in self.url:
+            resp = requests.get(self.url, allow_redirects=False)
             resp.raise_for_status()
-            data = yaml.load(resp.raw)
-        finally:
-            resp.close()
+            buf = StringIO()
+            buf.write(resp.content)
+            buf.seek(0)
+            data = yaml.load(buf)
+            assert isinstance(data, dict), 'config url returned invalid data'
+        else:
+            u = Url(self.url)
+            host = u.host
+            data = dict()
+            for txt in dns.resolver.query(host, 'TXT'):
+                for line in txt.strings:
+                    key, value = line.split(': ', 1)
+                    data[key] = value
+
         assert len(data.keys()) > 0
+
+        found_sources = list()
         group = Group()
 
         def _add_source(url):
             try:
                 source = add_source(url, self.url)
             except:
-                self.log.warning('error adding new repo {}'.format(url))
+                self.log.exception('error adding new repo {}'.format(url))
             else:
                 found_sources.append(source)
+
         for name, url in data.iteritems():
             try:
                 Url(url)
@@ -835,6 +854,7 @@ class ConfigUrl(object):
             if source.config_url == self.url and source not in found_sources:
                 source.log.info('erasing repo')
                 source.delete(True)
+
 
 class BasicSource(Table):
     _table_name = "patch_source"
@@ -1106,6 +1126,9 @@ class PatchSource(BasicPatchSource, PublicSource):
         self.log.info('deleted')
         gevent.spawn_later(1, restart_app)
 
+    def send_error(self, id, name, type, message, content):
+        return core_source.send_error(self, id, name, type, message, content)
+
 
 class GitSource(BasicSource, PublicSource):
     id = Column(('db', 'api'))
@@ -1206,21 +1229,9 @@ def get_file_iterator(source_name, path=None, walk=False):
 def add_config_source(url, config_url=None):
     if config_url is not None:
         raise ValueError('config url not allowed on config sources')
-    resp = requests.get(url, stream=True)
-    try:
-        resp.raise_for_status()
-        data = yaml.load(resp.raw)
-    except:
-        log.exception('error adding config source')
-    finally:
-        resp.close()
-    assert len(data.keys()) > 0
-    if url in config_urls:
-        #config_urls[url].update()
-        pass
-    else:
+    if url not in config_urls:
         config_urls[url] = ConfigUrl(url)
-        config_urls[url].update()
+    config_urls[url].update()
     return config_urls[url]
 
 def add_git_source(url, config_url=None):
@@ -1291,63 +1302,54 @@ def identify_source(url):
         if not Url(url).path:
             url = url+'/'
 
-    # make deep request
-    try:
-        resp = requests.get(url, allow_redirects=False)
-        resp.raise_for_status()
-    except:
-        return
-    else:
-        # check for git
-        if url.endswith('.git'):
-            return 'git', url
+    if url.endswith('.git'):
+        return 'git', url
 
-        # check for patch
-        if '<h2>Add to Download.am</h2>' in resp.text:
-            return 'patch', url
+    if 'dlam-config.yaml' in url:
+        return 'config', url
 
-        # check for config
-        if 'dlam-config.yaml' in url:
-            return 'config', url
-
-    # check direct dlam-config url
-    if 'dlam-config.yaml' not in url:
-        u = url.rstrip('/')+'/dlam-config.yaml'
+    with Timeout(10):
         try:
-            resp = requests.get(u, stream=True)
-            try:
-                resp.raise_for_status()
-                data = yaml.load(resp.raw)
-            finally:
-                resp.close()
-            assert len(data.keys()) > 0
-            return 'config', u
+            u = Url(url)
+            host = u.host
+            for txt in dns.resolver.query(host, 'TXT'):
+                for line in txt.strings:
+                    if line.startswith('repo-domain='):
+                        return identify_source(line[12:])
+                    elif re.match(r'^\w+: \w+://', line):
+                        return 'config', url
+        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
+            pass
         except:
             traceback.print_exc()
-            pass
 
-    # check patch subdomain
     u = Url(url)
-    if not u.host.startswith('repo.'):
-        u.host = 'repo.{}'.format(u.host)
-        try:
-            resp = requests.get(u.to_string())
-            resp.raise_for_status()
-            if '<h2>Add to Download.am</h2>' in resp.text:
-                return 'patch', u.to_string()
-        except:
-            pass
+    if not u.host.startswith('www.'):
+        u.host = 'www.{}'.format(u.host)
+        return identify_source(u.to_string())
 
-    log.warning('could not identify source type. using default git')
-    return None, url
+    try:
+        with Timeout(10):
+            u = url.rstrip('/')+'/dlam-config.yaml'
+            resp = requests.get(u)
+            resp.raise_for_status()
+            return 'config', u
+    except:
+        traceback.print_exc()
+
+    return ValueError('could not identify source')
 
 def add_source(url, config_url=None, type=None):
     if type is None:
-        type, url = identify_source(url)
-        if type is None:
+        try:
+            with Timeout(30):
+                type, url = identify_source(url)
+        except Timeout:
+            log.warning('add source check timed out')
             return
+        except BaseException as e:
+            raise
     return source_types[type](url, config_url)
-
 
 # startup/shutdown
 
@@ -1400,7 +1402,7 @@ def init():
                     pass
 
     default_sources = dict(
-        downloadam='http://community.download.am/dlam-config.yaml'
+        downloadam='download.am'
     )
 
     if not test_mode:
@@ -1438,7 +1440,7 @@ def init():
         yield x
 
     patch_group.join()
-
+    
     # start the patch loop
     patch_loop_greenlet = gevent.spawn(patch_loop)
 

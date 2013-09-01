@@ -42,6 +42,8 @@ else:
     if not settings.use_keyring:
         keyring = False
 
+module_initialized = Event()
+
 log = logger.get("login")
 
 hash_types = ['login', 'frontend', 'backend', 'client', 'protected']

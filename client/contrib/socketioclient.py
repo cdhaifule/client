@@ -247,8 +247,11 @@ class _SocketIO(object):
         self.heartbeat_timeout_handler = gevent.spawn_later(self.heartbeat_timeout, self.heartbeat_timed_out)
 
     def heartbeat_timed_out(self):
-        e = SocketIOConnectionError('heartbeat timed out')
-        self.parent.disconnect(e)
+        self.heartbeat_timeout_handler = None
+        try:
+            raise SocketIOConnectionError('heartbeat timed out')
+        except BaseException as e:
+            self.parent.disconnect(e)
 
     # messages/events
 
@@ -375,7 +378,6 @@ class _SocketIO(object):
         gevent.spawn(self.disconnect)
 
     def on_heartbeat(self, packet_id, get_event_callback, data):
-        #print "!"*100, 'RECEIVED HEARTBEAT'
         self.send_packet(2)
         self.reset_heartbeat_timeout()
 

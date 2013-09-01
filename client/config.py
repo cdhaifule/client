@@ -20,9 +20,12 @@ import json
 import traceback
 
 from gevent.lock import Semaphore
+from gevent.event import Event
 
 from . import event, scheme, settings, interface
 from .scheme import transaction
+
+module_initialized = Event()
 
 class ConfigTable(scheme.Table):
     _table_name = 'config'

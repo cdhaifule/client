@@ -197,7 +197,7 @@ class Package(Table):
     progress = Column('api', always_use_getter=True, getter_cached=True, change_affects=['speed', 'eta', '_progress', ['global_status', 'progress']])
     speed = Column('api', always_use_getter=True, getter_cached=True, change_affects=['eta', ['global_status', 'speed']])
     eta = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'eta']])
-    files = Column(None, change_affects=[['global_status', 'files'], 'hosts', 'size', 'progress'])
+    files = Column(None, change_affects=[['global_status', 'files'], 'hosts', 'size', 'progress', 'tab'])
     files_working = Column(None, always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'files_working']])
     chunks = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks']])
     chunks_working = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks_working']])
