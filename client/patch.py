@@ -814,7 +814,11 @@ class ConfigUrl(object):
             host = u.host
             data = dict()
             for txt in dns.resolver.query(host, 'TXT'):
-                for line in txt.strings:
+                if hasattr(txt, 'strings'):
+                    strings = txt.strings
+                else:
+                    strings = [txt.data[1:]]
+                for line in strings:
                     key, value = line.split(': ', 1)
                     data[key] = value
 
@@ -1313,7 +1317,11 @@ def identify_source(url):
             u = Url(url)
             host = u.host
             for txt in dns.resolver.query(host, 'TXT'):
-                for line in txt.strings:
+                if hasattr(txt, 'strings'):
+                    strings = txt.strings
+                else:
+                    strings = [txt.data[1:]]
+                for line in strings:
                     if line.startswith('repo-domain='):
                         return identify_source(line[12:])
                     elif re.match(r'^\w+: \w+://', line):
