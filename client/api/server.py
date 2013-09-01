@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import uuid
 import base64
 import gevent
 
-from bottle import Bottle, request, response
+from bottle import Bottle, request, response, HTTPError
 from socketio import socketio_manage, server
 from socketio.namespace import BaseNamespace
 from socketio.mixins import BroadcastMixin
@@ -86,14 +87,31 @@ def route_downloadam_js():
     if not login.has_login():
         return
     response.headers['Content-Type'] = 'text/javascript'
-    uuid = base64.b64encode(login.encrypt('frontend', settings.app_uuid))
-    return 'var downloadam_client_id="{}";'.format(uuid)
+    _uuid = base64.b64encode(login.encrypt('frontend', settings.app_uuid))
+    return 'var downloadam_client_id="{}";'.format(_uuid)
     
 @app.route('/socket.io/<arg:path>')
 def route_socket_io(*arg, **kw):
     request.environ["HTTP_ORIGIN"] = "*.download.am"
     socketio_manage(request.environ, {'': Namespace}, request=request)
     return "out"
+
+@app.route('/trylogin')
+def route_login_dialog():
+    _id = "/" + uuid.uuid4().hex
+    username = request.query.username
+    @app.route(_id)
+    def show_login_dialog():
+        try:
+            app.routes.remove(route)
+        except ValueError:
+            return HTTPError(404)
+        login.login_dialog(False, username, False)
+        return "ok"
+    route = app.routes[-1]
+    print app.routes
+    print route
+    return """<a href="{}">Show login dialog for user {}</a>""".format(_id, username)
 
 handle = None
 

@@ -344,11 +344,11 @@ class Session(object):
                 
                 message = decode_string(alert.message())
                 #if alert_type not in ('portmap_log_alert', 'dht_reply_alert', 'state_update_alert', 'dht_reply_alert'):
-                if alert_type not in ('portmap_log_alert', 'dht_reply_alert', 'dht_reply_alert'):
-                    try:
-                        log.debug(u'alert: {}: {}'.format(alert_type, message))
-                    except UnicodeEncodeError:
-                        log.error('error decoding unicode...')
+                #if alert_type not in ('portmap_log_alert', 'dht_reply_alert', 'dht_reply_alert'):
+                #    try:
+                #        log.debug(u'alert: {}: {}'.format(alert_type, message))
+                #    except UnicodeEncodeError:
+                #        log.error('error decoding unicode...')
 
                 if alert_type in self.alert_handlers:
                     for func in self.alert_handlers[alert_type]:

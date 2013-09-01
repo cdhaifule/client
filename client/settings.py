@@ -59,6 +59,30 @@ patchserver = "http://repo.download.am"
 
 app_build = 1
 app_uuid = None
+keyring_service = None
+use_keyring = True
+
+if "nose" in sys.argv[0] and use_keyring:
+    import keyring
+    from keyring.backend import KeyringBackend
+
+    class DummyKeyring(KeyringBackend):
+        def __init__(self):
+            self.keys = dict()
+
+        def supported(self):
+            return True
+
+        def get_password(self, service, username):
+            return self.keys.get(username)
+
+        def set_password(self, service, username, password):
+            self.keys[username] = password
+
+        def delete_password(self, service, username):
+            del self.keys[username]
+            
+    keyring.set_keyring(DummyKeyring())
 
 try:
     sys.frozen
@@ -93,6 +117,7 @@ else:
     menuiconfolder = os.path.join(app_dir, "client/img/menu")
     img_dir = os.path.join(app_dir, 'client/img')
     if sys.platform == "darwin":
+        os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
@@ -121,6 +146,7 @@ _makedirs(external_plugins)
 def init_pre():
     global log
     global app_uuid
+    global keyring_service
 
     from . import logger
     log = logger.get("settings")
@@ -140,6 +166,8 @@ def init_pre():
         with open(app_uuid_file, 'wb') as f:
             f.write(app_uuid)
         log.info('created new app uuid: {}'.format(app_uuid))
+
+    keyring_service = "download.am_client_" + app_uuid
 
 def init():
     pass

@@ -265,7 +265,7 @@ class Profile(Account):
 
     # options
     username = Column(('api', 'db'), read_only=False, fire_event=True)
-    password = Column('db', read_only=False, fire_event=True)
+    password = Column('db', read_only=False, fire_event=True, use_keyring=True)
 
     def __init__(self, **kwargs):
         Account.__init__(self, **kwargs)

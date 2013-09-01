@@ -315,7 +315,7 @@ td {
         return u"""<input type="image" name="{}" src="data:{};base64,{}" style="cursor:crosshair;" />""".format(e.name, e.mime, e.data)
 
     def input_input_text(self, e, _type="text"):
-        return u"""<input type="{}" name="{}" value="{}" />""".format(_type, e.name, self.compile_text(e.default))
+        return u"""<input type="{}" name="{}" value="{}" />""".format(_type, e.name, self.compile_text(e.value))
         
     def input_input_password(self, e):
         return self.input_input_text(e, "password")

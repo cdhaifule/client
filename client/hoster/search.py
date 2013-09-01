@@ -15,13 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import uuid
 import random
 from gevent.pool import Group
 from gevent.lock import Semaphore
+from PIL import Image
+from cStringIO import StringIO as BytesIO
 
 from . import manager, this, util
 from ..cache import CachedDict
 from ..api import proto
+from ..variablesizepool import VariableSizePool
 
 cache = CachedDict(3600)
 
@@ -71,7 +75,47 @@ class Query(object):
             self._display = 'list'
         return self._display
         
+def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
+    payload = {
+        "thumb_id": thumb_id,
+        "data": data,
+        "mime": mime,
+    }
+    ctx.responder.send(command="thumb", payload=payload)
+
+def _create_thumbnail_data(img):
+    dim_x = 90
+    dim_y = 120
+    black = Image.new("RGB", (dim_x, dim_y), (0, 0, 0))
+    x, y = img.size
+    img.convert("RGB")
+    if y >= x:
+        new_y = dim_y
+        new_x = int(x / (y/float(dim_y)))
+        x_start = (dim_x - new_x) // 2
+        y_start = 0
+    else:
+        new_x = 90
+        new_y = int(y / (x/float(dim_x)))
+        y_start = (dim_y - new_y) // 2
+        x_start = 0
         
+    black.paste(img.resize((new_x, new_y), Image.ANTIALIAS), (x_start, y_start)) 
+    data = BytesIO()
+    black.save(data, "JPEG", quality=50, optimize=True, progressive=True)
+    return data.getvalue()
+
+def _load_thumb(ctx, thumb, thumb_id):
+    resp = ctx.account.get(thumb)
+    img = Image.open(BytesIO(resp.content))
+    data = _create_thumbnail_data(img)
+    push_thumb_data(ctx, thumb_id, data)
+
+def load_thumb_async(ctx, thumb):
+    _id = uuid.uuid4().hex
+    ctx.thumb_pool.spawn(_load_thumb, ctx, thumb, _id)
+    return _id
+    
 def _add_result(self, title=None, thumb=None, duration=None, url=None, description=None, extra=None, name=None):
     from .. import core
     try:
@@ -82,6 +126,10 @@ def _add_result(self, title=None, thumb=None, duration=None, url=None, descripti
     except TypeError:
         exists = 0
         url = None
+    if thumb:
+        thumb_id = load_thumb_async(self, thumb)
+    else:
+        thumb_id = None
     if url and extra is not None:
         url = util.add_extra(url, extra)
     if thumb is not None:
@@ -89,15 +137,16 @@ def _add_result(self, title=None, thumb=None, duration=None, url=None, descripti
     self.results.append([name or "http", title, thumb, duration, url, description, exists])
 
 class Context(object):
-    def __init__(self, name, tags):
+    def __init__(self, name, tags, responder=None):
         self.name = name
         self.sub = self.plugin.search
+        self.responder = responder
         if self.sub is None:
             raise ValueError('plugin {} has no search method'.format(name))
         self.tags = tags
         self.position = None
         self.next = 0
-
+        self.thumb_pool = VariableSizePool(3)
         self.results = list()
 
     def add_result(self, *args, **kwargs):
@@ -124,6 +173,7 @@ class Input(object):
         self.id = random.randint(1, 100000)
         self.results = []
         self.sent = False
+        self.thumb_pool = VariableSizePool(3)
         
     def add_result(self, *args, **kwargs):
         assert not self.sent
@@ -201,10 +251,10 @@ def _search(responder, id, search, max_results):
 
 def search(responder, id, search_id, plugins, query, tags, max_results=50):
     search = Query(search_id, query)
-    with search.lock:
-        for plugin in plugins:
-            search.contexts.append(Context(plugin, tags))
-        return _search(responder, id, search, max_results)
+    #with search.lock:
+    for plugin in plugins:
+        search.contexts.append(Context(plugin, tags, responder))
+    return _search(responder, id, search, max_results)
 
 def search_more(responder, id, search_id, max_results=50):
     if search_id not in cache:

@@ -34,6 +34,14 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 
+try:
+    import keyring
+except ImportError:
+    keyring = False
+else:
+    if not settings.use_keyring:
+        keyring = False
+
 log = logger.get("login")
 
 hash_types = ['login', 'frontend', 'backend', 'client', 'protected']
@@ -91,11 +99,16 @@ def set_login(username, password, save_password=True):
 
             if save_password:
                 for h in hash_types:
-                    config.hashes[h] = hashes[h]
+                    if keyring:
+                        keyring.set_password(settings.keyring_service, h, hashes[h] or "")
+                    else:
+                        config.hashes[h] = hashes[h]
 
         if config['username'] is None or not save_password:
             for h in hash_types:
                 config.hashes[h] = None
+                if keyring:
+                    keyring.set_password(settings.keyring_service, h, "")
 
     event.fire('login:changed')
     
@@ -125,6 +138,8 @@ def logout():
     if config['save_password']:
         for h in hash_types:
             config.hashes[h] = None
+            if keyring:
+                keyring.set_password(settings.keyring_service, h, "")
 
     event.fire('login:changed')
 
@@ -214,13 +229,20 @@ def on_config_loaded(e):
             hashes[h] = config.hashes[h]
         except (AttributeError, KeyError):
             hashes[h] = None
+        else:
+            if config.hashes[h] and keyring:
+                # transfer legacy keys into keyring
+                keyring.set_password(settings.keyring_service,
+                    h, config.hashes[h])
+                config.hashes[h] = None
+        if not hashes[h] and keyring:
+            hashes[h] = keyring.get_password(settings.keyring_service, h) or None
 
 login_input = None
 
 @event.register('login:changed')
 def on_login_changed(e):
     global login_input
-
     module_initialized.wait()
     ui.module_initialized.wait()
     
@@ -235,40 +257,53 @@ def on_login_changed(e):
         if login_input is not None:
             print "login input active"
             return
-        if not ui.ui.has_ui:
-            log.error("Cannot login without user interface. For commandline usage see --help.")
-            sys.exit(1)
-        login_event.clear()
-        elements = list()
-        elements.append([input.Text('Please input your login informations')])
-        elements.append([input.Float('left')])
-        elements.append([input.Text('')])
-        elements.append([input.Text('E-Mail:'), input.Input('username', value=config.username)])
-        elements.append([input.Text('Password:'), input.Input('password', 'password')])
-        elements.append([input.Text(''), input.Link('https://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
-        elements.append([input.Text(''), input.Link('https://{}/#register'.format(settings.frontend_domain), 'Register')])
-        elements.append([input.Float('right')])
-        elements.append([input.Text('')])
+        login_dialog()
+        
+def login_dialog(guest=True, username=None, close_on_failure=True):
+    global login_input
+    if not ui.ui.has_ui:
+        log.error("Cannot login without user interface. For commandline usage see --help.")
+        sys.exit(1)
+    if not username:
+        username = config.username
+    print "username is", username, config.username
+    login_event.clear()
+    elements = list()
+    elements.append([input.Text('Please input your login informations')])
+    elements.append([input.Float('left')])
+    elements.append([input.Text('')])
+    elements.append([input.Text('E-Mail:'), input.Input('username', value=username)])
+    elements.append([input.Text('Password:'), input.Input('password', 'password')])
+    elements.append([input.Text(''), input.Link('https://{}/#pwlose'.format(settings.frontend_domain), 'Forgot password?')])
+    elements.append([input.Text(''), input.Link('https://{}/#register'.format(settings.frontend_domain), 'Register')])
+    elements.append([input.Float('right')])
+    elements.append([input.Text('')])
 
-        #elements.append([sub, input.Input('save_password', 'checkbox', default=config.save_password, label='Save password')])
-        elements.append([input.Choice('action', choices=[
-            dict(value='ok', content='OK', ok=True),
-            dict(value='cancel', content='Cancel', cancel=True),
-            dict(value='guest', content='Connect as guest')])])
+    #elements.append([sub, input.Input('save_password', 'checkbox', default=config.save_password, label='Save password')])
+    login_choices = [
+        dict(value='ok', content='OK', ok=True),
+        dict(value='cancel', content='Cancel', cancel=True),
+    ]
+    if guest:
+        login_choices.append(dict(value='guest', content='Connect as guest'))
+    
+    elements.append([input.Choice('action', choices=login_choices)])
 
-        def _login_input():
-            try:
-                result = input.get(elements, type='login', timeout=None, close_aborts=True, ignore_api=True)
-            except input.InputAborted:
+    def _login_input():
+        try:
+            result = input.get(elements, type='login', timeout=None, close_aborts=True, ignore_api=True)
+        except input.InputAborted:
+            if close_on_failure:
                 sys.exit(1)
-            else:
-                if result['action'] == 'cancel':
+        else:
+            if result['action'] == 'cancel':
+                if close_on_failure:
                     sys.exit(1)
-                elif result['action'] == 'guest':
-                    init_first_start(1, result.get('save_password', True))
-                else:
-                    set_login(result['username'], result['password'], result.get('save_password', True))
-        login_input = gevent.spawn(_login_input)
+            elif result['action'] == 'guest':
+                init_first_start(1, result.get('save_password', True))
+            else:
+                set_login(result['username'], result['password'], result.get('save_password', True))
+    login_input = gevent.spawn(_login_input)
 
 def init_optparser(parser, OptionGroup):
     group = OptionGroup(parser, _T.login__options)

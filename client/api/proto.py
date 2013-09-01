@@ -51,11 +51,6 @@ class ProtoResponder(object):
         message = pack_message(self.source, command, self.in_response_to, payload, self.channel)
         self.send_message(message)
 
-    def get_caller_class(self):
-        if hasattr(self.send_message, '__self__'):
-            return self.send_message.__self__
-        return None
-
 
 def deflate(data, compresslevel=9):
     compress = zlib.compressobj(compresslevel, zlib.DEFLATED, -zlib.MAX_WBITS, zlib.DEF_MEM_LEVEL, 0)
