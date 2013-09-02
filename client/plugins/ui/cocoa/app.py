@@ -48,6 +48,9 @@ class Delegate(NSObject):
     def test_(self, noti):
         common.relogin()
         
+    def register_(self, noti):
+        common.register()
+        
     def quit_(self, notification):
         exit(0)
         
@@ -69,10 +72,12 @@ def start_taskbar():
     icon = t.statusItemWithLength_(NSVariableStatusItemLength)
     icon.setHighlightMode_(1)
     menuitems = []
-    labels = ["Open", "Logout", "Quit"]
+    labels = ["Open", "Register", "Logout", "Quit"]
     if patch.current.current == "DEV" or patch.config.branch == "master":
-        labels = ["Open", "Logout", "Restart", "Test", "Quit"]
+        labels = ["Open", "Register", "Logout", "Restart", "Test", "Quit"]
     for label in labels:
+        if label == "Register" and not login.is_guest():
+            continue
         item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
             localize._X(label), label.lower().replace(" ", "").split(" ")[0]+":", "")
             
@@ -109,9 +114,13 @@ def start_taskbar():
     
     @login.config.register('username')
     def _():
-        item = menu.itemAtIndex_(0)
-        item.setTitle_(login.config.username or "Open")
-
+        if not login.is_guest():
+            item = menu.itemAtIndex_(0)
+            item.setTitle_(login.config.username or "Open")
+            item = menu.itemAtIndex_(1)
+            if item.title == localize._X("Register"):
+                menu.removeItemAtIndex_(1)
+                
 def gevent_timer(deleg):
     timer = NSTimer.alloc().initWithFireDate_interval_target_selector_userInfo_repeats_(
                 NSDate.date(), 0.1, deleg, 'gevent:', None, True)
