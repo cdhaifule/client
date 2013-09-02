@@ -38,12 +38,31 @@ log = logger.get('plugintools')
 ################################## module functions
 
 
+def load_python_module(name, path, code):
+    module = new_module(name)
+    module.__file__ = path.encode(sys.getfilesystemencoding())
+    code = compile(code, module.__file__, 'exec')
+    exec code in module.__dict__
+    sys.modules[name] = module
+    return module
+
+default_handlers = dict(
+    py=load_python_module
+)
+
+
 def iterplugins(type):
     package = 'client.plugins.{}'.format(type)
     for loader, name, ispkg in iter_modules([os.path.join(settings.script_dir, *package.split('.'))]):
         yield '.'+name, package
 
-def itermodules(type, load_external=True):
+def itermodules(type, load_external=True, handlers=None):
+    if handlers is None:
+        handlers = dict()
+    for key in default_handlers:
+        if key not in handlers:
+            handlers[key] = default_handlers[key]
+
     for name, package in iterplugins(type):
         try:
             log.debug('loading {}{}'.format(package, name))
@@ -82,7 +101,10 @@ def itermodules(type, load_external=True):
 
         for file in files:
             module_name, ext = os.path.splitext(file.name)
-            if ext != ".py":
+
+            try:
+                handler = handlers[ext[1:]]
+            except KeyError:
                 continue
 
             name = "{}{}".format(extern_name, module_name)
@@ -90,12 +112,7 @@ def itermodules(type, load_external=True):
 
             log.debug("loading external {}".format(display_name))
             try:
-                module = new_module(name)
-                module.__file__ = os.path.join(path, file.name).encode(sys.getfilesystemencoding())
-                code = compile(file.get_contents(), module.__file__, 'exec')
-                exec code in module.__dict__
-                sys.modules[name] = module
-                yield module
+                yield handler(name, os.path.join(path, file.name), file.get_contents())
             except ImportError:
                 log.exception('missing some imports while loading external module {}'.format(display_name))
             except:

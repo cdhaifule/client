@@ -158,7 +158,8 @@ def check_dependencies(module, retry):
 def init():
     global icon_cache
     
-    icon_cache = shelve.open(icon_cache_path.encode(sys.getfilesystemencoding()), writeback=True)
+    # load icon cache
+    icon_cache = shelve.open(icon_cache_path, writeback=True)
     icon_cache.close = icon_cache.sync
     try:
         a, (b, c) = icon_cache.iteritems().next() # reset cache if format not correct.
@@ -170,9 +171,12 @@ def init():
         print "resetting icon cache...", traceback.format_exc()
         reset_icon_cache()
     
+    # load modules
     retry = list()
-    for module in plugintools.itermodules('hoster'):
+    from . import jshoster
+    for module in plugintools.itermodules('hoster', handlers=dict(js=jshoster.load)):
         if not hasattr(module, 'this'):
+            log.warning('found no this object in module {}'.format(module.__name__))
             continue
 
         # check if there are dependencies that needs to be loaded before this module
@@ -181,6 +185,7 @@ def init():
 
         register(module)
 
+    # solve dependencies
     while retry:
         changed = False
         next_retry = list()
@@ -193,8 +198,12 @@ def init():
         if not changed:
             break
 
+    # retry and fail all unsolved dependencies
     for module in retry:
-        register(module)
+        try:
+            register(module)
+        except BaseException as e:
+            log.exception('error initializing module {}: {}'.format(module.this.name, e))
 
 def terminate():
     try:
