@@ -25,15 +25,15 @@ script_dir = os.path.abspath(os.path.dirname(module_dir))
 filesystem_encoding = sys.getfilesystemencoding()
 
 if sys.platform == "darwin":
-    home_dir = os.environ["HOME"].decode(sys.getfilesystemencoding())
+    home_dir = os.environ["HOME"].decode(filesystem_encoding)
     data_dir = os.path.join(home_dir, "Library", 'download.am')
 elif sys.platform == "win32":
     if platform.release() == 'XP':
         os.environ['LOCALAPPDATA'] = os.environ['APPDATA']
-    home_dir = os.path.join(os.environ["HOMEDRIVE"], os.environ["HOMEPATH"].decode(sys.getfilesystemencoding()))
-    data_dir = os.path.join(os.environ["LOCALAPPDATA"].decode(sys.getfilesystemencoding()), 'download.am-data')
+    home_dir = os.path.join(os.environ["HOMEDRIVE"], os.environ["HOMEPATH"].decode(filesystem_encoding))
+    data_dir = os.path.join(os.environ["LOCALAPPDATA"].decode(filesystem_encoding), 'download.am-data')
 else:
-    home_dir = os.environ["HOME"].decode(sys.getfilesystemencoding())
+    home_dir = os.environ["HOME"].decode(filesystem_encoding)
     data_dir = os.path.join(home_dir, ".download.am")
 
 app_uuid_file = os.path.join(data_dir, '.app.uuid')
