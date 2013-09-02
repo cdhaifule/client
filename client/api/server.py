@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import uuid
 import base64
 import gevent
+import socket
+import platform
 
 from bottle import Bottle, request, response, HTTPError
 from socketio import socketio_manage, server
@@ -100,6 +103,7 @@ def route_socket_io(*arg, **kw):
 def route_login_dialog():
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
+
     @app.route(_id)
     def show_login_dialog():
         try:
@@ -107,11 +111,17 @@ def route_login_dialog():
         except ValueError:
             return HTTPError(404)
         login.login_dialog(False, username, False)
-        return "ok"
+        return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
     route = app.routes[-1]
+    path = os.path.join(os.path.split(__file__)[0], 'server-change_login.html')
+    with open(path, 'r') as f:
+        data = f.read()
+    data = data.replace('###login_url###', _id)
+    data = data.replace('###name###', socket.gethostname())
+    data = data.replace('###os###', platform.system())
     print app.routes
     print route
-    return """<a href="{}">Show login dialog for user {}</a>""".format(_id, username)
+    return data
 
 handle = None
 
