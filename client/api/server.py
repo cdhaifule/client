@@ -96,7 +96,7 @@ def route_socket_io(*arg, **kw):
     socketio_manage(request.environ, {'': Namespace}, request=request)
     return "out"
 
-@app.route('/trylogin')
+@app.route('/change_login')
 def route_login_dialog():
     _id = "/" + uuid.uuid4().hex
     username = request.query.username

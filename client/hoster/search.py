@@ -15,17 +15,19 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import uuid
+import os
 import random
+import base64
 from gevent.pool import Group
 from gevent.lock import Semaphore
-from PIL import Image
+from PIL import Image, ImageOps
 from cStringIO import StringIO as BytesIO
 
 from . import manager, this, util
 from ..cache import CachedDict
 from ..api import proto
 from ..variablesizepool import VariableSizePool
+from .. import login
 
 cache = CachedDict(3600)
 
@@ -78,41 +80,53 @@ class Query(object):
 def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
     payload = {
         "thumb_id": thumb_id,
-        "data": data,
+        "data": base64.b64encode(data),
         "mime": mime,
     }
     ctx.responder.send(command="thumb", payload=payload)
+    print "pushed thumb data: {}".format(len(data))
 
 def _create_thumbnail_data(img):
-    dim_x = 90
-    dim_y = 120
-    black = Image.new("RGB", (dim_x, dim_y), (0, 0, 0))
+    dim_x = 120
+    dim_y = 90
+    #black = Image.new("RGB", (dim_x, dim_y), (0, 0, 0))
     x, y = img.size
-    img.convert("RGB")
+    img = img.convert("RGB")
     if y >= x:
         new_y = dim_y
         new_x = int(x / (y/float(dim_y)))
-        x_start = (dim_x - new_x) // 2
-        y_start = 0
+        #x_start = (dim_x - new_x) // 2
+        #y_start = 0
     else:
         new_x = 90
         new_y = int(y / (x/float(dim_x)))
-        y_start = (dim_y - new_y) // 2
-        x_start = 0
-        
-    black.paste(img.resize((new_x, new_y), Image.ANTIALIAS), (x_start, y_start)) 
+        #y_start = (dim_y - new_y) // 2
+        #x_start = 0
+    #black.paste(img.resize((new_x, new_y), Image.ANTIALIAS), (x_start, y_start)) 
+    img.thumbnail((new_x, new_y), Image.ANTIALIAS)
+    #img = ImageOps.fit(img, (dim_x, dim_y), Image.ANTIALIAS)
     data = BytesIO()
-    black.save(data, "JPEG", quality=50, optimize=True, progressive=True)
+    img.save(data, "JPEG", quality=40, optimize=True, progressive=True)
     return data.getvalue()
 
 def _load_thumb(ctx, thumb, thumb_id):
+    if thumb_id in cache:
+        data = cache[thumb_id]
+        push_thumb_data(ctx, thumb_id, data)
+        return
     resp = ctx.account.get(thumb)
-    img = Image.open(BytesIO(resp.content))
+    content = resp.content
+    img = Image.open(BytesIO(content))
     data = _create_thumbnail_data(img)
+    previewfolder = os.environ.get("THUMBPREVIEW", "")
+    if previewfolder:
+        with open(os.path.join(previewfolder, thumb_id+".jpg"), "wb") as f:
+            f.write(data)
+    cache[thumb_id] = data
     push_thumb_data(ctx, thumb_id, data)
 
 def load_thumb_async(ctx, thumb):
-    _id = uuid.uuid4().hex
+    _id = login.sha256(thumb)
     ctx.thumb_pool.spawn(_load_thumb, ctx, thumb, _id)
     return _id
     
@@ -127,9 +141,8 @@ def _add_result(self, title=None, thumb=None, duration=None, url=None, descripti
         exists = 0
         url = None
     if thumb:
-        thumb_id = load_thumb_async(self, thumb)
-    else:
-        thumb_id = None
+        load_thumb_async(self, thumb)
+
     if url and extra is not None:
         url = util.add_extra(url, extra)
     if thumb is not None:
@@ -148,6 +161,7 @@ class Context(object):
         self.next = 0
         self.thumb_pool = VariableSizePool(3)
         self.results = list()
+        self.referer = None
 
     def add_result(self, *args, **kwargs):
         kwargs.setdefault("name", self.name)
@@ -209,7 +223,7 @@ def _run(responder, search, ctx, todo):
         else:
             plugin.on_search(ctx, search.query)
     finally:
-        del ctx.account
+        #del ctx.account
         todo[ctx.name] = 1
         if responder is not None:
             progress = int((float(sum(todo.values()))/len(todo))*100)
