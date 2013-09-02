@@ -116,14 +116,15 @@ elif sys.platform == "darwin" and sys.frozen:
 else:
     app_dir = os.getcwd()
     bin_dir = os.path.join(app_dir, "bin")
+    os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     menuiconfolder = os.path.join(app_dir, "client/img/menu")
     img_dir = os.path.join(app_dir, 'client/img')
     if sys.platform == "darwin":
-        os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     else:
+        use_keyring = False
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
