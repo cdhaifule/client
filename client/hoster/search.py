@@ -98,7 +98,7 @@ def _create_thumbnail_data(img):
         #x_start = (dim_x - new_x) // 2
         #y_start = 0
     else:
-        new_x = 90
+        new_x = dim_x
         new_y = int(y / (x/float(dim_x)))
         #y_start = (dim_y - new_y) // 2
         #x_start = 0
