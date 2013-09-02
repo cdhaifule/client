@@ -141,13 +141,15 @@ def _add_result(self, title=None, thumb=None, duration=None, url=None, descripti
         exists = 0
         url = None
     if thumb:
-        load_thumb_async(self, thumb)
+        _id = load_thumb_async(self, thumb)
+    else:
+        _id = None
 
     if url and extra is not None:
         url = util.add_extra(url, extra)
     if thumb is not None:
         self.display = "thumbs"
-    self.results.append([name or "http", title, thumb, duration, url, description, exists])
+    self.results.append([name or "http", title, thumb, duration, url, description, exists, _id])
 
 class Context(object):
     def __init__(self, name, tags, responder=None):
