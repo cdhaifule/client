@@ -1345,7 +1345,7 @@ def identify_source(url):
     except:
         traceback.print_exc()
 
-    return ValueError('could not identify source')
+    raise ValueError('could not identify source')
 
 def add_source(url, config_url=None, type=None):
     if type is None:
