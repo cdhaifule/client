@@ -129,6 +129,15 @@ else:
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
 
+if use_keyring:
+    try:
+        import keyring
+    except ImportError:
+        keyring = None
+        use_keyring = False
+else:
+    keyring = None
+
 def _makedirs(path):
     try:
         try:

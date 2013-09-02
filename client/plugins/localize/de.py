@@ -56,7 +56,6 @@ logger__log_file_level = u'setzt das Log-Level für die Log Datei (Default: DEBU
 login__options = 'Login Optionen'
 login__username = 'Login Benutzername'
 login__password = 'Login Passwort'
-login__save_password = 'speicher das Passwort in der Einstellungsdatei. Du musst das Passwort dann nicht erneut eingeben'
 
 # UI
 

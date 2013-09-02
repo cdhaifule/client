@@ -56,7 +56,6 @@ logger__log_file_level = 'set the log level of the logfile (default: DEBUG)'
 login__options = 'Login options'
 login__username = 'login username'
 login__password = 'login password'
-login__save_password = 'save the password in config file so you don\'t have to enter this again'
 
 # UI
 

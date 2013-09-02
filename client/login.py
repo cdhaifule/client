@@ -34,14 +34,6 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 
-try:
-    import keyring
-except ImportError:
-    keyring = False
-else:
-    if not settings.use_keyring:
-        keyring = False
-
 module_initialized = Event()
 
 log = logger.get("login")
@@ -52,7 +44,6 @@ config = globalconfig.new('login')
 config.default('first_start', None, dict, private=True)
 
 config.default('username', "", unicode, private=True)
-config.default('save_password', True, bool, private=True)
 
 hashes = dict()
 for h in hash_types:
@@ -83,15 +74,12 @@ def hash_protected(password, hash_frontend):
 def hash_client(hash_login, hash_frontend):
     return sha256(hash_login + hash_frontend)
 
-def set_login(username, password, save_password=True):
+def set_login(username, password):
     global _config_loaded
     _config_loaded = True
 
     with transaction:
         config['username'] = username
-        if save_password is not None and save_password:
-            config['save_password'] = save_password
-
         if username is not None:
             hashes['login'] = hash_login(username, password)
             hashes['frontend'] = hash_frontend(username, password, hashes['login'])
@@ -99,18 +87,12 @@ def set_login(username, password, save_password=True):
             hashes['protected'] = hash_protected(password, hashes['frontend'])
             hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
 
-            if save_password:
-                for h in hash_types:
-                    if keyring:
-                        keyring.set_password(settings.keyring_service, h, hashes[h] or "")
-                    else:
-                        config.hashes[h] = hashes[h]
+            for h in hash_types:
+                config.hashes[h] = hashes[h]
 
-        if config['username'] is None or not save_password:
+        if config['username'] is None:
             for h in hash_types:
                 config.hashes[h] = None
-                if keyring:
-                    keyring.set_password(settings.keyring_service, h, "")
 
     event.fire('login:changed')
     
@@ -137,11 +119,8 @@ def logout():
     for h in hash_types:
         hashes[h] = None
 
-    if config['save_password']:
-        for h in hash_types:
-            config.hashes[h] = None
-            if keyring:
-                keyring.set_password(settings.keyring_service, h, "")
+    for h in hash_types:
+        config.hashes[h] = None
 
     event.fire('login:changed')
 
@@ -226,20 +205,6 @@ def on_config_loaded(e):
         return
     _config_loaded = True
 
-    for h in hash_types:
-        try:
-            hashes[h] = config.hashes[h]
-        except (AttributeError, KeyError):
-            hashes[h] = None
-        else:
-            if config.hashes[h] and keyring:
-                # transfer legacy keys into keyring
-                keyring.set_password(settings.keyring_service,
-                    h, config.hashes[h])
-                config.hashes[h] = None
-        if not hashes[h] and keyring:
-            hashes[h] = keyring.get_password(settings.keyring_service, h) or None
-
 login_input = None
 
 @event.register('login:changed')
@@ -289,7 +254,6 @@ def login_dialog(username=None, website_switch=False):
     elements.append([input.Float('right')])
     elements.append([input.Text('')])
 
-    #elements.append([sub, input.Input('save_password', 'checkbox', default=config.save_password, label='Save password')])
     login_choices = [
         dict(value='ok', content='OK', ok=True),
         dict(value='cancel', content='Cancel', cancel=True),
@@ -311,9 +275,9 @@ def login_dialog(username=None, website_switch=False):
                 if not website_switch:
                     sys.exit(1)
             elif result['action'] == 'guest':
-                init_first_start(1, result.get('save_password', True))
+                init_first_start(1)
             else:
-                set_login(result['username'], result['password'], result.get('save_password', True))
+                set_login(result['username'], result['password'])
         finally:
             login_input = None
 
@@ -323,20 +287,16 @@ def init_optparser(parser, OptionGroup):
     group = OptionGroup(parser, _T.login__options)
     group.add_option('--username', dest="username", help=_T.login__username)
     group.add_option('--password', dest="password", help=_T.login__password)
-    #group.add_option('--save-password', dest="save_password", action="store_true", default=False, help=_T.login__save_password)
     parser.add_option_group(group)
 
 def init_options(options):
     if options.username is not None:
         if options.password:
-            #set_login(options.username, options.password, options.save_password)
             set_login(options.username, options.password)
             return
         raise SystemExit('you have to specify --username with --password')
     elif options.password:
         raise SystemExit('you have to specify --password with --username')
-    #elif options.save_password:
-    #    raise SystemExit('you have to specify --username and --password with --save-password')
     else:
         event.fire_later(0, 'login:changed')
         return
@@ -344,13 +304,12 @@ def init_options(options):
 pub_key = RSA.importKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCoUVppotFnAvfVFmpIcSsTFZPlh49XmobCjoZCJRCxnOIV2JlDhD1CzwyW6/pypvjZnNPkU/lunO0UreWNQAVyzSRW2Q/PjDkeSPuSDvQ4jxffADYu/YfsD8mTUtRj5yRqmBHepqk0eJjl4GNsJX6g6BmUJG+3/etBpmsOMtYBOO/5HJxMrQslzWccv7ObMdDnjO3+nSnH1/09PnNWNQx3lt+PVfV4eBYIl3M0anHHhhsj21oWaevDdEj2nSEA9nwdPrA7jI+np2bm83PgfsGdzdF837M/r6EECCG7Qw7YTeU06yDebMpqqsUagv+7ddxaUgyu5Cd1DdUn4PHbD7wIlX2uts4iXsSzLYBcsw93cfuH9XT55xhidqYpCzfr3DemSBWOS5AbR3qkpyz4h8fO0QlH3z5gAuKVBVCOyZb0HFV1Cro0OtF3bxGUok8+i7A8/afzUK+ndPNCTKUTzlrQgnkCankurgZGZ5kcCVvgYga4zGUKC0pdBkzCqMh7VF6ki4mt3SuA6KsbJNNWpna7euYTUomY5jyxAlK4gK6LYxoUcyUxaDD5RnTyhX2LvYZnQ7yunsv9LcNAeSay1Xp3bg066XTxoOCZXuR+ZwNAnhkpDN6aaZdQCAuoqZs4U6rKTWWpNrppxnbW4lZ9WGsEQe9FdkBdedgXHi9KGIaV1Q==")
 pub_key = PKCS1_OAEP.new(pub_key)
 
-def init_first_start(retry=1, save_password=True):
+def init_first_start(retry=1):
     if config.first_start is not None:
         config.username = config.first_start['username']
         for key in hash_types:
             hashes[key] = config.first_start[key]
-            if save_password:
-                config.hashes[key] = config.first_start[key]
+            config.hashes[key] = config.first_start[key]
         event.fire('login:changed')
         return
 
@@ -394,7 +353,7 @@ def init_first_start(retry=1, save_password=True):
         log.critical('first start register failed. User have to create and setup an own account.')
         return
 
-    set_login(username, password, True)
+    set_login(username, password)
     with transaction:
         config.first_start = hashes
         config.first_start['username'] = username
@@ -413,10 +372,10 @@ def init(options):
 class LoginInterface(interface.Interface):
     name = 'login'
 
-    def set(username=None, password=None, save_password=True):
+    def set(username=None, password=None):
         """this function is mainly for the command line rpc interface
         """
-        set_login(username, password, save_password)
+        set_login(username, password)
 
     def change_password(username=None, login=None, frontend=None, backend=None, protected=None, upgrade_guest_account=None):
         """changes login infos and reconnects to api
@@ -433,9 +392,8 @@ class LoginInterface(interface.Interface):
         hashes['protected'] = protected
         hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
 
-        if config['save_password']:
-            for h in hash_types:
-                config.hashes[h] = hashes[h]
+        for h in hash_types:
+            config.hashes[h] = hashes[h]
 
         event.fire('login:changed')
 

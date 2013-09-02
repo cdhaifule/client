@@ -264,7 +264,7 @@ class PatchWorker(BasicPatchWorker):
             self.source.log.error('patch error: {}'.format(e))
         return False
 
-    def get(self, retry=1):
+    def get(self):
         resp = patch_get(self.source.url, "check", self.source.id, self.source.get_branch(), self.source.version)
         resp.raise_for_status()
         if resp.content == "HEAD":
@@ -282,10 +282,7 @@ class PatchWorker(BasicPatchWorker):
             data = resp.content
         else:
             if resp.status_code != 201:
-                self.source.log.debug("patch not ready (retry {}): {}".format(retry, resp.content))
-                if retry <= 4: # wait at least 10 seconds for the patch
-                    gevent.sleep(retry)
-                    return self.get(retry + 1)
+                self.source.log.debug("patch not ready: {}".format(resp.content))
                 return
             resp = requests.get(resp.headers["Location"])
             resp.raise_for_status()
