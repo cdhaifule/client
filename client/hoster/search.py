@@ -88,7 +88,7 @@ def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
 
 def _create_thumbnail_data(img):
     dim_x = 120
-    dim_y = 90
+    dim_y = 70
     #black = Image.new("RGB", (dim_x, dim_y), (0, 0, 0))
     x, y = img.size
     img = img.convert("RGB")
@@ -103,8 +103,8 @@ def _create_thumbnail_data(img):
         #y_start = (dim_y - new_y) // 2
         #x_start = 0
     #black.paste(img.resize((new_x, new_y), Image.ANTIALIAS), (x_start, y_start)) 
-    img.thumbnail((new_x, new_y), Image.ANTIALIAS)
-    #img = ImageOps.fit(img, (dim_x, dim_y), Image.ANTIALIAS)
+    #img.thumbnail((new_x, new_y), Image.ANTIALIAS)
+    img = ImageOps.fit(img, (dim_x, dim_y), Image.ANTIALIAS)
     data = BytesIO()
     img.save(data, "JPEG", quality=40, optimize=True, progressive=True)
     return data.getvalue()
