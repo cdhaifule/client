@@ -106,7 +106,7 @@ allowed_origins = [
     'http://local.download.am:9090/foo'
 ]
 
-@app.route('/change_login')
+"""@app.route('/change_login')
 def route_login_dialog(methods=['GET']):
     #response.headers['Access-Control-Allow-Origin'] = 'http://*'
     #response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
@@ -138,9 +138,9 @@ def route_login_dialog(methods=['GET']):
         response.status = 403
         return "onError('Guest account pairing is not possible.');"
     gevent.spawn(login.login_dialog, username, True)
-    return "onSuccess();"
+    return "onSuccess();" """
 
-"""@app.route('/change_login')
+@app.route('/change_login')
 def route_login_dialog():
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
@@ -154,7 +154,7 @@ def route_login_dialog():
         login.login_dialog(username, True)
         return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
     route = app.routes[-1]
-    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system())"""
+    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system(), username=username)
 
 handle = None
 
@@ -278,6 +278,10 @@ login_template = SimpleTemplate("""
             div {
                 text-align:center;
             }
+            form div div {
+                float: left;
+                width: 320px;
+            }
         </style>
         <script type="text/javascript">
             function onLogin() {
@@ -297,12 +301,17 @@ login_template = SimpleTemplate("""
             {{_("Would you like to login now?")}}
         </p>
         <div>
-        <button class="blue" onclick="onLogin();">
-            {{_("Yes")}}
-        </button>
-        <button class="grey" onclick="onAbort();">
-            {{_("No")}}
-        </button></div>
+            <form method="post" action="{{login_url}}">
+                <div>{{_("Username:")}}<strong>{{username}}</strong></div>
+                <div>{{_("Password:")}}<input type="password" name="password" /></div>
+                <button type="submit" class="blue">
+                    {{_("Yes")}}
+                </button>
+                <button class="grey" onclick="onAbort();">
+                    {{_("No")}}
+                </button>
+            </form>
+        </div>
     </body>
 </html>
 """)
