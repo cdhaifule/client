@@ -109,7 +109,7 @@ if sys.platform == "win32" and sys.frozen:
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
     if use_keyring:
         from keyring.backends import Windows
-        keyring.set_keyring(Windows.RegistryKeyring())
+        keyring.set_keyring(Windows.WinVaultKeyring())
 elif sys.platform == "darwin" and sys.frozen:
     app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
