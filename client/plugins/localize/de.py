@@ -56,7 +56,6 @@ logger__log_file_level = u'setzt das Log-Level für die Log Datei (Default: DEBU
 login__options = 'Login Optionen'
 login__username = 'Login Benutzername'
 login__password = 'Login Passwort'
-login__save_password = 'speicher das Passwort in der Einstellungsdatei. Du musst das Passwort dann nicht erneut eingeben'
 
 # UI
 
@@ -100,7 +99,8 @@ TEXT['The project is currently in closed beta state.\nYou need an invite code to
 
 # login
 
-TEXT['Please input your login informations'] = 'Bitte gebe hier deine Registrierungsdaten ein'
+TEXT['Please enter your login informations'] = 'Bitte gebe hier deine Registrierungsdaten ein'
+TEXT['Please enter your login informations\nto connect the the website'] = 'Bitte gebe hier deine Registrierungsdaten ein\num dich mit der Webseite zu verbinden'
 TEXT['E-Mail:'] = 'E-Mail:'
 TEXT['Password:'] = 'Passwort:'
 TEXT['Save password'] = 'Passwort speichern'

@@ -71,7 +71,6 @@ class MyHTTPSConnectionPool(connectionpool.HTTPSConnectionPool):
         block = True
         self.get_timeout = 1
         self.lock = Semaphore()
-        print "https connection", ca_certs
         ca_certs = os.environ["SSL_CERT_FILE"]
         connectionpool.HTTPSConnectionPool.__init__(self, host, port, strict, timeout, maxsize, block, headers, key_file, cert_file, cert_reqs, ca_certs, ssl_version)
 

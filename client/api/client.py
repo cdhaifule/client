@@ -23,6 +23,7 @@ import socket
 import gevent
 import platform
 
+from gevent import Timeout
 from gevent.lock import Semaphore
 from gevent.event import Event, AsyncResult
 
@@ -306,10 +307,11 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             if self.connection_state is not None:
                 self.connection_state.put('connecting')
             try:
-                e = self.spawn(self.connect).get()
-                if e is not None:
-                    raise e
-                self.emit("hello", settings.app_uuid, "client")
+                with Timeout(30):
+                    e = self.spawn(self.connect).get()
+                    if e is not None:
+                        raise e
+                    self.emit("hello", settings.app_uuid, "client")
             except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
                 raise
             except BaseException as e:

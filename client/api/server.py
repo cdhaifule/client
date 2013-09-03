@@ -101,27 +101,21 @@ def route_socket_io(*arg, **kw):
 
 @app.route('/change_login')
 def route_login_dialog():
-    _id = "/" + uuid.uuid4().hex
     username = request.query.username
-
-    @app.route(_id)
-    def show_login_dialog():
-        try:
-            app.routes.remove(route)
-        except ValueError:
-            return HTTPError(404)
-        login.login_dialog(False, username, False)
-        return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
-    route = app.routes[-1]
-    path = os.path.join(os.path.split(__file__)[0], 'server-change_login.html')
-    with open(path, 'r') as f:
-        data = f.read()
-    data = data.replace('###login_url###', _id)
-    data = data.replace('###name###', socket.gethostname())
-    data = data.replace('###os###', platform.system())
-    print app.routes
-    print route
-    return data
+    if '@' not in 'username':
+        response.status = 405
+        return '''
+            <button onclick="window.close();">
+                Guest account pairing is not possible.
+                Please click here to close this window.
+            </button>'''
+    login.login_dialog(username, True)
+    return '''
+        <script type="text/javascript">window.close();</script>
+        <button onclick="window.close();">
+            This window should close automatically.
+            If it doesn't please click here or close it manually.
+        </button>'''
 
 handle = None
 
