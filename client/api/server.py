@@ -101,15 +101,7 @@ def route_socket_io(*arg, **kw):
 
 @app.route('/change_login')
 def route_login_dialog():
-    username = request.query.username
-    if '@' not in 'username':
-        response.status = 405
-        return '''
-            <button onclick="window.close();">
-                Guest account pairing is not possible.
-                Please click here to close this window.
-            </button>'''
-    login.login_dialog(username, True)
+    login.login_dialog(request.query.username, True)
     return '''
         <script type="text/javascript">window.close();</script>
         <button onclick="window.close();">
