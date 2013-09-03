@@ -19,6 +19,8 @@ import sys
 import uuid
 import platform
 
+import keyring
+
 module_dir = os.path.dirname(__file__)
 script_dir = os.path.abspath(os.path.dirname(module_dir))
 
@@ -62,14 +64,9 @@ patchserver = "http://repo.download.am"
 app_build = 1
 app_uuid = None
 keyring_service = None
-try:
-    import keyring
-except ImportError:
-    use_keyring = False
-else:
-    use_keyring = True
 
-if "nose" in sys.argv[0] and use_keyring:
+
+if "nose" in sys.argv[0]:
     from keyring.backend import KeyringBackend
 
     class DummyKeyring(KeyringBackend):
@@ -107,11 +104,10 @@ if sys.platform == "win32" and sys.frozen:
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
-    if use_keyring:
-        from keyring.backends import Windows
-        class EncryptedKeyring(Windows.EncryptedKeyring):
-            file_path = os.path.join(data_dir, ".keyring")
-        keyring.set_keyring(EncryptedKeyring())
+    from keyring.backends import Windows
+    class EncryptedKeyring(Windows.EncryptedKeyring):
+        file_path = os.path.join(data_dir, ".keyring")
+    keyring.set_keyring(EncryptedKeyring())
 elif sys.platform == "darwin" and sys.frozen:
     app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
@@ -133,7 +129,15 @@ else:
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     else:
-        use_keyring = False
+        from keyring.backends.file import BaseKeyring
+        from .contrib import gibberishaes
+        class PseudoKeyring(BaseKeyring):
+            file_path = os.path.join(data_dir, ".keyring")
+            def encrypt(self, password):
+                return gibberishaes.encrypt(app_uuid, password)
+            def decrypt(self, password_encrypted):
+                return gibberishaes.decrypt(app_uuid, password_encrypted)
+        keyring.set_keyring(PseudoKeyring())
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon

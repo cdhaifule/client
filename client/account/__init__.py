@@ -17,33 +17,42 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import json
 import gevent
 
+import keyring
+
 from .models import Account, Profile, HosterAccount, PremiumAccount, Http, HttpAccount, HttpHosterAccount, HttpPremiumAccount, \
-    MultiAccount, HttpMultiAccount
+    MultiAccount, HttpMultiAccount, PasswordListener
 from .manager import manager, log, config
 from ..hoster.this import localctx
 from ..scheme import transaction
-from .. import db, interface, settings
+from .. import db, interface, settings, scheme
 from ..api import proto
 from . import verify
 
 def init():
     # plugins are loaded by hoster.py
     Account.localctx = localctx
-
+    scheme.register(PasswordListener())
+    
     with transaction, db.Cursor() as c:
         aa = c.execute("SELECT * FROM account")
         for a in aa.fetchall():
             try:
                 name = json.loads(a['name'])
                 data = json.loads(a['data'])
+                oldpw = data.pop('password', "")
                 data['id'] = int(a['id'])
-                a = manager.get_pool(name).add(**data)
+                acc = manager.get_pool(name).add(**data)
+                if oldpw:
+                    print "transferring old pw of:", data
+                    acc.password = oldpw
+                else:
+                    print "loading pw from keyring"
+                    acc.password = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"]))
             except TypeError:
                 log.critical("broken row: {}".format(a))
                 c.execute("DELETE FROM account WHERE id={}".format(a["id"]))
             except AttributeError:
                 log.critical("hoster account for {} not exists anymore".format(name))
-
 
 @interface.register
 class AccountInterface(interface.Interface):

@@ -19,25 +19,18 @@ import hashlib
 import requests
 import dateutil
 import urlparse
-
 import time
+
+import keyring
 from gevent.lock import Semaphore
 
 from .manager import config, manager
-from .. import useragent, event, logger, settings
+from .. import useragent, event, logger, settings, scheme
 from ..cache import CachedDict
 from ..scheme import transaction, Table, Column
 from ..plugintools import ErrorFunctions, InputFunctions, ctx_error_handler, wildcard
 from ..contrib import sizetools
 from ..variablesizepool import VariableSizePool
-
-try:
-    import keyring
-except ImportError:
-    keyring = False
-else:
-    if not settings.use_keyring:
-        keyring = False
 
 class Account(Table, ErrorFunctions, InputFunctions):
     """on ErrorFunctions member functions the variable need_reconnect is ignored
@@ -262,35 +255,24 @@ class Account(Table, ErrorFunctions, InputFunctions):
         return func(*args, **kwargs)
 
     on_download_next_decorator = on_download_decorator
+        
 
+class PasswordListener(scheme.TransactionListener):
+    def __init__(self):
+        scheme.TransactionListener.__init__(self, 'password')
+    
+    def on_commit(self, update):
+        for key, data in update.iteritems():
+            for k, v in data.iteritems():
+                if k in {"action", "table", "id"}: continue
+                key = "{}_{}_{}".format(data["table"], data["id"], k)
+                if data["action"] in {"new", "update"}:
+                    keyring.set_password(settings.keyring_service, key, data["password"] or "")
+                elif data["action"] == "delete":
+                    keyring.delete_password(settings.keyring_service, key)
+        
 
-class PasswordMixin(object):
-    def on_get_password(self, value):
-        if value is None:
-            return value
-        print "getting password", value
-        if not keyring:
-            return value
-        if value != "_keyring":
-            # transfer value into keyring
-            print "transfering password of account {} to keyring".format(self.name), value
-            with transaction:
-                self.password = value
-            return value
-        else:
-            print "from keyring password"
-            return keyring.get_password(settings.keyring_service, str(self.id))
-            
-    def _set_password(self, value):
-        if not keyring:
-            return value
-        if not value:
-            value = ""
-        print "setting password into keyring"
-        keyring.set_password(settings.keyring_service, str(self.id), value)
-        return "_keyring"
-
-class Profile(Account, PasswordMixin):
+class Profile(Account):
     _all_hostnames = wildcard('*')
 
     # match variables
@@ -299,11 +281,10 @@ class Profile(Account, PasswordMixin):
 
     # options
     username = Column(('api', 'db'), read_only=False, fire_event=True)
-    password = Column('db', read_only=False, fire_event=True, always_use_getter=True)
+    password = Column("password", read_only=False, fire_event=True, always_use_getter=True)
 
     def __init__(self, **kwargs):
         Account.__init__(self, **kwargs)
-
         if self.hostname:
             self._hostname = wildcard(self.hostname)
         else:
@@ -316,9 +297,6 @@ class Profile(Account, PasswordMixin):
         data = Account.get_login_data(self)
         data.update(dict(hostname=self.hostname, port=self.port, username=self.username, password=self.password))
         return data
-        
-    def on_set_password(self, value):
-        return self._set_password(value)
 
     def match(self, file):
         if not self._hostname.match(file.split_url.host):
@@ -344,17 +322,13 @@ class Profile(Account, PasswordMixin):
 #from requests.packages.urllib3.response import HTTPResponse
 #sbox.type_manager.add(Response, leave=['close'])
 
-class HosterAccount(Account, PasswordMixin):
+class HosterAccount(Account):
     username = Column(('api', 'db'), read_only=False, fire_event=True)
-    password = Column('db', read_only=False, fire_event=True, always_use_getter=True)
+    password = Column("password", read_only=False, fire_event=True, always_use_getter=True)
 
-    def __init__(self, username=None, password=None, **kwargs):
+    def __init__(self, username=None, **kwargs):
         Account.__init__(self, **kwargs)
         self.username = username
-        self.password = password
-
-    def on_set_password(self, value):
-        return self._set_password(value)
 
     def on_weight(self):
         w = Account.on_weight(self)
