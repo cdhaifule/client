@@ -266,19 +266,22 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
 class PasswordMixin(object):
     def on_get_password(self, value):
-        print "getting password"
+        if value is None:
+            return value
+        print "getting password", value
         if not keyring:
             return value
         if value != "_keyring":
             # transfer value into keyring
-            print "transfering password of account {} to keyring".format(self.name)
-            self.password = value
+            print "transfering password of account {} to keyring".format(self.name), value
+            with transaction:
+                self.password = value
             return value
         else:
             print "from keyring password"
             return keyring.get_password(settings.keyring_service, str(self.id))
             
-    def on_set_password(self, value):
+    def _set_password(self, value):
         if not keyring:
             return value
         if not value:
@@ -313,6 +316,9 @@ class Profile(Account, PasswordMixin):
         data = Account.get_login_data(self)
         data.update(dict(hostname=self.hostname, port=self.port, username=self.username, password=self.password))
         return data
+        
+    def on_set_password(self, value):
+        return self._set_password(value)
 
     def match(self, file):
         if not self._hostname.match(file.split_url.host):
@@ -346,6 +352,9 @@ class HosterAccount(Account, PasswordMixin):
         Account.__init__(self, **kwargs)
         self.username = username
         self.password = password
+
+    def on_set_password(self, value):
+        return self._set_password(value)
 
     def on_weight(self):
         w = Account.on_weight(self)
