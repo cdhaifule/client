@@ -84,6 +84,7 @@ if not app_uuid:
     with open(app_uuid_file, 'wb') as f:
         f.write(app_uuid)
     print 'created new app uuid: {}'.format(app_uuid)
+keyring_service = "download.am_client_" + app_uuid
 
 if sys.platform == "win32" and sys.frozen:
     app_dir = os.path.dirname(sys.executable)
@@ -160,10 +161,7 @@ def init_pre():
 
     from . import logger
     log = logger.get("settings")
-
     os.chdir(script_dir)
-
-    keyring_service = "download.am_client_" + app_uuid
 
 def init():
     pass
