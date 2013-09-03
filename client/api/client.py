@@ -21,7 +21,10 @@ import time
 import base64
 import socket
 import gevent
+import traceback
+import random
 import platform
+from itertools import cycle
 
 from gevent import Timeout
 from gevent.lock import Semaphore
@@ -38,8 +41,11 @@ config = globalconfig.new('api').new('client')
 config.default('show_error_dialog', True, bool)
 
 class APIClient(BaseNamespace, plugintools.GreenletObject):
-    node = ('ws.download.am', 443)
-    change_node = True # change node if asked to, may be overridden by --testbackend for internal testing
+    nodes = ["ws-{}.download.am".format(i) for i in range(2,5)]
+    random.shuffle(nodes)
+    node_cycler = cycle(nodes)
+    node_port = 443
+    change_node = False # change node if asked to, may be overridden by --testbackend for internal testing
 
     def __init__(self):
         plugintools.GreenletObject.__init__(self)
@@ -58,7 +64,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.connect_error_dialog = None
 
         self.connection_states = None
-
+        
     def __call__(self, socketio, path):
         BaseNamespace.__init__(self, socketio, path)
         return self
@@ -68,19 +74,17 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             if self.io:
                 self.io.disconnect()
 
-            if self.next_node is not None:
-                node = self.next_node
-                self.next_node = None
-            else:
-                node = self.node
-
+            node = self.node_cycler.next()
+            node_port = self.node_port
+                
             log.info('connecting to {}:{}'.format(*node))
-            self.io = SocketIO(node[0], node[1], self, secure=True)
+            self.io = SocketIO(node, node_port, self, secure=True)
 
             all_events = ["disconnect", "reconnect", "open", "close", "error", "retry", "message"]
             for e in all_events:
                 self.io.on(e, getattr(self, "on_" + e))
         except BaseException as e:
+            traceback.print_exc()
             return e
 
     def is_connected(self):
@@ -185,7 +189,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         try:
             result = result.get(timeout=20)
         except gevent.Timeout:
-            result.set(["False", "Login timed out"])
+            result = ["False", "Login timed out"]
         finally:
             try:
                 del self.login_results[rid]
@@ -198,17 +202,6 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 self.connect_retry = 0
                 login.logout()
             return False
-
-        node = result[1].rsplit(':', 1)
-        node = str(node[0]), int(len(node) == 2 and node[1] or 443)
-        if node != self.node and self.node != self.next_node:
-            if not self.change_node:
-                log.info("i was asked to switch my connection to `{}`. I refuse. (--testbackend is {})".format(node, self.node[0]))
-                return True
-            self.next_node = node
-            log.info('switching to node {}:{}'.format(*self.next_node))
-            return False
-
         return True
 
     def connection_error(self):
