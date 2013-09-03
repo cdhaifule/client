@@ -151,8 +151,8 @@ def iterate_browsers(default=None):
 
 @event.register('registry:select_browser')
 def on_select_browser(e, open_browser):
-    ask_user(False)
-    if open_browser:
+    result = ask_user(False)
+    if open_browser and result:
         webbrowser.open_new_tab(login.get_sso_url())
 
 class DLAMBrowser(webbrowser.BaseBrowser):

@@ -81,12 +81,14 @@ def init():
         name = name[:name.rfind(".")]
     
     thread = threadpool.ThreadPool(1)
-    options = [
-        (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser)),
-        (_X("Select browser"), bmp_factory('browser'), lambda *_: event.call_from_thread(common.select_browser)),
-        (_X("Logout"), bmp_factory('logout'), lambda *_: event.call_from_thread(common.relogin)),
-        (_X("Quit"), bmp_factory('quit'), 'QUIT')
-    ]
+
+    _open = (_X("Open"), bmp_factory('open'), lambda *_: event.call_from_thread(common.open_browser))
+    _browser = (_X("Select browser"), bmp_factory('browser'), lambda *_: event.call_from_thread(common.select_browser))
+    _register = (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register))
+    _login = (_X("Login"), bmp_factory('login'), lambda *_: event.call_from_thread(common.relogin))
+    _logout = (_X("Logout"), bmp_factory('logout'), lambda *_: event.call_from_thread(common.relogin))
+    _quit = (_X("Quit"), bmp_factory('quit'), 'QUIT')
+    options = [_open, _browser, _login, _register, _quit]
 
     icon = settings.taskbaricon_inactive
     if not icon:
@@ -97,14 +99,21 @@ def init():
 
     @event.register('login:changed')
     def on_login_changed(*_):
-        guest = login.is_guest() or not login.has_login()
-        if guest and len(options) == 4:
+        opts = list()
+        opts.append(_open)
+        opts.append(_browser)
+        if login.is_guest() or not login.has_login():
+            opts.append(_login)
+            opts.append(_register)
+        elif login.has_login():
+            opts.append(_logout)
+        else:
+            opts.append(_register)
+        opts.append(_quit)
+
+        if opts != options:
             with lock:
-                options.insert(2, (_X("Register"), bmp_factory('register'), lambda *_: event.call_from_thread(common.register)))
-                SysTray.instance.init_menu_options(options)
-        elif not guest and len(options) == 5:
-            with lock:
-                options.pop(2)
+                options[:] = opts
                 SysTray.instance.init_menu_options(options)
 
     try:
