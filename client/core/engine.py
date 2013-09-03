@@ -198,11 +198,11 @@ class Package(Table):
     speed = Column('api', always_use_getter=True, getter_cached=True, change_affects=['eta', ['global_status', 'speed']])
     eta = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'eta']])
     files = Column(None, change_affects=[['global_status', 'files'], 'hosts', 'size', 'progress', 'tab'])
-    files_working = Column(None, always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'files_working']])
+    files_working = Column(None, always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'files_working'], 'tab', 'working'])
     chunks = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks']])
     chunks_working = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks_working']])
 
-    working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['tab', 'files_working', ['global_status', 'packages_working']])
+    working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['tab', ['global_status', 'packages_working']])
 
     _torrent_hash = None
     _log = None
@@ -518,7 +518,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     input = Column(None, fire_event=True)
 
     greenlet = Column(None, change_affects=['working'])
-    working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['speed', ['package', 'working'], ['global_status', 'files_working']])
+    working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['speed', ['package', 'files_working']])
 
     global_status = Column()
 

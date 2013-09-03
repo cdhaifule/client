@@ -30,6 +30,12 @@ def on_package_changed(*args):
     with transaction:
         global_status.packages = len(_packages)
 
+@event.register('file:deleted')
+def on_file_deleted(e, file):
+    p = file.package
+    if p.state == 'download' and not any('download' not in f.completed_plugins for f in p.files):
+        with transaction:
+            p.state = 'download_complete'
 
 # sort functions
 
