@@ -310,8 +310,8 @@ with transaction:
 def init():
     if settings.config_file:
         try:
-            data = open(settings.config_file, 'r').read()
-            data = json.loads(data)
+            with open(settings.config_file, 'r') as f:
+                data = json.load(f)
             event.fire('config:before_load', data)
             with transaction:
                 for key, value in data.iteritems():

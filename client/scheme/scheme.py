@@ -24,14 +24,6 @@ import sys
 import gevent
 from gevent.lock import Semaphore
 
-try:
-    import keyring
-except ImportError:
-    keyring = False
-else:
-    if not settings.use_keyring:
-        keyring = False
-
 lock = Semaphore()
 log = logger.get('scheme')
 
@@ -140,7 +132,7 @@ class ColumnData(object):
 
 class Column(object):
     def __init__(self, channels=None, on_get=None, on_set=None, on_changed=None, read_only=True, fire_event=False,
-            change_affects=None, always_use_getter=False, getter_cached=False, use_keyring=False, foreign_key=None):
+            change_affects=None, always_use_getter=False, getter_cached=False, foreign_key=None):
         """read_only is only for api calls that would change that column
         getter_cached will cache return value of getter function until column is set dirty
         """
@@ -168,10 +160,6 @@ class Column(object):
         self.change_affects = change_affects or []
         self.always_use_getter = always_use_getter
         self.getter_cached = getter_cached
-        self.use_keyring = use_keyring
-
-        if use_keyring and self.on_get is not None:
-            raise RuntimeError('on_get must be none when keyring is used')
 
         if foreign_key is not None and len(foreign_key) == 2:
             foreign_key.append(None)
@@ -194,11 +182,7 @@ class Column(object):
         if self.on_get is None:
             on_get_func = 'on_get_{}'.format(self.name)
             if hasattr(cls, on_get_func):
-                if self.use_keyring:
-                    raise RuntimeError('{} not allowed when keyring is used'.format(on_get_func))
                 self.on_get = lambda table, value: getattr(table, on_get_func)(value)
-            elif self.use_keyring and keyring is not False:
-                self.on_get = lambda table, value: keyring.get_password(settings.keyring_service, "{}_{}".format(table.id, name))
             else:
                 self.on_get = lambda table, value: value
 
@@ -217,14 +201,6 @@ class Column(object):
         on_set_func = 'on_set_{}'.format(self.name)
         if hasattr(cls, on_set_func):
             self.set_hooks.appendleft(lambda table, value: getattr(table, on_set_func)(value))
-        if self.use_keyring and keyring is not False:
-            def set_value_keyring(table, value):
-                if value is None:
-                    value = ""
-                assert isinstance(value, basestring)
-                keyring.set_password(settings.keyring_service, "{}_{}".format(table.id, name), value)
-                return '_keyring'
-            self.set_hooks.append(set_value_keyring)
 
         # setup foreign key handling
         if self.foreign_key:

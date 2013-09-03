@@ -24,13 +24,20 @@ import time
 from gevent.lock import Semaphore
 
 from .manager import config, manager
-from .. import useragent, event, logger
+from .. import useragent, event, logger, settings
 from ..cache import CachedDict
 from ..scheme import transaction, Table, Column
 from ..plugintools import ErrorFunctions, InputFunctions, ctx_error_handler, wildcard
 from ..contrib import sizetools
 from ..variablesizepool import VariableSizePool
 
+try:
+    import keyring
+except ImportError:
+    keyring = False
+else:
+    if not settings.use_keyring:
+        keyring = False
 
 class Account(Table, ErrorFunctions, InputFunctions):
     """on ErrorFunctions member functions the variable need_reconnect is ignored
@@ -256,7 +263,31 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     on_download_next_decorator = on_download_decorator
 
-class Profile(Account):
+
+class PasswordMixin(object):
+    def on_get_password(self, value):
+        print "getting password"
+        if not keyring:
+            return value
+        if value != "_keyring":
+            # transfer value into keyring
+            print "transfering password of account {} to keyring".format(self.name)
+            self.password = value
+            return value
+        else:
+            print "from keyring password"
+            return keyring.get_password(settings.keyring_service, str(self.id))
+            
+    def on_set_password(self, value):
+        if not keyring:
+            return value
+        if not value:
+            value = ""
+        print "setting password into keyring"
+        keyring.set_password(settings.keyring_service, str(self.id), value)
+        return "_keyring"
+
+class Profile(Account, PasswordMixin):
     _all_hostnames = wildcard('*')
 
     # match variables
@@ -265,7 +296,7 @@ class Profile(Account):
 
     # options
     username = Column(('api', 'db'), read_only=False, fire_event=True)
-    password = Column('db', read_only=False, fire_event=True, use_keyring=True)
+    password = Column('db', read_only=False, fire_event=True, always_use_getter=True)
 
     def __init__(self, **kwargs):
         Account.__init__(self, **kwargs)
@@ -307,9 +338,9 @@ class Profile(Account):
 #from requests.packages.urllib3.response import HTTPResponse
 #sbox.type_manager.add(Response, leave=['close'])
 
-class HosterAccount(Account):
+class HosterAccount(Account, PasswordMixin):
     username = Column(('api', 'db'), read_only=False, fire_event=True)
-    password = Column('db', read_only=False, fire_event=True)
+    password = Column('db', read_only=False, fire_event=True, always_use_getter=True)
 
     def __init__(self, username=None, password=None, **kwargs):
         Account.__init__(self, **kwargs)
