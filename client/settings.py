@@ -65,28 +65,6 @@ app_build = 1
 app_uuid = None
 keyring_service = None
 
-
-if "nose" in sys.argv[0]:
-    from keyring.backend import KeyringBackend
-
-    class DummyKeyring(KeyringBackend):
-        def __init__(self):
-            self.keys = dict()
-
-        def supported(self):
-            return True
-
-        def get_password(self, service, username):
-            return self.keys.get(username)
-
-        def set_password(self, service, username, password):
-            self.keys[username] = password
-
-        def delete_password(self, service, username):
-            del self.keys[username]
-            
-    keyring.set_keyring(DummyKeyring())
-
 try:
     sys.frozen
 except AttributeError:
@@ -133,6 +111,7 @@ else:
         from .contrib import gibberishaes
         class PseudoKeyring(BaseKeyring):
             file_path = os.path.join(data_dir, ".keyring")
+            filename = ""
             def encrypt(self, password):
                 return gibberishaes.encrypt(app_uuid, password)
             def decrypt(self, password_encrypted):
