@@ -100,8 +100,7 @@ TEXT['The project is currently in closed beta state.\nYou need an invite code to
 
 # login
 
-TEXT['Please enter your login informations'] = 'Bitte gebe hier deine Registrierungsdaten ein'
-TEXT['Please enter your login informations\nto connect the the website'] = 'Bitte gebe hier deine Registrierungsdaten ein\num dich mit der Webseite zu verbinden'
+TEXT['Please input your login informations'] = 'Bitte gebe hier deine Registrierungsdaten ein'
 TEXT['E-Mail:'] = 'E-Mail:'
 TEXT['Password:'] = 'Passwort:'
 TEXT['Save password'] = 'Passwort speichern'

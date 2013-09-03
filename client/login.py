@@ -261,25 +261,17 @@ def on_login_changed(e):
             return
         login_dialog()
         
-def login_dialog(username=None, website_switch=False):
+def login_dialog(guest=True, username=None, close_on_failure=True):
     global login_input
     if not ui.ui.has_ui:
         log.error("Cannot login without user interface. For commandline usage see --help.")
-        if not website_switch:
-            sys.exit(1)
-    if login_input is not None:
-        log.info("Login dialog already active.")
-        return
+        sys.exit(1)
     if not username:
         username = config.username
-    if not website_switch: # don't clear the login event when we try a soft login...
-        login_event.clear()
-
+    print "username is", username, config.username
+    login_event.clear()
     elements = list()
-    if website_switch:
-        elements.append([input.Text('Please enter your login informations\nto connect the the website')])
-    else:
-        elements.append([input.Text('Please enter your login informations')])
+    elements.append([input.Text('Please input your login informations')])
     elements.append([input.Float('left')])
     elements.append([input.Text('')])
     elements.append([input.Text('E-Mail:'), input.Input('username', value=username)])
@@ -294,29 +286,25 @@ def login_dialog(username=None, website_switch=False):
         dict(value='ok', content='OK', ok=True),
         dict(value='cancel', content='Cancel', cancel=True),
     ]
-    if not website_switch:
+    if guest:
         login_choices.append(dict(value='guest', content='Connect as guest'))
     
     elements.append([input.Choice('action', choices=login_choices)])
 
     def _login_input():
-        global login_input
         try:
-            result = input.get(elements, type='login', timeout=90 if website_switch else None, close_aborts=True, ignore_api=True)
-        except (input.InputAborted, input.InputTimeout):
-            if not website_switch:
+            result = input.get(elements, type='login', timeout=None, close_aborts=True, ignore_api=True)
+        except input.InputAborted:
+            if close_on_failure:
                 sys.exit(1)
         else:
             if result['action'] == 'cancel':
-                if not website_switch:
+                if close_on_failure:
                     sys.exit(1)
             elif result['action'] == 'guest':
                 init_first_start(1, result.get('save_password', True))
             else:
                 set_login(result['username'], result['password'], result.get('save_password', True))
-        finally:
-            login_input = None
-
     login_input = gevent.spawn(_login_input)
 
 def init_optparser(parser, OptionGroup):
