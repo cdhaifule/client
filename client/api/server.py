@@ -16,20 +16,19 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
 import uuid
 import base64
 import gevent
 import socket
 import platform
 
-from bottle import Bottle, request, response, HTTPError
+from bottle import Bottle, request, response, HTTPError, SimpleTemplate
 from socketio import socketio_manage, server
 from socketio.namespace import BaseNamespace
 from socketio.mixins import BroadcastMixin
 
 from . import proto
-from .. import settings, logger, localrpc, login
+from .. import settings, logger, localrpc, login, localize
 
 log = logger.get("api.server")
 
@@ -113,15 +112,7 @@ def route_login_dialog():
         login.login_dialog(False, username, False)
         return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
     route = app.routes[-1]
-    path = os.path.join(os.path.split(__file__)[0], 'server-change_login.html')
-    with open(path, 'r') as f:
-        data = f.read()
-    data = data.replace('###login_url###', _id)
-    data = data.replace('###name###', socket.gethostname())
-    data = data.replace('###os###', platform.system())
-    print app.routes
-    print route
-    return data
+    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system())
 
 handle = None
 
@@ -146,3 +137,130 @@ def terminate():
     if handle:
         handle.stop()
         handle = None
+        
+login_template = SimpleTemplate("""
+
+<html>
+    <head>
+        <style type="text/css">
+            body {
+                margin: 0;
+                padding: 0;
+                background: url(https://www.download.am/assets/img/ui/background_top.png) repeat-x top #fcfcfc;
+                font-size: 14px;
+                font-weight: normal;
+            }
+            p {
+                display: block;
+                width: 100%;
+                text-align: center;
+                color: #484848;
+                margin-top: 95px;
+                text-shadow: 1px whitesmoke;
+            }
+            .blue {
+                cursor: pointer;
+                position: relative;
+                text-align: center;
+                color: #ffffff;
+                padding: 10px;
+                width:100px;
+                border: 1px solid #2373af;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                -moz-background-clip: padding;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box;
+                background-color: #237bbd;
+                -moz-box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                -webkit-box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDIwNiA3MiIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMjM3YmJkIiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMjk5OWVmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgPC9saW5lYXJHcmFkaWVudD4KCjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMDYiIGhlaWdodD0iNzIiIGZpbGw9InVybCgjaGF0MCkiIC8+Cjwvc3ZnPg==);
+                background-image: -moz-linear-gradient(bottom, #237bbd 0%, #2999ef 100%);
+                background-image: -o-linear-gradient(bottom, #237bbd 0%, #2999ef 100%);
+                background-image: -webkit-linear-gradient(bottom, #237bbd 0%, #2999ef 100%);
+                background-image: linear-gradient(bottom, #237bbd 0%, #2999ef 100%);
+            }
+            .grey {
+                cursor: pointer;
+                margin: 4px;
+                padding: 10px;
+                border: 1px solid #cacaca;
+                -moz-border-radius: 4px;
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+                -moz-background-clip: padding;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box;
+                background-color: #f5f5f5;
+                -moz-box-shadow: 0 2px 2px rgba(0,0,0,.1);
+                -webkit-box-shadow: 0 2px 2px rgba(0,0,0,.1);
+                box-shadow: 0 2px 2px rgba(0,0,0,.1);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzNCAzOCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZDlkOWQ5IiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmJmYmZiIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgPC9saW5lYXJHcmFkaWVudD4KCjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMzQiIGhlaWdodD0iMzgiIGZpbGw9InVybCgjaGF0MCkiIC8+Cjwvc3ZnPg==);
+                background-image: -moz-linear-gradient(bottom, #d9d9d9 0%, #fbfbfb 100%);
+                background-image: -o-linear-gradient(bottom, #d9d9d9 0%, #fbfbfb 100%);
+                background-image: -webkit-linear-gradient(bottom, #d9d9d9 0%, #fbfbfb 100%);
+                background-image: linear-gradient(bottom, #d9d9d9 0%, #fbfbfb 100%);
+            }
+            .grey:hover {
+                background-color: #fcfcfc;
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzNCAzOCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZTFlMWUxIiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSI4NyUiIHN0b3AtY29sb3I9IiNmZGZkZmQiIHN0b3Atb3BhY2l0eT0iMSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZGZkZmQiIHN0b3Atb3BhY2l0eT0iMSIvPgogICA8L2xpbmVhckdyYWRpZW50PgoKPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEzNCIgaGVpZ2h0PSIzOCIgZmlsbD0idXJsKCNoYXQwKSIgLz4KPC9zdmc+);
+                background-image: -moz-linear-gradient(bottom, #e1e1e1 0%, #fdfdfd 87.33%, #fdfdfd 100%);
+                background-image: -o-linear-gradient(bottom, #e1e1e1 0%, #fdfdfd 87.33%, #fdfdfd 100%);
+                background-image: -webkit-linear-gradient(bottom, #e1e1e1 0%, #fdfdfd 87.33%, #fdfdfd 100%);
+                background-image: linear-gradient(bottom, #e1e1e1 0%, #fdfdfd 87.33%, #fdfdfd 100%);
+            }
+            .grey:active {
+                -moz-box-shadow: inset 0 0px 0 #fff;
+                -webkit-box-shadow: inset 0 0px 0 #fff;
+                box-shadow: inset 0 0px 0 #fff;
+                background-color: #e1e1e1;
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEzNCAzOCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmJmYmZiIiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZGZkZmRmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgPC9saW5lYXJHcmFkaWVudD4KCjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMzQiIGhlaWdodD0iMzgiIGZpbGw9InVybCgjaGF0MCkiIC8+Cjwvc3ZnPg==);
+                background-image: -moz-linear-gradient(bottom, #fbfbfb 0%, #dfdfdf 100%);
+                background-image: -o-linear-gradient(bottom, #fbfbfb 0%, #dfdfdf 100%);
+                background-image: -webkit-linear-gradient(bottom, #fbfbfb 0%, #dfdfdf 100%);
+                background-image: linear-gradient(bottom, #fbfbfb 0%, #dfdfdf 100%);
+            }
+            .blue:hover {
+                background-color: #2985cb;
+                -moz-box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                -webkit-box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                box-shadow: 0 2px 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDIwNiA3MiIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMjk4NWNiIiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGZhYmYzIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgPC9saW5lYXJHcmFkaWVudD4KCjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMDYiIGhlaWdodD0iNzIiIGZpbGw9InVybCgjaGF0MCkiIC8+Cjwvc3ZnPg==);
+                background-image: -moz-linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
+                background-image: -o-linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
+                background-image: -webkit-linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
+                background-image: linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
+            }
+            div {
+                text-align:center;
+            }
+        </style>
+        <script type="text/javascript">
+            function onLogin() {
+                top.location.href = "{{login_url}}";
+            }
+
+            function onAbort() {
+                window.close();
+            }
+            window.resizeTo(655, document.height);
+        </script>
+    </head>
+    <body>
+        <p>
+            {{_("You reached the download.am client on machine")}} "{{machine_name}}  ({{os_name}})"
+            <br />
+            {{_("Would you like to login now?")}}
+        </p>
+        <div>
+        <button class="blue" onclick="onLogin();">
+            {{_("Yes")}}
+        </button>
+        <button class="grey" onclick="onAbort();">
+            {{_("No")}}
+        </button></div>
+    </body>
+</html>
+""")

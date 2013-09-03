@@ -133,3 +133,7 @@ TEXT['Your current default browser #{browser} is not compatible with Download.am
 TEXT['Please select a browser you like to use with Download.am.'] = 'Bitte wähle einen Browser den Du mit Download.am nutzen möchtest.'
 TEXT['You have no compatible webbrowser installed.'] = 'Du hast keinen kompatiblen Browser installiert.'
 TEXT['The best choice is Chrome, Firefox or Opera Next. You find the download links below.'] = 'Die beste Wahl ist Chrome, Firefox oder Opera Next. Nachfolgend findest du die Downloadlinks.'
+
+# login popup
+TEXT["You reached the download.am client on machine"] = "Hier ist download.am Client auf"
+TEXT["Would you like to login now?"] = "Möchtest du dich mit ihm verbinden?"

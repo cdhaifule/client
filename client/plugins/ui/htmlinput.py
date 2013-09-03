@@ -76,6 +76,8 @@ class Input(object):
         raise NotImplementedError()
         
     def compile_text(self, text):
+        if not text:
+            return ""
         if isinstance(text, list):
             args, text = text[1], _X(text[0])
             for k, v in args.iteritems():

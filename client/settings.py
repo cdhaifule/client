@@ -62,10 +62,14 @@ patchserver = "http://repo.download.am"
 app_build = 1
 app_uuid = None
 keyring_service = None
-use_keyring = True
+try:
+    import keyring
+except ImportError:
+    use_keyring = False
+else:
+    use_keyring = True
 
 if "nose" in sys.argv[0] and use_keyring:
-    import keyring
     from keyring.backend import KeyringBackend
 
     class DummyKeyring(KeyringBackend):
