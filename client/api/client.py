@@ -77,7 +77,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             node = self.node_cycler.next()
             node_port = self.node_port
                 
-            log.info('connecting to {}:{}'.format(*node))
+            log.info('connecting to {}'.format(node))
             self.io = SocketIO(node, node_port, self, secure=True)
 
             all_events = ["disconnect", "reconnect", "open", "close", "error", "retry", "message"]

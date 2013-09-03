@@ -98,7 +98,49 @@ def route_socket_io(*arg, **kw):
     socketio_manage(request.environ, {'': Namespace}, request=request)
     return "out"
 
+allowed_origins = [
+    'http://development-downloadam.s3-external-3.amazonaws.com/',
+    'http://download.am/',
+    'http://www.download.am/',
+    'http://localhost:9090/foo',
+    'http://local.download.am:9090/foo'
+]
+
 @app.route('/change_login')
+def route_login_dialog(methods=['GET']):
+    #response.headers['Access-Control-Allow-Origin'] = 'http://*'
+    #response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    #response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Accept-Language, Accept-Encoding, Referer, User-Agent, Connection, Content-Type, X-Requested-With'
+    response.headers['Content-Type'] = 'text/javascript'
+
+    def access_denied():
+        response.status = 403
+        return "onError('Access denied');"
+
+    if 'HTTP_REFERER' in request.environ:
+        origin = request.environ['HTTP_REFERER']
+    #elif 'HTTP_ORIGIN' in request.environ:
+    #    origin = request.environ['HTTP_ORIGIN']
+    else:
+        return access_denied()
+
+    for o in allowed_origins:
+        if origin.startswith(o):
+            break
+    else:
+        return access_denied()
+
+    if request.method == 'OPTIONS':
+        return ''
+
+    username = request.query.username
+    if '@' not in username:
+        response.status = 403
+        return "onError('Guest account pairing is not possible.');"
+    gevent.spawn(login.login_dialog, username, True)
+    return "onSuccess();"
+
+"""@app.route('/change_login')
 def route_login_dialog():
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
@@ -109,10 +151,10 @@ def route_login_dialog():
             app.routes.remove(route)
         except ValueError:
             return HTTPError(404)
-        login.login_dialog(False, username, False)
+        login.login_dialog(username, True)
         return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
     route = app.routes[-1]
-    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system())
+    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system())"""
 
 handle = None
 

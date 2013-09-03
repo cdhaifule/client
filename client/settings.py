@@ -93,6 +93,7 @@ except AttributeError:
     sys.frozen = False
 
 if sys.platform == "win32" and sys.frozen:
+    # dirs and files
     app_dir = os.path.dirname(sys.executable)
     img_dir = os.path.join(app_dir, 'img')
     mainicon = os.path.join(img_dir, 'dlam.ico')
@@ -100,15 +101,19 @@ if sys.platform == "win32" and sys.frozen:
     taskbaricon_inactive = os.path.join(img_dir, 'dlam_grey.ico')
     bin_dir = os.path.join(app_dir, "bin")
     menuiconfolder = os.path.join(app_dir, 'img', 'menu')
+    # cert
     import requests
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
+    # keyring
     from keyring.backends import Windows
+
     class EncryptedKeyring(Windows.EncryptedKeyring):
         file_path = os.path.join(data_dir, ".keyring")
     keyring.set_keyring(EncryptedKeyring())
 elif sys.platform == "darwin" and sys.frozen:
+    # dirs and files
     app_dir = sys.executable.split(".app/Contents/", 1)[0] + ".app"
     bin_dir = os.path.join(app_dir, "Contents", "Resources", "bin")
     img_dir = os.path.join(app_dir, 'Contents/Resources/lib/python2.7/client/img')
@@ -116,31 +121,45 @@ elif sys.platform == "darwin" and sys.frozen:
     taskbaricon = os.path.join(img_dir, "dlam_black.icns")
     taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     menuiconfolder = os.path.join(img_dir, "menu")
+    # cert
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
 else:
+    # dirs and files
     app_dir = os.getcwd()
     bin_dir = os.path.join(app_dir, "bin")
-    os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     menuiconfolder = os.path.join(app_dir, "client/img/menu")
     img_dir = os.path.join(app_dir, 'client/img')
+    # cert
+    os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     if sys.platform == "darwin":
+        # dirs and files
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
         taskbaricon = os.path.join(img_dir, "dlam_black.icns")
         taskbaricon_inactive = os.path.join(img_dir, "dlam_greyx32.png")
     else:
-        from keyring.backends.file import BaseKeyring
-        from .contrib import gibberishaes
-        class PseudoKeyring(BaseKeyring):
-            file_path = os.path.join(data_dir, ".keyring")
-            def encrypt(self, password):
-                return gibberishaes.encrypt(app_uuid, password)
-            def decrypt(self, password_encrypted):
-                return gibberishaes.decrypt(app_uuid, password_encrypted)
-        keyring.set_keyring(PseudoKeyring())
+        # dirs and files
         mainicon = os.path.join(img_dir, "dlam.ico")
         taskbaricon = mainicon
         taskbaricon_inactive = taskbaricon
+
+        # keyring
+        from keyring.backends.file import BaseKeyring
+        from .contrib import gibberishaes
+
+        class PseudoKeyring(BaseKeyring):
+            file_path = os.path.join(data_dir, ".keyring")
+
+            def filename(self):
+                return self.file_path
+
+            def encrypt(self, password):
+                return gibberishaes.encrypt(app_uuid, password)
+
+            def decrypt(self, password_encrypted):
+                return gibberishaes.decrypt(app_uuid, password_encrypted)
+
+        keyring.set_keyring(PseudoKeyring())
 
 def _makedirs(path):
     try:
