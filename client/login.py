@@ -29,18 +29,11 @@ from .scheme import transaction
 from .config import globalconfig
 from .localize import _T
 
+import keyring
 from gevent.event import Event
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
-
-try:
-    import keyring
-except ImportError:
-    keyring = False
-else:
-    if not settings.use_keyring:
-        keyring = False
 
 module_initialized = Event()
 
