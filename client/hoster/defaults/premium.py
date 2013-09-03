@@ -91,7 +91,7 @@ def get_download_context(file, account=None):
             if acc:
                 try:
                     file.log.info('trying multihoster {}'.format(acc.name))
-                    acc.hoster.get_download_context(file)
+                    acc.hoster.get_download_context(file, account=acc)
                     return
                 except gevent.GreenletExit:
                     if not file.next_try and file.last_error:

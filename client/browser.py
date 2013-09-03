@@ -34,17 +34,22 @@ class BrowserInterface(interface.Interface):
         result = []
         if sys.platform == 'win32' and len(path) == 2 and path[1] == ':':
             path += '\\'
-        for f in os.listdir(path):
-            f = os.path.join(path, f)
-            if not os.path.isdir(f):
-                continue
-            result.append(dict(path=f, read=os.access(f, os.R_OK), write=os.access(f, os.W_OK)))
-        return path, result
-
+        try:
+            for f in os.listdir(path):
+                f = os.path.join(path, f)
+                if not os.path.isdir(f):
+                    continue
+                result.append(dict(path=f, read=os.access(f, os.R_OK), write=os.access(f, os.W_OK)))
+            return path, result
+        except (OSError, IOError) as e:
+            return "ls.error", repr(e)
     def mkdir(path=None, name=None):
         npath = os.path.join(path, name)
         if not os.path.exists(npath):
-            os.makedirs(npath)
+            try:
+                os.makedirs(npath)
+            except (OSError, IOError) as e:
+                return "mkdir.error", repr(e)
         return interface.call('browser', 'ls', path=path)
 
     def open_browser():
