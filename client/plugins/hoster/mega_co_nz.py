@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
 import time
-from ... import account, hoster, download, ratelimit
+from ... import hoster, download, ratelimit
 from Crypto.Util import Counter
 from Crypto.Cipher import AES
 from Crypto.Util.strxor import strxor
@@ -29,8 +29,7 @@ import requests
 
 @hoster.host
 class this:
-    model = hoster.Hoster
-    account_model = account.HttpHoster
+    model = hoster.HttpHoster
     name = 'mega.co.nz'
     patterns = [
         hoster.Matcher('https?', '*.mega.co.nz'),
