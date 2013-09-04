@@ -63,16 +63,19 @@ def check_file(file):
         else:
             added_links = False
 
-        if file.name is None:
-            if added_links and file.get_any_size() is None and file.last_error is None:
-                file.delete_after_greenlet()
-            elif file.state != 'deleted' and not any(file.delete == fn[0] for fn in file._greenlet_funcs):
-                file.fatal('link check was not successful (missing filename)', abort_greenlet=False)
-        elif file.state == 'check' and file.last_error is None:
-            with transaction:
-                file.state = 'collect'
-        if not added_links and result is not None:
-            file.no_download_link()
+        if result == 'delete':
+            file.delete_after_greenlet()
+        else:
+            if file.name is None:
+                if added_links and file.get_any_size() is None and file.last_error is None:
+                    file.delete_after_greenlet()
+                elif file.state != 'deleted' and not any(file.delete == fn[0] for fn in file._greenlet_funcs):
+                    file.fatal('link check was not successful (missing filename)', abort_greenlet=False)
+            elif file.state == 'check' and file.last_error is None:
+                with transaction:
+                    file.state = 'collect'
+            if not added_links and result is not None:
+                file.no_download_link()
         file.fire_after_greenlet('file:checked', file)
     finally:
         if not file._table_deleted:
