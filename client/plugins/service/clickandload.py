@@ -18,12 +18,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import time
 import socket
+import webbrowser
 
 from bottle import Bottle, request, redirect
 import gevent
 from gevent import pywsgi
 
-from ... import service, core, container, localrpc, login
+from ... import service, core, container, localrpc, login, event
 
 cnl = Bottle()
 
@@ -92,41 +93,38 @@ def add_dialog(count):
     try:
         from ... import input
         if cnl_service.config.add:
-            return True
-        try:
-            elements = list()
-            elements.append(input.Text(["An external website wants to add #{count} links.", dict(count=count)]))
-            elements.append(input.Input('always_add', 'checkbox', default=False, label='Always add links without asking.'))
-            elements.append(
-                input.Choice('answer',
-                choices=[
-                    {"value": "true", "content": "Add"},
-                    {"value": "false", "content": "Discard once"},
-                    #{"value": "stop", "content": "Stop service"}
-                ]
-            ))
-            result = input.get(elements, type='remember_boolean')
-        except input.InputAborted:
-            always_add = False
-            answer = False
-        except input.InputTimeout:
-            always_add = False
-            answer = False
+            answer = cnl_service.config.add
         else:
-            always_add = result.get('always_add', False)
-            answer = result.get("answer", "false")
-            if answer == "stop":
-                with core.transaction:
-                    cnl_service.config.enabled = False
-                return False
-            answer = answer == "true"
-            if always_add:
-                with core.transaction:
-                    cnl_service.config.add = True
-        
-        return answer
+            try:
+                elements = list()
+                elements.append(input.Text(["An external website wants to add #{count} links.", dict(count=count)]))
+                elements.append(input.Input('always_add', 'checkbox', default=False, label='Always add links without asking.'))
+                elements.append(
+                    input.Choice('answer', choices=[
+                        {"value": "add", "content": "Add"},
+                        {"value": "add_open", "content": "Add and open browser"},
+                        {"value": "discard", "content": "Discard once"}
+                    ]))
+                result = input.get(elements, type='remember_boolean')
+            except input.InputAborted:
+                answer = 'discard'
+            except input.InputTimeout:
+                answer = 'add'
+            else:
+                answer = result.get("answer", "discard")
+                if result.get('always_add', False):
+                    with core.transaction:
+                        cnl_service.config.add = answer
+        if answer == 'add_open':
+            webbrowser.open_new_tab(login.get_sso_url('collect'))
+        return answer in ('add', 'add_open')
     finally:
         _dialog_open = False
+
+@event.register('config:before_load')
+def on_config_before_load(e, data):
+    if data.get('service.clickandload.add', None) in (True, False):
+        data['service.clickandload.add'] = None
 
 class ClickAndLoad(service.ServicePlugin):
     server = None
@@ -134,7 +132,7 @@ class ClickAndLoad(service.ServicePlugin):
     
     def __init__(self, name):
         service.ServicePlugin.__init__(self, name)
-        self.config.default("add", False, bool, description="Always add the links without asking.")
+        self.config.default("add", None, str, description="Always add the links without asking.")
         self.config.default("add_block_for", 5, int, description="Block the clickandload feature for this amount of seconds.")
         if not self.config.enabled: # TODO: remove this and make config setting on website
             self.config.enabled = True

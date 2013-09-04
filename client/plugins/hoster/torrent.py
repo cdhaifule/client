@@ -14,9 +14,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import webbrowser
 from gevent.event import Event
 
-from ... import hoster, account, core, torrentengine, torrent
+from ... import hoster, account, core, torrentengine, torrent, login
 
 class Account(account.Account):
     _private_account = True
@@ -35,15 +36,47 @@ class this:
         hoster.Matcher('torrent')
     ]
     config = [
-        hoster.cfg('magnet_timeout', 120, int, description='timeout for getting torrent over magnet link')
+        hoster.cfg('magnet_timeout', 120, int, description='timeout for getting torrent over magnet link'),
+        hoster.cfg('add', None, str, description='add magnet links without asking')
     ]
 
 def can_download(file):
     return file.split_url.scheme == 'torrent'
 
+def ask_user(file):
+    from ... import input
+    if this.config.add:
+        answer = this.conig.add
+    else:
+        try:
+            elements = list()
+            elements.append(input.Text(["An external website wants to add a magnet link."]))
+            elements.append(input.Input('always_add', 'checkbox', default=True, label='Always add magnet links without asking.'))
+            elements.append(
+                input.Choice('answer', choices=[
+                    {"value": "add", "content": "Add"},
+                    {"value": "add_open", "content": "Add and open browser"},
+                    {"value": "discard", "content": "Discard"}
+                ]))
+            result = input.get(elements, type='remember_boolean')
+        except input.InputAborted:
+            answer = 'discard'
+        except input.InputTimeout:
+            answer = 'add'
+        else:
+            answer = result.get("answer", "discard") == 'add'
+            if answer and result.get('always_add', False):
+                this.config.add = True
+    if answer == 'add_open':
+        webbrowser.open_new_tab(login.get_sso_url('collect'))
+    return answer in ('add', 'add_open')
+
 def on_check(file):
     if file.split_url.scheme == 'torrent':
         return
+
+    if not ask_user(file):
+        return 'delete'
 
     e1 = Event()
     e2 = Event()

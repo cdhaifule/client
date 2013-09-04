@@ -41,7 +41,7 @@ config = globalconfig.new('api').new('client')
 config.default('show_error_dialog', True, bool)
 
 class APIClient(BaseNamespace, plugintools.GreenletObject):
-    nodes = ["ws-{}.download.am".format(i) for i in range(2,5)]
+    nodes = ["ws-{}.download.am".format(i) for i in range(2, 5)]
     random.shuffle(nodes)
     node_cycler = cycle(nodes)
     node_port = 443
