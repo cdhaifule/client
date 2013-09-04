@@ -185,7 +185,7 @@ class Interface(interface.Interface):
                     if package.state == 'collect' and package.name != update['name']:
                         for p in packages():
                             if p != package and p.state == 'collect' and p.name == update['name']:
-                                for file in package.files:
+                                for file in package.files[:]:
                                     file.package = p
                                 return
                     package.modify_table(update)
