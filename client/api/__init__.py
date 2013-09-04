@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
 import gevent
 
 from gevent.queue import JoinableQueue
@@ -55,7 +56,7 @@ class Interface(interface.Interface):
         try:
             assert guest == login.is_guest()
         except:
-            proto.log.unhandled_exception('Remote guest state: {}, local guest state {}'.format(guest, login.is_guest()))
+            proto.log.send('warning', 'Remote guest state: {}, local guest state {}'.format(guest, login.is_guest()), sys.exc_info())
         if not success or err:
             client.login_results[id].set([False, err, None])
         else:
@@ -91,6 +92,9 @@ def init(options):
         client.change_node = options.nochangenode
         client.node = (options.testbackend, 443)
 
+    # start the server
+    server.init()
+
     # start the main api loop
     proto.client = client
     client.connection_state = JoinableQueue()
@@ -101,9 +105,6 @@ def init(options):
         if result == 'connected' or is_connected():
             break
     client.connection_state = None
-
-    # start the direct connect server
-    server.init()
 
 def terminate():
     server.terminate()

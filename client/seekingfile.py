@@ -28,7 +28,10 @@ try:
     def get_free_space(path):
         try:
             path = os.path.dirname(path)
-            return win32file.GetDiskFreeSpaceEx(path)[0]
+            while path:
+                if os.path.exists(path):
+                    return win32file.GetDiskFreeSpaceEx(path)[0]
+                path = os.path.split(path)[0]
         except OSError:
             traceback.print_exc()
             return
@@ -46,16 +49,17 @@ except ImportError:
     def get_free_space(path):
         try:
             path = os.path.dirname(path)
-            if not os.path.exists(path):
+            while path:
+                if os.path.exists(path):
+                    st = os.statvfs(path)
+                    return st.f_bavail * st.f_frsize
                 path = os.path.split(path)[0]
-            st = os.statvfs(path)
-            return st.f_bavail * st.f_frsize
         except OSError:
             traceback.print_exc()
             return
             
     def allocate_file(path, size):
-        f = os.open(path, os.O_CREAT|os.O_RDWR)
+        f = os.open(path, os.O_CREAT | os.O_RDWR)
         os.lseek(f, size - 1, os.SEEK_SET)
         os.write(f, b'\x00')
         os.close(f)

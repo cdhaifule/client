@@ -102,59 +102,40 @@ allowed_origins = [
     'http://development-downloadam.s3-external-3.amazonaws.com/',
     'http://download.am/',
     'http://www.download.am/',
-    'http://localhost:9090/foo',
-    'http://local.download.am:9090/foo'
+    'http://localhost:9090/change_login',
+    'http://local.download.am:9090/change_login'
 ]
-
-"""@app.route('/change_login')
-def route_login_dialog(methods=['GET']):
-    #response.headers['Access-Control-Allow-Origin'] = 'http://*'
-    #response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    #response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Accept-Language, Accept-Encoding, Referer, User-Agent, Connection, Content-Type, X-Requested-With'
-    response.headers['Content-Type'] = 'text/javascript'
-
-    def access_denied():
-        response.status = 403
-        return "onError('Access denied');"
-
-    if 'HTTP_REFERER' in request.environ:
-        origin = request.environ['HTTP_REFERER']
-    #elif 'HTTP_ORIGIN' in request.environ:
-    #    origin = request.environ['HTTP_ORIGIN']
-    else:
-        return access_denied()
-
-    for o in allowed_origins:
-        if origin.startswith(o):
-            break
-    else:
-        return access_denied()
-
-    if request.method == 'OPTIONS':
-        return ''
-
-    username = request.query.username
-    if '@' not in username:
-        response.status = 403
-        return "onError('Guest account pairing is not possible.');"
-    gevent.spawn(login.login_dialog, username, True)
-    return "onSuccess();" """
 
 @app.route('/change_login')
 def route_login_dialog():
+    def check_referer():
+        for o in allowed_origins:
+            if request.environ['HTTP_REFERER'].startswith(o):
+                return False
+        return True
+
+    #if check_referer():
+    #    response.status = 403
+    #    return login_template.render(_=localize._X, action='denied')
+
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
+    if login.config.username == username and login.has_login():
+        return login_template.render(_=localize._X, action='logged_in', machine_name=socket.gethostname(), os_name=platform.system(), username=username)
 
-    @app.route(_id)
-    def show_login_dialog():
+    @app.route(_id, method='POST')
+    def change_login():
+        if check_referer():
+            response.status = 403
+            return login_template.render(_=localize._X, action='denied')
         try:
             app.routes.remove(route)
         except ValueError:
             return HTTPError(404)
-        login.login_dialog(username, True)
-        return '''<script type="text/javascript">window.close();</script><button onclick="window.close();">Close window</button>'''
+        login.set_login(username, request.params.password)
+        return login_template.render(_=localize._X, action='close', machine_name=socket.gethostname(), os_name=platform.system(), username=username)
     route = app.routes[-1]
-    return login_template.render(_=localize._X, login_url=_id, machine_name=socket.gethostname(), os_name=platform.system(), username=username)
+    return login_template.render(_=localize._X, action='ok', login_url=_id, machine_name=socket.gethostname(), os_name=platform.system(), username=username)
 
 handle = None
 
@@ -181,7 +162,6 @@ def terminate():
         handle = None
         
 login_template = SimpleTemplate("""
-
 <html>
     <head>
         <style type="text/css">
@@ -284,34 +264,52 @@ login_template = SimpleTemplate("""
             }
         </style>
         <script type="text/javascript">
-            function onLogin() {
-                top.location.href = "{{login_url}}";
-            }
-
-            function onAbort() {
-                window.close();
-            }
             window.resizeTo(655, document.height);
         </script>
     </head>
     <body>
-        <p>
-            {{_("You reached the download.am client on machine")}} "{{machine_name}}  ({{os_name}})"
-            <br />
-            {{_("Would you like to login now?")}}
-        </p>
-        <div>
-            <form method="post" action="{{login_url}}">
-                <div>{{_("Username:")}}<strong>{{username}}</strong></div>
-                <div>{{_("Password:")}}<input type="password" name="password" /></div>
-                <button type="submit" class="blue">
-                    {{_("Yes")}}
-                </button>
-                <button class="grey" onclick="onAbort();">
-                    {{_("No")}}
-                </button>
-            </form>
-        </div>
+        % if action == 'denied':
+            <p>
+                <div class="error">{{_('Access denied')}}</div>
+            <p>
+            <button class="grey" onclick="window.close();">
+                {{_("Close window")}}
+            </button>
+
+        % elif action == 'logged_in':
+            <p>
+                <div class="error">{{_("You are already logged in as {username} on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}</div>
+            <p>
+            <button class="grey" onclick="window.close();">
+                {{_("Close window")}}
+            </button>
+
+        % elif action == 'close':
+            <p>
+                <div class="error">{{_("Account change on client {username} on {machine_name} ({os_name}) in progress").format(username=username, machine_name=machine_name, os_name=os_name)}}</div>
+            <p>
+            <button class="grey" onclick="window.close();">
+                {{_("Close window")}}
+            </button>
+            <script type="text/javascript">window.close();</script>
+
+        % else:
+            <p>
+                {{_("You reached the Download.am Client on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}<br />
+                {{_("Would you like to login now?")}}
+            </p>
+            <div>
+                <form method="post" action="{{login_url}}">
+                    <div>{{_("Username:")}}<strong>{{username}}</strong></div>
+                    <div>{{_("Password:")}}<input type="password" name="password" /></div>
+                    <button type="submit" class="blue">
+                        {{_("Login")}}
+                    </button>
+                    <button class="grey" onclick="window.close();">
+                        {{_("Cancel")}}
+                    </button>
+                </form>
+            </div>
     </body>
 </html>
 """)

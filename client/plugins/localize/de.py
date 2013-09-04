@@ -135,5 +135,14 @@ TEXT['You have no compatible webbrowser installed.'] = 'Du hast keinen kompatibl
 TEXT['The best choice is Chrome, Firefox or Opera Next. You find the download links below.'] = 'Die beste Wahl ist Chrome, Firefox oder Opera Next. Nachfolgend findest du die Downloadlinks.'
 
 # login popup
-TEXT["You reached the download.am client on machine"] = "Hier ist download.am Client auf"
+
+TEXT["Access denied"] = "Zugriff verweigert"
+TEXT["Close window"] = u"Fenster schließen"
+TEXT["You are already logged in as {username} on {machine_name} ({os_name})"] = "Du bist bereits als {username} auf {machine_name} ({os_name}) verbunden"
+TEXT["Account change on client {username} on {machine_name} ({os_name}) in progress"] = "Wechsel des Accounts auf {username} auf {machine_name} ({os_name}) in Bearbeitung"
+TEXT["You reached the Download.am Client on {machine_name} ({os_name})"] = "Du hast den Clienten auf {machine_name} ({os_name}) erreicht"
 TEXT["Would you like to login now?"] = "Möchtest du dich mit ihm verbinden?"
+TEXT["Username:"] = "Benutzername:"
+TEXT["Password:"] = "Passwort:"
+TEXT["Login"] = "Einloggen"
+TEXT["Cancel"] = "Abbrechen"
