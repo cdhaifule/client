@@ -22,7 +22,6 @@ from Crypto.Util import Counter
 from Crypto.Cipher import AES
 from Crypto.Util.strxor import strxor
 from ...contrib.mega import Mega, crypto
-from ...contrib.mega.errors import RequestError as MegaRequestError
 import gevent
 import traceback
 from gevent import _threading
@@ -31,7 +30,7 @@ import requests
 @hoster.host
 class this:
     model = hoster.Hoster
-    account_model = account.HttpHosterAccount
+    account_model = account.HttpHoster
     name = 'mega.co.nz'
     patterns = [
         hoster.Matcher('https?', '*.mega.co.nz'),
@@ -41,16 +40,12 @@ class this:
 
 def on_check(file):
     mega = file.account.mega
-    file_handle, file_key = mega._parse_url(file.url).split('!')
-    file_key = crypto.base64_to_a32(file_key)
-    data = mega._api_request({'a': 'g', 'g': 1, 'p': file_handle})
-    k = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5],
-         file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
-    attribs = crypto.base64_url_decode(data['at'])
-    attribs = crypto.decrypt_attr(attribs, k)
-    print attribs
-    file.set_infos(name=attribs['n'], size=data['s'])
-
+    try:
+        handle, key = mega._parse_url(file.url).split('!')
+    except ValueError:
+        file.no_download_link()
+    file.set_infos(**mega.get_public_file_info(handle, key))
+    
 def get_download_context(file):
     file.set_download_context(
         account=this.get_account('download', file),
@@ -113,18 +108,24 @@ class CBCMACConsumer(object):
 class ProgressMega(Mega):
     def download_url(self, processor, url, dest_path=None):
         path = self._parse_url(url).split('!')
-        file_id = path[0]
+        file_handle = path[0]
         file_key = path[1]
-        self.download_file(processor, file_id, file_key, dest_path, is_public=True)
+        self.download_file(processor, file_handle, file_key, dest_path)
         
-    def download_file(self, processor, file_handle, file_key, dest_path=None, is_public=True):
-        assert is_public
-        file_key = crypto.base64_to_a32(file_key)
-        file_data = self._api_request({'a': 'g', 'g': 1, 'p': file_handle})
-        k = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5],
-             file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
-        iv = file_key[4:6] + (0, 0)
-        meta_mac = file_key[6:8]
+    def download_file(self, processor, file_handle=None, file_key=None, dest_path=None):
+        if file is None:
+            file_key = crypto.base64_to_a32(file_key)
+            file_data = self._api_request({'a': 'g', 'g': 1, 'p': file_handle})
+            k = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5],
+                 file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
+            iv = file_key[4:6] + (0, 0)
+            meta_mac = file_key[6:8]
+        else:
+            file_data = self._api_request({'a': 'g', 'g': 1, 'n': file['h']})
+            k = file['k']
+            iv = file['iv']
+            meta_mac = file['meta_mac']
+        
         file_url = file_data['g']
         file_size = file_data['s']
         input_stream = requests.get(file_url, stream=True).raw
@@ -144,6 +145,12 @@ class ProgressMega(Mega):
         file_mac = crypto.str_to_a32(consumer.finish())
         if (file_mac[0] ^ file_mac[1], file_mac[2] ^ file_mac[3]) != meta_mac:
             processor.chunk.fatal('Mismatched mac')
+            
+    def get_id_from_obj(self, node_data):
+        for i in node_data['f']:
+            if i["h"] and i["a"]:
+                return i['h']
+        return None
 
 class MegaDownload(download.DownloadFunction):
     def read(self):
@@ -156,10 +163,3 @@ class MegaDownload(download.DownloadFunction):
 
 def on_initialize_account(self):
     self.mega = ProgressMega()
-    if self.username:
-        try:
-            self.mega.login_user(self.username, self.password)
-        except MegaRequestError:
-            self.login_failed()
-        #details = self.mega.get_user()
-        #print details

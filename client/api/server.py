@@ -100,6 +100,7 @@ def route_socket_io(*arg, **kw):
 
 allowed_origins = [
     'http://development-downloadam.s3-external-3.amazonaws.com/',
+    'http://stable-downloadam.s3-external-3.amazonaws.com/',
     'http://download.am/',
     'http://www.download.am/',
     'http://localhost:9090/change_login',
@@ -255,13 +256,50 @@ login_template = SimpleTemplate("""
                 background-image: -webkit-linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
                 background-image: linear-gradient(bottom, #2985cb 0%, #4fabf3 100%);
             }
-            div {
-                text-align:center;
+            .ct {
+                width:450px;
+                margin:0 auto;
             }
-            form div div {
-                float: left;
-                width: 320px;
+            .row {
+                width:450px;
             }
+            .row .element {
+                width:150px;
+                text-align:left;
+                float:left;
+            }
+            .row .strong {
+                width:300px;
+                font-weight:bold;
+                float:left;
+            }
+            .row .input {
+                width:300px;
+                float:left;
+            }
+            .row .input input {
+                width:300px;
+                height: 21px;
+                border: 1px solid #d2d2d2; /* stroke */
+                -moz-border-radius: 6px;
+                -webkit-border-radius: 6px;
+                border-radius: 6px; /* border radius */
+                -moz-background-clip: padding;
+                -webkit-background-clip: padding-box;
+                background-clip: padding-box; /* prevents bg color from leaking outside the border */
+                background-color: #fff; /* layer fill content */
+                -moz-box-shadow: inset 0 1px 5px rgba(0,0,0,.15); /* inner shadow */
+                -webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.15); /* inner shadow */
+                box-shadow: inset 0 1px 5px rgba(0,0,0,.15); /* inner shadow */
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDI5NyAyOSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGxpbmVhckdyYWRpZW50IGlkPSJoYXQwIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjUwJSIgeTE9IjEwMCUiIHgyPSI1MCUiIHkyPSItMS40MjEwODU0NzE1MjAyZS0xNCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmIiBzdG9wLW9wYWNpdHk9IjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZjdmN2Y3IiBzdG9wLW9wYWNpdHk9IjEiLz4K                ICAgPC9saW5lYXJHcmFkaWVudD4KCjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyOTciIGhlaWdodD0iMjkiIGZpbGw9InVybCgjaGF0MCkiIC8+Cjwvc3ZnPg==); /* gradient overlay */
+                background-image: -moz-linear-gradient(bottom, #fff 0%, #f7f7f7 100%); /* gradient overlay */
+                background-image: -o-linear-gradient(bottom, #fff 0%, #f7f7f7 100%); /* gradient overlay */
+                background-image: -webkit-linear-gradient(bottom, #fff 0%, #f7f7f7 100%); /* gradient overlay */
+                background-image: linear-gradient(bottom, #fff 0%, #f7f7f7 100%); /* gradient overlay */
+    
+            }
+            .error {color:maroon;}
+            .center {text-align:center;}
         </style>
         <script type="text/javascript">
             window.resizeTo(655, document.height);
@@ -269,28 +307,32 @@ login_template = SimpleTemplate("""
     </head>
     <body>
         % if action == 'denied':
-            <p>
-                <div class="error">{{_('Access denied')}}</div>
-            <p>
-            <button class="grey" onclick="window.close();">
-                {{_("Close window")}}
-            </button>
+            <p class="error">
+                {{_('Access denied')}}
+            </p>
+            <div class="center">
+                <button class="grey" onclick="window.close();">
+                    {{_("Close window")}}
+                </button>
+            </div>
 
         % elif action == 'logged_in':
-            <p>
-                <div class="error">{{_("You are already logged in as {username} on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}</div>
-            <p>
-            <button class="grey" onclick="window.close();">
-                {{_("Close window")}}
-            </button>
+            <p class="error">{{_("You are already logged in as {username} on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}</p>
+            <div class="center">
+                <button class="grey" onclick="window.close();">
+                    {{_("Close window")}}
+                </button>
+            </div>
 
         % elif action == 'close':
-            <p>
-                <div class="error">{{_("Account change on client {username} on {machine_name} ({os_name}) in progress").format(username=username, machine_name=machine_name, os_name=os_name)}}</div>
-            <p>
+            <p class="error">
+                {{_("Account change on client {username} on {machine_name} ({os_name}) in progress").format(username=username, machine_name=machine_name, os_name=os_name)}}
+            </p>
+            <div class="center">
             <button class="grey" onclick="window.close();">
                 {{_("Close window")}}
             </button>
+            </div>
             <script type="text/javascript">window.close();</script>
 
         % else:
@@ -298,10 +340,17 @@ login_template = SimpleTemplate("""
                 {{_("You reached the Download.am Client on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}<br />
                 {{_("Would you like to login now?")}}
             </p>
-            <div>
+            <div class="ct">
                 <form method="post" action="{{login_url}}">
-                    <div>{{_("Username:")}}<strong>{{username}}</strong></div>
-                    <div>{{_("Password:")}}<input type="password" name="password" /></div>
+                    <div class="row">
+                        <div class="element">{{_("Username:")}}</div>
+                        <div class="strong">{{username}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="element">{{_("Password:")}}</div>
+                        <div class="input"><input type="password" name="password" /></div>
+                    </div>
+                    <div style="clear:both;"></div>
                     <button type="submit" class="blue">
                         {{_("Login")}}
                     </button>

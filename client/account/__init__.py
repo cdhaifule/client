@@ -41,13 +41,12 @@ def init():
                 data = json.loads(a['data'])
                 oldpw = data.pop('password', "")
                 data['id'] = int(a['id'])
-                acc = manager.get_pool(name).add(**data)
                 if oldpw:
                     print "transferring old pw of:", data
-                    acc.password = oldpw
+                    data["password"]= oldpw
                 else:
-                    print "loading pw from keyring"
-                    acc.password = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"]))
+                    data["password"] = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"]))
+                manager.get_pool(name).add(**data)
             except TypeError:
                 log.critical("broken row: {}".format(a))
                 c.execute("DELETE FROM account WHERE id={}".format(a["id"]))
