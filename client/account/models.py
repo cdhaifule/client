@@ -21,11 +21,10 @@ import dateutil
 import urlparse
 import time
 
-import keyring
 from gevent.lock import Semaphore
 
 from .manager import config, manager
-from .. import useragent, event, logger, settings, scheme
+from .. import useragent, event, logger
 from ..cache import CachedDict
 from ..scheme import transaction, Table, Column
 from ..plugintools import ErrorFunctions, InputFunctions, ctx_error_handler, wildcard
@@ -255,21 +254,6 @@ class Account(Table, ErrorFunctions, InputFunctions):
         return func(*args, **kwargs)
 
     on_download_next_decorator = on_download_decorator
-        
-
-class PasswordListener(scheme.TransactionListener):
-    def __init__(self):
-        scheme.TransactionListener.__init__(self, 'password')
-    
-    def on_commit(self, update):
-        for key, data in update.iteritems():
-            for k, v in data.iteritems():
-                if k in {"action", "table", "id"}: continue
-                key = "{}_{}_{}".format(data["table"], data["id"], k)
-                if data["action"] in {"new", "update"}:
-                    keyring.set_password(settings.keyring_service, key, data["password"] or "")
-                elif data["action"] == "delete":
-                    keyring.delete_password(settings.keyring_service, key)
         
 
 class Profile(Account):

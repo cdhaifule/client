@@ -20,18 +20,17 @@ import gevent
 import keyring
 
 from .models import Account, Profile, HosterAccount, PremiumAccount, Http, HttpAccount, HttpHosterAccount, HttpPremiumAccount, \
-    MultiAccount, HttpMultiAccount, PasswordListener
+    MultiAccount, HttpMultiAccount
 from .manager import manager, log, config
 from ..hoster.this import localctx
 from ..scheme import transaction
-from .. import db, interface, settings, scheme
+from .. import db, interface, settings
 from ..api import proto
 from . import verify
 
 def init():
     # plugins are loaded by hoster.py
     Account.localctx = localctx
-    scheme.register(PasswordListener())
     
     with transaction, db.Cursor() as c:
         aa = c.execute("SELECT * FROM account")
