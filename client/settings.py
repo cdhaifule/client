@@ -91,6 +91,23 @@ try:
     sys.frozen
 except AttributeError:
     sys.frozen = False
+#    
+def _makedirs(path):
+    try:
+        try:
+            os.makedirs(path)
+            return
+        except OSError as e:
+            if e.errno != 17:
+                raise
+    except BaseException as e:
+        print >>sys.stderr, 'error creating file or directory {}: {}'.format(path, e)
+        sys.exit(1)
+
+_makedirs(data_dir)
+_makedirs(torrent_dir)
+_makedirs(temp_dir)
+_makedirs(external_plugins)
     
 try:
     with open(app_uuid_file, 'r') as f:
@@ -177,22 +194,6 @@ else:
 
         keyring.set_keyring(PseudoKeyring())
 
-def _makedirs(path):
-    try:
-        try:
-            os.makedirs(path)
-            return
-        except OSError as e:
-            if e.errno != 17:
-                raise
-    except BaseException as e:
-        print >>sys.stderr, 'error creating file or directory {}: {}'.format(path, e)
-        sys.exit(1)
-
-_makedirs(data_dir)
-_makedirs(torrent_dir)
-_makedirs(temp_dir)
-_makedirs(external_plugins)
 
 def init_pre():
     global log
