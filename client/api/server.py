@@ -27,7 +27,7 @@ from socketio import socketio_manage, server
 from socketio.namespace import BaseNamespace
 from socketio.mixins import BroadcastMixin
 
-from . import proto
+from . import proto, client
 from .. import settings, logger, localrpc, login, localize
 
 log = logger.get("api.server")
@@ -107,26 +107,22 @@ allowed_origins = [
     'http://local.download.am:9090/change_login'
 ]
 
+def check_referer(referer):
+    for o in allowed_origins:
+        if referer.startswith(o):
+            return False
+    return True
+
 @app.route('/change_login')
 def route_login_dialog():
-    def check_referer():
-        for o in allowed_origins:
-            if request.environ['HTTP_REFERER'].startswith(o):
-                return False
-        return True
-
-    #if check_referer():
-    #    response.status = 403
-    #    return login_template.render(_=localize._X, action='denied')
-
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
-    if login.config.username == username and login.has_login():
+    if login.config.username == username and login.has_login() and client.client.is_connected():
         return login_template.render(_=localize._X, action='logged_in', machine_name=socket.gethostname(), os_name=platform.system(), username=username)
 
     @app.route(_id, method='POST')
     def change_login():
-        if check_referer():
+        if check_referer(request.environ['HTTP_REFERER']):
             response.status = 403
             return login_template.render(_=localize._X, action='denied')
         try:
@@ -178,8 +174,12 @@ login_template = SimpleTemplate("""
                 width: 100%;
                 text-align: center;
                 color: #484848;
-                margin-top: 95px;
+                margin-top: 75px;
                 text-shadow: 1px whitesmoke;
+            }
+            .buttons {
+                margin-top:20px;
+                text-align: center;
             }
             .blue {
                 cursor: pointer;
@@ -336,7 +336,7 @@ login_template = SimpleTemplate("""
             <script type="text/javascript">window.close();</script>
 
         % else:
-            <p>
+            <p style="margin-top:40px;">
                 {{_("You reached the Download.am Client on {machine_name} ({os_name})").format(username=username, machine_name=machine_name, os_name=os_name)}}<br />
                 {{_("Would you like to login now?")}}
             </p>
@@ -351,12 +351,14 @@ login_template = SimpleTemplate("""
                         <div class="input"><input type="password" name="password" /></div>
                     </div>
                     <div style="clear:both;"></div>
-                    <button type="submit" class="blue">
-                        {{_("Login")}}
-                    </button>
-                    <button class="grey" onclick="window.close();">
-                        {{_("Cancel")}}
-                    </button>
+                    <div class="buttons">
+                        <button type="submit" class="blue">
+                            {{_("Login")}}
+                        </button>
+                        <button class="grey" onclick="window.close();">
+                            {{_("Cancel")}}
+                        </button>
+                    </div>
                 </form>
             </div>
     </body>

@@ -263,6 +263,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         while True:
             self.close()
             self.connected_event.clear()
+            self.disconnected_event.clear()
 
             login.wait()    # wait until user entered login data
             # TODO: wait for reconnected event
@@ -338,7 +339,9 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             payload = interface.call('api', 'expose_all')
             message = proto.pack_message('frontend', 'api.expose_all', payload=payload)
             try:
+                print "!"*100, 'sending expose_all', len(message)
                 self.send_message(message)
+                print "!"*100, 'sending expose_all', len(message), 'done'
             except AttributeError:
                 log.warning('api closed unexpected')
                 if self.connection_state is not None:
@@ -349,7 +352,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 continue
 
             self.connected_event.set()
-            self.disconnected_event.clear()
+            #self.disconnected_event.clear()
             if self.connection_state is not None:
                 self.connection_state.put('connected')
 
@@ -364,6 +367,7 @@ client = APIClient()
 @event.register('proxy:changed')
 def _(e, *args):
     client.disconnected_event.set()
+    client.kill()
 
 @event.register('reconnect:reconnecting')
 def __(e, *args):
