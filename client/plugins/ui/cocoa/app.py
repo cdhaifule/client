@@ -42,6 +42,9 @@ class Delegate(NSObject):
     def open_(self, notification):
         common.open_browser()
         
+    def login_(self, noti):
+        common.relogin()
+        
     def logout_(self, notification):
         common.relogin()
     
@@ -65,19 +68,11 @@ def draw_browser(wind, deleg):
     return Window.web(wind, "Browser", frame, deleg)
 
 browserwindow = None
-    
-NSVariableStatusItemLength = -1
-def start_taskbar():
-    t = NSStatusBar.systemStatusBar()
-    icon = t.statusItemWithLength_(NSVariableStatusItemLength)
-    icon.setHighlightMode_(1)
-    menuitems = []
-    labels = ["Open", "Register", "Logout", "Quit"]
-    if patch.current.current == "DEV" or patch.config.branch == "master":
-        labels = ["Open", "Register", "Logout", "Restart", "Test", "Quit"]
+
+def build_menu(labels):
+    menu = NSMenu.alloc().init()
+    menu.setAutoenablesItems_(True)
     for label in labels:
-        if label == "Register" and not login.is_guest():
-            continue
         item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
             localize._X(label), label.lower().replace(" ", "").split(" ")[0]+":", "")
             
@@ -86,13 +81,14 @@ def start_taskbar():
             img = NSImage.alloc().initByReferencingFile_(iconpath)
             img.setSize_(NSSize(16, 16))
             item.setImage_(img)
-        menuitems.append(item)
-    
-    menu = NSMenu.alloc().init()
-    menu.setAutoenablesItems_(True)
-    icon.setMenu_(menu)
-    for m in menuitems:
-        menu.addItem_(m)
+        menu.addItem_(item)
+    return menu
+
+NSVariableStatusItemLength = -1
+def start_taskbar():
+    t = NSStatusBar.systemStatusBar()
+    icon = t.statusItemWithLength_(NSVariableStatusItemLength)
+    icon.setHighlightMode_(1)
         
     def set_image(path):
         taskbarimg = NSImage.alloc().initByReferencingFile_(path)
@@ -112,14 +108,20 @@ def start_taskbar():
     set_image(settings.taskbaricon_inactive)
     icon.setEnabled_(True)
     
-    @login.config.register('username')
-    def _():
-        if not login.is_guest():
-            item = menu.itemAtIndex_(0)
-            item.setTitle_(login.config.username or "Open")
-            item = menu.itemAtIndex_(1)
-            if item.title == localize._X("Register"):
-                menu.removeItemAtIndex_(1)
+    @event.register('login:changed')
+    def login_changed(*_):
+        opts = ["Open"]
+        if login.is_guest() or not login.has_login():
+            opts.append("Login")
+            opts.append("Register")
+        elif login.has_login():
+            opts.append("Logout")
+        else:
+            opts.append("Register")
+        opts.append("Quit")
+        icon.setMenu_(build_menu(opts))
+    
+    login_changed()
                 
 def gevent_timer(deleg):
     timer = NSTimer.alloc().initWithFireDate_interval_target_selector_userInfo_repeats_(
