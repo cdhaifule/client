@@ -158,7 +158,7 @@ class PasswordListener(scheme.TransactionListener):
                     continue
                 key = "{}_{}_{}".format(data["table"], data["id"], k)
                 if data["action"] in {"new", "update"}:
-                    keyring.set_password(settings.keyring_service, key, v or "")
+                    keyring.set_password(settings.keyring_service, key, data["password"] or "")
                 elif data["action"] == "delete":
                     keyring.delete_password(settings.keyring_service, key)
 

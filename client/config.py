@@ -58,7 +58,7 @@ class Config(object):
         if key not in _configtable._table_data:
             self[key] = value
         if use_keyring:
-            self[key] = keyring.get_password(settings.keyring_service, 'config_config_{}'.format(key)) or ''
+            self[key] = keyring.get_password(settings.keyring_service, 'config_config_{}'.format(key))
 
     def register(self, key, _config=None):
         """decorator"""
