@@ -24,6 +24,11 @@ from gevent.event import AsyncResult
 
 from . import event, interface, scheme
 
+from .config import globalconfig
+
+config = globalconfig.new('input')
+config.default("localui", True, bool, description="Use desktop ui input")
+
 class InputError(BaseException):
     pass
 
@@ -234,6 +239,8 @@ def get(elements, timeout=60, type=None, parent=None, close_aborts=False, ignore
     with scheme.transaction:
         input = InputTable(type, parent, timeout, elements, close_aborts, ignore_api)
 
+    if config.localui:
+        event.fire("input:uirequest", input)
     event.fire("input:request", input)
 
     try:

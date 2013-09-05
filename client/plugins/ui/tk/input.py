@@ -292,7 +292,7 @@ class _Input(Tk):
 lock = Semaphore()
 windows = dict()
 
-@event.register('input:request')
+@event.register('input:uirequest')
 def input(e, input):
     if input.ignore_api or not ui.browser_has_focus():
         gevent.spawn(_input, input)

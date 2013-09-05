@@ -61,7 +61,7 @@ def _(*_):
     else:
         app.browserwindow.hide()
 
-@event.register('input:request')
+@event.register('input:uirequest')
 def input(e, input):
     global current
     if ui.browser_has_focus():
