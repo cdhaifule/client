@@ -53,9 +53,7 @@ def init():
                 try:
                     dict_json(b)
                     f = File(**b)
-                except RuntimeError:
-                    pass
-                except TypeError:
+                except (RuntimeError, TypeError):
                     pass
                 else:
                     download = f.get_download_file()
