@@ -34,6 +34,9 @@ class BrowserInterface(interface.Interface):
         result = []
         if sys.platform == 'win32' and len(path) == 2 and path[1] == ':':
             path += '\\'
+        if sys.platform == 'win32' and path == "\\":
+            import win32api
+            return path, win32api.GetLogicalDriveStrings().split('\0')[:-1]
         try:
             for f in os.listdir(path):
                 f = os.path.join(path, f)
