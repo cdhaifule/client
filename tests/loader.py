@@ -67,4 +67,4 @@ def init():
 
     interface.call('config', 'set', key='check.use_cache', value=False)
     
-    login.set_login('ein@account.com', 'helloworld')
+    login.set_login('rico@download.net', 'helloworld')

@@ -17,7 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-import keyring
 import traceback
 
 from gevent.lock import Semaphore
@@ -37,7 +36,7 @@ class Config(object):
     def new(self, name):
         return SubConfig(self, name)
 
-    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None, use_keyring=False):
+    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None):
         if not func is None:
             self.register_hook(key, func)
         if isinstance(enum, basestring):
@@ -47,18 +46,15 @@ class Config(object):
         _defaults[key] = {
             'value': value,
             'type': type,
-            'private': private or use_keyring,
+            'private': private,
             'protected': protected,
             'allow_none': value is None and True or allow_none,
             'description': description,
-            'enum': enum,
-            'use_keyring': use_keyring}
+            'enum': enum}
         if hook is not None:
             self.register_hook(key, hook)
         if key not in _configtable._table_data:
             self[key] = value
-        if use_keyring:
-            self[key] = keyring.get_password(settings.keyring_service, 'config_config_{}'.format(key))
 
     def register(self, key, _config=None):
         """decorator"""
@@ -106,21 +102,14 @@ class Config(object):
                 else:
                     if _defaults[key]["type"] == bool:
                         value = bool(value)
-            channels = set()
-            on_set = None
-            if key in _defaults:
-                if _defaults[key]['use_keyring']:
-                    channels.add('password')
-                else:
-                    channels.add('config')
-                    if _defaults[key]['private']:
-                        channels.add('api')
-                if _defaults[key]['type'] is not None or _defaults[key]['allow_none'] is False:
-                    on_set = lambda _, value: self._on_set(key, value)
+            if key in _defaults and (_defaults[key]['type'] is not None or _defaults[key]['allow_none'] is False):
+                on_set = lambda _, value: self._on_set(key, value)
             else:
-                channels.add('api')
-                channels.add('config')
-            col = scheme.Column(channels, on_set=on_set, fire_event=True)
+                on_set = None
+            if key in _defaults and _defaults[key]['private']:
+                col = scheme.Column('config', on_set=on_set, fire_event=True)
+            else:
+                col = scheme.Column(('config', 'api'), on_set=on_set, fire_event=True)
             setattr(_configtable.__class__, key, col)
             col.init_table_class(_configtable.__class__, key)
             col.init_table_instance(_configtable)
@@ -245,7 +234,7 @@ class ConfigListener(scheme.TransactionListener):
 
     def on_commit(self, update):
         if settings.config_file:
-            data = scheme.get_by_uuid(update.keys()[0]).serialize({'config'})
+            data = scheme.get_by_uuid(update.keys()[0]).serialize()
             if not data:
                 return
             data = json.dumps(data, indent=4, sort_keys=True)
