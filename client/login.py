@@ -50,8 +50,8 @@ config.account.default('username', '', unicode, private=True)
 hashes = dict()
 for h in hash_types:
     hashes[h] = None
-    config.guest.default(h, '', str, private=True, use_keyring=False)
-    config.account.default(h, '', str, private=True, use_keyring=False)
+    config.guest.default(h, '', str, private=True, use_keyring=True)
+    config.account.default(h, '', str, private=True, use_keyring=True)
 
 _config_loaded = False
 
