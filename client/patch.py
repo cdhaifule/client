@@ -45,6 +45,7 @@ from cStringIO import StringIO
 from gevent.pool import Group
 from gevent.event import Event
 from gevent.lock import Semaphore
+from gevent.threadpool import ThreadPool
 from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
 from collections import defaultdict
@@ -68,6 +69,8 @@ log = logger.get("patch")
 
 patch_group = Group()
 patch_all_lock = Semaphore()
+
+git_threadpool = ThreadPool(10)
 
 test_mode = False
 

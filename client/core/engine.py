@@ -554,7 +554,6 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def __init__(self, package=None, enabled=True, state='check', url=None, host=None, pmatch=None, completed_plugins=None, weight=0, **kwargs):
         GreenletObject.__init__(self)
-
         if host:
             self.host = host
             self.pmatch = pmatch
@@ -564,19 +563,13 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             try:
                 self.host, self.pmatch = hoster.find(url)
             except TypeError:
-                self.log.critical('deleting file: error getting hoster plugin for url {}'.format(url))
                 self.table_delete()
-                raise RuntimeError()
+                return
 
         self.global_status = global_status
 
         if not isinstance(package, Package):
-            try:
-                package = get_by_uuid(package)
-            except KeyError:
-                self.log.critical('deleting file: error getting package {}'.format(package))
-                self.table_delete()
-                raise RuntimeError()
+            package = get_by_uuid(package)
             if not isinstance(package, Package):
                 raise ValueError('file.package must be a Package instance, got {}'.format(package))
         self.package = package
@@ -594,6 +587,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         self.last_substate = list()
         self.enabled = enabled
         self.intern = None
+
+        if not self.host:
+            raise ValueError('file.host can not be null')
 
         kwargs.setdefault("name", None)
         for k, v in kwargs.iteritems():
@@ -641,7 +637,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     def on_set_state(self, value):
         self._on_init_progress(value, value, self.get_any_size())
         self.retry_num = 0
-        if value == 'download_complete' and 'download' not in self.completed_plugins: # TODO: remove me. this was needed cause of old bad code
+        if value == 'download_complete' and 'download' not in self.completed_plugins:
             with transaction:
                 self.completed_plugins.add('download')
         return value
@@ -1177,9 +1173,8 @@ class Chunk(Table, ErrorFunctions, InputFunctions, GreenletObject):
             try:
                 file = get_by_uuid(file)
             except KeyError:
-                self.log.critical('deleting chunk: error getting file {}'.format(file))
                 self.table_delete()
-                raise RuntimeError()
+                return
             if not isinstance(file, File):
                 raise ValueError('chunk.file must be a File instance, got{}'.format(file))
         self.file = file
