@@ -82,8 +82,6 @@ def valid(urls):
     _block_to = time.time() + cnl_service.config.add_block_for
     if _dialog_open:
         return False
-    if cnl_service.config.add:
-        return True
     return add_dialog(len(urls))
 
     
@@ -121,11 +119,6 @@ def add_dialog(count):
     finally:
         _dialog_open = False
 
-@event.register('config:before_load')
-def on_config_before_load(e, data):
-    if data.get('service.clickandload.add', None) in (True, False):
-        data['service.clickandload.add'] = None
-
 class ClickAndLoad(service.ServicePlugin):
     server = None
     default_enabled = True
@@ -133,6 +126,8 @@ class ClickAndLoad(service.ServicePlugin):
     def __init__(self, name):
         service.ServicePlugin.__init__(self, name)
         self.config.default("add", None, str, description="Always add the links without asking.")
+        if self.config.add in ('True', 'False'):
+            self.config.add = None
         self.config.default("add_block_for", 5, int, description="Block the clickandload feature for this amount of seconds.")
         if not self.config.enabled: # TODO: remove this and make config setting on website
             self.config.enabled = True
