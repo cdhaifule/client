@@ -259,7 +259,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
     def run(self):
         def log_state(msg):
             if self.connection_state is not None:
-                self.connection_state.put('connecting')
+                self.connection_state.put(msg)
             log.debug(msg)
 
         error = False
