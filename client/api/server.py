@@ -84,6 +84,11 @@ class Namespace(BaseNamespace, BroadcastMixin):
 def route_index():
     return "websocket client listening"
 
+@app.route('/online.js')
+def route_online_js():
+    response.headers['Content-Type'] = 'text/javascript'
+    return 'var online = 1;'
+    
 @app.route('/downloadam.js')
 def route_downloadam_js():
     if not login.has_login():
@@ -166,8 +171,9 @@ login_template = SimpleTemplate("""
                 margin: 0;
                 padding: 0;
                 background: url(https://www.download.am/assets/img/ui/background_top.png) repeat-x top #fcfcfc;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: normal;
+                font-family: Arial;
             }
             p {
                 display: block;

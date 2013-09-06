@@ -114,20 +114,20 @@ class Config(object):
                 else:
                     if _defaults[key]["type"] == bool:
                         value = bool(value)
-            channels = list()
+            channels = set()
             on_set = None
             if key in _defaults:
                 if _defaults[key]['use_keyring']:
-                    channels.append('password')
+                    channels.add('password')
                 else:
-                    channels.append('config')
+                    channels.add('config')
                     if not _defaults[key]['private']:
-                        channels.append('api')
+                        channels.add('api')
                 if _defaults[key]['type'] is not None or _defaults[key]['allow_none'] is False:
                     on_set = lambda _, value: self._on_set(key, value)
             else:
-                channels.append('api')
-                channels.append('config')
+                channels.add('api')
+                channels.add('config')
             col = scheme.Column(channels, on_set=on_set, fire_event=True)
             setattr(_configtable.__class__, key, col)
             col.init_table_class(_configtable.__class__, key)
@@ -338,7 +338,6 @@ def init():
                 for key in loaded_data.keys():
                     try:
                         if hasattr(_configtable, key):
-                            print "!"*100, 'setting loaded key', key
                             _config[key] = loaded_data[key]
                             del loaded_data[key]
                     except BaseException as e:

@@ -283,9 +283,9 @@ class PatchWorker(BasicPatchWorker):
         else:
             if resp.status_code != 201:
                 self.source.log.debug("patch not ready (retry {}): {}".format(retry, resp.content))
-                if retry <= 4: # wait at least 10 seconds for the patch
-                    gevent.sleep(retry)
-                    return self.get(retry + 1)
+                #if retry <= 4: # wait at least 10 seconds for the patch
+                #    gevent.sleep(retry)
+                #    return self.get(retry + 1)
                 return
             resp = requests.get(resp.headers["Location"])
             resp.raise_for_status()
