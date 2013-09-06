@@ -88,7 +88,7 @@ def macpaste():
                     try:
                         encoding = m.group(1)
                         f = encoding.find("-external")
-                        if f>0:
+                        if f > 0:
                             encoding = encoding[:f]
                         data = item.dataForType_(t).bytes().tobytes().decode(encoding)
                     except LookupError:

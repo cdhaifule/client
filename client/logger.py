@@ -112,6 +112,7 @@ class MyLogger(loggerClass):
             c = c.replace(settings.home_dir, '{HOME_DIR}')
             c = re.sub(r'/[^\s]+/lib/python([23](\.\d+)?)?', 'lib', c)
             c = re.sub(r'0x[0-9a-fA-F]+', '0x12345678', c)
+            c = re.sub(r'\d/\d/\d', '#/#/#', c) # ThreadPool errors
             return c
 
         message = anonymize(message)

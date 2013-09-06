@@ -808,7 +808,7 @@ class ConfigUrl(object):
             buf.write(resp.content)
             buf.seek(0)
             data = yaml.load(buf)
-            assert isinstance(data, dict), 'config url returned invalid data'
+            assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
         else:
             u = Url(self.url)
             host = u.host
@@ -1312,11 +1312,10 @@ def identify_source(url):
     if 'dlam-config.yaml' in url:
         return 'config', url
 
+    u = Url(url)
     with Timeout(10):
         try:
-            u = Url(url)
-            host = u.host
-            for txt in dns.resolver.query(host, 'TXT'):
+            for txt in dns.resolver.query(u.host, 'TXT'):
                 if hasattr(txt, 'strings'):
                     strings = txt.strings
                 else:
@@ -1331,7 +1330,6 @@ def identify_source(url):
         except:
             traceback.print_exc()
 
-    u = Url(url)
     if not u.host.startswith('www.'):
         u.host = 'www.{}'.format(u.host)
         return identify_source(u.to_string())
