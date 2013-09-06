@@ -59,6 +59,10 @@ _config_loaded = False
 @event.register('config:before_load')
 def on_config_before_load(e, data):
     if 'login.first_start' in data:
+        if data['login.first_start']['frontend'] == data['login.hashes.frontend']:
+            config.current = 'guest'
+        else:
+            config.current = 'account'
         if isinstance(data['login.first_start'], basestring):
             data['login.first_start'] = json.loads(data['login.first_start'])
         for h in hash_types + ['username']:

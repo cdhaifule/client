@@ -59,6 +59,10 @@ def _fire_once(se):
     del once[se[0]]
     _fire(se)
 
+def fire_blocked(event, *args, **kwargs):
+    if event in events or debug:
+        return _fire((event, args, kwargs))
+
 def fire(event, *args, **kwargs):
     if event in events or debug:
         t = gevent.spawn(_fire, (event, args, kwargs))

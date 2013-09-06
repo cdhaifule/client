@@ -84,7 +84,7 @@ def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
         "mime": mime,
     }
     ctx.responder.send(command="thumb", payload=payload)
-    print "pushed thumb data: {}".format(len(data))
+    #print "pushed thumb data: {}".format(len(data))
 
 def _create_thumbnail_data(img):
     dim_x = 120

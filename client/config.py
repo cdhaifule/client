@@ -59,10 +59,14 @@ class Config(object):
             'use_keyring': use_keyring}
         if hook is not None:
             self.register_hook(key, hook)
-        if key not in _configtable._table_data:
-            self[key] = value
         if use_keyring:
             self[key] = keyring.get_password(settings.keyring_service, 'config_config_{}'.format(key)) or ''
+        elif key not in _configtable._table_data:
+            if key in loaded_data:
+                self[key] = loaded_data[key]
+                del loaded_data[key]
+            else:
+                self[key] = value
 
     def register(self, key, _config=None):
         """decorator"""
@@ -110,20 +114,20 @@ class Config(object):
                 else:
                     if _defaults[key]["type"] == bool:
                         value = bool(value)
-            channels = set()
+            channels = list()
             on_set = None
             if key in _defaults:
                 if _defaults[key]['use_keyring']:
-                    channels.add('password')
+                    channels.append('password')
                 else:
-                    channels.add('config')
-                    if _defaults[key]['private']:
-                        channels.add('api')
+                    channels.append('config')
+                    if not _defaults[key]['private']:
+                        channels.append('api')
                 if _defaults[key]['type'] is not None or _defaults[key]['allow_none'] is False:
                     on_set = lambda _, value: self._on_set(key, value)
             else:
-                channels.add('api')
-                channels.add('config')
+                channels.append('api')
+                channels.append('config')
             col = scheme.Column(channels, on_set=on_set, fire_event=True)
             setattr(_configtable.__class__, key, col)
             col.init_table_class(_configtable.__class__, key)
@@ -322,16 +326,21 @@ with transaction:
     config = configobj(_config)
     globalconfig = config
 
+loaded_data = dict()
+
 def init():
     if settings.config_file:
         try:
             with open(settings.config_file, 'r') as f:
-                data = json.load(f)
-            event.fire('config:before_load', data)
+                loaded_data.update(json.load(f))
+            event.fire_blocked('config:before_load', loaded_data)
             with transaction:
-                for key, value in data.iteritems():
+                for key in loaded_data.keys():
                     try:
-                        _config[key] = value
+                        if hasattr(_configtable, key):
+                            print "!"*100, 'setting loaded key', key
+                            _config[key] = loaded_data[key]
+                            del loaded_data[key]
                     except BaseException as e:
                         from . import logger
                         traceback.print_exc()
