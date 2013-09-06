@@ -29,7 +29,6 @@ from .scheme import transaction
 from .config import globalconfig
 from .localize import _T
 
-import keyring
 from gevent.event import Event
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -42,17 +41,47 @@ log = logger.get("login")
 hash_types = ['login', 'frontend', 'backend', 'client', 'protected']
 
 config = globalconfig.new('login')
-config.default('first_start', None, dict, private=True)
 
-config.default('username', "", unicode, private=True)
-config.default('save_password', True, bool, private=True)
+config.default('current', 'guest', str, private=True)
+
+config.guest.default('username', '', unicode, private=True)
+config.account.default('username', '', unicode, private=True)
 
 hashes = dict()
 for h in hash_types:
     hashes[h] = None
-    config.hashes.default(h, None, str, private=True)
+    config.guest.default(h, '', str, private=True, use_keyring=True)
+    config.account.default(h, '', str, private=True, use_keyring=True)
 
 _config_loaded = False
+
+
+@event.register('config:before_load')
+def on_config_before_load(e, data):
+    if 'login.first_start' in data:
+        if isinstance(data['login.first_start'], basestring):
+            data['login.first_start'] = json.loads(data['login.first_start'])
+        for h in hash_types + ['username']:
+            value = data['login.first_start'].get(h, None)
+            if value:
+                config.guest[h] = value
+        del data['login.first_start']
+
+    for h in hash_types:
+        key = 'login.hashes.{}'.format(h)
+        if key in data:
+            config.account[h] = data[key] or ''
+            del data[key]
+    if 'login.username' in data:
+        config.account.username = data['login.username']
+        del data['login.username']
+
+    if 'login.save_password' in data:
+        del data['login.save_password']
+
+
+def current():
+    return config[config.current]
 
 def sha256(s):
     if isinstance(s, unicode):
@@ -76,92 +105,70 @@ def hash_protected(password, hash_frontend):
 def hash_client(hash_login, hash_frontend):
     return sha256(hash_login + hash_frontend)
 
-def set_login(username, password, save_password=True):
+def set_login(username, password, type='account'):
     global _config_loaded
     _config_loaded = True
 
     with transaction:
-        config['username'] = username
-        if save_password is not None and save_password:
-            config['save_password'] = save_password
-
-        if username is not None:
-            hashes['login'] = hash_login(username, password)
-            hashes['frontend'] = hash_frontend(username, password, hashes['login'])
-            hashes['backend'] = None
-            hashes['protected'] = hash_protected(password, hashes['frontend'])
-            hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
-
-            if save_password:
-                for h in hash_types:
-                    if keyring:
-                        keyring.set_password(settings.keyring_service, h, hashes[h] or "")
-                    else:
-                        config.hashes[h] = hashes[h]
-
-        if config['username'] is None or not save_password:
+        config.current = type
+        config[type]['username'] = username
+        if not username:
             for h in hash_types:
-                config.hashes[h] = None
-                if keyring:
-                    keyring.set_password(settings.keyring_service, h, "")
+                config[type][h] = ''
+        else:
+            config[type]['login'] = hash_login(username, password)
+            config[type]['frontend'] = hash_frontend(username, password, config[type]['login'])
+            config[type]['backend'] = ''
+            config[type]['protected'] = hash_protected(password, config[type]['frontend'])
+            config[type]['client'] = hash_client(config[type]['login'], config[type]['frontend'])
 
     event.fire('login:changed')
     
 def generate_backend_key():
     if not has_login():
         raise RuntimeError('setting backend key while no login is set')
-    key = hashes.get("backend")
+    key = current()['backend']
     if not key:
         key = sha256(Random.new().read(32))
-        hashes['backend'] = key
+        current()['backend'] = key
     return key
-    
+
 def get_sso_url(tab=None):
     return "https://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab))
     
 def logout():
-    if config.first_start is not None:
-        for h in hash_types:
-            if h != 'backend' and config.first_start[h] != hashes[h]:
-                break
-        else:
-            config.username = ''
-
+    if config.current == 'guest':
+        with transaction:
+            config.current = 'account'
     for h in hash_types:
-        hashes[h] = None
-
-    if config['save_password']:
-        for h in hash_types:
-            config.hashes[h] = None
-            if keyring:
-                keyring.set_password(settings.keyring_service, h, "")
+        config['account'][h] = ''
 
     event.fire('login:changed')
 
-# event is set when login data is present
-login_event = Event()
 
-def has_login():
-    if config['username'] is None:
-        return False
-    for h in hash_types:
-        if h != 'backend' and not hashes[h]:
+login_event = Event() # event is set when login data is present
+
+def has_login(type=None):
+    c = current() if type is None else config[type]
+    for h in hash_types + ['username']:
+        if h != 'backend' and not c[h]:
             return False
     return True
 
 def is_guest():
+    """returns true if account is not setup with hashes or it's a guest account"""
+    if config.current == 'guest':
+        return True
     if not has_login():
         return False
-    if config.first_start and config.first_start['login'] == hashes['login']:
-        return True
     return False
 
 def wait():
     login_event.wait()
 
-def get(type):
+def get(h):
     wait()
-    return hashes[type]
+    return current()[h]
 
 def get_login():
     return get('login')
@@ -172,7 +179,7 @@ def get_auth_token(tab=None):
     char_set = string.ascii_uppercase + string.ascii_lowercase + string.digits
     key = ''.join(random.sample(char_set*12, 12))
 
-    data = "{};{};{};{}".format(config['username'], get('login'), get('frontend'), settings.app_uuid)
+    data = "{};{};{};{}".format(get('username'), get('login'), get('frontend'), settings.app_uuid)
     if tab is not None:
         data = '{};{}'.format(data, tab)
     data = base64.b64encode(gibberishaes.encrypt(key, data))
@@ -200,17 +207,8 @@ def decrypt(source, data):
                 logout()
             log.critical('encryption key for source {} seems to be invalid'.format(source))
             raise
-            #if source == "backend":
-            #    sys.exit(1)
-            #else:
-            #    raise
     else:
         return data
-
-@event.register('config:before_load')
-def on_config_before_load(e, data):
-    if 'first_start' in data and isinstance(data['first_start'], basestring):
-        data['first_start'] = json.loads(data['first_start'])
 
 @event.register('config:loaded')
 def on_config_loaded(e):
@@ -218,20 +216,6 @@ def on_config_loaded(e):
     if _config_loaded:
         return
     _config_loaded = True
-
-    for h in hash_types:
-        try:
-            hashes[h] = config.hashes[h]
-        except (AttributeError, KeyError):
-            hashes[h] = None
-        else:
-            if config.hashes[h] and keyring:
-                # transfer legacy keys into keyring
-                keyring.set_password(settings.keyring_service,
-                    h, config.hashes[h])
-                config.hashes[h] = None
-        if not hashes[h] and keyring:
-            hashes[h] = keyring.get_password(settings.keyring_service, h) or None
 
 login_input = None
 
@@ -264,7 +248,7 @@ def login_dialog(username=None, website_switch=False):
         log.info("Login dialog already active.")
         return
     if not username:
-        username = config.username
+        username = config.account.username
     if not website_switch: # don't clear the login event when we try a soft login...
         login_event.clear()
 
@@ -315,20 +299,16 @@ def init_optparser(parser, OptionGroup):
     group = OptionGroup(parser, _T.login__options)
     group.add_option('--username', dest="username", help=_T.login__username)
     group.add_option('--password', dest="password", help=_T.login__password)
-    #group.add_option('--save-password', dest="save_password", action="store_true", default=False, help=_T.login__save_password)
     parser.add_option_group(group)
 
 def init_options(options):
     if options.username is not None:
         if options.password:
-            #set_login(options.username, options.password, options.save_password)
             set_login(options.username, options.password)
             return
         raise SystemExit('you have to specify --username with --password')
     elif options.password:
         raise SystemExit('you have to specify --password with --username')
-    #elif options.save_password:
-    #    raise SystemExit('you have to specify --username and --password with --save-password')
     else:
         event.fire_later(0, 'login:changed')
         return
@@ -336,13 +316,9 @@ def init_options(options):
 pub_key = RSA.importKey("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCoUVppotFnAvfVFmpIcSsTFZPlh49XmobCjoZCJRCxnOIV2JlDhD1CzwyW6/pypvjZnNPkU/lunO0UreWNQAVyzSRW2Q/PjDkeSPuSDvQ4jxffADYu/YfsD8mTUtRj5yRqmBHepqk0eJjl4GNsJX6g6BmUJG+3/etBpmsOMtYBOO/5HJxMrQslzWccv7ObMdDnjO3+nSnH1/09PnNWNQx3lt+PVfV4eBYIl3M0anHHhhsj21oWaevDdEj2nSEA9nwdPrA7jI+np2bm83PgfsGdzdF837M/r6EECCG7Qw7YTeU06yDebMpqqsUagv+7ddxaUgyu5Cd1DdUn4PHbD7wIlX2uts4iXsSzLYBcsw93cfuH9XT55xhidqYpCzfr3DemSBWOS5AbR3qkpyz4h8fO0QlH3z5gAuKVBVCOyZb0HFV1Cro0OtF3bxGUok8+i7A8/afzUK+ndPNCTKUTzlrQgnkCankurgZGZ5kcCVvgYga4zGUKC0pdBkzCqMh7VF6ki4mt3SuA6KsbJNNWpna7euYTUomY5jyxAlK4gK6LYxoUcyUxaDD5RnTyhX2LvYZnQ7yunsv9LcNAeSay1Xp3bg066XTxoOCZXuR+ZwNAnhkpDN6aaZdQCAuoqZs4U6rKTWWpNrppxnbW4lZ9WGsEQe9FdkBdedgXHi9KGIaV1Q==")
 pub_key = PKCS1_OAEP.new(pub_key)
 
-def init_first_start(retry=1, save_password=True):
-    if config.first_start is not None:
-        config.username = config.first_start['username']
-        for key in hash_types:
-            hashes[key] = config.first_start[key]
-            if save_password:
-                config.hashes[key] = config.first_start[key]
+def init_first_start(retry=1):
+    if has_login('guest'):
+        config.current = 'guest'
         event.fire('login:changed')
         return
 
@@ -386,18 +362,14 @@ def init_first_start(retry=1, save_password=True):
         log.critical('first start register failed. User have to create and setup an own account.')
         return
 
-    set_login(username, password, True)
-    with transaction:
-        config.first_start = hashes
-        config.first_start['username'] = username
-
+    set_login(username, password, 'guest')
     log.info('registered new first start account')
 
 def init(options):
     init_options(options)
     if has_login():
         return
-    if config.first_start is None and not config.username:
+    if not has_login('guest') and not config.account.username:
         yield 'creating account'
         init_first_start()
 
@@ -405,29 +377,25 @@ def init(options):
 class LoginInterface(interface.Interface):
     name = 'login'
 
-    def set(username=None, password=None, save_password=True):
+    def set(username=None, password=None):
         """this function is mainly for the command line rpc interface
         """
-        set_login(username, password, save_password)
+        set_login(username, password)
 
     def change_password(username=None, login=None, frontend=None, backend=None, protected=None, upgrade_guest_account=None):
         """changes login infos and reconnects to api
         """
-        if upgrade_guest_account is not None and config.first_start is not None:
-            if upgrade_guest_account == config.first_start['frontend']:
-                config.first_start = None
+        if upgrade_guest_account is not None and has_login('guest') and upgrade_guest_account == config.guest.frontend:
+            for h in hash_types + ['username']:
+                config.guest[h] = ''
 
-        config['username'] = username
-
-        hashes['login'] = login
-        hashes['frontend'] = frontend
-        hashes['backend'] = backend
-        hashes['protected'] = protected
-        hashes['client'] = hash_client(hashes['login'], hashes['frontend'])
-
-        if config['save_password']:
-            for h in hash_types:
-                config.hashes[h] = hashes[h]
+        config.account['username'] = username
+        config.account['login'] = login
+        config.account['frontend'] = frontend
+        config.account['backend'] = backend
+        config.account['protected'] = protected
+        config.account['client'] = hash_client(config.account['login'], config.account['frontend'])
+        config.current = 'account'
 
         event.fire('login:changed')
 

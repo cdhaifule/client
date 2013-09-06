@@ -202,6 +202,8 @@ def ask_user(outdated):
             result = input.get(elements, type='browser_select', timeout=None, close_aborts=True, ignore_api=True)
             config.webbrowser = result['browser']
             return True
+        except input.InputAborted:
+            return False
         except:
             if outdated:
                 config.webbrowser = values[0][0]

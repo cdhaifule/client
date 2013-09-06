@@ -15,23 +15,20 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-import gevent
-
 import keyring
 
 from .models import Account, Profile, HosterAccount, PremiumAccount, Http, HttpAccount, HttpHosterAccount, HttpPremiumAccount, \
-    MultiAccount, HttpMultiAccount, PasswordListener
+    MultiAccount, HttpMultiAccount
 from .manager import manager, log, config
 from ..hoster.this import localctx
 from ..scheme import transaction
-from .. import db, interface, settings, scheme
+from .. import db, interface, settings
 from ..api import proto
 from . import verify
 
 def init():
     # plugins are loaded by hoster.py
     Account.localctx = localctx
-    scheme.register(PasswordListener())
     
     with transaction, db.Cursor() as c:
         aa = c.execute("SELECT * FROM account")
@@ -39,14 +36,16 @@ def init():
             try:
                 name = json.loads(a['name'])
                 data = json.loads(a['data'])
-                oldpw = data.pop('password', "")
+                oldpw = data.pop('password', "") # TODO: remove. update process
                 data['id'] = int(a['id'])
+                pool = manager.get_pool(name)
                 if oldpw:
+                    # TODO: remove. update process
                     print "transferring old pw of:", data
-                    data["password"]= oldpw
-                else:
-                    data["password"] = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"]))
-                manager.get_pool(name).add(**data)
+                    data["password"] = oldpw
+                elif hasattr(pool.account_class, 'password'):
+                    data["password"] = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"])) or ''
+                pool.add(**data)
             except TypeError:
                 log.critical("broken row: {}".format(a))
                 c.execute("DELETE FROM account WHERE id={}".format(a["id"]))

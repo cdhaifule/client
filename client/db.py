@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+import keyring
 import sqlite3
 
 from . import scheme, settings, logger, event
@@ -145,7 +146,27 @@ def _dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+
+class PasswordListener(scheme.TransactionListener):
+    def __init__(self):
+        scheme.TransactionListener.__init__(self, 'password')
+    
+    def on_commit(self, update):
+        for key, data in update.iteritems():
+            for k, v in data.iteritems():
+                if k in {"action", "table", "id"}:
+                    continue
+                key = "{}_{}_{}".format(data["table"], data["id"], k)
+                if data["action"] in {"new", "update"}:
+                    keyring.set_password(settings.keyring_service, key, v or "")
+                elif data["action"] == "delete":
+                    keyring.delete_password(settings.keyring_service, key)
+
+
 listener = None
+
+def init_pre():
+    scheme.register(PasswordListener())
 
 def init():
     global conn

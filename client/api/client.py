@@ -41,7 +41,8 @@ config = globalconfig.new('api').new('client')
 config.default('show_error_dialog', True, bool)
 
 class APIClient(BaseNamespace, plugintools.GreenletObject):
-    nodes = ["ws-{}.download.am".format(i) for i in range(2, 5)]
+    #nodes = ["ws-{}.download.am".format(i) for i in range(3, 4)]
+    nodes = ['ws.download.am']
     random.shuffle(nodes)
     node_cycler = cycle(nodes)
     node_port = 443
@@ -256,16 +257,21 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             raise RuntimeError('invalid response: {}'.format(result))
 
     def run(self):
-        self.connect_retry = 0
+        def log_state(msg):
+            if self.connection_state is not None:
+                self.connection_state.put('connecting')
+            log.debug(msg)
+
         error = False
+        self.connect_retry = 0
         self.connect_error_dialog = None
 
         while True:
             self.close()
             self.connected_event.clear()
-            self.disconnected_event.clear()
 
             login.wait()    # wait until user entered login data
+            self.disconnected_event.clear()
             # TODO: wait for reconnected event
 
             if error:
@@ -278,19 +284,17 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             if sleep_time > 15:
                 sleep_time = 15
 
-            if self.connection_state is not None:
-                self.connection_state.put('connecting')
+            log_state('connecting')
             try:
                 with Timeout(30):
                     e = self.spawn(self.connect).get()
                     if e is not None:
                         raise e
                     self.emit("hello", settings.app_uuid, "client")
-            except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
+            except (KeyboardInterrupt, SystemExit):
                 raise
             except BaseException as e:
-                if self.connection_state is not None:
-                    self.connection_state.put('connection error')
+                log_state('connection error')
                 log.error('error connecting: {}'.format(e))
                 self.close()
                 event.fire('api:connection_error')
@@ -300,18 +304,25 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             finally:
                 self.kill()
 
-            if self.connection_state is not None:
-                self.connection_state.put('logging in')
+            # close the connection error dialog
+            self.connect_retry = 0
+            if self.connect_error_dialog:
+                self.connect_error_dialog.kill()
+                self.connect_error_dialog = None
+
+            # clear this event here to get acknowledged of new login data
+            self.disconnected_event.clear()
+
+            log_state('logging in')
             try:
                 self.spawn(self.handshake)
                 result = self.greenlet.get()
                 if not result:
                     continue
-            except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
+            except (KeyboardInterrupt, SystemExit):
                 raise
             except BaseException as e:
-                if self.connection_state is not None:
-                    self.connection_state.put('login error')
+                log_state('login error')
                 log.error('error handshaking: {}'.format(str(e)))
                 self.close()
                 error = True
@@ -320,41 +331,37 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             finally:
                 self.kill()
 
+            if self.disconnected_event.is_set():
+                log.info('login data changed during handshake')
+                continue
+
             if self.io is None or not self.io.connected:
                 log.warning('api bootstrap done but not connected. this is strange...')
-                if self.connection_state is not None:
-                    self.connection_state.put('connection error')
+                log_state('connection error')
                 self.close()
                 error = True
                 gevent.sleep(sleep_time)
                 continue
 
-            self.connect_retry = 0
-            if self.connect_error_dialog:
-                self.connect_error_dialog.kill()
-                self.connect_error_dialog = None
-
-            if self.connection_state is not None:
-                self.connection_state.put('sending infos')
+            log_state('sending infos')
             payload = interface.call('api', 'expose_all')
             message = proto.pack_message('frontend', 'api.expose_all', payload=payload)
             try:
-                print "!"*100, 'sending expose_all', len(message)
                 self.send_message(message)
-                print "!"*100, 'sending expose_all', len(message), 'done'
             except AttributeError:
                 log.warning('api closed unexpected')
-                if self.connection_state is not None:
-                    self.connection_state.put('connection error')
+                log_state('connection error')
                 self.close()
                 error = True
                 gevent.sleep(sleep_time)
                 continue
 
+            if self.disconnected_event.is_set():
+                log.info('login data changed during handshake')
+                continue
+
             self.connected_event.set()
-            #self.disconnected_event.clear()
-            if self.connection_state is not None:
-                self.connection_state.put('connected')
+            log_state('connected')
 
             event.fire('api:connected')
             self.disconnected_event.wait()
@@ -367,7 +374,6 @@ client = APIClient()
 @event.register('proxy:changed')
 def _(e, *args):
     client.disconnected_event.set()
-    client.kill()
 
 @event.register('reconnect:reconnecting')
 def __(e, *args):

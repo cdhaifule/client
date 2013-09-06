@@ -19,6 +19,7 @@ import json
 import socket
 import traceback
 
+from gevent import Timeout
 from gevent.server import StreamServer
 
 from . import interface, logger, event
@@ -188,7 +189,8 @@ def init(options, args):
     # so we try to connect to check if there is already another instance running
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        s = client_connect()
+        with Timeout(5): # needed cause this action can hang on win32 for a longer time
+            s = client_connect()
     except ValueError:
         already_running(s)
     except:
