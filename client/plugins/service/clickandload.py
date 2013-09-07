@@ -126,7 +126,7 @@ class ClickAndLoad(service.ServicePlugin):
     def __init__(self, name):
         service.ServicePlugin.__init__(self, name)
         self.config.default("add", None, str, description="Always add the links without asking.")
-        if self.config.add in ('True', 'False'):
+        if self.config.add in ('True', 'False'): # TODO: remove this after update
             self.config.add = None
         self.config.default("add_block_for", 5, int, description="Block the clickandload feature for this amount of seconds.")
         if not self.config.enabled: # TODO: remove this and make config setting on website

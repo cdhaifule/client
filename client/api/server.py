@@ -122,7 +122,7 @@ def check_referer(referer):
 def route_login_dialog():
     _id = "/" + uuid.uuid4().hex
     username = request.query.username
-    if login.config.username == username and login.has_login() and client.client.is_connected():
+    if login.current().username == username and login.has_login() and client.client.is_connected():
         return login_template.render(_=localize._X, action='logged_in', machine_name=socket.gethostname(), os_name=platform.system(), username=username)
 
     @app.route(_id, method='POST')

@@ -164,7 +164,7 @@ def is_guest():
     if config.current == 'guest':
         return True
     if not has_login():
-        return False
+        return True
     return False
 
 def wait():

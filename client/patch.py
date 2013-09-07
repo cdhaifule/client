@@ -488,7 +488,7 @@ def patch_one(patches, source, timeout=180):
 def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
     with patch_all_lock:
         # check config urls
-        log.debug('checking config urls')
+        """log.debug('checking config urls')
         todo = list()
         for source in sources.values():
             config_url = source.get_config_url()
@@ -499,10 +499,11 @@ def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
         for config_url in todo:
             g = group.spawn(config_url.update)
             patch_group.add(g)
-        group.join()
+        group.join()"""
 
-        log.debug('updating repos')
         # check for updates
+        log.debug('updating repos')
+        group = Group()
         patches = list()
         for source in sources.values():
             if source.enabled:
@@ -808,6 +809,7 @@ class ConfigUrl(object):
             buf.write(resp.content)
             buf.seek(0)
             data = yaml.load(buf)
+            self.log.send('error', 'config url returned invalid data: {} (type {})'.format(data, type(data)))
             assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
         else:
             u = Url(self.url)
