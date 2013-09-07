@@ -19,11 +19,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import hashlib
 import zlib
 import struct
+import traceback
 
 from functools import partial
 
+from Crypto.Cipher import AES
+
 from ... import fileplugin
 from ...scheme import intervalled
+from ...contrib.mega import crypto
 
 name = 'checksum'
 priority = 50
@@ -53,11 +57,16 @@ class ProgressTrack(intervalled.Cache):
         
     def close(self):
         # update end state in file
-        if self.check.hexdigest() != self.file.hash_value:
+        if self.check.name == "cbcmac":
+            file_mac = crypto.str_to_a32(self.check.file_mac)
+            if (file_mac[0] ^ file_mac[1], file_mac[2] ^ file_mac[3]) != self.check.meta_mac:
+                self.file.fatal('file checksum invalid')
+        elif self.check.hexdigest() != self.file.hash_value.lower():
             print self.file.get_download_file()
             print "Checked:", self.check.hexdigest()
             print "Set:", self.file.hash_value
             self.file.fatal('file checksum invalid')
+        print "checksum OK"
             
 class CRC32(object):
     """hashlib compatible interface to crc32"""
@@ -77,16 +86,56 @@ class CRC32(object):
         
     def update(self, bytes):
         self._hash = zlib.crc32(bytes, self._hash)
+
+class MegaCbcMac(object):
+    """interface for checking cbc-mac of mega.co.nz"""
+    name = "cbcmac"
+    digest_size = 4
+    block_size = 16
+    
+    def __init__(self, file_key):
+        file_key = crypto.base64_to_a32(file_key)
+        key = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5],
+                 file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
+        self.meta_mac = file_key[6:8]
+        self.file_mac = '\0' * 16
+        self.key = crypto.a32_to_str(key)
+        self.aes = AES.new(self.key, mode=AES.MODE_CBC, IV=self.file_mac)
+        self.IV = crypto.a32_to_str([file_key[4], file_key[5]]*2)
+    
+    def update(self, chunk):
+        enc = AES.new(self.key, mode=AES.MODE_CBC, IV=self.IV)
+        for i in xrange(0, len(chunk)-16, 16):
+            enc.encrypt(buffer(chunk, i, 16))
+        try:
+            i += 16
+        except NameError:
+            i = 0
+        self.file_mac = self.aes.encrypt(enc.encrypt(chunk[i:].ljust(16, '\0')))
         
 algorithms.add("crc32")
+algorithms.add("cbc_mac_mega")
 hashlib.crc32 = CRC32
 
 def hashfile(path, check, bs=64*1024):
-    with open(path) as f:
-        for data in iter(partial(f.read, bs), ""):
-            if not data:
-                break
-            check.update(data)
+    try:
+        with open(path) as f:
+            if check.check.name == "cbcmac":
+                chunks = crypto.get_chunks(path.st_size)
+                def readfunc():
+                    try:
+                        return f.read(chunks.next()[1])
+                    except StopIteration:
+                        return ""
+            else:
+                readfunc = partial(f.read, bs)
+            for data in iter(readfunc, ""):
+                if not data:
+                    break
+                check.update(data)
+    except (TypeError, ValueError):
+        traceback.print_exc()
+
 
 def match(path, file):
     if file is None:
@@ -108,7 +157,10 @@ def process(path, file, hddsem, threadpool):
     with hddsem:
         size = path.st_size
         if file.hash_type in algorithms:
-            hash_func = getattr(hashlib, file.hash_type)()
+            if file.hash_type == "cbc_mac_mega":
+                hash_func = MegaCbcMac(file.hash_value)
+            else:
+                hash_func = getattr(hashlib, file.hash_type)()
         else:
             hash_func = hashlib.new(file.hash_type)
 

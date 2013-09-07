@@ -48,14 +48,18 @@ class FakeCRC32File(File): # self implemented crc32 interface
 class FakeRIPEMD160File(File): # hashlib.new
     hash_type = "ripemd160"
     hash_value = "3d48802d859f9ef3dc54665acd1cfb9f8073084b"
-    
+
+class FakeMegaCBCMACFile(File):
+    hash_type = "cbc_mac_mega"
+    hash_value = "c3nqdm0PKL27I5EFevCv9imSgFoJx_kry5Vj2m2SGLw"
+
 def main():
     fileplugin.init()
     for _, __, plugin in fileplugin.manager.plugins:
         if plugin.name == "checksum":
             break
     assert plugin.name == "checksum"
-    tests = [FakeSHA1File(), FakeCRC32File(), FakeRIPEMD160File()]
+    tests = [FakeSHA1File(), FakeCRC32File(), FakeRIPEMD160File(), FakeMegaCBCMACFile()]
     for t in tests:
         print "testing", t.hash_type
         path, file = fileplugin.fileorpath(t)

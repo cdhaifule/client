@@ -35,6 +35,8 @@ def init():
         for a in aa.fetchall():
             try:
                 name = json.loads(a['name'])
+                if name == "mega.co.nz":
+                    raise TypeError("mega no support for now, deleting account")
                 data = json.loads(a['data'])
                 oldpw = data.pop('password', "") # TODO: remove. update process
                 data['id'] = int(a['id'])
