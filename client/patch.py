@@ -199,6 +199,13 @@ class GitWorker(BasicPatchWorker):
                 self.source.last_error = 'failed fetching repository: {}'.format(e)
             return False
 
+        broken_file = os.path.join(self.source.basepath, '.broken_repo')
+        if os.path.exists(broken_file):
+            try:
+                really_clean_repo(self.source.basepath)
+            except:
+                pass
+
         old_version = self.source.version
         try:
             repo = self.source._open_repo()
@@ -235,7 +242,12 @@ class GitWorker(BasicPatchWorker):
                     if not os.path.exists(p):
                         break
                     tmp += 1
-                self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path {}'.format(p), exc_info=old_exception)
+                try:
+                    with open(broken_file, 'w') as f:
+                        f.write('delete me')
+                except:
+                    pass
+                self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path', exc_info=old_exception)
                 self.source.basepath = p
             return self.fetch(True)
         #except BaseException as e:
@@ -1417,14 +1429,17 @@ def init():
 
     # delete useless repos
     for extern in os.listdir(settings.external_plugins):
-        if extern not in sources or not sources[extern].enabled:
-            path = os.path.join(settings.external_plugins, extern)
-            if os.path.isdir(path) and not os.path.exists(os.path.join(path, '.git')):
-                log.info('deleting useless external repo {}'.format(path))
-                try:
-                    really_clean_repo(path)
-                except:
-                    pass
+        path = os.path.join(settings.external_plugins, extern)
+        if not os.path.isdir(path):
+            continue
+        if os.path.exists(os.path.join(path, '.git')):
+            continue
+        if extern not in sources or not sources[extern].enabled or os.path.exists(os.path.join(path, '.broken_repo')):
+            log.info('deleting useless external repo {}'.format(path))
+            try:
+                really_clean_repo(path)
+            except:
+                pass
 
     default_sources = dict(
         downloadam='download.am'
