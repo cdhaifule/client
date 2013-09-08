@@ -217,6 +217,7 @@ class GitWorker(BasicPatchWorker):
         except BaseException as e:
             if retry:
                 return on_error(e)
+            old_exception = sys.exc_info()
             self.source.log.exception('failed fetching repository; deleting repo')
             del repo
             try:
@@ -234,7 +235,7 @@ class GitWorker(BasicPatchWorker):
                     if not os.path.exists(p):
                         break
                     tmp += 1
-                self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path {}'.format(p))
+                self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path {}'.format(p), exc_info=old_exception)
                 self.source.basepath = p
             return self.fetch(True)
         #except BaseException as e:
