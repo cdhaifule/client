@@ -810,7 +810,7 @@ class ConfigUrl(object):
             buf.seek(0)
             data = yaml.load(buf)
             if not isinstance(data, dict):
-                self.log.send('error', 'config url returned invalid data: {} (type {})'.format(data, type(data)))
+                self.log.send('error', 'config url returned invalid data: {} (type {})'.format(resp.content, type(data)))
             assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
         else:
             u = Url(self.url)
@@ -1309,6 +1309,10 @@ def identify_source(url):
         if not Url(url).path:
             url = url+'/'
 
+    u = Url(url)
+    u.host = u.host.lower()
+    url = u.to_string()
+
     if url.endswith('.git'):
         return 'git', url
 
@@ -1387,10 +1391,14 @@ def init():
                 id = json.loads(a['id'])
                 data = json.loads(a['data'])
                 # update old repo urls
-                if 'url' in data and data['url'].startswith('http://patch.download.am'):
-                    data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
-                if 'url' in data and data['url'].endswith('.git'):
-                    source = GitSource(id=id, **data)
+                if 'url' in data:
+                    if data['url'].startswith('http://patch.download.am'):
+                        data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
+                    if data['url'].endswith('.git'):
+                        source = GitSource(id=id, **data)
+                    u = Url(data['url'])
+                    u.host = u.host.lower()
+                    data['url'] = u.to_string()
                 else:
                     source = PatchSource(id=id, **data)
                 if source.enabled:
