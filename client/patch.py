@@ -809,7 +809,8 @@ class ConfigUrl(object):
             buf.write(resp.content)
             buf.seek(0)
             data = yaml.load(buf)
-            self.log.send('error', 'config url returned invalid data: {} (type {})'.format(data, type(data)))
+            if not isinstance(data, dict):
+                self.log.send('error', 'config url returned invalid data: {} (type {})'.format(data, type(data)))
             assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
         else:
             u = Url(self.url)
