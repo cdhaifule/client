@@ -234,7 +234,7 @@ class GitWorker(BasicPatchWorker):
                     if not os.path.exists(p):
                         break
                     tmp += 1
-                self.source.log.error('failed deleting broken repo, trying alternative base path {}'.format(p))
+                self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path {}'.format(p))
                 self.source.basepath = p
             return self.fetch(True)
         #except BaseException as e:
