@@ -32,11 +32,10 @@ def foo(*args, **kwargs):
     return ooo(*args, **kwargs)
 gevent.threading._start_new_thread = foo
 
-from gevent.event import Event
 from importlib import import_module
 from types import GeneratorType
 
-pre_objects = ['settings', 'event', 'logger', 'localize', 'config', 'db', 'interface', 'localrpc']
+pre_objects = ['settings', 'event', 'logger', 'localrpc', 'localize', 'config', 'db', 'interface']
 main_objects = ['ui']
 post_objects = ['proxy', 'patch', 'registry', 'login', 'api', 'ratelimit', 'reconnect', 'hoster', 'account', 'fileplugin', 'core', 'check', 'torrent', 'download', 'service', 'browser']
 
