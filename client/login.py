@@ -66,7 +66,7 @@ def on_config_before_load(e, data):
             config.current = 'account'
         if isinstance(data['login.first_start'], basestring):
             data['login.first_start'] = json.loads(data['login.first_start'])
-        for h in hash_types:
+        for h in hash_types + ['username']:
             value = data['login.first_start'].get(h, None)
             if value:
                 config.guest[h] = value
