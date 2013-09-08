@@ -1399,6 +1399,13 @@ def init():
                     u = Url(data['url'])
                     u.host = u.host.lower()
                     data['url'] = u.to_string()
+                if 'config_url' in data:
+                    u = Url(data['config_url'])
+                    u.host = u.host.lower()
+                    data['config_url'] = u.to_string()
+
+                if 'url' in data and data['url'].endswith('.git'):
+                    source = GitSource(id=id, **data)
                 else:
                     source = PatchSource(id=id, **data)
                 if source.enabled:
