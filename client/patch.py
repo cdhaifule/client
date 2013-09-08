@@ -803,7 +803,7 @@ class ConfigUrl(object):
 
     def _update(self):
         if 'dlam-config.yaml' in self.url:
-            resp = requests.get(self.url, allow_redirects=False)
+            resp = requests.get(self.url)
             resp.raise_for_status()
             buf = StringIO()
             buf.write(resp.content)
