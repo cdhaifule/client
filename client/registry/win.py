@@ -168,7 +168,7 @@ class DLAMBrowser(webbrowser.BaseBrowser):
             if not ask_user(outdated and name):
                 return
             return self.open(url, new, autoraise)
-        subprocess.Popen([path.encode(sys.getfilesystemencoding()), url.encode(sys.getfilesystemencoding())]) # TODO: this can raise an unicode error on win32
+        subprocess.Popen([path.encode(sys.getfilesystemencoding()), url.encode(sys.getfilesystemencoding())])
 
 def ask_user(outdated):
     elements = list()

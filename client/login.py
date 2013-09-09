@@ -114,8 +114,11 @@ def set_login(username, password, type='account'):
     global _config_loaded
     _config_loaded = True
 
+    print config.current, type, config.guest.username, has_login()
+    if config.current == 'guest' and type == 'guest' and config.guest.username == username and has_login():
+        return
+
     with transaction:
-        config.current = type
         config[type]['username'] = username
         if not username:
             for h in hash_types:
@@ -126,6 +129,13 @@ def set_login(username, password, type='account'):
             config[type]['backend'] = ''
             config[type]['protected'] = hash_protected(password, config[type]['frontend'])
             config[type]['client'] = hash_client(config[type]['login'], config[type]['frontend'])
+
+    if has_login() and config.current == 'guest' and type == 'account':
+        from . import api
+        if api.client.is_connected():
+            api.proto.send('frontend', 'website.setlocation', payload=dict(url=get_sso_url(type='account')))
+
+    config.current = type
 
     event.fire('login:changed')
     
@@ -138,17 +148,19 @@ def generate_backend_key():
         current()['backend'] = key
     return key
 
-def get_sso_url(tab=None):
-    return "https://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab))
-    
+def get_sso_url(tab=None, type=None):
+    return "https://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab, type=type))
+
 def logout():
     if config.current == 'guest':
+        login_dialog(exit_on_error=False, logout_current=False)
+    else:
         with transaction:
-            config.current = 'account'
-    for h in hash_types:
-        config['account'][h] = ''
-
-    event.fire('login:changed')
+            if config.current == 'guest':
+                config.current = 'account'
+            for h in hash_types:
+                config['account'][h] = ''
+        event.fire('login:changed')
 
 
 login_event = Event() # event is set when login data is present
@@ -175,16 +187,14 @@ def get(h):
     wait()
     return current()[h]
 
-def get_login():
-    return get('login')
-
-def get_auth_token(tab=None):
+def get_auth_token(tab=None, type=None):
     """returns base64 encoded auto token for automatic login to website
     """
     char_set = string.ascii_uppercase + string.ascii_lowercase + string.digits
     key = ''.join(random.sample(char_set*12, 12))
 
-    data = "{};{};{};{}".format(get('username'), get('login'), get('frontend'), settings.app_uuid)
+    c = current() if type is None else config[type]
+    data = "{};{};{};{}".format(c.username, c.login, c.frontend, settings.app_uuid)
     if tab is not None:
         data = '{};{}'.format(data, tab)
     data = base64.b64encode(gibberishaes.encrypt(key, data))
@@ -231,37 +241,32 @@ def on_login_changed(e):
     ui.module_initialized.wait()
     
     if has_login():
-        print "have login infos"
         login_event.set()
         if login_input is not None:
             login_input.kill()
             login_input = None
     else:
-        print "login infos missing"
         if login_input is not None:
-            print "login input active"
             return
         login_dialog()
 
-def login_dialog(username=None, website_switch=False):
+def login_dialog(username=None, exit_on_error=True, logout_current=True, allow_guest_login=True, timeout=None):
     global login_input
     if not ui.ui.has_ui:
         log.error("Cannot login without user interface. For commandline usage see --help.")
-        if not website_switch:
+        if exit_on_error:
             sys.exit(1)
+        return
     if login_input is not None:
         log.info("Login dialog already active.")
         return
     if not username:
         username = config.account.username
-    if not website_switch: # don't clear the login event when we try a soft login...
+    if logout_current: # don't clear the login event when we try a soft login...
         login_event.clear()
 
     elements = list()
-    if website_switch:
-        elements.append([input.Text('Please enter your login informations\nto connect the the website')])
-    else:
-        elements.append([input.Text('Please enter your login informations')])
+    elements.append([input.Text('Please enter your login informations')])
     elements.append([input.Float('left')])
     elements.append([input.Text('')])
     elements.append([input.Text('E-Mail:'), input.Input('username', value=username)])
@@ -275,7 +280,7 @@ def login_dialog(username=None, website_switch=False):
         dict(value='ok', content='OK', ok=True),
         dict(value='cancel', content='Cancel', cancel=True),
     ]
-    if not website_switch:
+    if allow_guest_login:
         login_choices.append(dict(value='guest', content='Connect as guest'))
     
     elements.append([input.Choice('action', choices=login_choices)])
@@ -283,14 +288,16 @@ def login_dialog(username=None, website_switch=False):
     def _login_input():
         global login_input
         try:
-            result = input.get(elements, type='login', timeout=90 if website_switch else None, close_aborts=True, ignore_api=True)
+            result = input.get(elements, type='login', timeout=timeout, close_aborts=True, ignore_api=True)
         except (input.InputAborted, input.InputTimeout):
-            if not website_switch:
+            if exit_on_error:
                 sys.exit(1)
+            return
         else:
             if result['action'] == 'cancel':
-                if not website_switch:
+                if exit_on_error:
                     sys.exit(1)
+                return
             elif result['action'] == 'guest':
                 init_first_start(1)
             else:
@@ -323,8 +330,9 @@ pub_key = PKCS1_OAEP.new(pub_key)
 
 def init_first_start(retry=1):
     if has_login('guest'):
-        config.current = 'guest'
-        event.fire('login:changed')
+        if config.current != 'guest':
+            config.current = 'guest'
+            event.fire('login:changed')
         return
 
     log.info('creating first start account (retry #{})'.format(retry))

@@ -156,16 +156,16 @@ def remove_connection(connection):
     if connection in connections:
         connections.remove(connection)
 
-def send(type, command=None, in_response_to=None, payload=None, channel=None, encrypt=True, _wait_for_master_connection=False):
+def send(destination, command=None, in_response_to=None, payload=None, channel=None, encrypt=True, _wait_for_master_connection=False):
     """default routing function for global messages
     """
     if client is None:
         return
-    message = pack_message(type, command, in_response_to, payload, channel, encrypt)
+    message = pack_message(destination, command, in_response_to, payload, channel, encrypt)
     if _wait_for_master_connection:
         client.wait_connected()
     if client.is_connected():
         client.send_message(message)
-    if type == 'frontend':
+    if destination == 'frontend':
         for connection in connections:
             connection.send_message(message)
