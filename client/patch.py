@@ -238,7 +238,7 @@ class GitWorker(BasicPatchWorker):
                     basepath = self.source.basepath
                     tmp = 1
                 while True:
-                    p = '{}-tmp{}'.format(basepath, tmp)
+                    p = u'{}-tmp{}'.format(basepath, tmp)
                     if not os.path.exists(p):
                         break
                     tmp += 1

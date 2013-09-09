@@ -138,7 +138,7 @@ def reset_icon_cache():
     if icon_cache is not None:
         icon_cache.close()
     os.remove(icon_cache_path)
-    icon_cache = shelve.open(icon_cache_path, writeback=True)
+    icon_cache = shelve.open(icon_cache_path.encode(sys.getfilesystemencoding()), writeback=True)
     icon_cache.close = icon_cache.sync
 
 icon_cache = None
@@ -159,7 +159,7 @@ def init():
     global icon_cache
     
     # load icon cache
-    icon_cache = shelve.open(icon_cache_path, writeback=True)
+    icon_cache = shelve.open(icon_cache_path.encode(sys.getfilesystemencoding()), writeback=True)
     icon_cache.close = icon_cache.sync
     try:
         a, (b, c) = icon_cache.iteritems().next() # reset cache if format not correct.
