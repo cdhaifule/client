@@ -18,7 +18,7 @@ class SocketIOConnectionError(SocketIOError):
 class SocketIOPacketError(SocketIOError):
     pass
 
-HEARTBEAT_WAIT = 15
+HEARTBEAT_WAIT = 5
 
 class BaseNamespace(object):  # pragma: no cover
     'Define socket.io behavior'
