@@ -30,7 +30,7 @@ from .. import settings, input, event, login
 from ..config import globalconfig
 
 config = globalconfig.new('registry.win')
-config.default('webbrowser', None, unicode)
+config.default('webbrowser', None, unicode, private=True)
 config.default('portable', None, unicode, private=True)
 
 @contextmanager
@@ -122,32 +122,43 @@ def _parse_browser_path(path):
         return None
 
 def get_default_browser():
-    return _parse_browser_path(read_reg_key(HKEY_CLASSES_ROOT, 'http\\shell\\open\\command')[0])
+    result = _parse_browser_path(read_reg_key(HKEY_CURRENT_USER, 'Software\\Classes\\http\\shell\\open\\command')[0])
+    if result is None:
+        result = _parse_browser_path(read_reg_key(HKEY_CLASSES_ROOT, 'http\\shell\\open\\command')[0])
+    return result
 
 def get_browser_path(key):
-    return _parse_browser_path(read_reg_key(HKEY_LOCAL_MACHINE, 'SOFTWARE\\Clients\\StartMenuInternet\\{}\\shell\\open\\command'.format(key))[0])
+    result = _parse_browser_path(read_reg_key(HKEY_CURRENT_USER, 'Software\\Clients\\StartMenuInternet\\{}\\shell\\open\\command'.format(key))[0])
+    if result is None:
+        result = _parse_browser_path(read_reg_key(HKEY_LOCAL_MACHINE, 'Software\\Clients\\StartMenuInternet\\{}\\shell\\open\\command'.format(key))[0])
+    return result
 
 def iterate_browsers(default=None):
     if default is None:
         default = get_default_browser() or ''
     default = default.lower()
-    for key in enum_reg_keys(HKEY_LOCAL_MACHINE, 'SOFTWARE\\Clients\\StartMenuInternet'):
-        name = browser_translate.get(key, key)
-        path = get_browser_path(key)
-        if not path:
-            continue
-        if key == 'IEXPLORE.EXE':
-            version = int(read_reg_key(HKEY_LOCAL_MACHINE, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
-            if version < 9:
+    ignore = set()
+    for hkey in (HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE):
+        for key in enum_reg_keys(hkey, 'Software\\Clients\\StartMenuInternet'):
+            if key in ignore:
+                continue
+            ignore.add(key)
+            name = browser_translate.get(key, key)
+            path = get_browser_path(key)
+            if not path:
+                continue
+            if key == 'IEXPLORE.EXE':
+                version = int(read_reg_key(hkey, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
+                if version < 9:
+                    outdated = True
+                else:
+                    outdated = False
+            elif key == 'OperaStable':
                 outdated = True
             else:
                 outdated = False
-        elif key == 'OperaStable':
-            outdated = True
-        else:
-            outdated = False
 
-        yield key, name, path, path.lower() == default, outdated
+            yield key, name, path, path.lower() == default, outdated
 
 
 @event.register('registry:select_browser')
