@@ -178,6 +178,8 @@ def spawn_tasks(e, file, old):
         return
     if not file.enabled:
         return
+    if file.file_plugins_complete:
+        return
     if globalconfig['{}.state'.format(file.package.system)] != 'started':
         return
     if 'download' not in file.completed_plugins:

@@ -144,17 +144,17 @@ def file_enabled_changed(file, old):
 
 def _auto_remove_files(file):
     to_delete = list()
-    path = file.get_complete_path()
+    path = file.get_complete_file()
     for f in files():
-        if f.get_complete_path() == path:
+        if f.get_complete_file() == path:
             to_delete.append(f)
     with transaction:
         for f in to_delete:
-            f.log.info('auto removing complete file')
+            f.log.info('auto removing complete file {} {} {}'.format(f.name, f.state, f.working))
             f.delete()
 
 @event.register('fileplugin:done')
-def fileplugins_done(e, path, file):
+def on_fileplugin_done(e, path, file):
     if file is None:
         return
     file.file_plugins_complete = True
@@ -163,6 +163,8 @@ def fileplugins_done(e, path, file):
     elif config.removed_completed == 'file':
         _auto_remove_files(file)
     elif config.removed_completed == 'package':
+        if file.package.tab != 'complete':
+            return
         for f in file.package.files:
             if f.file_plugins_complete:
                 continue
@@ -173,7 +175,6 @@ def fileplugins_done(e, path, file):
             while file.package.files:
                 _auto_remove_files(file.package.files[0])
             file.package.delete()
-
 
 # file chunks changed (progress update)
 
