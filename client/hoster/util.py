@@ -211,55 +211,62 @@ def buy_premium(hoster, url):
     except KeyError:
         pass
     asked[hoster] = Event()
+    ignore_asked = False
     try:
-        return ask_buy_premium_dialog(hoster, url)
+        with premium_lock:
+            return ask_buy_premium_dialog(hoster, url)
+    except gevent.GreenletExit:
+        ignore_asked = True
+        raise
     finally:
         e = asked[hoster]
-        asked[hoster] = time.time()
+        if ignore_asked:
+            del asked[hoster]
+        else:
+            asked[hoster] = time.time()
         e.set()
 
 def ask_buy_premium_dialog(hoster, url):
-    with premium_lock:
-        if hoster in config.ignore_ask_premium:
-            return
-        try:
+    if hoster in config.ignore_ask_premium:
+        return
+    try:
+        elements = [
+            input.Text("Buy premium account for hoster {}?".format(hoster)),
+            input.Choice('answer', choices=[
+                {"value": 'yes', "content": "Yes", "link": url},
+                {"value": 'no', "content": "No"},
+                {"value": 'already', "content": "I already have an account"},
+                {"value": 'never', "content": "No and never ask again"}
+            ]),
+        ]
+        result = input.get(elements)
+        if result['answer'] == 'already':
             elements = [
-                input.Text("Buy premium account for hoster {}?".format(hoster)),
+                input.Text('Please enter your account details for {}'.format(hoster)),
+                input.Float('left'),
+                [input.Text('Username:'), input.Input('username')],
+                [input.Text('Password:'), input.Input('password', 'password')],
+                input.Float('center'),
+                input.Text(''),
                 input.Choice('answer', choices=[
-                    {"value": 'yes', "content": "Yes", "link": url},
-                    {"value": 'no', "content": "No"},
-                    {"value": 'already', "content": "I already have an account"},
-                    {"value": 'never', "content": "No and never ask again"}
-                ]),
+                    {"value": 'add', "content": "Add Account", 'ok': True},
+                    {"value": 'cancel', "content": "Cancel", 'cancel': True}
+                ])
             ]
-            result = input.get(elements)
-            if result['answer'] == 'already':
-                elements = [
-                    input.Text('Please enter your account details for {}'.format(hoster)),
-                    input.Float('left'),
-                    [input.Text('Username:'), input.Input('username')],
-                    [input.Text('Password:'), input.Input('password', 'password')],
-                    input.Float('center'),
-                    input.Text(''),
-                    input.Choice('answer', choices=[
-                        {"value": 'add', "content": "Add Account", 'ok': True},
-                        {"value": 'cancel', "content": "Cancel", 'cancel': True}
-                    ])
-                ]
-                result = input.get(elements, close_aborts=True)
-                if result['answer'] == 'add' and result['username'] and result['password']:
-                    interface.call('account', 'add', name=hoster, username=result['username'], password=result['password'])
-                    raise gevent.GreenletExit()
-            elif result['answer'] == 'never':
-                if hoster not in config.ignore_ask_premium:
-                    with transaction:
-                        config.ignore_ask_premium.append(hoster)
-        except KeyError:
-            pass
-        except input.InputTimeout:
-            log.warning('input timed out')
-        except input.InputError:
-            log.error('input was aborted')
+            result = input.get(elements, close_aborts=True)
+            if result['answer'] == 'add' and result['username'] and result['password']:
+                interface.call('account', 'add', name=hoster, username=result['username'], password=result['password'])
+                raise gevent.GreenletExit()
+        elif result['answer'] == 'never':
+            if hoster not in config.ignore_ask_premium:
+                with transaction:
+                    config.ignore_ask_premium.append(hoster)
+    except KeyError:
+        pass
+    except input.InputTimeout:
+        log.warning('input timed out')
+    except input.InputError:
+        log.error('input was aborted')
 
 def add_extra(url, data):
     return url + "&---extra=" + base64.urlsafe_b64encode(json.dumps(data))
