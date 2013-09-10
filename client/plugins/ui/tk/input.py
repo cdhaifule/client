@@ -20,6 +20,7 @@ import gevent
 import base64
 import webbrowser
 
+from tkFileDialog import askopenfilename
 from Tkinter import Tk, Frame, Label, Checkbutton, Radiobutton, OptionMenu, Button, StringVar, IntVar, Entry, FALSE, LEFT
 from PIL import ImageTk
 
@@ -135,6 +136,23 @@ class Context(object):
         self.pack_element(w)
         w.focus_set()
         return w
+
+    def input_openfile(self, e, **kwargs):
+        frame = Frame(self.frame)
+
+        var = StringVar(master=frame)
+        self.master.serialized[e.name] = lambda: var.get()
+        if e.value is not None:
+            var.set(e.value)
+        Entry(frame, textvariable=var, **kwargs).pack(side=LEFT, padx=5)
+
+        def browse():
+            var.set(askopenfilename(filetypes=e.filetypes, initialdir=e.initialdir, initialfile=e.initialfile))
+
+        Button(frame, text=self.compile_text(e.caption or 'Browse'), command=browse, padx=5).pack(side=LEFT)
+        
+        self.pack_element(frame)
+        return frame
 
     def input_input_password(self, e):
         self.input_input_text(e, show='*')

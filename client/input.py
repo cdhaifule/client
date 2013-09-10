@@ -145,6 +145,17 @@ class Input(BaseInput):
         self['default'] = default
         self['label'] = label
 
+class OpenFile(BaseInput):
+    def __init__(self, name, value=None, caption='Browse', filetypes=None, initialdir=None, initialfile=None):
+        """type: text, password, radio, checkbox, hidden"""
+        self['element'] = 'openfile'
+        self['name'] = name
+        self['value'] = value
+        self['caption'] = caption
+        self['filetypes'] = filetypes
+        self['initialdir'] = initialdir
+        self['initialfile'] = initialfile
+
 class Radio(BaseInput):
     def __init__(self, name, default=None, value=None):
         self['element'] = 'radio'

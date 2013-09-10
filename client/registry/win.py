@@ -31,6 +31,7 @@ from ..config import globalconfig
 
 config = globalconfig.new('registry.win')
 config.default('webbrowser', None, unicode)
+config.default('portable', None, unicode, private=True)
 
 @contextmanager
 def open_key(hkey, *args):
@@ -157,17 +158,20 @@ def on_select_browser(e, open_browser):
 
 class DLAMBrowser(webbrowser.BaseBrowser):
     def open(self, url, new=0, autoraise=True):
-        for key, name, path, default, outdated in iterate_browsers():
-            if config.webbrowser is None and default:
-                break
-            elif key == config.webbrowser:
-                break
+        if config.webbrowser == '_portable' and config.portable and os.path.exists(config.portable):
+            path = config.portable
         else:
-            path, outdated = None, False
-        if path is None or outdated:
-            if not ask_user(outdated and name):
-                return
-            return self.open(url, new, autoraise)
+            for key, name, path, default, outdated in iterate_browsers():
+                if config.webbrowser is None and default:
+                    break
+                elif key == config.webbrowser:
+                    break
+            else:
+                path, outdated = None, False
+            if path is None or outdated:
+                if not ask_user(outdated and name):
+                    return
+                return self.open(url, new, autoraise)
         subprocess.Popen([path.encode(sys.getfilesystemencoding()), url.encode(sys.getfilesystemencoding())])
 
 def ask_user(outdated):
@@ -191,15 +195,21 @@ def ask_user(outdated):
             bisect.insort(values, (priority, (key, name)))
     values = [v for p, v in values]
     if values:
+        values.append(('_portable', 'Select the executable to the browser you like to use yourself:'))
+        if config.webbrowser == '_portable':
+            default_value = '_portable'
         elements.append([input.Text('Please select a browser you like to use with Download.am.')])
         elements.append([input.Text('')])
         elements.append([input.Float('left')])
         elements.append([input.Radio('browser', value=values, default=default_value)])
+        elements.append([input.OpenFile('portable', value=config.portable, filetypes=[("Executable files", "*.exe")], initialfile=config.portable)])
         elements.append([input.Float('center')])
         elements.append([input.Text('')])
         elements.append([input.Submit('OK')])
         try:
             result = input.get(elements, type='browser_select', timeout=None, close_aborts=True, ignore_api=True)
+            if result.get('portable', None) is not None:
+                config.portable = result['portable']
             config.webbrowser = result['browser']
             return True
         except input.InputAborted:
@@ -219,11 +229,18 @@ def ask_user(outdated):
         elements.append([input.Link('https://www.mozilla.org/‎', 'Mozilla Firefox - https://www.mozilla.org/')])
         elements.append([input.Link('http://www.opera.com/computer/next‎', 'Opera Next - http://www.opera.com/computer/next')])
         elements.append([input.Text('')])
+        elements.append([input.Text('If you have installed a portable browser you can enter the path to it here:')])
+        elements.append([input.OpenFile('portable', value=config.portable, filetypes=[("Executable files", "*.exe")], initialfile=config.portable)])
+        elements.append([input.Text('')])
         elements.append([input.Submit('OK')])
         webbrowser._browsers = _old_browsers
         webbrowser._tryorder = _old_tryorder
         try:
-            input.get(elements, type='browser_download', timeout=None, close_aborts=True, ignore_api=True)
+            result = input.get(elements, type='browser_download', timeout=None, close_aborts=True, ignore_api=True)
+            if result.get('portable', None) is not None and os.path.exists(result['portable']):
+                config.portable = result['portable']
+                config.webbrowser = '_portable'
+                return True
         except:
             pass
         finally:
@@ -238,3 +255,9 @@ _old_tryorder = webbrowser._tryorder
 webbrowser._browsers = {}
 webbrowser._tryorder = []
 webbrowser.register('dlam-default', DLAMBrowser)
+
+@event.register('loader:initialized')
+def _(*_):
+    import gevent
+    gevent.spawn_later(1, ask_user, False)
+    #gevent.spawn_later(30, sys.exit, 0)
