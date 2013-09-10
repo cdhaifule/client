@@ -526,11 +526,17 @@ class Http(object):
             if kwargs['chunk'] is not None and (kwargs['chunk'].pos or kwargs['chunk'].end):
                 kwargs['range'] = [kwargs['chunk'].pos, kwargs['chunk'].end]
             del kwargs['chunk']
+        
+        set_exact_range = kwargs.pop('set_exact_range', False)
 
         if 'range' in kwargs:
-            if kwargs['range'] is not None and kwargs['range'][0] > 0:
-                #kwargs['headers']['Range'] = 'bytes={pos}-{end}'.format(pos=kwargs['range'][0], end=kwargs['range'][1] and kwargs['range'][1] or '')
-                kwargs['headers']['Range'] = 'bytes={pos}-'.format(pos=kwargs['range'][0], end=kwargs['range'][1] and kwargs['range'][1] or '')
+            if kwargs['range'] is not None and (kwargs['range'][0] > 0 or set_exact_range):
+                if set_exact_range:
+                    kwargs['headers']['Range'] = 'bytes={pos}-{end}'.format(
+                        pos=kwargs['range'][0],
+                        end=int(kwargs['range'][1])-1 if kwargs['range'][1] else '')
+                else:
+                    kwargs['headers']['Range'] = 'bytes={pos}-'.format(pos=kwargs['range'][0], end=kwargs['range'][1] and kwargs['range'][1] or '')
             del kwargs['range']
 
         if 'referer' in kwargs:

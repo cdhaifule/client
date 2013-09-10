@@ -71,7 +71,7 @@ class AccountPool(list):
             kwargs['name'] = self.name
             account = self.account_class(**kwargs)
             if account in self:
-                raise ValueError('account already exists: {}'.format(account))
+                raise ValueError('account already exists: {} {}'.format(account, kwargs))
         self.append(account)
         gevent.spawn(account.boot)
         return account

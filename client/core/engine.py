@@ -622,7 +622,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         return value and value.lower() or None
         
     def on_set_hash_value(self, value):
-        return value and value.lower() or None
+        if not value:
+            return None
+        return value
                 
     def on_set_size(self, value):
         value = isinstance(value, basestring) and sizetools.human2bytes(value) or value
