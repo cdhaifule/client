@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 import json
 import socket
+import chardet
 import traceback
 
 from gevent import Timeout
@@ -77,6 +78,7 @@ def listen_accept(conn, addr):
             data = recv(conn)
             if not data:
                 break
+            data = data.decode(chardet.detect(data)['encoding'])
             command, module, kwargs = json.loads(data)
             data = interface.call(command, module, **kwargs)
             data = json.dumps(data)
@@ -161,6 +163,7 @@ def init(options, args):
     # parse command line arguments
     for rpc in args:
         try:
+            rpc = rpc.decode(chardet.detect(rpc)['encoding'])
             try:
                 command, args = rpc.split(' ', 1)
             except ValueError:
@@ -173,7 +176,6 @@ def init(options, args):
             kwargs = dict()
             for arg in filter(lambda a: a and True or False, args.split(' -- ')):
                 key, value = arg.split('=', 1)
-                print "args:", key, value
                 try:
                     value = json.loads(value)
                 except ValueError:
