@@ -255,9 +255,3 @@ _old_tryorder = webbrowser._tryorder
 webbrowser._browsers = {}
 webbrowser._tryorder = []
 webbrowser.register('dlam-default', DLAMBrowser)
-
-@event.register('loader:initialized')
-def _(*_):
-    import gevent
-    gevent.spawn_later(1, ask_user, False)
-    #gevent.spawn_later(30, sys.exit, 0)
