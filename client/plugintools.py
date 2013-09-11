@@ -689,9 +689,11 @@ class Matcher(object):
             return '('+pattern+')'
         return pattern.pattern.lstrip('^').rstrip('$').replace('\Z(?ms)', '')
 
-    def get_regex(self, with_scheme=True):
-        if hasattr(self, '_decompiled_regex'):
-            return self._decompiled_regex
+    def get_regex_plain(self, with_scheme=True):
+        attr = '_decompiled_regex_plain' if with_scheme else '_decompiled_regex_plain_schemeless'
+        if hasattr(self, attr):
+            return getattr(self, attr)
+
         r = ''
         if with_scheme:
             r += '(?P<url>'
@@ -716,8 +718,19 @@ class Matcher(object):
             r += '([\?&]('+keys+')=[^&#\?]*)*'
 
         r += '[^\s<>]*)'
-        self._decompiled_regex = re.compile(r)
-        return self._decompiled_regex
+        setattr(self, attr, r)
+        return r
+
+    def get_regex(self, with_scheme=True):
+        attr = '_decompiled_regex' if with_scheme else '_decompiled_regex_schemeless'
+        if hasattr(self, attr):
+            return getattr(self, attr)
+
+        r = self.get_regex_plain(with_scheme)
+        if r:
+            c = re.compile(r)
+            setattr(self, attr, c)
+            return c
 
 ################################## bottle url match syntax
 # stolen from https://github.com/defnull/bottle/blob/master/bottle.py line 285

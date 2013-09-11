@@ -67,31 +67,17 @@ def collect_links(text, schemeless=True):
     for m in all_url_regex.finditer(text):
         links.add(m.group('url'))
 
-    # TODO: this is a big performance bug
-    if schemeless and False:
+    if schemeless:
         for host in plugins:
+            if host[2].name in {'rtmp', 'http', 'ftp'}:
+                continue
             for p in host[2].patterns:
                 if not hasattr(p, 'get_regex'):
                     continue
                 r = p.get_regex(False)
-                if r is None:
+                if not r:
                     continue
-                mm = r.finditer(text)
-                for m in mm:
-                    if '://' in m.group('url'):
-                        continue
-                    type = None
-                    for scheme in p.scheme:
-                        if type is None:
-                            if 'http' in scheme.pattern:
-                                type = 'http'
-                            elif 'ftp' in scheme.pattern:
-                                type = 'ftp'
-                        r = re.compile(scheme.pattern+'://'+re.escape(m.group('url')))
-                        if any(r.match(link) for link in links):
-                            break
-                    else:
-                        if type is not None:
-                            link = type+'://'+m.group('url')
-                            links.add(link)
+                for m in r.finditer(text):
+                    link = 'http://'+m.group(1).split(' ', 1)[0]
+                    links.add(link)
     return links
