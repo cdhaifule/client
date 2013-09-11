@@ -78,7 +78,10 @@ def listen_accept(conn, addr):
             data = recv(conn)
             if not data:
                 break
-            data = data.decode(chardet.detect(data)['encoding'])
+            try:
+                data = data.decode(chardet.detect(data)['encoding'])
+            except TypeError:
+                pass
             command, module, kwargs = json.loads(data)
             data = interface.call(command, module, **kwargs)
             data = json.dumps(data)
@@ -163,7 +166,10 @@ def init(options, args):
     # parse command line arguments
     for rpc in args:
         try:
-            rpc = rpc.decode(chardet.detect(rpc)['encoding'])
+            try:
+                rpc = rpc.decode(chardet.detect(rpc)['encoding'])
+            except TypeError:
+                pass
             try:
                 command, args = rpc.split(' ', 1)
             except ValueError:
@@ -171,7 +177,7 @@ def init(options, args):
             try:
                 module, command = command.rsplit('.', 1)
             except ValueError:
-                log.error("could not work with command {}".format(rpc))
+                log.error(u"could not work with command {}".format(rpc))
                 continue
             kwargs = dict()
             for arg in filter(lambda a: a and True or False, args.split(' -- ')):
@@ -182,7 +188,7 @@ def init(options, args):
                     pass
                 kwargs[key.strip()] = value
         except ValueError:
-            log.critical('rpc command line error: {}'.format(rpc))
+            log.critical(u'rpc command line error: {}'.format(rpc))
             raise
             sys.exit()
         pending.append([module, command, kwargs])
