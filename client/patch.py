@@ -184,6 +184,9 @@ class BasicPatchWorker(object):
         self.source = source
         self.external = defaultdict(list)
 
+    @classmethod
+    def cleanup(cls):
+        pass
 
 class GitWorker(BasicPatchWorker):
     def __init__(self, source):
@@ -191,6 +194,26 @@ class GitWorker(BasicPatchWorker):
 
     def patch(self):
         return self.fetch()
+
+    @classmethod
+    def cleanup(cls):
+        from dulwich import file as file_module
+        if not hasattr(file_module, 'OPEN_FILES'):
+            return
+        for f in file_module.OPEN_FILES:
+            if hasattr(f, 'close'):
+                try:
+                    f.close()
+                except:
+                    pass
+            elif isinstance(f, int):
+                try:
+                    os.close(f)
+                except:
+                    pass
+            else:
+                print "!"*100, 'UNKNOWN FILE OBJECT', f, type(f)
+        file_module.OPEN_FILES = set()
         
     def fetch(self, retry=False):
         def on_error(e):
@@ -473,6 +496,7 @@ class PatchWorker(BasicPatchWorker):
         else:
             self.add_external_new(file, new_data)
 
+worker_classes = [GitWorker, PatchWorker]
 
 # patch tasks
 
@@ -518,17 +542,21 @@ def patch_all(timeout=180, external_loaded=True, source_complete_callback=None):
         log.debug('updating repos')
         group = Group()
         patches = list()
-        for source in sources.values():
-            if source.enabled:
-                def _patch(patches, source, timeout):
-                    try:
-                        patch_one(patches, source, timeout)
-                    finally:
-                        if source_complete_callback is not None:
-                            source_complete_callback(source)
-                g = group.spawn(_patch, patches, source, timeout)
-                patch_group.add(g)
-        group.join()
+        try:
+            for source in sources.values():
+                if source.enabled:
+                    def _patch(patches, source, timeout):
+                        try:
+                            patch_one(patches, source, timeout)
+                        finally:
+                            if source_complete_callback is not None:
+                                source_complete_callback(source)
+                    g = group.spawn(_patch, patches, source, timeout)
+                    patch_group.add(g)
+            group.join()
+        finally:
+            for cls in worker_classes:
+                cls.cleanup()
         finalize_patches(patches, external_loaded=external_loaded)
 
 def patch_loop():
@@ -764,14 +792,17 @@ class GitIterator(object):
         self.startswith = startswith
         
     def __iter__(self):
-        for entry in self.repo.object_store.iter_tree_contents(self.tree):
-            path = entry.in_path(self.repo.path).path
-            if platform == 'win32':
-                path = path.replace('/', os.sep)
-            if not path.startswith(self.startswith):
-                continue
-            gevent.sleep(0)
-            yield GitFile(path, self.repo[entry.sha].as_raw_string())
+        try:
+            for entry in self.repo.object_store.iter_tree_contents(self.tree):
+                path = entry.in_path(self.repo.path).path
+                if platform == 'win32':
+                    path = path.replace('/', os.sep)
+                if not path.startswith(self.startswith):
+                    continue
+                gevent.sleep(0)
+                yield GitFile(path, self.repo[entry.sha].as_raw_string())
+        finally:
+            GitWorker.cleanup()
 
 class GitFile(object):
     def __init__(self, path, contents):
