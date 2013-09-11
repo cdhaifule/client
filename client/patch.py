@@ -592,7 +592,7 @@ def finalize_patches(patches, external_loaded=True):
             # currently in bootstrap. instant restart
             execute_restart()
     else:
-        log.info('patchs applied on the fly')
+        log.info('patches applied on the fly')
 
 
 # restart functions
@@ -1426,7 +1426,7 @@ def init():
         1224239220300762038953555488069442663256999688439
     ]
     with transaction:
-        core_source = CoreSource(id=platform, url=settings.patchserver, sig=sig, contact='contact@download.am')
+        core_source = CoreSource(id=platform, url=settings.patchserver, sig=sig, contact='support@download.am')
 
     # load sources
     try:

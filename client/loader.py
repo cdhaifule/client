@@ -61,7 +61,6 @@ def init():
         localize = modules_by_name['localize']
 
         log = modules_by_name['logger'].get('loader')
-        raise Fo()
 
         # register terminate handler
         if sys.platform != 'darwin':
