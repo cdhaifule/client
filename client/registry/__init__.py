@@ -17,5 +17,5 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 
-if sys.platform == 'win32':
+if sys.platform == 'win32' and "nose" not in sys.argv[0]:
     from . import win

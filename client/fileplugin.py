@@ -206,7 +206,7 @@ def startfile(path):
         except:
             return False
 
-if sys.platform.startswith("win") and not "nose" in sys.argv[0]:
+if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
     from win32com.shell import shell, shellcon
     def selectfiles(show):
         folders = defaultdict(list)
