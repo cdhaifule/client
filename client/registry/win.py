@@ -22,6 +22,7 @@ import gevent
 import bisect
 import tempfile
 import webbrowser
+import subprocess
 
 import _winreg as winreg
 from _winreg import HKEY_CLASSES_ROOT, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER, KEY_QUERY_VALUE, REG_SZ, KEY_ALL_ACCESS, KEY_WRITE, KEY_CREATE_SUB_KEY, KEY_SET_VALUE
