@@ -20,7 +20,6 @@ import sys
 import bisect
 import webbrowser
 import subprocess
-import _psutil_mswindows
 
 import _winreg as winreg
 from _winreg import HKEY_CLASSES_ROOT, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER, KEY_QUERY_VALUE, REG_SZ, KEY_ALL_ACCESS
