@@ -150,7 +150,7 @@ def _auto_remove_files(file):
             to_delete.append(f)
     with transaction:
         for f in to_delete:
-            f.log.info('auto removing complete file {} {} {}'.format(f.name, f.state, f.working))
+            f.log.info('auto removing complete file')
             f.delete()
 
 @event.register('fileplugin:done')

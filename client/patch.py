@@ -578,9 +578,8 @@ def restart_app():
         if not core.global_status.files_working:
             result = "now"
             break
-        if config.restart is not None:
-            if config.restart != "never":
-                result = config.restart
+        if config.restart is not None and config.restart != "never":
+            result = config.restart
             break
 
         elements = list()
