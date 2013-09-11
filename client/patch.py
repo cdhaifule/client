@@ -1412,6 +1412,8 @@ def add_source(url, config_url=None, type=None):
 patch_loop_greenlet = None
 core_source = None
 
+emergency_patch = False
+
 def init():
     global patch_loop_greenlet
     global core_source
@@ -1427,55 +1429,61 @@ def init():
         core_source = CoreSource(id=platform, url=settings.patchserver, sig=sig, contact='contact@download.am')
 
     # load sources
-    with transaction, db.Cursor() as c:
-        aa = c.execute("SELECT * FROM patch_source")
-        for a in aa.fetchall():
-            try:
-                id = json.loads(a['id'])
-                data = json.loads(a['data'])
-                # update old repo urls
-                if 'url' in data:
-                    if data['url'].startswith('http://patch.download.am'):
-                        data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
-                    if data['url'].endswith('.git'):
-                        source = GitSource(id=id, **data)
-                    u = Url(data['url'])
-                    u.host = u.host.lower()
-                    data['url'] = u.to_string()
-                if 'config_url' in data and data['config_url']:
-                    u = Url(data['config_url'])
-                    u.host = u.host.lower()
-                    data['config_url'] = u.to_string()
+    try:
+        with transaction, db.Cursor() as c:
+            aa = c.execute("SELECT * FROM patch_source")
+            for a in aa.fetchall():
+                try:
+                    id = json.loads(a['id'])
+                    data = json.loads(a['data'])
+                    # update old repo urls
+                    if 'url' in data:
+                        if data['url'].startswith('http://patch.download.am'):
+                            data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
+                        if data['url'].endswith('.git'):
+                            source = GitSource(id=id, **data)
+                        u = Url(data['url'])
+                        u.host = u.host.lower()
+                        data['url'] = u.to_string()
+                    if 'config_url' in data and data['config_url']:
+                        u = Url(data['config_url'])
+                        u.host = u.host.lower()
+                        data['config_url'] = u.to_string()
 
-                if 'url' in data and data['url'].endswith('.git'):
-                    source = GitSource(id=id, **data)
-                else:
-                    source = PatchSource(id=id, **data)
-                if source.enabled:
-                    patch_group.spawn(source.check)
-            except TypeError:
-                log.critical(u"broken row: {}".format(a))
-                traceback.print_exc()
+                    if 'url' in data and data['url'].endswith('.git'):
+                        source = GitSource(id=id, **data)
+                    else:
+                        source = PatchSource(id=id, **data)
+                    if source.enabled:
+                        patch_group.spawn(source.check)
+                except TypeError:
+                    log.critical(u"broken row: {}".format(a))
+                    traceback.print_exc()
+    except:
+        if emergency_patch:
+            traceback.print_exc()
+        else:
+            raise
 
     # delete useless repos
-    for extern in os.listdir(settings.external_plugins):
-        path = os.path.join(settings.external_plugins, extern)
-        if not os.path.isdir(path):
-            continue
-        if os.path.exists(os.path.join(path, '.git')):
-            continue
-        if extern not in sources or not sources[extern].enabled or os.path.exists(os.path.join(path, '.broken_repo')):
-            log.info(u'deleting useless external repo {}'.format(path))
-            try:
-                really_clean_repo(path)
-            except:
-                pass
+    if not emergency_patch:
+        for extern in os.listdir(settings.external_plugins):
+            path = os.path.join(settings.external_plugins, extern)
+            if not os.path.isdir(path):
+                continue
+            if os.path.exists(os.path.join(path, '.git')):
+                continue
+            if extern not in sources or not sources[extern].enabled or os.path.exists(os.path.join(path, '.broken_repo')):
+                log.info(u'deleting useless external repo {}'.format(path))
+                try:
+                    really_clean_repo(path)
+                except:
+                    pass
 
-    default_sources = dict(
-        downloadam='download.am'
-    )
-
-    if not test_mode:
+    if not emergency_patch and not test_mode:
+        default_sources = dict(
+            downloadam='download.am'
+        )
         for id, url in default_sources.iteritems():
             if id not in sources and url not in config_urls:
                 yield u'adding default repo {}'.format(id)

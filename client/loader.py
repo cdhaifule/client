@@ -26,12 +26,6 @@ import signal
 import gevent
 import optparse
 
-ooo = gevent.threading._start_new_thread
-def foo(*args, **kwargs):
-    print args, kwargs
-    return ooo(*args, **kwargs)
-gevent.threading._start_new_thread = foo
-
 from importlib import import_module
 from types import GeneratorType
 
@@ -67,6 +61,7 @@ def init():
         localize = modules_by_name['localize']
 
         log = modules_by_name['logger'].get('loader')
+        raise Fo()
 
         # register terminate handler
         if sys.platform != 'darwin':
@@ -92,20 +87,40 @@ def init():
     except:
         def log_exception(msg):
             if log:
-                log.exception(msg)
+                log.exception(u'EMERGENCY TERMINATE: '+msg)
             else:
-                print msg
+                print u'EMERGENCY TERMINATE: '+msg
                 traceback.print_exc()
 
         log_exception('trying recovery patch')
 
+        # load config module
+        if 'config' not in modules_by_name:
+            from . import config
+            try:
+                _init_pre(config)
+            except:
+                log_exception('error pre-initializing config system')
+        else:
+            config = modules_by_name['config']
+        if not config.module_initialized.is_set():
+            try:
+                config.init()
+            except:
+                log_exception('error initializing config system')
+
         # load patch module
         if 'patch' not in modules_by_name:
             from . import patch
-            _init_pre(patch)
+            try:
+                _init_pre(patch)
+            except:
+                log_exception('error pre-initializing patch system')
             modules_by_name['patch'] = patch
         else:
             patch = modules_by_name['patch']
+
+        patch.emergency_patch = True
 
         # initialize patch module
         if not patch.module_initialized.is_set():
@@ -118,6 +133,10 @@ def init():
                         print msg
             except:
                 log_exception('error initializing patch system')
+                try:
+                    patch.patch_all()
+                except:
+                    log_exception('error running patch all')
         else:
             # apply patches
             try:
