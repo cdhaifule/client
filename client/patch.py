@@ -578,9 +578,8 @@ def restart_app():
         if not core.global_status.files_working:
             result = "now"
             break
-        if config.restart is not None:
-            if config.restart != "never":
-                result = config.restart
+        if config.restart is not None and config.restart != "never":
+            result = config.restart
             break
 
         elements = list()
@@ -1373,7 +1372,7 @@ def add_source(url, config_url=None, type=None):
         except Timeout:
             log.warning('add source check timed out')
             return
-        except BaseException as e:
+        except BaseException:
             raise
     return source_types[type](url, config_url)
 
@@ -1412,7 +1411,7 @@ def init():
                     u = Url(data['url'])
                     u.host = u.host.lower()
                     data['url'] = u.to_string()
-                if 'config_url' in data:
+                if 'config_url' in data and data['config_url']:
                     u = Url(data['config_url'])
                     u.host = u.host.lower()
                     data['config_url'] = u.to_string()
@@ -1424,7 +1423,7 @@ def init():
                 if source.enabled:
                     patch_group.spawn(source.check)
             except TypeError:
-                log.critical("broken row: {}".format(a))
+                log.critical(u"broken row: {}".format(a))
                 traceback.print_exc()
 
     # delete useless repos
@@ -1435,7 +1434,7 @@ def init():
         if os.path.exists(os.path.join(path, '.git')):
             continue
         if extern not in sources or not sources[extern].enabled or os.path.exists(os.path.join(path, '.broken_repo')):
-            log.info('deleting useless external repo {}'.format(path))
+            log.info(u'deleting useless external repo {}'.format(path))
             try:
                 really_clean_repo(path)
             except:
@@ -1448,7 +1447,7 @@ def init():
     if not test_mode:
         for id, url in default_sources.iteritems():
             if id not in sources and url not in config_urls:
-                yield 'adding default repo {}'.format(id)
+                yield u'adding default repo {}'.format(id)
                 try:
                     source = add_source(url)
                     if source is None:

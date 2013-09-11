@@ -149,7 +149,7 @@ def generate_backend_key():
     return key
 
 def get_sso_url(tab=None, type=None):
-    return "https://{}/#sso!{}".format(settings.frontend_domain, get_auth_token(tab, type=type))
+    return "https://{}/sso#{}".format(settings.frontend_domain, get_auth_token(tab, type=type))
 
 def logout():
     if config.current == 'guest':
