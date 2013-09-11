@@ -206,7 +206,7 @@ def ask_user(outdated):
             bisect.insort(values, (priority, (key, name)))
     values = [v for p, v in values]
     if values:
-        values.append(('_portable', 'Select the executable to the browser you like to use yourself:'))
+        values.append(('_portable', 'I want to select the .exe by myself'))
         if config.webbrowser == '_portable':
             default_value = '_portable'
         elements.append([input.Text('Please select a browser you like to use with Download.am.')])
