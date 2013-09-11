@@ -318,12 +318,12 @@ class _SocketIO(object):
             code, packet_id, path = parts
         elif 1 == count:
             code = parts[0]
-        print "SOCKETIO RECV", code, packet_id, path, len(data)
+        print "SOCKETIO RECV", code, packet_id, path
         return code, packet_id, path, data
 
     def send_packet(self, code, path='', data='', callback=None):
         packet_id = self.set_message_callback(callback) if callback else ''
-        print "SOCKETIO SEND", code, packet_id, path, len(data)
+        print "SOCKETIO SEND", code, packet_id, path
         parts = [str(code), packet_id, path, data]
         packet = ':'.join(parts)
         try:
