@@ -44,13 +44,13 @@ def can_download(file):
     return file.split_url.scheme == 'torrent'
 
 def ask_user(file):
-    from ... import input
     if this.config.add:
-        answer = this.conig.add
+        answer = this.config.add
     else:
         try:
+            from ... import input
             elements = list()
-            elements.append(input.Text(["An external website wants to add a magnet link."]))
+            elements.append(input.Text("An external website wants to add a magnet link."))
             elements.append(input.Input('always_add', 'checkbox', default=True, label='Always add magnet links without asking.'))
             elements.append(
                 input.Choice('answer', choices=[
@@ -64,11 +64,12 @@ def ask_user(file):
         except input.InputTimeout:
             answer = 'add'
         else:
-            answer = result.get("answer", "discard") == 'add'
+            answer = result.get("answer", "discard")
             if answer and result.get('always_add', False):
-                this.config.add = True
+                this.config.add = answer
     if answer == 'add_open':
         webbrowser.open_new_tab(login.get_sso_url('collect'))
+    print answer
     return answer in ('add', 'add_open')
 
 def on_check(file):
