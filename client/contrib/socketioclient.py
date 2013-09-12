@@ -339,8 +339,6 @@ class _SocketIO(object):
 
     def listener(self):
         while True:
-            #from ..api import proto
-            #print "........", proto.unpack_message()
             try:
                 try:
                     code, packet_id, path, data = self.recv_packet()
@@ -377,7 +375,8 @@ class _SocketIO(object):
         get_event_callback('connect')()
 
     def on_disconnect(self, packet_id, get_event_callback, data):
-        gevent.spawn(self.disconnect)
+        raise SocketIOConnectionError('got disconnect packet')
+        #gevent.spawn(self.disconnect)
 
     def on_heartbeat(self, packet_id, get_event_callback, data):
         self.send_packet(2)

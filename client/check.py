@@ -58,14 +58,14 @@ def check_file(file):
             added_links = core.add_links(*result)
         elif isinstance(result, dict):
             added_links = core.add_links(**result)
+        elif result == 'delete':
+            file.delete_after_greenlet()
         elif result is not None:
             raise RuntimeError('invalid return value of on_check: {}'.format(result))
         else:
             added_links = False
 
-        if result == 'delete':
-            file.delete_after_greenlet()
-        else:
+        if result != 'delete':
             if file.name is None:
                 if added_links and file.get_any_size() is None and file.last_error is None:
                     file.delete_after_greenlet()
