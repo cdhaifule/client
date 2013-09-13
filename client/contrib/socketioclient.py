@@ -133,13 +133,14 @@ class SocketIO(object):
         return self.namespaces[path]
 
     def remove_namespace(self, path='', exception=None):
+        namespace = self.namespaces[path]
+        del self.namespaces[path]
         if self.connected:
             try:
                 self.io.send_packet(0, path) # disconnect from path
             except:
                 pass
-        self.namespaces[path].on_disconnect(exception)
-        del self.namespaces[path]
+        namespace.on_disconnect(exception)
         if not self.namespaces:
             self.io.disconnect()
 

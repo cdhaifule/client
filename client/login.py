@@ -114,7 +114,6 @@ def set_login(username, password, type='account'):
     global _config_loaded
     _config_loaded = True
 
-    print config.current, type, config.guest.username, has_login()
     if config.current == 'guest' and type == 'guest' and config.guest.username == username and has_login():
         return
 
@@ -395,22 +394,14 @@ class LoginInterface(interface.Interface):
         """
         set_login(username, password)
 
-    def change_password(username=None, login=None, frontend=None, backend=None, protected=None, upgrade_guest_account=None):
+    def change_login(username=None, password=None, upgrade_guest_account=None):
         """changes login infos and reconnects to api
         """
-        if upgrade_guest_account is not None and has_login('guest') and upgrade_guest_account == config.guest.frontend:
+        if upgrade_guest_account is not None and has_login('guest') and upgrade_guest_account == config.guest.username:
             for h in hash_types + ['username']:
                 config.guest[h] = ''
 
-        config.account['username'] = username
-        config.account['login'] = login
-        config.account['frontend'] = frontend
-        config.account['backend'] = backend
-        config.account['protected'] = protected
-        config.account['client'] = hash_client(config.account['login'], config.account['frontend'])
-        config.current = 'account'
-
-        event.fire('login:changed')
+        set_login(username, password, 'account')
 
     def reset_login():
         """resets login infos (hashes, not the email address) and reconnects to api
