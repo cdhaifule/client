@@ -132,6 +132,29 @@ class HosterInterface(interface.Interface):
 
     def search_more(id=None, search_id=None, max_results=50, responder=None):
         return search.search_more(responder, id, search_id, max_results)
+        
+    def search_cancel(id=None):
+        if id is None:
+            try:
+                for v in search.groups.values():
+                    for _ in v:
+                        try:
+                            _.kill()
+                        except:
+                            pass
+            finally:
+                search.groups = dict()
+            return True
+        elif id in search.groups:
+            for _ in search.groups[id]:
+                try:
+                    _.kill()
+                except:
+                    pass
+            del search.groups[id]
+            return True
+        else:
+            return False
 
 def reset_icon_cache():
     global icon_cache

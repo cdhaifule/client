@@ -26,7 +26,6 @@ from cStringIO import StringIO as BytesIO
 from . import manager, this, util
 from ..cache import CachedDict
 from ..api import proto
-from ..variablesizepool import VariableSizePool
 from .. import login
 
 cache = CachedDict(3600)
@@ -76,7 +75,7 @@ class Query(object):
         if self._display is None:
             self._display = 'list'
         return self._display
-        
+
 def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
     payload = {
         "thumb_id": thumb_id,
@@ -84,7 +83,7 @@ def push_thumb_data(ctx, thumb_id, data, mime="image/jpeg"):
         "mime": mime,
     }
     ctx.responder.send(command="thumb", payload=payload)
-    #print "pushed thumb data: {}".format(len(data))
+    print "pushed thumb data: {}, SENT STATUS: {}".format(len(data), ctx.responder._sent)
 
 def _create_thumbnail_data(img):
     dim_x = 120
@@ -114,7 +113,8 @@ def _load_thumb(ctx, thumb, thumb_id):
         data = cache[thumb_id]
         push_thumb_data(ctx, thumb_id, data)
         return
-    resp = ctx.account.get(thumb)
+    with ctx.thumb_sem:
+        resp = ctx.account.get(thumb)
     content = resp.content
     img = Image.open(BytesIO(content))
     data = _create_thumbnail_data(img)
@@ -161,7 +161,8 @@ class Context(object):
         self.tags = tags
         self.position = None
         self.next = 0
-        self.thumb_pool = VariableSizePool(3)
+        self.thumb_pool = Group()
+        self.thumb_sem = Semaphore(3)
         self.results = list()
         self.referer = None
 
@@ -189,7 +190,8 @@ class Input(object):
         self.id = random.randint(1, 100000)
         self.results = []
         self.sent = False
-        self.thumb_pool = VariableSizePool(3)
+        self.thumb_pool = Group()
+        self.thumb_sem = Semaphore(3)
         
     def add_result(self, *args, **kwargs):
         assert not self.sent
@@ -201,7 +203,6 @@ class Input(object):
     def send(self):
         meta = dict(name=self.name, display=self.display, id=self.id, icon=self.icon)
         payload = dict(meta=meta, result=self.results)
-        #print "sending payload", payload
         proto.send("frontend", "search.open_tab", payload=payload)
         self.sent = True
     
@@ -227,14 +228,19 @@ def _run(responder, search, ctx, todo):
     finally:
         #del ctx.account
         todo[ctx.name] = 1
-        if responder is not None:
-            progress = int((float(sum(todo.values()))/len(todo))*100)
-            responder.send({'progress': progress}, 'search.progress')
+        #if responder is not None:
+        #    progress = int((float(sum(todo.values()))/len(todo))*100)
+        #    responder.send({'progress': progress}, 'search.progress')
+            
+groups = dict()
 
 def _search(responder, id, search, max_results):
+    responder._sent = False
     todo = dict()
     group = Group()
+    groups[id] = [group]
     for ctx in search.contexts:
+        groups[id].append(ctx.thumb_pool)
         if len(ctx.results) > max_results/len(search.contexts):
             continue
         todo[ctx.name] = 0
@@ -263,8 +269,14 @@ def _search(responder, id, search, max_results):
     elif search.id in cache:
         del cache[search.id]
 
-    return dict(id=id, search_id=search.id, display=display, more=search.more, results=results)
-
+    payload = dict(id=id, search_id=search.id, display=display, more=search.more, results=results)
+    responder.send(payload=payload)
+    responder._sent = True
+    try:
+        del groups[id]
+    except KeyError:
+        pass
+    
 def search(responder, id, search_id, plugins, query, tags, max_results=50):
     search = Query(search_id, query)
     #with search.lock:
@@ -276,5 +288,5 @@ def search_more(responder, id, search_id, max_results=50):
     if search_id not in cache:
         return dict(id=id, search_id=search_id, display=None, more=False, results=[])
     search = cache[search_id]
-    with search.lock:
-        return _search(responder, id, search, max_results)
+    #with search.lock:
+    return _search(responder, id, search, max_results)
