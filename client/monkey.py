@@ -123,6 +123,21 @@ models.Response._soup = None
 models.Response.soup = property(soup)
 
 
+# add sets to json
+
+import json
+old_encoder = json.JSONEncoder
+try:
+    class SetEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, set):
+                return list(obj)
+            return old_encoder.default(self, obj)
+    json.JSONEncoder = SetEncoder
+except:
+    pass
+
+
 # init
 
 def init():
