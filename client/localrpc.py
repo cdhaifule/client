@@ -82,8 +82,16 @@ def listen_accept(conn, addr):
                 data = data.decode(chardet.detect(data)['encoding'])
             except TypeError:
                 pass
-            command, module, kwargs = json.loads(data)
-            data = interface.call(command, module, **kwargs)
+            module, command, kwargs = json.loads(data)
+            try:
+                # check if command with cmd_ prefix exists
+                getattr(interface.manager[module], 'cmdline_{}'.format(command))
+            except (KeyError, AttributeError, UnicodeError):
+                # call the original requested command
+                data = interface.call(module, command, **kwargs)
+            else:
+                # call the prefixed command
+                data = interface.call(module, 'cmdline_{}'.format(command), **kwargs)
             data = json.dumps(data)
             send(conn, data)
     except BaseException:

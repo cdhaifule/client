@@ -22,6 +22,7 @@ import bisect
 import gevent
 import tempfile
 import base64
+import webbrowser
 
 from collections import defaultdict
 from gevent.pool import Group
@@ -29,7 +30,7 @@ from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
 from gevent import subprocess
 
-from . import core, variablesizepool, plugintools, interface, event, logger
+from . import core, variablesizepool, plugintools, interface, event, logger, login
 from .scheme import transaction
 from .config import globalconfig
 
@@ -256,6 +257,10 @@ class FileInterface(interface.Interface):
 
     def add(path=None):
         manager.dispatch(path)
+
+    def cmdline_add(path=None):
+        manager.dispatch(path)
+        webbrowser.open_new_tab(login.get_sso_url())
         
     def openfolder(path=None):
         if not path:
