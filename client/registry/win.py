@@ -378,3 +378,7 @@ def on_ext_dlc_changed(value):
 @config.register('ext_ccf')
 def on_ext_ccf_changed(value):
     handle_file_extension('ccf', 'application/x-ccf', value)
+
+@config.register('ext_rsdf')
+def on_ext_rsdf_changed(value):
+    handle_file_extension('rsdf', 'application/x-rsdf', value)
