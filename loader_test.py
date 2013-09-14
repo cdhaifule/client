@@ -16,14 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import threading
-threading._DummyThread._Thread__stop = lambda x: 42
-
-from client import app, scheme
+import sys
 
 def main():
-    scheme.register(scheme.DebugListener(('db', 'api', 'config'), 0))
-    app.main()
+    if sys.platform == 'win32':
+        import loader_win32 as loader
+    elif sys.platform == 'darwin':
+        import loader_darwin as loader
+    else:
+        import loader_linux2 as loader
+
+    try:
+        from client import test
+    except ImportError:
+        from client import testdefault as test
+
+    test.init()
+    loader.main()
 
 if __name__ == '__main__':
     main()

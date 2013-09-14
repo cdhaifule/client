@@ -274,6 +274,8 @@ class Std(object):
 
 # init functions
 
+test_mode = False
+
 def init_pre():
     global config
     config = JsonFile(settings.log_settings_file, defaults=dict(log_file=settings.log_file, log_file_level=logging.DEBUG, log_console_level=logging.DEBUG))
@@ -319,8 +321,9 @@ def init(options):
     
     sys._old_stdout = sys.stdout
     sys._old_stderr = sys.stderr
-    sys.stdout = Std("stdout", sys.stdout)
-    sys.stderr = Std("stderr", sys.stderr, logging.ERROR)
+    if not test_mode:
+        sys.stdout = Std("stdout", sys.stdout)
+        sys.stderr = Std("stderr", sys.stderr, logging.ERROR)
 
 def terminate():
     sys.excepthook = original_excepthook

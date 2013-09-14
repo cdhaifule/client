@@ -381,6 +381,7 @@ def init(options):
     init_options(options)
     if has_login():
         return
+    # create a guest account when guest account was never set and no user account username is given so we are sure the user never had an account on this client
     if not has_login('guest') and not config.account.username:
         yield 'creating account'
         init_first_start()

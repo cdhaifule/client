@@ -151,7 +151,7 @@ class ClickAndLoad(service.ServicePlugin):
                 self.server.serve_forever()
             except socket.error:
                 if not log:
-                    self.log.exception('port 9666 for click and load is already taken!')
+                    self.log.error('port 9666 for click and load is already taken!')
                     log = 20
                 log -= 1
                 gevent.sleep(5)
