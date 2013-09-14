@@ -27,6 +27,14 @@ def init():
     if True:
         login.set_login('dummy', 'account', type='account')
 
+    # set database to memory
+    if True:
+        settings.db_file = ':memory:'
+
+    # set config to memory
+    if True:
+        settings.config_file = None
+
     # allow the use of protected interface functions
     if True:
         interface.ignore_protected_functions = True
@@ -39,10 +47,6 @@ def init():
     if True:
         api.init = lambda: None
         api.is_connected = lambda: True
-
-    # set database to memory
-    if True:
-        settings.db_file = ':memory:'
 
     # diable localrpc
     if True:
