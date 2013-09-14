@@ -214,7 +214,7 @@ class Column(object):
                             self.foreign_key[2](table, old)
                 if new:
                     f = getattr(new, self.foreign_key[1])
-                    if not table in f:
+                    if table not in f:
                         f.append(table)
             self.handle_foreign_key = handle_foreign_key
         else:
