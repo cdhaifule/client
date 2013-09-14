@@ -485,8 +485,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     size = Column(('db', 'api'), change_affects=[['package', 'size'], 'eta'], fire_event=True)
     position = Column(('db', 'api'), fire_event=True)
     state = Column(('db', 'api'), fire_event=True, change_affects=[['package', 'tab']])   # check, collect, download, download_complete, (extract, extract_complete), complete
-    enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', ['package', 'tab']])
-    last_error = Column(('db', 'api'), change_affects=['name'], fire_event=True)
+    enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', 'working', ['package', 'tab']])
+    last_error = Column(('db', 'api'), change_affects=['name', 'working'], fire_event=True)
     completed_plugins = Column(('db', 'api'))
 
     substate = Column('api', getter_cached=True, change_affects=['next_try', 'last_error'])
