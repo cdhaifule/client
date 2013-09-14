@@ -148,25 +148,29 @@ class Interface(interface.Interface):
 
     def delete_package(**filter):
         """deletes packages. for arguments see accept_collected"""
-        with transaction:
-            filter_objects_callback(_packages[:], filter, lambda obj: obj.delete())
+        with lock:
+            with transaction:
+                filter_objects_callback(_packages[:], filter, lambda obj: obj.delete())
 
     def delete_file(**filter):
         """deletes files. for arguments see accept_collected"""
-        with transaction:
-            for package in _packages[:]:
-                filter_objects_callback(package.files[:], filter, lambda obj: obj.delete())
+        with lock:
+            with transaction:
+                for package in _packages[:]:
+                    filter_objects_callback(package.files[:], filter, lambda obj: obj.delete())
 
     def erase_package(**filter):
         """erases packages. for arguments see accept_collected"""
-        with transaction:
-            filter_objects_callback(_packages[:], filter, lambda obj: obj.erase())
+        with lock:
+            with transaction:
+                filter_objects_callback(_packages[:], filter, lambda obj: obj.erase())
 
     def erase_file(**filter):
         """erases files. for arguments see accept_collected"""
-        with transaction:
-            for package in _packages[:]:
-                filter_objects_callback(package.files[:], filter, lambda obj: obj.erase())
+        with lock:
+            with transaction:
+                for package in _packages[:]:
+                    filter_objects_callback(package.files[:], filter, lambda obj: obj.erase())
 
     def modify_package(update=None, **filter):
         """modifies packages
