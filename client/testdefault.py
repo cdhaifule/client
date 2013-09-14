@@ -89,7 +89,7 @@ def main():
     debugtools.add_links('http://example.com/file/1mb.bin')
 
     # add a download link and start download directly after successful check
-    debugtools.add_links('http://example.com/file/2mb.bin')
+    debugtools.add_links('http://example.com/file/2mb.bin', auto_accept=True)
 
     # change some config variables
     interface.call('config', 'set', key="download.max_simultan_downloads", value=1)
