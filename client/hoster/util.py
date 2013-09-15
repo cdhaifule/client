@@ -30,6 +30,7 @@ from PIL import Image, ImageFilter, ImageDraw, ImageFont
 import requests
 
 from bs4 import BeautifulSoup
+from functools import partial
 
 from gevent.pool import Group
 from gevent.event import Event
@@ -371,3 +372,28 @@ def parse_seconds(s):
     for i, s in enumerate(reversed(s.split(':'))):
         t += float(s)*times[i]
     return t
+
+def parse_seconds2(s):
+    """parses the seconds from strings like 2 hours 1 minute 50 seconds
+    """
+    wait = 0
+    t = dict(hour=3600, hours=3600, minute=60, minutes=60, second=1, seconds=1)
+    for x in s.split(', '):
+        a, b = x.split(' ', 1)
+        wait += int(a.strip())*t[b.strip()]
+    return wait
+
+def xfilesharing_download(resp, step=1, free=True):
+    form = resp.soup.find('input', attrs=dict(name='op', value='download{}'.format(step)))
+    form = form.find_parent('form')
+
+    # remove child forms (yes, they exists sometimes)
+    for f in form.find_all('form'):
+        f.decompose()
+    
+    action, data = serialize_html_form(form)
+    if free:
+        data.pop('method_premium', None)
+    else:
+        data.pop('method_free', None)
+    return lambda *args, **kwargs: resp.post(action, data=data, *args, **kwargs), data
