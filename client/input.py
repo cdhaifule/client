@@ -298,19 +298,19 @@ def reset_timeout(id, timeout):
         timeout = time.time() + timeout - 0.2
     event.fire("input:reset_timeout", id, timeout)
 
-def input_loop(testfunc=None, postfunc=None, retries=1, func=get, **kwargs):
+def input_loop(testfunc=None, prefunc=None, retries=1, func=get, **kwargs):
     """retry input with callback.
     arguments:
         testfunc - callback function to test result.
                    this function must return not None when successful
                    when testfunc is None the function returns when any result is present
-        postfunc - callback function called before func(**kwargs)
+        prefunc - callback function called before func(**kwargs)
         retries - number of retries
         func - input function (defaults to "get")
     """
     for i in xrange(retries):
-        if postfunc:
-            postfunc()
+        if prefunc:
+            prefunc()
         result = func(**kwargs)
         if result:
             if testfunc is None:
@@ -320,8 +320,10 @@ def input_loop(testfunc=None, postfunc=None, retries=1, func=get, **kwargs):
                 return t
     raise InputFailed()
     
-def input_iter(retries=1, func=get, **kwargs):
+def input_iter(retries=1, func=get, prefunc=None, **kwargs):
     for i in xrange(retries):
+        if prefunc:
+            prefunc(kwargs)
         yield func(**kwargs)
     raise InputFailed()
 
