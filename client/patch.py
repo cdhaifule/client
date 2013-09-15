@@ -215,7 +215,7 @@ class GitWorker(BasicPatchWorker):
                 print "!"*100, 'UNKNOWN FILE OBJECT', f, type(f)
         file_module.OPEN_FILES = set()
         
-    def fetch(self, retry=False):
+    def fetch(self, retry=False, old_version=None):
         def on_error(e):
             self.source.log.exception('failed fetching repository')
             with transaction:
@@ -229,7 +229,8 @@ class GitWorker(BasicPatchWorker):
             except:
                 pass
 
-        old_version = self.source.version
+        if old_version is None:
+            old_version = self.source.version
         try:
             repo = self.source._open_repo()
             if repo is None:
@@ -272,7 +273,7 @@ class GitWorker(BasicPatchWorker):
                     pass
                 self.source.log.unhandled_exception('failed deleting broken repo, trying alternative base path', exc_info=old_exception)
                 self.source.basepath = p
-            return self.fetch(True)
+            return self.fetch(True, old_version)
         #except BaseException as e:
         #    return on_error(e)
         else:
@@ -1466,7 +1467,7 @@ def init():
             raise
 
     # delete useless repos
-    if not emergency_patch:
+    if not emergency_patch and not test_mode:
         for extern in os.listdir(settings.external_plugins):
             path = os.path.join(settings.external_plugins, extern)
             if not os.path.isdir(path):
