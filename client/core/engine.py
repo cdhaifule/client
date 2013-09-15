@@ -231,7 +231,7 @@ class Package(Table):
         return self.files and list(set(file.host.name for file in self.files if file.host)) or list()
     
     def on_get_size(self, value):
-        return sum((f.get_any_size() or 0) for f in self.files) if self.files else 0
+        return sum((f.get_any_size() or 0) for f in self.files if f.enabled) if self.files else 0
 
     def on_get__progress(self, value):
         files = {f.get_download_file(): f for f in self.files if f._max_progress and f.enabled}.values()
@@ -485,7 +485,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     size = Column(('db', 'api'), change_affects=[['package', 'size'], 'eta'], fire_event=True)
     position = Column(('db', 'api'), fire_event=True)
     state = Column(('db', 'api'), fire_event=True, change_affects=[['package', 'tab']])   # check, collect, download, download_complete, (extract, extract_complete), complete
-    enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', 'working', ['package', 'tab']])
+    enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', 'working', ['package', 'tab'], ['package', 'size']])
     last_error = Column(('db', 'api'), change_affects=['name', 'working'], fire_event=True)
     completed_plugins = Column(('db', 'api'))
 
@@ -1045,7 +1045,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def set_offline(self, msg=None):
         event.fire('file:offline', self)
-        self._dhf_error(msg or 'file is offline')
+        self._dhf_error(msg or 'offline')
 
     ####################### "physical" file functions
 
