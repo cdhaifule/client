@@ -82,6 +82,9 @@ def main():
     # disable remote check cache
     interface.call('config', 'set', key="check.use_cache", value=False)
 
+    # overwrite existing files without asking
+    interface.call('config', 'set', key="download.overwrite", value='overwrite')
+
     # add a hoster account
     interface.call('account', 'add', name="example.com", username="user", password="verysecure")
 
