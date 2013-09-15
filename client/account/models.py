@@ -555,15 +555,14 @@ class Http(object):
                 params.append(str(value))
 
     def _decorate_resp_functions(self, resp, func):
-        def fn(*args, **kwargs):
-            args = list(args)
-            args[0] = urlparse.urljoin(resp.url, args[0])
+        def fn(url, **kwargs):
+            url = urlparse.urljoin(resp.url, url)
             if 'referer' not in kwargs:
                 kwargs['referer'] = resp.url
-            return func(*args, **kwargs)
+            return func(url, **kwargs)
         return fn
 
-    def _http_request(self, func, *args, **kwargs):
+    def _http_request(self, func, url, **kwargs):
         self._http_request_prepare(kwargs)
 
         # check cache
@@ -572,7 +571,7 @@ class Http(object):
             del kwargs['use_cache']
             if use_cache:
                 params = list()
-                self._http_cache_id(params, enumerate(args))
+                self._http_cache_id(params, dict(url=url))
                 self._http_cache_id(params, kwargs.iteritems())
                 params.sort()
                 cache_id = hashlib.md5(' -- '.join(params)).hexdigest()
@@ -584,7 +583,7 @@ class Http(object):
             use_cache = False
 
         # make request
-        resp = func(*args, **kwargs)
+        resp = func(url, **kwargs)
 
         # set cache
         resp.from_cache = False
@@ -615,11 +614,11 @@ class Http(object):
 
         return resp
 
-    def get(self, *args, **kwargs):
-        return self._http_request(self.browser.get, *args, **kwargs)
+    def get(self, url, **kwargs):
+        return self._http_request(self.browser.get, url, **kwargs)
 
-    def post(self, *args, **kwargs):
-        return self._http_request(self.browser.post, *args, **kwargs)
+    def post(self, url, **kwargs):
+        return self._http_request(self.browser.post, url, **kwargs)
 
     def on_check_decorator(self, func, *args, **kwargs):
         g = id(gevent.getcurrent())
