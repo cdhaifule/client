@@ -920,8 +920,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     def activate(self, _package=False):
         if self.last_error and self.last_error.startswith('downloaded via'):
             return
-        self.reset_retry()
         with transaction:
+            self.reset_retry()
             self.enabled = True
 
     def deactivate(self, _package=False):

@@ -17,7 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import gevent
 
-from .engine import config, log, lock, _packages, packages, files, Package, File, Chunk, global_status
+from .engine import config, log, lock, _packages, packages, _files, files, Package, File, Chunk, global_status
 from .functions import add_links, accept_collected, url_exists
 from .events import sort_queue
 from .. import db, interface
@@ -207,7 +207,7 @@ class Interface(interface.Interface):
         def update(file):
             file.package = target
         with transaction:
-            filter_objects_callback(files(), filter, update)
+            filter_objects_callback(_files[:], filter, update)
 
     def activate_package(**filter):
         with transaction:
