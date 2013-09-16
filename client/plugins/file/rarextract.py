@@ -335,8 +335,14 @@ class StreamingExtract(object):
                 self.finish_file(*self.current)
 
             if core.config.delete_extracted_archives:
-                for path, file in self.parts.values():
-                    os.remove(file.get_complete_file())
+                with transaction:
+                    for path, file in self.parts.values():
+                        if file:
+                            file.delete_local_files()
+                            file.last_error = 'extracted and deleted'
+                            file.enabled = False
+                        else:
+                            os.remove(path)
 
 def check_file(path):
     with lock:

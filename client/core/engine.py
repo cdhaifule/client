@@ -41,7 +41,7 @@ config = globalconfig.new('core')
 # download options
 config.default('download_dir', os.path.join(settings.home_dir, u'Downloads', u'Download.am'), unicode)
 config.default('complete_dir', config.download_dir, unicode)
-config.default('create_package_folders', False, bool)
+config.default('create_package_folders', True, bool)
 config.default('add_part_extension', True, bool)
 
 # extract options

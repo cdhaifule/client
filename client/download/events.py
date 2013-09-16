@@ -63,13 +63,11 @@ def spawn_tasks(e):
             return
         if config.state != 'started':
             return
-        if pool.full():
-            return
         blocked_hosts = set()
         for file in core.files():
-            if spawn_download(file, blocked_hosts):
-                if pool.full():
-                    return
+            if pool.full():
+                return
+            spawn_download(file, blocked_hosts)
 
 def spawn_download(file, blocked_hosts=None, retry=False, ignore_pools=False):
     if file.state != 'download':
@@ -179,7 +177,7 @@ def spawn_download(file, blocked_hosts=None, retry=False, ignore_pools=False):
             file.log.warning(u'account of file becomes null, even after retry. spawning file later')
             return False
         else:
-            return _spawn_task(file, blocked_hosts, True, ignore_pools)
+            return spawn_download(file, blocked_hosts, True, ignore_pools)
 
     if file in working_downloads:
         return False
@@ -232,6 +230,11 @@ def on_account_changed(account, *args, **kwargs):
     for f in working_downloads:
         if f.account == account and f.working:
             f.stop()
+
+@core.File.working.changed
+def on_file_working_changed(file, old):
+    if not file.working and file in working_downloads:
+        working_downloads.remove(file)
 
 # reconnect
 
