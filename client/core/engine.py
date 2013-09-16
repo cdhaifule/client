@@ -895,7 +895,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         with transaction:
             self.last_error = None
             self.need_reconnect = False
-            if self.next_try:
+            if self.next_try is not None:
                 g = self.next_try
                 self.next_try = None
         if fire_event:

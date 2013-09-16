@@ -18,7 +18,8 @@ from . import events
 from .engine import start, pause, stop, config, strategy, DownloadFunction
 from .rtmp import rtmplink, is_rtmplink, load_rtmplink, RTMPDownload
 
-from .. import interface
+from .. import interface, core
+from ..scheme import filter_objects_callback
 
 @interface.register
 class Interface(interface.Interface):
@@ -32,6 +33,9 @@ class Interface(interface.Interface):
 
     def stop():
         stop()
+
+    def force(**filter):
+        filter_objects_callback(core.files(), filter, lambda obj: events.spawn_download(obj, ignore_pools=True))
 
 def init():
     pass
