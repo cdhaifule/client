@@ -571,7 +571,7 @@ class Http(object):
             del kwargs['use_cache']
             if use_cache:
                 params = list()
-                self._http_cache_id(params, dict(url=url))
+                self._http_cache_id(params, [(0, url)])
                 self._http_cache_id(params, kwargs.iteritems())
                 params.sort()
                 cache_id = hashlib.md5(' -- '.join(params)).hexdigest()
