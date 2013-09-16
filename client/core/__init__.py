@@ -201,9 +201,9 @@ class Interface(interface.Interface):
             filter_objects_callback(files(), filter, lambda obj: obj.modify_table(update))
 
     def move_file(target=None, **filter):
-        target = get_by_uuid(target)
+        target = get_by_uuid(int(target))
         assert isinstance(target, Package)
-        
+
         def update(file):
             file.package = target
         with transaction:
