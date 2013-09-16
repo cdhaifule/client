@@ -327,6 +327,13 @@ def input_iter(retries=1, func=get, prefunc=None, **kwargs):
         yield func(**kwargs)
     raise InputFailed()
 
+def get_input_table(id):
+    try:
+        id = int(id)
+    except ValueError:
+        pass
+    return input_tables[id]
+
 @interface.register
 class AnswerMachine(interface.Interface):
     name = "input"
@@ -334,25 +341,25 @@ class AnswerMachine(interface.Interface):
     def answer(id=None, answer=None):
         """Answer to resid's request, args: resid, answer"""
         try:
-            input_tables[id].set_result(answer)
+            get_input_table(id).set_result(answer)
         except KeyError:
             pass
     
     def abort(id=None):
         try:
-            input_tables[id].set_error(InputAborted())
+            get_input_table(id).set_error(InputAborted())
         except KeyError:
             pass
     
     def reset_timeout(id=None, timeout=None):
         """reset timeout of a resid to timeout or remove timeout"""
         try:
-            input_tables[id].reset_timeout(timeout)
+            get_input_table(id).reset_timeout(timeout)
         except KeyError:
             pass
 
     def request(id=None):
         try:
-            return input_tables[id].serialize(set(['api']))
+            return get_input_table(id).serialize(set(['api']))
         except KeyError:
             pass
