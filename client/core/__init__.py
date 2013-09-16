@@ -22,7 +22,7 @@ from .functions import add_links, accept_collected, url_exists
 from .events import sort_queue
 from .. import db, interface
 from ..plugintools import dict_json
-from ..scheme import transaction, filter_objects_callback
+from ..scheme import transaction, filter_objects_callback, get_by_uuid
 
 
 ########################## init
@@ -199,6 +199,15 @@ class Interface(interface.Interface):
     def modify_file(update=None, **filter):
         with transaction:
             filter_objects_callback(files(), filter, lambda obj: obj.modify_table(update))
+
+    def move_file(target=None, **filter):
+        target = get_by_uuid(target)
+        assert isinstance(target, Package)
+        
+        def update(file):
+            file.package = target
+        with transaction:
+            filter_objects_callback(files(), filter, update)
 
     def activate_package(**filter):
         with transaction:
