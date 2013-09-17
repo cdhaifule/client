@@ -34,7 +34,10 @@ class Interface(interface.Interface):
     def stop():
         stop()
 
-    def force(**filter):
+    def force_package(**filter):
+        filter_objects_callback(core.packages(), filter, lambda obj: [events.spawn_download(f, ignore_pools=True) for f in obj.files])
+
+    def force_file(**filter):
         filter_objects_callback(core.files(), filter, lambda obj: events.spawn_download(obj, ignore_pools=True))
 
 def init():
