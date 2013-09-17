@@ -334,7 +334,7 @@ def handle_file_extension(ext, content_type, value):
     if value:
         add_rpc_stuff(
             '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.{}]'.format(ext),
-            '@="Download.am"',
+            '@="Download.am File"',
             '"Content Type"="{}"'.format(content_type))
     else:
         admin_reg_execute(
