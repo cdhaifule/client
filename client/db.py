@@ -81,8 +81,15 @@ class SqlListener(scheme.TransactionListener):
 
         if 'last_error' in data:
             t = scheme.get_by_uuid(data['id'])
-            if hasattr(t, 'next_try') and t.next_try not in (None, False):
+            # TODO: remove next_try condition cause this should now be handled by last_error_type
+            if (hasattr(t, 'last_error_type') and t.last_error_type == 'retry') or (hasattr(t, 'next_try') and t.next_try not in (None, False)):
                 del data['last_error']
+                if 'last_error_type' in data:
+                    del data['last_error_type']
+                if len(data.keys()) == 1: # is only id left?
+                    return
+            if 'last_error_type' in data and data['last_error_type'] == 'retry':
+                del data['last_error_type']
                 if len(data.keys()) == 1: # is only id left?
                     return
 
