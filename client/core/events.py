@@ -133,6 +133,7 @@ def file_enabled_changed(file, old):
             if not file.package.enabled:
                 file.package.enabled = True
             file.last_error = None
+            file.last_error_type = None
     else:
         if file.package.enabled and not any(f.enabled for f in file.package.files):
             with transaction:

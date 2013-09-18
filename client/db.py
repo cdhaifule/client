@@ -25,7 +25,7 @@ conn = None
 lock = Semaphore()
 log = logger.get('db')
 
-version = 20
+version = 21
 
 class Cursor:
     def __init__(self):
@@ -187,7 +187,8 @@ def init():
         state UNICODE(15),
         system UNICODE(15),
         payload UNICODE(5000),
-        last_error UNICODE(100))"""
+        last_error UNICODE(100),
+        last_error_type UNICODE(15))"""
     create_statements['file'] = """CREATE TABLE %s (
         id UNICODE(100) PRIMARY KEY,
         package UNICODE(100),
@@ -199,12 +200,13 @@ def init():
         enabled UNICODE(10),
         state UNICODE(15),
         last_error UNICODE(100),
+        last_error_type UNICODE(100),
         completed_plugins UNICODE(1000),
         url UNICODE(1000),
         extra UNICODE(1000),
         referer UNICODE(1000),
         hash_type UNICODE(10),
-        hash_value UNICODE(100))"""
+        hash_value UNICODE(15))"""
     create_statements['chunk'] = """CREATE TABLE %s (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         file INTEGER,
@@ -282,6 +284,17 @@ def init():
             c.execute("DROP TABLE %s" % table)
         for table in create_statements:
             _create(c, create_statements[table], table)
+
+    def update_21(c):
+        c.execute("ALTER TABLE package RENAME TO package_old_%s" % db_version)
+        _create(c, create_statements['package'] % 'package')
+        old_columns = 'id, name, download_dir, complete_dir, extract_dir, extract, extract_passwords, position, state, system, payload, last_error'
+        c.execute("INSERT INTO package (%s) SELECT %s FROM package_old_%s" % (old_columns, old_columns, db_version))
+
+        c.execute("ALTER TABLE file RENAME TO file_old_%s" % db_version)
+        _create(c, create_statements['file'] % 'file')
+        old_columns = 'id, package, name, size, approx_size, weight, position, enabled, state, last_error, completed_plugins, url, extra, referer, hash_type, hash_value'
+        c.execute("INSERT INTO file (%s) SELECT %s FROM file_old_%s" % (old_columns, old_columns, db_version))
 
     updates = list()
     for key in locals().keys():

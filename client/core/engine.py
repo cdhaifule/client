@@ -189,7 +189,8 @@ class Package(Table):
 
     hosts = Column('api', always_use_getter=True) # , getter_cached=True)
 
-    last_error = Column(('db', 'api'))
+    last_error = Column(('db', 'api'), change_affects=['last_error_type'])
+    last_error_type = Column(('db', 'api'))
     global_status = Column()
 
     size = Column('api', always_use_getter=True, getter_cached=True, change_affects=['eta', ['global_status', 'size']])
@@ -214,6 +215,10 @@ class Package(Table):
         for k, v in kwargs.iteritems():
             if k != 'id':
                 setattr(self, k, v)
+
+        # update process
+        if self.last_error is not None and self.last_error_type is None:
+            self.last_error_type = 'fatal'
 
         self.extract_passwords = extract_passwords or []
         self.state = state
@@ -331,6 +336,7 @@ class Package(Table):
     def activate(self):
         with transaction:
             self.last_error = None
+            self.last_error_type = None
             for f in self.files:
                 f.activate(_package=True)
 
@@ -463,7 +469,7 @@ class Package(Table):
     ####################### ...
 
     def __repr__(self):
-        return 'Package<{id}, name={name}, position={position}, state={state}, files={files}, last_error={last_error}>'.format(
+        return 'Package<{id}, name={name}, position={position}, state={state}, files={files}, error={last_error}>'.format(
             id=self.id,
             name=repr(self.name),
             position=self.position,
@@ -486,7 +492,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     position = Column(('db', 'api'), fire_event=True)
     state = Column(('db', 'api'), fire_event=True, change_affects=[['package', 'tab']])   # check, collect, download, download_complete, (extract, extract_complete), complete
     enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', 'working', ['package', 'tab'], ['package', 'size']])
-    last_error = Column(('db', 'api'), change_affects=['name', 'working'], fire_event=True)
+    last_error = Column(('db', 'api'), change_affects=['name', 'working', 'last_error_type'], fire_event=True)
+    last_error_type = Column(('db', 'api'))
     completed_plugins = Column(('db', 'api'))
 
     substate = Column('api', getter_cached=True, change_affects=['next_try', 'last_error'])
@@ -595,6 +602,14 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
+        if self.last_error is not None and self.last_error_type is None:
+            if self.last_error.startswith('downloaded via'):
+                self.last_error_type = 'info'
+            elif self.last_error == 'link already exists':
+                self.last_error_type = 'info'
+            else:
+                self.last_error_type = 'fatal'
+
         try:
             self.url, extra = self.url.rsplit("&---extra=", 1)
         except ValueError:
@@ -702,6 +717,11 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     def on_get_last_error(self, value):
         if self.substate[0] == 'waiting_account':
             value = u'{}: {}'.format(self.account.name, self.account.last_error)
+        return value
+
+    def on_get_last_error_type(self, value):
+        if self.substate[0] == 'waiting_account':
+            value = self.account.last_error_type
         return value
 
     def on_get_chunks(self, value):
@@ -882,6 +902,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             self.input = None
         with transaction:
             self.last_error = msg
+            self.last_error_type = 'retry'
             self.need_reconnect = need_reconnect
             self.next_try = gevent.spawn_later(seconds, self.reset_retry)
             self.next_try.eta = time.time() + seconds
@@ -894,6 +915,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         g = None
         with transaction:
             self.last_error = None
+            self.last_error_type = None
             self.need_reconnect = False
             if self.next_try is not None:
                 g = self.next_try
@@ -903,12 +925,15 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         if g:
             g.kill()
 
-    def fatal(self, msg, abort_greenlet=True):
+    def fatal(self, msg, abort_greenlet=True, type='fatal'):
+        """type can be fatal, error, info. default is fatal
+        """
         if self.input:
             interface.call('input', 'abort', id=self.input.id)
             self.input = None
         with transaction:
             self.last_error = msg
+            self.last_error_type = type
             self.enabled = False
             self.log.error(msg)
         event.fire('file:fatal_error', self)
@@ -980,6 +1005,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             if not _inner_reset or (self.last_error is not None and self.last_error.startswith('downloaded via ')):
                 self.enabled = True
                 self.last_error = None
+                self.last_error_type = None
             if self.next_try:
                 self.next_try.kill()
                 self.next_try = None
@@ -1164,6 +1190,7 @@ class Chunk(Table, ErrorFunctions, InputFunctions, GreenletObject):
     input = Column(None)
 
     last_error = None
+    last_error_type = None
     greenlet = Column(None, change_affects=[['file', 'chunks_working']])
 
     _log = None
@@ -1247,6 +1274,7 @@ class Chunk(Table, ErrorFunctions, InputFunctions, GreenletObject):
         self.log.info(u'retry in {} seconds: {}; reconnect: {}'.format(seconds, msg, need_reconnect))
         with transaction:
             self.last_error = msg
+            self.last_error_type = 'error'
             self.need_reconnect = need_reconnect
             self.next_try = time.time() + seconds
             if self.input:

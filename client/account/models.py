@@ -45,6 +45,7 @@ class Account(Table, ErrorFunctions, InputFunctions):
     name = Column(('api', 'db'))
     enabled = Column(('api', 'db'), fire_event=True, read_only=False)
     last_error = Column(('api', 'db'))
+    last_error_type = Column(('api', 'db'))
     next_try = Column('api', lambda self, value: not value is None and int(value.eta*1000) or value, fire_event=True)
     multi_account = Column('api')
 
@@ -117,6 +118,7 @@ class Account(Table, ErrorFunctions, InputFunctions):
                 return
             with transaction:
                 self.last_error = None
+                self.last_error_type = None
             if not self._initialized or self._last_check is None or self._last_check + config['recheck_interval'] < time.time():
                 self.initialize()
                 self.check_pool.set(self.max_check_tasks)
@@ -174,9 +176,10 @@ class Account(Table, ErrorFunctions, InputFunctions):
             1000000 if self.max_download_speed is None else int(self.max_download_speed/50),
             None if self.waiting_time is None else int(self.waiting_time/60)]
 
-    def fatal(self, msg):
+    def fatal(self, msg, type='fatal'):
         with transaction:
             self.last_error = msg
+            self.last_error_type = type
             self.enabled = False
         self.log.error(msg)
         raise gevent.GreenletExit()
@@ -193,6 +196,7 @@ class Account(Table, ErrorFunctions, InputFunctions):
             self.next_try = gevent.spawn_later(seconds, self.reset_retry)
             self.next_try.eta = time.time() + seconds
             self.last_error = msg
+            self.last_error_type = 'retry'
         self.log.info('retry in {} seconds: {}'.format(seconds, msg))
         raise gevent.GreenletExit()
 
@@ -200,6 +204,7 @@ class Account(Table, ErrorFunctions, InputFunctions):
         with transaction:
             self.next_try = None
             self.last_error = None
+            self.last_error_type = None
 
     def get_task_pool(self, task):
         if task == 'check':
