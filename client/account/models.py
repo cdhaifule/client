@@ -28,11 +28,11 @@ from .manager import config, manager
 from .. import useragent, event, logger, settings, scheme
 from ..cache import CachedDict
 from ..scheme import transaction, Table, Column
-from ..plugintools import ErrorFunctions, InputFunctions, ctx_error_handler, wildcard
+from ..plugintools import ErrorFunctions, InputFunctions, GreenletObject, ctx_error_handler, wildcard
 from ..contrib import sizetools
 from ..variablesizepool import VariableSizePool
 
-class Account(Table, ErrorFunctions, InputFunctions):
+class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
     """on ErrorFunctions member functions the variable need_reconnect is ignored
     """
     _table_name = 'account'
@@ -51,6 +51,9 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     hoster = None       # must be set before hoster.register()
 
+    greenlet = Column(None, change_affects=['working'])
+    working = Column('api', always_use_getter=True, getter_cached=True)
+
     # none means use defaults from hoster class, some value means account.foo > hoster.foo and hoster.foo or account.foo
     max_check_tasks = Column(always_use_getter=True)
     max_download_tasks = Column(always_use_getter=True)
@@ -58,6 +61,8 @@ class Account(Table, ErrorFunctions, InputFunctions):
     can_resume = Column(always_use_getter=True)
 
     def __init__(self, **kwargs):
+        GreenletObject.__init__(self)
+
         self.account = self # needed for InputFunctions.solve_* functions
 
         self.multi_account = False
@@ -73,6 +78,17 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     def __eq__(self, other):
         return isinstance(other, Account) and self.name == other.name
+
+    def stop(self):
+        with transaction:
+            if self.working:
+                self.greenlet.kill()
+                self.greenlet = None
+
+    def delete(self):
+        with transaction:
+            self.stop()
+            self.table_delete()
 
     def get_login_data(self):
         """returns dict with data for sync (clone accounts on other clients)
@@ -106,10 +122,19 @@ class Account(Table, ErrorFunctions, InputFunctions):
     def on_get_next_try(self, value):
         return None if value is None else value.eta
 
+    def on_get_working(self, value):
+        if not self.greenlet:
+            return False
+        #if isinstance(self.greenlet, gevent.Greenlet) and self.greenlet.dead:
+        #    return False
+        return True
+
     def boot(self, return_when_locked=False):
         if return_when_locked and self.lock.locked():
             return
         with self.lock:
+            if self.working:
+                return
             if not self.enabled:
                 #TODO: raise GreenletExit ?
                 return
@@ -120,7 +145,7 @@ class Account(Table, ErrorFunctions, InputFunctions):
                 self.last_error = None
                 self.last_error_type = None
             if not self._initialized or self._last_check is None or self._last_check + config['recheck_interval'] < time.time():
-                self.initialize()
+                self.spawn(self.initialize).get()
                 self.check_pool.set(self.max_check_tasks)
                 self.download_pool.set(self.max_download_tasks)
                 
