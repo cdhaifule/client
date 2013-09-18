@@ -96,8 +96,8 @@ while checking or downloading:
 @File.waiting.changed
 @Chunk.waiting.changed
 def waiting_changed(self, value):
-    if self.waiting:
-        self.push_substate('waiting', int(self.waiting*1000))
+    if value:
+        self.push_substate('waiting', int(value*1000))
     else:
         self.pop_substate()
 
@@ -112,7 +112,8 @@ def retry_changed(self, value):
         else:
             eta = self.next_try.eta
         self.push_substate('retry', int(eta*1000), self.need_reconnect)
-    elif self.substate[0] != 'waiting_account':
+    #elif self.substate[0] != 'waiting_account':
+    elif self.substate[0] == 'retry':
         self.pop_substate()
 
 @File.input.changed

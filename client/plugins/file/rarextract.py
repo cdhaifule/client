@@ -339,8 +339,7 @@ class StreamingExtract(object):
                     for path, file in self.parts.values():
                         if file:
                             file.delete_local_files()
-                            file.last_error = 'extracted and deleted'
-                            file.enabled = False
+                            file.fatal('extracted and deleted', type='info')
                         else:
                             os.remove(path)
 

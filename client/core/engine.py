@@ -909,7 +909,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             self.retry_num += 1
         self.log.info(u'retry in {} seconds: {}; reconnect: {}'.format(seconds, msg, need_reconnect))
         event.fire('file:retry', self)
-        raise gevent.GreenletExit()
+        self.kill()
 
     def reset_retry(self, fire_event=True):
         g = None
@@ -938,7 +938,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             self.log.error(msg)
         event.fire('file:fatal_error', self)
         if abort_greenlet:
-            raise gevent.GreenletExit()
+            self.kill()
 
     ####################### actions
 
@@ -1280,7 +1280,7 @@ class Chunk(Table, ErrorFunctions, InputFunctions, GreenletObject):
             if self.input:
                 interface.call('input', 'abort', id=self.input.id)
                 self.input = None
-        raise gevent.GreenletExit()
+        self.kill()
 
     def fatal(self, msg):
         if self.input:

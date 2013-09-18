@@ -189,8 +189,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
-    else:
-        print "multi: no accounts found"
+    #else:
+    #    print "multi: no accounts found"
 
 ######## premium accounts...
 

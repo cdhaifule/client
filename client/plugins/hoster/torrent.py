@@ -69,7 +69,6 @@ def ask_user(file):
                 this.config.add = answer
     if answer == 'add_open':
         webbrowser.open_new_tab(login.get_sso_url('collect'))
-    print answer
     return answer in ('add', 'add_open')
 
 def on_check(file):

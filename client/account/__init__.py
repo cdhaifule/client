@@ -43,7 +43,6 @@ def init():
                 pool = manager.get_pool(name)
                 if oldpw:
                     # TODO: remove. update process
-                    print "transferring old pw of:", data
                     data["password"] = oldpw
                 elif hasattr(pool.account_class, 'password'):
                     data["password"] = keyring.get_password(settings.keyring_service, "account_{}_password".format(a["id"])) or ''

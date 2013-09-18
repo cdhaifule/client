@@ -201,13 +201,14 @@ class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
             1000000 if self.max_download_speed is None else int(self.max_download_speed/50),
             None if self.waiting_time is None else int(self.waiting_time/60)]
 
-    def fatal(self, msg, type='fatal'):
+    def fatal(self, msg, type='fatal', abort_greenlet=True):
         with transaction:
             self.last_error = msg
             self.last_error_type = type
             self.enabled = False
         self.log.error(msg)
-        raise gevent.GreenletExit()
+        if abort_greenlet:
+            self.kill()
 
     def login_failed(self, msg=None):
         """default error message for failed logins"""
@@ -220,10 +221,9 @@ class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
         with transaction:
             self.next_try = gevent.spawn_later(seconds, self.reset_retry)
             self.next_try.eta = time.time() + seconds
-            self.last_error = msg
-            self.last_error_type = 'retry'
+            self.fatal(msg, type='retry', abort_greenlet=False)
         self.log.info('retry in {} seconds: {}'.format(seconds, msg))
-        raise gevent.GreenletExit()
+        self.kill()
 
     def reset_retry(self):
         with transaction:
