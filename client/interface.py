@@ -58,6 +58,8 @@ class InterfaceManager(dict):
             result = func(*args, **kwargs)
             if isinstance(result, types.GeneratorType):
                 result = list(result)
+            elif result is not None and not isinstance(result, (set, tuple, list, dict)):
+                result = dict(result=result)
             return result
         except gevent.GreenletExit:
             pass
