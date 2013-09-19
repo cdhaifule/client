@@ -75,6 +75,18 @@ loader__help = 'zeigt diese Meldung und beendet das Programm'
 api__options = 'API Einstellungen'
 api__api_log = 'Logge den API Datenverkehr'
 
+# systray.win
+
+systray__win__tooltip = u"""Download.am Client
+{complete} / {total} übertragen
+{working} / {queued} Dateien arbeiten mit {speed}/s"""
+
+systray__win__tooltip_idle = """Download.am Client
+Die Download Warteschlange ist leer"""
+
+systray__win__tooltip_stopped = """Download.am Client
+Derzeit ist der Download angehalten"""
+
 #############################
 
 # systray
