@@ -50,6 +50,8 @@ from Crypto.PublicKey import DSA
 from requests.exceptions import ConnectionError
 from collections import defaultdict
 
+from dulwich import pack
+pack.has_mmap = False # mmap causes never closed .idx files
 from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
 
@@ -197,23 +199,7 @@ class GitWorker(BasicPatchWorker):
 
     @classmethod
     def cleanup(cls):
-        from dulwich import file as file_module
-        if not hasattr(file_module, 'OPEN_FILES'):
-            return
-        for f in file_module.OPEN_FILES:
-            if hasattr(f, 'close'):
-                try:
-                    f.close()
-                except:
-                    pass
-            elif isinstance(f, int):
-                try:
-                    os.close(f)
-                except:
-                    pass
-            else:
-                print "!"*100, 'UNKNOWN FILE OBJECT', f, type(f)
-        file_module.OPEN_FILES = set()
+        pass
         
     def fetch(self, retry=False, old_version=None):
         def on_error(e):
@@ -233,15 +219,19 @@ class GitWorker(BasicPatchWorker):
             old_version = self.source.version
         try:
             repo = self.source._open_repo()
-            if repo is None:
-                p = self.source.basepath
-                if not os.path.exists(p):
-                    os.makedirs(p)
-                repo = Repo.init_bare(p)
+            try:
+                if repo is None:
+                    p = self.source.basepath
+                    if not os.path.exists(p):
+                        os.makedirs(p)
+                    repo = Repo.init_bare(p)
 
-            client, host_path = get_transport_and_path(self.source.url)
-            remote_refs = client.fetch(host_path, repo)
-            repo["HEAD"] = remote_refs["HEAD"]
+                client, host_path = get_transport_and_path(self.source.url)
+                remote_refs = client.fetch(host_path, repo)
+                repo["HEAD"] = remote_refs["HEAD"]
+            finally:
+                if repo:
+                    repo.object_store.close()
         except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
             self.source.unlink()  # it is possible that the clone process is broken when the operation was interrupted
             raise
@@ -250,7 +240,6 @@ class GitWorker(BasicPatchWorker):
                 return on_error(e)
             old_exception = sys.exc_info()
             self.source.log.exception('failed fetching repository; deleting repo')
-            del repo
             try:
                 really_clean_repo(self.source.basepath)
             except:
@@ -786,25 +775,6 @@ class HddFile(object):
         with open(os.path.join(self.path, self.name), 'rb') as f:
             return f.read()
 
-class GitIterator(object):
-    def __init__(self, repo, tree, startswith):
-        self.repo = repo
-        self.tree = tree
-        self.startswith = startswith
-        
-    def __iter__(self):
-        try:
-            for entry in self.repo.object_store.iter_tree_contents(self.tree):
-                path = entry.in_path(self.repo.path).path
-                if platform == 'win32':
-                    path = path.replace('/', os.sep)
-                if not path.startswith(self.startswith):
-                    continue
-                gevent.sleep(0)
-                yield GitFile(path, self.repo[entry.sha].as_raw_string())
-        finally:
-            GitWorker.cleanup()
-
 class GitFile(object):
     def __init__(self, path, contents):
         self.path, self.name = os.path.split(path)
@@ -1207,7 +1177,10 @@ class GitSource(BasicSource, PublicSource):
         repo = self._open_repo()
         if repo is None:
             return list()
-        return list(i.rsplit("/", 1)[1] for i in repo.get_refs() if i.startswith("refs/heads/"))
+        try:
+            return list(i.rsplit("/", 1)[1] for i in repo.get_refs() if i.startswith("refs/heads/"))
+        finally:
+            repo.object_store.close()
 
     def on_get_version(self, value):
         repo = self._open_repo()
@@ -1218,6 +1191,8 @@ class GitSource(BasicSource, PublicSource):
             return x[:7]
         except KeyError:
             return '0'*7
+        finally:
+            repo.object_store.close()
     
     def get_worker(self):
         return GitWorker(self)
@@ -1238,8 +1213,21 @@ class GitSource(BasicSource, PublicSource):
             repo = self._open_repo()
             if repo is None:
                 return list()
-            tree = repo["refs/heads/"+self.get_branch()].tree
-            return GitIterator(repo, tree, startswith=os.path.join(self.basepath, path))
+
+            try:
+                data = list()
+                startswith = os.path.join(self.basepath, path)
+                for entry in repo.object_store.iter_tree_contents(repo["refs/heads/"+self.get_branch()].tree):
+                    path = entry.in_path(repo.path).path
+                    if platform == 'win32':
+                        path = path.replace('/', os.sep)
+                    if not path.startswith(startswith):
+                        continue
+                    gevent.sleep(0)
+                    data.append(GitFile(path, repo[entry.sha].as_raw_string()))
+                return data
+            finally:
+                repo.object_store.close()
 
     def unlink(self):
         try:
