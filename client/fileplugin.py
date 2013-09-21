@@ -86,6 +86,8 @@ class FilePluginManager(object):
             path, file = fileorpath(fp)
         except BaseException as e:
             if isinstance(fp, core.File):
+                if not fp.enabled or fp.last_error:
+                    return
                 fp.fatal('failed opening file: {}'.format(e))
             log.error('failed opening file: {}'.format(e))
             return
@@ -123,6 +125,8 @@ class FilePluginManager(object):
                     if complete:
                         with transaction:
                             file.completed_plugins.add(plugin.name)
+                if not file.enabled or file.last_error:
+                    break
             else:
                 self.execute_plugin(plugin, path, file)
         if delete_after_processing:
