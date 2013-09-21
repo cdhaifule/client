@@ -58,7 +58,7 @@ config.default('open_browser_after_add_links', False, bool)
 config.default('adult', False, bool)
 
 # computer shutdown
-if sys.platform == 'win32':
+if sys.platform == 'win32' and "nose" not in sys.argv[0]:
     try:
         import wmi
         wmi.WMI(privileges=["Shutdown"])

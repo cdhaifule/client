@@ -192,7 +192,7 @@ def file_chunks_changed(file, old):
 
 # shutdown computer when downloads are done
 
-if sys.platform == 'win32':
+if sys.platform == 'win32' and "nose" not in sys.argv[0]:
     import wmi
 
     def on_package_tab_changed(p, old):
