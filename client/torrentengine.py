@@ -438,7 +438,7 @@ class Session(object):
                 data.type = password and lt.proxy_type.http_pw or lt.proxy_type.http
             elif type == 'socks5':
                 data.type = password and lt.proxy_type.socks5_pw or lt.proxy_type.socks5
-                print "socks5", lt.proxy_type.socks5
+                #print "socks5", lt.proxy_type.socks5
             elif type == 'socks4':
                 data.type = lt.proxy_type.socks4
             else:
@@ -779,9 +779,9 @@ class Torrent(object):
             self.register_alert('save_resume_data_alert', _on_alert_save_resume_data)
             self.register_alert('save_resume_data_failed_alert', _on_alert_save_resume_data_failed)
 
-            print "saving resume data"
+            #print "saving resume data"
             self.handle.save_resume_data()
-            print "saving resume data done"
+            #print "saving resume data done"
 
             if not async:
                 event.wait()
@@ -845,15 +845,15 @@ class Torrent(object):
                     try:
                         pending[index] = filename
                         self.handle.rename_file(index, pending[index])
-                        print "rename 1", index, pending[index]
+                        #print "rename 1", index, pending[index]
                     except TypeError:
                         pending[index] = filename.encode('utf-8')
                         self.handle.rename_file(index, pending[index])
-                        print "rename 2", index, pending[index]
+                        #print "rename 2", index, pending[index]
                 
                 if pending:
-                    print "!"*100, "rename"
-                    print pending
+                    #print "!"*100, "rename"
+                    #print pending
                     i = 0
                     while True:
                         try:
@@ -866,11 +866,11 @@ class Torrent(object):
                                     del pending[index]
                             if not pending:
                                 break
-                            print "still pending", pending
+                            #print "still pending", pending
                             i += 1
                             if i > 60:
                                 raise
-                    print "!"*100, "rename done"
+                    #print "!"*100, "rename done"
             finally:
                 self.unregister_alert('file_renamed_alert', _on_file_renamed_alert)
                 self.unregister_alert('file_rename_failed_alert', _on_file_rename_failed_alert)

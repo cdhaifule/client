@@ -16,6 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import re
 import os
+import gevent
 
 from .engine import strategy, pool, lock, download_file, working_downloads, config
 from .. import event, core, reconnect, api, account, input
@@ -62,15 +63,13 @@ def spawn_tasks(e):
             return
         if config.state != 'started':
             return
-        if pool.full():
-            return
         blocked_hosts = set()
         for file in core.files():
-            if _spawn_task(file, blocked_hosts):
-                if pool.full():
-                    return
+            if pool.full():
+                return
+            spawn_download(file, blocked_hosts)
 
-def _spawn_task(file, blocked_hosts, retry=False):
+def spawn_download(file, blocked_hosts=None, retry=False, ignore_pools=False):
     if file.state != 'download':
         return False
     if not file.enabled:
@@ -83,14 +82,14 @@ def _spawn_task(file, blocked_hosts, retry=False):
         return False
     if file.name is None: # do not download files without name (any soltion for that?)
         return False
-    if file.host in blocked_hosts:
+    if blocked_hosts is not None and file.host in blocked_hosts:
         return False
-    if file.host.download_pool.full():
+    if not ignore_pools and file.host.download_pool.full():
         blocked_hosts.add(file.host)
         return False
 
     file.host.get_download_context(file)
-    if file.account is None or file.account.download_pool.full():
+    if file.account is None or (not ignore_pools and file.account.download_pool.full()):
         blocked_hosts.add(file.host)
         return False
 
@@ -178,16 +177,25 @@ def _spawn_task(file, blocked_hosts, retry=False):
             file.log.warning(u'account of file becomes null, even after retry. spawning file later')
             return False
         else:
-            _spawn_task(file, blocked_hosts, True)
+            return spawn_download(file, blocked_hosts, True, ignore_pools)
+
+    if file in working_downloads:
+        return False
 
     file.log.debug(u'downloading {} via account {} {}'.format(file.url, file.account.name, file.account.id))
 
     working_downloads.append(file)
     with transaction:
         file.spawn(download_file, file)
-    pool.add(file.greenlet)
-    file.host.download_pool.add(file.greenlet)
-    file.account.download_pool.add(file.greenlet)
+
+    # add the greenlet to the pools
+    if ignore_pools:
+        add = lambda pool, *args, **kwargs: gevent.spawn(pool.add, *args, **kwargs)
+    else:
+        add = lambda pool, *args, **kwargs: pool.add(*args, **kwargs)
+    add(pool, file.greenlet)
+    add(file.host.download_pool, file.greenlet)
+    add(file.account.download_pool, file.greenlet)
 
     return True
 
@@ -222,6 +230,11 @@ def on_account_changed(account, *args, **kwargs):
     for f in working_downloads:
         if f.account == account and f.working:
             f.stop()
+
+@core.File.working.changed
+def on_file_working_changed(file, old):
+    if not file.working and file in working_downloads:
+        working_downloads.remove(file)
 
 # reconnect
 

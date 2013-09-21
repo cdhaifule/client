@@ -14,9 +14,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import gevent
 
-from bottle import GeventServer, Bottle, request, response
+from bottle import GeventServer, Bottle, request, response, static_file
 
 xxx = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
@@ -153,6 +154,13 @@ def route_resume_connection_limit(resume):
 @http.route("/anyname/<:re:(.*/)?><name>")
 def route_anyname(name):
     return _resume(name=name)
+
+
+########## rar multipart tests
+
+@http.route(r"/rar/<name:re:1mb\.part(\d+)\.rar>")
+def route_rar_multipart(name):
+    return static_file(name, root=os.path.dirname(__file__))
 
 
 ########## patch repo tests

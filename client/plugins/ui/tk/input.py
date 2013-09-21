@@ -203,7 +203,7 @@ class Context(object):
                 if self.master.ok_element:
                     raise RuntimeError('ok element already set')
                 self.master.ok_element = dict(name=e.name, value=f['value'])
-            elif f['cancel']:
+            if f['cancel']:
                 if self.master.cancel_element:
                     raise RuntimeError('cancel element already set')
                 self.master.cancel_element = dict(name=e.name, value=f['value'])
@@ -215,9 +215,7 @@ class Context(object):
                     self.submit(data, self.on_ok)
 
                 data = dict(name=e.name, value=f['value'])
-                Button(frame, text=self.compile_text(f['content']),
-                    command=command,
-                    padx=5).pack(side=LEFT, padx=5, pady=5)
+                Button(frame, text=self.compile_text(f['content']), command=command, padx=5).pack(side=LEFT, padx=5, pady=5)
 
             create_button(f)
         self.pack_element(frame)

@@ -74,3 +74,19 @@ loader__help = 'show this help message and exit'
 
 api__options = 'API options'
 api__api_log = 'Log the API traffic'
+
+# systray.win
+
+systray__win__tooltip = """Download.am Client
+{complete} / {total} transferred
+{working} / {queued} files working at {speed}/s"""
+
+systray__win__tooltip_idle = """Download.am Client
+The download queue is empty"""
+
+systray__win__tooltip_stopped = """Download.am Client
+The download is currently stopped"""
+# api
+
+core__options = 'Download options'
+core__shutdown = 'Shutdown computer when all downloads are complete'

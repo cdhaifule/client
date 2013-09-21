@@ -28,11 +28,11 @@ from .manager import config, manager
 from .. import useragent, event, logger, settings, scheme
 from ..cache import CachedDict
 from ..scheme import transaction, Table, Column
-from ..plugintools import ErrorFunctions, InputFunctions, ctx_error_handler, wildcard
+from ..plugintools import ErrorFunctions, InputFunctions, GreenletObject, ctx_error_handler, wildcard
 from ..contrib import sizetools
 from ..variablesizepool import VariableSizePool
 
-class Account(Table, ErrorFunctions, InputFunctions):
+class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
     """on ErrorFunctions member functions the variable need_reconnect is ignored
     """
     _table_name = 'account'
@@ -45,10 +45,14 @@ class Account(Table, ErrorFunctions, InputFunctions):
     name = Column(('api', 'db'))
     enabled = Column(('api', 'db'), fire_event=True, read_only=False)
     last_error = Column(('api', 'db'))
+    last_error_type = Column(('api', 'db'))
     next_try = Column('api', lambda self, value: not value is None and int(value.eta*1000) or value, fire_event=True)
     multi_account = Column('api')
 
     hoster = None       # must be set before hoster.register()
+
+    greenlet = Column(None, change_affects=['working'])
+    working = Column('api', always_use_getter=True, getter_cached=True)
 
     # none means use defaults from hoster class, some value means account.foo > hoster.foo and hoster.foo or account.foo
     max_check_tasks = Column(always_use_getter=True)
@@ -57,6 +61,8 @@ class Account(Table, ErrorFunctions, InputFunctions):
     can_resume = Column(always_use_getter=True)
 
     def __init__(self, **kwargs):
+        GreenletObject.__init__(self)
+
         self.account = self # needed for InputFunctions.solve_* functions
 
         self.multi_account = False
@@ -72,6 +78,17 @@ class Account(Table, ErrorFunctions, InputFunctions):
 
     def __eq__(self, other):
         return isinstance(other, Account) and self.name == other.name
+
+    def stop(self):
+        with transaction:
+            if self.working:
+                self.greenlet.kill()
+                self.greenlet = None
+
+    def delete(self):
+        with transaction:
+            self.stop()
+            self.table_delete()
 
     def get_login_data(self):
         """returns dict with data for sync (clone accounts on other clients)
@@ -105,10 +122,19 @@ class Account(Table, ErrorFunctions, InputFunctions):
     def on_get_next_try(self, value):
         return None if value is None else value.eta
 
+    def on_get_working(self, value):
+        if not self.greenlet:
+            return False
+        #if isinstance(self.greenlet, gevent.Greenlet) and self.greenlet.dead:
+        #    return False
+        return True
+
     def boot(self, return_when_locked=False):
         if return_when_locked and self.lock.locked():
             return
         with self.lock:
+            if self.working:
+                return
             if not self.enabled:
                 #TODO: raise GreenletExit ?
                 return
@@ -117,8 +143,9 @@ class Account(Table, ErrorFunctions, InputFunctions):
                 return
             with transaction:
                 self.last_error = None
+                self.last_error_type = None
             if not self._initialized or self._last_check is None or self._last_check + config['recheck_interval'] < time.time():
-                self.initialize()
+                self.spawn(self.initialize).get()
                 self.check_pool.set(self.max_check_tasks)
                 self.download_pool.set(self.max_download_tasks)
                 
@@ -174,12 +201,14 @@ class Account(Table, ErrorFunctions, InputFunctions):
             1000000 if self.max_download_speed is None else int(self.max_download_speed/50),
             None if self.waiting_time is None else int(self.waiting_time/60)]
 
-    def fatal(self, msg):
+    def fatal(self, msg, type='fatal', abort_greenlet=True):
         with transaction:
             self.last_error = msg
+            self.last_error_type = type
             self.enabled = False
         self.log.error(msg)
-        raise gevent.GreenletExit()
+        if abort_greenlet:
+            self.kill()
 
     def login_failed(self, msg=None):
         """default error message for failed logins"""
@@ -192,14 +221,15 @@ class Account(Table, ErrorFunctions, InputFunctions):
         with transaction:
             self.next_try = gevent.spawn_later(seconds, self.reset_retry)
             self.next_try.eta = time.time() + seconds
-            self.last_error = msg
+            self.fatal(msg, type='retry', abort_greenlet=False)
         self.log.info('retry in {} seconds: {}'.format(seconds, msg))
-        raise gevent.GreenletExit()
+        self.kill()
 
     def reset_retry(self):
         with transaction:
             self.next_try = None
             self.last_error = None
+            self.last_error_type = None
 
     def get_task_pool(self, task):
         if task == 'check':

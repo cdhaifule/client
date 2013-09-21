@@ -124,8 +124,8 @@ class Choice(Button):
             value, content = value
             ok, cancel = False, False
 
-        if ok and cancel:
-            raise RuntimeError('ok and cancel cannot be true')
+        #if ok and cancel:
+        #    raise RuntimeError('ok and cancel cannot be true')
 
         if not content:
             content = value

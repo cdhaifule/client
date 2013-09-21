@@ -84,6 +84,8 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             all_events = ["disconnect", "reconnect", "open", "close", "error", "retry", "message"]
             for e in all_events:
                 self.io.on(e, getattr(self, "on_" + e))
+        except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
+            raise
         except BaseException as e:
             traceback.print_exc()
             return e

@@ -15,7 +15,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import time
-import gevent, requests
+import gevent
+import requests
 from gevent.event import AsyncResult
 from ..api import proto
 

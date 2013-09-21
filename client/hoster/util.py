@@ -30,7 +30,6 @@ from PIL import Image, ImageFilter, ImageDraw, ImageFont
 import requests
 
 from bs4 import BeautifulSoup
-from functools import partial
 
 from gevent.pool import Group
 from gevent.event import Event
@@ -190,8 +189,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
-    else:
-        print "multi: no accounts found"
+    #else:
+    #    print "multi: no accounts found"
 
 ######## premium accounts...
 
@@ -202,30 +201,30 @@ config = globalconfig.new('hoster_util')
 config.default('ignore_ask_premium', list(), list)
 
 def buy_premium(hoster, url):
-    if not account.config.ask_buy_premium:
-        return
-    try:
-        if isinstance(asked[hoster], Event):
-            asked[hoster].wait()
-        if asked[hoster] > (time.time() - account.config.ask_buy_premium_time):
+    with premium_lock:
+        if not account.config.ask_buy_premium:
             return
-    except KeyError:
-        pass
-    asked[hoster] = Event()
-    ignore_asked = False
-    try:
-        with premium_lock:
+        try:
+            if isinstance(asked[hoster], Event):
+                asked[hoster].wait()
+            if asked[hoster] > (time.time() - account.config.ask_buy_premium_time):
+                return
+        except KeyError:
+            pass
+        asked[hoster] = Event()
+        ignore_asked = False
+        try:
             return ask_buy_premium_dialog(hoster, url)
-    except gevent.GreenletExit:
-        ignore_asked = True
-        raise
-    finally:
-        e = asked[hoster]
-        if ignore_asked:
-            del asked[hoster]
-        else:
-            asked[hoster] = time.time()
-        e.set()
+        except gevent.GreenletExit:
+            ignore_asked = True
+            raise
+        finally:
+            e = asked[hoster]
+            if ignore_asked:
+                del asked[hoster]
+            else:
+                asked[hoster] = time.time()
+            e.set()
 
 def ask_buy_premium_dialog(hoster, url):
     if hoster in config.ignore_ask_premium:

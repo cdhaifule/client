@@ -14,10 +14,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
 import gevent
+import traceback
 
 from .engine import _packages, packages, files, lock, config, global_status, Package, File, Chunk, PACKAGE_POSITION_MULTIPLICATOR
-from .. import event
+from .. import event, notify, input
 from ..scheme import transaction
 from ..plugintools import EmptyQueue
 
@@ -96,8 +98,8 @@ while checking or downloading:
 @File.waiting.changed
 @Chunk.waiting.changed
 def waiting_changed(self, value):
-    if self.waiting:
-        self.push_substate('waiting', int(self.waiting*1000))
+    if value:
+        self.push_substate('waiting', int(value*1000))
     else:
         self.pop_substate()
 
@@ -112,7 +114,8 @@ def retry_changed(self, value):
         else:
             eta = self.next_try.eta
         self.push_substate('retry', int(eta*1000), self.need_reconnect)
-    elif self.substate[0] != 'waiting_account':
+    #elif self.substate[0] != 'waiting_account':
+    elif self.substate[0] == 'retry':
         self.pop_substate()
 
 @File.input.changed
@@ -133,6 +136,7 @@ def file_enabled_changed(file, old):
             if not file.package.enabled:
                 file.package.enabled = True
             file.last_error = None
+            file.last_error_type = None
     else:
         if file.package.enabled and not any(f.enabled for f in file.package.files):
             with transaction:
@@ -185,3 +189,76 @@ def file_chunks_changed(file, old):
         if size is not None:
             file.init_progress(size)
             file.set_progress(sum(chunk.pos - chunk.begin for chunk in file.chunks))
+
+# shutdown computer when downloads are done
+
+if sys.platform == 'win32' and "nose" not in sys.argv[0]:
+    import wmi
+
+    def on_package_tab_changed(p, old):
+        if p.tab not in {'collect', 'complete'}:
+            return
+        event.fire_once_later(1, 'core:check_package_tabs')
+
+    def on_engine_state_changed(*_):
+        if check_engine_state():
+            return
+
+    def check_engine_state():
+        from .. import download, torrent
+        if download.config.state == 'stopped' and torrent.config.state == 'stopped':
+            config.shutdown = False
+            notify.info('Computer shutdown disabled cause download engine is stopped')
+            return True
+
+    def check_package_tabs():
+        for p in packages():
+            if p.tab not in {'collect', 'complete'} and p.enabled:
+                return False
+        return True
+
+    @event.register('core:check_package_tabs')
+    def on_check_package_tabs(e):
+        if not check_package_tabs():
+            return
+        config.shutdown = False
+        elements = list()
+        elements.append([input.Text(['All downloads are complete.\nThe computer will shut down in #{seconds} seconds.', dict(seconds=config.shutdown_timeout)])])
+        elements.append([input.Text('')])
+        elements.append([input.Choice('action', choices=[
+            dict(value='abort', content='Abort shutdown', ok=True, cancel=True),
+            dict(value='now', content='Shutdown now')
+        ])])
+        try:
+            result = input.get(elements, type='computer_shutdown', timeout=config.shutdown_timeout, close_aborts=True)
+            result = result.get('action', 'abort')
+        except input.InputTimeout:
+            result = 'now'
+        except:
+            traceback.print_exc()
+            result = 'abort'
+        if result == 'abort':
+            notify.info('Computer shutdown aborted')
+            return
+        if result != 'now':
+            raise RuntimeError('invalid return value from input: {}'.format(result))
+        notify.warning('Computer will shutdown now')
+        wmi.WMI(privileges=["Shutdown"]).Win32_OperatingSystem()[0].Shutdown()
+
+    @config.register('shutdown')
+    def on_config_shutdown_changed(value, old):
+        if value:
+            if check_engine_state():
+                return
+            if check_package_tabs():
+                notify.info('Computer shutdown disabled cause the download queue is empty')
+                return
+            if on_package_tab_changed not in Package.tab.changed_hooks:
+                Package.tab.changed(on_package_tab_changed)
+                event.add('config.download.state:changed', on_engine_state_changed)
+                event.add('config.torrent.state:changed', on_engine_state_changed)
+        else:
+            if on_package_tab_changed in Package.tab.changed_hooks:
+                Package.tab.remove_changed(on_package_tab_changed)
+                event.remove('config.download.state:changed', on_engine_state_changed)
+                event.remove('config.torrent.state:changed', on_engine_state_changed)

@@ -35,7 +35,6 @@ class ServicePlugin(plugintools.GreenletObject):
         
         self.name = name
         self.greenlet = None
-        self.log = logger.get('service').getLogger(name)
         self.config = config.new(self.name)
         self.config.default('enabled', self.default_enabled, bool)
         
@@ -62,6 +61,12 @@ class ServicePlugin(plugintools.GreenletObject):
             self.greenlet.kill()
             self.log.info("stopped")
             event.fire('service:stopped', self)
+
+    @property
+    def log(self):
+        if not hasattr(self, '_log'):
+            self._log = logger.get('service').getLogger(self.name)
+        return self._log
 
     @property
     def running(self):
