@@ -86,3 +86,7 @@ The download queue is empty"""
 
 systray__win__tooltip_stopped = """Download.am Client
 The download is currently stopped"""
+# api
+
+core__options = 'Download options'
+core__shutdown = 'Shutdown computer when all downloads are complete'

@@ -15,6 +15,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import sys
 import gevent
 
 from .engine import config, log, lock, _packages, packages, files, Package, File, Chunk, GlobalStatus, global_status
@@ -23,11 +24,18 @@ from .events import sort_queue
 from .. import db, interface
 from ..plugintools import dict_json
 from ..scheme import transaction, filter_objects_callback, get_by_uuid
+from ..localize import _T
 
 
 ########################## init
 
-def init():
+def init_optparser(parser, OptionGroup):
+    if sys.platform == 'win32':
+        group = OptionGroup(parser, _T.core__options)
+        group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
+        parser.add_option_group(group)
+
+def init(options):
     if not os.path.exists(config.download_dir):
         try:
             os.makedirs(config.download_dir)
@@ -80,6 +88,9 @@ def init():
         if file.host not in ignore:
             gevent.spawn(file.host.get_account, 'download', file)
             ignore.add(file.host)
+
+    if sys.platform == 'win32':
+        config.shutdown = options.shutdown
 
 
 ########################## interface

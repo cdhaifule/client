@@ -55,7 +55,7 @@ pack.has_mmap = False # mmap causes never closed .idx files
 from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
 
-from . import current, logger, input, settings, reconnect, db, interface, loader, event
+from . import current, logger, input, settings, reconnect, db, interface, loader, event, core
 from .plugintools import Url
 from .config import globalconfig
 from .scheme import transaction, Table, Column, filter_objects_callback
@@ -588,7 +588,7 @@ def finalize_patches(patches, external_loaded=True):
 # restart functions
 
 def restart_app():
-    from . import download, core
+    from . import download
     if download.strategy.has('patch'):
         return
 
@@ -639,32 +639,53 @@ def restart_app():
     else:
         raise NotImplementedError()
 
+def build_argv(argv):
+    if module_initialized.is_set():
+        if '--no-browser' not in argv:
+            argv.append('--no-browser')
+        if '--disable-splash' not in argv:
+            argv.append('--disable-splash')
+    if platform == 'win32':
+        if core.config.shutdown:
+            if '--shutdown' not in argv:
+                argv.append('--shutdown')
+        elif '--shutdown' in argv:
+            argv.remove('--shutdown')
+
 def execute_restart():
     replace = pending_external and pending_external['replace'] or list()
     delete = pending_external and pending_external['delete'] or list()
     deltree = pending_external and pending_external['deltree'] or list()
+    if platform == "macos" or platform.startswith("linux"):
+        cmd = sys.executable
+        argv = sys.argv[:]
+        build_argv(argv)
+    else:
+        argv = sys.argv[1:]
+        build_argv(argv)
+        if sys.__stdout__.isatty():
+            if replace or delete or deltree:
+                cmd = '"' + sys.executable + '"'
+                if argv:
+                    cmd += ' "' + '" "'.join(argv) + '"'
+                argv = list()
+            else:
+                cmd = sys.executable
+        else:
+            cmd = 'cmd /c start "" '
+            cmd += '"' + sys.executable + '"'
+            if argv:
+                cmd += ' "' + '" "'.join(argv) + '"'
+                argv = list()
     if replace or delete or deltree:
         if platform == "win32":
-            return _external_rename_bat(replace, delete, deltree)
+            return _external_rename_bat(replace, delete, deltree, cmd, argv)
         else:
-            return _external_rename_sh(replace, delete, deltree)
+            return _external_rename_sh(replace, delete, deltree, cmd, argv)
     else:
-        if platform == "macos":
-            replace_app(sys.executable, *sys.argv)
-        elif platform.startswith("linux"):
-            replace_app(sys.executable, ' '.join(sys.argv))
-        else:
-            cmd = 'cmd /c start "" "' + sys.executable + '"'
-            argv = sys.argv[1:]
-            if not module_initialized.is_set():
-                if '--no-browser' not in argv:
-                    argv.append('--no-browser')
-                if '--disable-splash' not in argv:
-                    argv.append('--disable-splash')
-            cmd += ' "' + '" "'.join(argv) + '"'
-            replace_app(cmd)
+        replace_app(cmd, *argv)
 
-def _external_rename_bat(replace, delete, deltree):
+def _external_rename_bat(replace, delete, deltree, cmd, argv):
     code = list()
     code.append('@echo off')
     code.append('ping -n 3 127.0.0.1 >NUL') # dirty method to sleep 2 seconds
@@ -675,14 +696,6 @@ def _external_rename_bat(replace, delete, deltree):
     for file in deltree:
         code.append('del /S/Q "{}"'.format(file))
 
-    argv = sys.argv[1:]
-    if '--no-browser' not in argv:
-        argv.append('--no-browser')
-    if '--disable-splash' not in argv:
-        argv.append('--disable-splash')
-    cmd = '"' + '" "'.join([sys.executable] + argv) + '"'
-    if not sys.__stdout__.isatty():
-        cmd = 'start "" '+cmd
     code.append(cmd)
 
     code.append('del /Q "%0"')
@@ -694,7 +707,7 @@ def _external_rename_bat(replace, delete, deltree):
 
     replace_app(tmp.name)
 
-def _external_rename_sh(replace, delete, deltree):
+def _external_rename_sh(replace, delete, deltree, cmd, argv):
     code = list()
     code.append('sleep 2')
     for file in replace:
@@ -713,7 +726,7 @@ def _external_rename_sh(replace, delete, deltree):
         code.append('open {}'.format(settings.app_dir))
     else:
         # this code is only tested with console version
-        code.append("'{}' '{}'".format(sys.executable, "' '".join(sys.argv)))
+        code.append("'{}' '{}'".format(cmd, "' '".join(argv)))
 
     print '\n'.join(code)
 
@@ -723,15 +736,16 @@ def _external_rename_sh(replace, delete, deltree):
     replace_app("/bin/sh", tmp.name)
 
 def replace_app(cmd, *args):
-    args = list(args)
     if platform == 'macos':
         from PyObjCTools import AppHelper
+        args = list(args)
         AppHelper.stopEventLoop()
         aboot = args[0].replace('loader_darwin', '__boot__')
         if os.path.exists(aboot):
             args[0] = aboot
     elif platform == 'linux':
         os.chdir(settings.app_dir)
+    print "REPLACE APP:", cmd, args
     try:
         if platform != "macos":
             loader.terminate()
@@ -739,7 +753,7 @@ def replace_app(cmd, *args):
         if hasattr(sys, 'exitfunc'):
             sys.exitfunc()
         #os.chdir(settings.app_dir)
-        if platform == 'win32':
+        if platform == 'win32' and not sys.__stdout__.isatty():
             subprocess.Popen(cmd, creationflags=0x08000000)
         else:
             os.execl(cmd, cmd, *args)
