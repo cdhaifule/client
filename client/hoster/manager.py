@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import re
 import bisect
 
 from ..plugintools import Url, Matcher, all_url_regex
@@ -26,6 +25,9 @@ index = dict()
 
 def add(module):
     plugin = module.this.model(module)
+    if plugin.search and 'display' in plugin.search: # TODO: update process. remove this
+        print "WARNING: deprecated search attribate 'display' is renamed to 'template' in plugin {}".format(plugin.name)
+        plugin.search['template'] = plugin.search.pop('display')
     bisect.insort(plugins, (plugin.priority, 0, plugin))
 
 def find(url, ignore=None):

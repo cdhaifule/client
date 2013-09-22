@@ -36,6 +36,7 @@ from ..plugintools import Url, Matcher, regexp, wildcard, between
 from ..contrib import contentdisposition
 from .manager import add as register, find, find_by_name, collect_links
 from . import manager, search
+from .search import Input as SearchInput
 from .this import host
 from .models import Hoster, HttpHoster, PremiumHoster, HttpPremiumHoster, \
     MultiHoster, MultiHttpHoster, MultiHttpPremiumHoster, cfg
@@ -126,35 +127,6 @@ class HosterInterface(interface.Interface):
         data = {"{},{}".format(name, size): data for name, data in pool.IMapUnordered.spawn(_load, names, pool.Pool(20).spawn)}
         icon_cache.sync()
         return data
-        
-    def search(id=None, search_id=None, plugins=None, query=None, tags=["other"], max_results=50, responder=None):
-        return search.search(responder, id, search_id, plugins, query, tags, max_results)
-
-    def search_more(id=None, search_id=None, max_results=50, responder=None):
-        return search.search_more(responder, id, search_id, max_results)
-        
-    def search_cancel(id=None):
-        if id is None:
-            try:
-                for v in search.groups.values():
-                    for _ in v:
-                        try:
-                            _.kill()
-                        except:
-                            pass
-            finally:
-                search.groups = dict()
-            return True
-        elif id in search.groups:
-            for _ in search.groups[id]:
-                try:
-                    _.kill()
-                except:
-                    pass
-            del search.groups[id]
-            return True
-        else:
-            return False
 
 def reset_icon_cache():
     global icon_cache
