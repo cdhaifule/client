@@ -89,6 +89,7 @@ def start_taskbar():
     t = NSStatusBar.systemStatusBar()
     icon = t.statusItemWithLength_(NSVariableStatusItemLength)
     icon.setHighlightMode_(1)
+    icon.setToolTip_("lolololol 1 2 3")
         
     def set_image(path):
         taskbarimg = NSImage.alloc().initByReferencingFile_(path)
@@ -122,10 +123,10 @@ def start_taskbar():
         icon.setMenu_(build_menu(opts))
     
     login_changed()
-                
+
 def gevent_timer(deleg):
     timer = NSTimer.alloc().initWithFireDate_interval_target_selector_userInfo_repeats_(
-                NSDate.date(), 0.1, deleg, 'gevent:', None, True)
+        NSDate.date(), 0.1, deleg, 'gevent:', None, True)
     NSRunLoop.currentRunLoop().addTimer_forMode_(timer, NSDefaultRunLoopMode)
     timer.fire()
     print "started gevent timer"

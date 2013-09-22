@@ -36,10 +36,13 @@ class BrowserInterface(interface.Interface):
             path += '\\'
         if sys.platform == 'win32' and path == "\\" or path == "/" or not path:
             import win32api
-            return path, [dict(path=f, 
-                read=os.access(f, os.R_OK), 
-                write=os.access(f, os.W_OK)) 
-            for f in win32api.GetLogicalDriveStrings().split('\0')[:-1]]
+            return path, [
+                dict(
+                    path=f,
+                    read=os.access(f, os.R_OK),
+                    write=os.access(f, os.W_OK)
+                )
+                for f in win32api.GetLogicalDriveStrings().split('\0')[:-1]]
         try:
             for f in os.listdir(path):
                 f = os.path.join(path, f)
@@ -49,6 +52,7 @@ class BrowserInterface(interface.Interface):
             return path, result
         except (OSError, IOError) as e:
             return "ls.error", repr(e)
+    
     def mkdir(path=None, name=None):
         npath = os.path.join(path, name)
         if not os.path.exists(npath):

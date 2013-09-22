@@ -128,8 +128,10 @@ class Hoster(object):
                 if not config:
                     realconfig = pluginconfig.new(self.name)
                     module.this.options.config = realconfig
-                realconfig.default("default_phrase", 
-                    search.get("default_phrase", ""), str, 
+                realconfig.default(
+                    "default_phrase",
+                    search.get("default_phrase", ""),
+                    str,
                     description="Default search phrase")
 
     def get_account(self, task, file):

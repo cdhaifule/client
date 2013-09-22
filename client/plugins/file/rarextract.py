@@ -15,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
 import os
 import re
 import sys
@@ -51,12 +50,14 @@ rarfile.USE_DATETIME = 1
 rarfile.PATH_SEP = '/'
 rarfile.UNRAR_TOOL = config["rartool"]
 
+
 @config.register("rartool")
 def changed(value):
     rarfile.UNRAR_TOOL = value
 
 extractors = dict()
 blacklist = set()
+
 
 def match(path, file):
     if not isinstance(file, core.File):
@@ -72,6 +73,7 @@ def match(path, file):
     if check_file(path) is None:
         return None
     return True
+
 
 class StreamingExtract(object):
     def __init__(self, id, hddsem, threadpool):
@@ -89,7 +91,7 @@ class StreamingExtract(object):
         self.next_part_event = AsyncResult()
         self.rar = None
         extractors[id] = self
-        
+
     def feed_part(self, path, file):
         path.finished = AsyncResult()
         self.parts[path.path] = path, file
@@ -118,7 +120,7 @@ class StreamingExtract(object):
             except rarfile.NeedFirstVolume:
                 self.next = os.path.join(path.dir, "{}.part{}.rar".format(path.basename, "1".zfill(len(path.part))))
                 return self.find_next()
-            
+
             if result and result is not True:
                 raise result
 
@@ -138,7 +140,7 @@ class StreamingExtract(object):
             traceback.print_exc()
             self.kill(e)
             raise
-        
+
     def bruteforce(self, path, file):
         try:
             rar = rarfile.RarFile(path, ignore_next_part_missing=True)
@@ -147,22 +149,22 @@ class StreamingExtract(object):
         if not rar.needs_password():
             self.password = None
             return
-        if rar.needs_password() and rar.infolist():
-            # unencrypted headers. use file password or ask user.
-            pw = None
-            if len(file.package.extract_passwords) == 1:
-                pw = file.package.extract_passwords[0]
-            if not pw:
-                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
-                    break
-                else:
-                    return self.kill('extract password not entered')
-            self.password = pw
-            return
         passwords = []
         for i in itertools.chain(file.package.extract_passwords, core.config.bruteforce_passwords):
             if not i in passwords:
                 passwords.append(i)
+        if rar.needs_password() and rar.infolist():
+            # unencrypted headers. use file password or ask user.
+            pw = None
+            if not pw:
+                pw = bruteforce_by_content(rar, passwords)
+                if not pw:
+                    for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
+                        break
+                    else:
+                        return self.kill('extract password not entered')
+            self.password = pw
+            return
         print "testing", passwords
         if not self.threadpool.apply(bruteforce, (rar, passwords, self.hddsem, file.log)):
             # ask user for password
@@ -215,9 +217,12 @@ class StreamingExtract(object):
         #print "got new data from unrar:", data
         if "packed data CRC failed in volume" in data:
             return self.kill('checksum error in rar archive')
-            
+
         if data.startswith("CRC failed in the encrypted file"): # corrupt file or download not complete
             return self.kill('checksum error in rar archive. wrong password?')
+
+        if "bad archive" in data.lower():
+            return self.kill('Bad archive')
 
         m = re.search(r"Insert disk with (.*?) \[C\]ontinue\, \[Q\]uit", data)
         if not m:
@@ -229,7 +234,7 @@ class StreamingExtract(object):
         self.next = m.group(1)
         print "setting self.next", self.next
         return self.find_next()
-        
+
     def find_next(self):
         print "finding next", self.next
         next = self.next
@@ -287,7 +292,7 @@ class StreamingExtract(object):
         return True
         
     def kill(self, exc=""):
-        #blacklist.add(self.first[0].basename) # no autoextract for failed archives
+        blacklist.add(self.first[0].basename) # no autoextract for failed archives
         print "killing rarextract", self.first[0].basename
         if isinstance(exc, basestring):
             exc = ValueError(exc)
@@ -355,7 +360,7 @@ def check_file(path):
 def process(path, file, hddsem, threadpool):
     print "process rar file", path
     with lock:
-        id = os.path.join(path.dir, path.basename) #check_file(path)
+        id = os.path.join(path.dir, path.basename) # check_file(path)
         if id not in extractors:
             print "Creating StreamingExtract from", path
             extractors[id] = StreamingExtract(id, hddsem, threadpool)
@@ -384,9 +389,44 @@ def bruteforce(rar, pwlist, hddsem, log): # runs in threadpool
     print "not found"
     return False
 
+def _test_passwords(rar, fname, passwords):
+    try:
+        from libmagic import from_buffer
+    except ImportError:
+        return False
+
+    for pw in passwords:
+        cmd = [rarfile.UNRAR_TOOL, "-y", "-p"+pw, "p", rar.rarfile, fname]
+        p = rarfile.custom_popen(cmd)
+        data = p.stdout.read(1024*1024)
+        p.kill()
+        result = from_buffer(data)
+        mime = result.mime_type
+        if mime == "application/octet-stream":
+            continue
+        else:
+            return pw # return pw for everything besides random application data
+    return False
+
+def bruteforce_by_content(rar, passwords):
+    def _sort(k):
+        ext = k.filename.rsplit(".", 1)[-1]
+        k1 = ext not in extensions
+        k2 = k.file_size
+        k3 = k.filename
+        return (k1, k2, k3)
+
+    for i in sorted(rar.infolist(), key=_sort):
+        pw = _test_passwords(rar, i, passwords)
+        if pw:
+            return pw
+    return False
+
+
 def reinit(rar):
     rar._last_aes_key = (None, None, None)
     rarfile.RarFile.__init__(rar, rar.rarfile, ignore_next_part_missing=True)
+
 
 def test_on_smallest(rar, hddsem, log):
     return True # this is broken... test later
@@ -429,3 +469,142 @@ class RarextractInterface(interface.Interface):
 
     def extract(file=None, password=None):
         pass
+
+
+extensions = {
+'3gp': 'video/3gpp',
+'ai': 'application/postscript',
+'aif': 'audio/x-aiff',
+'aifc': 'audio/x-aiff',
+'aiff': 'audio/x-aiff',
+'asc': 'application/pgp-signature',
+'asf': 'video/x-ms-asf',
+'asx': 'video/x-ms-asf',
+'au': 'audio/basic',
+'avi': 'video/x-msvideo',
+'boz': 'application/x-bzip2',
+'bz2': 'application/x-bzip2',
+'cab': 'application/vnd.ms-cab-compressed',
+'cpio': 'application/x-cpio',
+'deb': 'application/x-debian-package',
+'djv': 'image/vnd.djvu',
+'djvu': 'image/vnd.djvu',
+'doc': 'application/msword',
+'dot': 'application/msword',
+'dvi': 'application/x-dvi',
+'eml': 'message/rfc822',
+'eps': 'application/postscript',
+'f': 'text/x-fortran',
+'f77': 'text/x-fortran',
+'f90': 'text/x-fortran',
+'flac': 'audio/x-flac',
+'fli': 'video/x-fli',
+'flv': 'video/x-flv',
+'for': 'text/x-fortran',
+'gif': 'image/gif',
+'gnumeric': 'application/x-gnumeric',
+'gv': 'text/vnd.graphviz',
+'h264': 'video/h264',
+'hdf': 'application/x-hdf',
+'hqx': 'application/mac-binhex40',
+'htm': 'text/html',
+'html': 'text/html',
+'iso': 'application/x-iso9660-image',
+'jpe': 'image/jpeg',
+'jpeg': 'image/jpeg',
+'jpg': 'image/jpeg',
+'kar': 'audio/midi',
+'kml': 'application/vnd.google-earth.kml+xml',
+'kmz': 'application/vnd.google-earth.kmz',
+'lwp': 'application/vnd.lotus-wordpro',
+'m1v': 'video/mpeg',
+'m2a': 'audio/mpeg',
+'m2v': 'video/mpeg',
+'m3a': 'audio/mpeg',
+'man': 'text/troff',
+'mdb': 'application/x-msaccess',
+'me': 'text/troff',
+'mid': 'audio/midi',
+'midi': 'audio/midi',
+'mime': 'message/rfc822',
+'mk3d': 'video/x-matroska',
+'mks': 'video/x-matroska',
+'mkv': 'video/x-matroska',
+'mng': 'video/x-mng',
+'mov': 'video/quicktime',
+'movie': 'video/x-sgi-movie',
+'mp2': 'audio/mpeg',
+'mp2a': 'audio/mpeg',
+'mp3': 'audio/mpeg',
+'mp4': 'video/mp4',
+'mp4a': 'audio/mp4',
+'mp4v': 'video/mp4',
+'mpe': 'video/mpeg',
+'mpeg': 'video/mpeg',
+'mpg': 'video/mpeg',
+'mpg4': 'video/mp4',
+'mpga': 'audio/mpeg',
+'ms': 'text/troff',
+'nfo': 'text/plain',
+'odb': 'application/vnd.oasis.opendocument.database',
+'odc': 'application/vnd.oasis.opendocument.chart',
+'odf': 'application/vnd.oasis.opendocument.formula',
+'odft': 'application/vnd.oasis.opendocument.formula-template',
+'odg': 'application/vnd.oasis.opendocument.graphics',
+'odi': 'application/vnd.oasis.opendocument.image',
+'odm': 'application/vnd.oasis.opendocument.text-master',
+'odp': 'application/vnd.oasis.opendocument.presentation',
+'ods': 'application/vnd.oasis.opendocument.spreadsheet',
+'odt': 'application/vnd.oasis.opendocument.text',
+'ogx': 'application/ogg',
+'otc': 'application/vnd.oasis.opendocument.chart-template',
+'otg': 'application/vnd.oasis.opendocument.graphics-template',
+'oth': 'application/vnd.oasis.opendocument.text-web',
+'oti': 'application/vnd.oasis.opendocument.image-template',
+'otp': 'application/vnd.oasis.opendocument.presentation-template',
+'ots': 'application/vnd.oasis.opendocument.spreadsheet-template',
+'ott': 'application/vnd.oasis.opendocument.text-template',
+'pbm': 'image/x-portable-bitmap',
+'pdf': 'application/pdf',
+'pgp': 'application/pgp-encrypted',
+'png': 'image/png',
+'ppm': 'image/x-portable-pixmap',
+'ps': 'application/postscript',
+'psd': 'image/vnd.adobe.photoshop',
+'qt': 'video/quicktime',
+'ra': 'audio/x-pn-realaudio',
+'ram': 'audio/x-pn-realaudio',
+'rm': 'application/vnd.rn-realmedia',
+'rmi': 'audio/midi',
+'roff': 'text/troff',
+'sig': 'application/pgp-signature',
+'sis': 'application/vnd.symbian.install',
+'sisx': 'application/vnd.symbian.install',
+'sit': 'application/x-stuffit',
+'snd': 'audio/basic',
+'svg': 'image/svg+xml',
+'svgz': 'image/svg+xml',
+'swf': 'application/x-shockwave-flash',
+'t': 'text/troff',
+'tfm': 'application/x-tex-tfm',
+'tif': 'image/tiff',
+'tiff': 'image/tiff',
+'torrent': 'application/x-bittorrent',
+'tr': 'text/troff',
+'ttc': 'application/x-font-ttf',
+'ttf': 'application/x-font-ttf',
+'udeb': 'application/x-debian-package',
+'vcf': 'text/x-vcard',
+'vrml': 'model/vrml',
+'wav': 'audio/x-wav',
+'wrl': 'model/vrml',
+'xla': 'application/vnd.ms-excel',
+'xlc': 'application/vnd.ms-excel',
+'xlm': 'application/vnd.ms-excel',
+'xls': 'application/vnd.ms-excel',
+'xlt': 'application/vnd.ms-excel',
+'xlw': 'application/vnd.ms-excel',
+'xml': 'application/xml',
+'xsl': 'application/xml',
+'xz': 'application/x-xz',
+'zip': 'application/zip'}

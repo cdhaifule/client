@@ -30,9 +30,7 @@ class Window(object):
     def __init__(self, win, title, frame, deleg):
         win.initWithContentRect_styleMask_backing_defer_(
             frame,
-            NSTitledWindowMask 
-          | NSClosableWindowMask 
-          | NSResizableWindowMask,
+            NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask,
             NSBackingStoreBuffered,
             False)
         win.setAcceptsMouseMovedEvents_(True)
@@ -59,7 +57,7 @@ class Window(object):
         
     def _web(self, pos, size):
         return WebKit.WebView.alloc().initWithFrame_((pos, size))
-        
+
     def goto(self, url, show=True):
         if self._webkit is None:
             raise RuntimeError("needs to be a web window")
