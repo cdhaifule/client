@@ -14,12 +14,15 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import time
+import bisect
 import gevent
+import hashlib
 
 from gevent.event import AsyncResult
 
-from . import interface, logger, api
+from . import interface, logger, api, settings
 from .config import globalconfig
 
 config = globalconfig.new('cache')
@@ -58,8 +61,9 @@ class Interface(interface.Interface):
 
 
 class CachedDict(dict):
-    def __init__(self, livetime=600):
+    def __init__(self, livetime=600, callback=None):
         self.livetime = livetime
+        self.callback = callback
         self.timeouts = dict()
         self.greenlet = None
 
@@ -80,8 +84,12 @@ class CachedDict(dict):
         smallest = None
         for key, value in self.timeouts.items():
             if value < t:
+                if self.callback:
+                    item = dict.__getitem__(self, key)
                 del self.timeouts[key]
                 dict.__delitem__(self, key)
+                if self.callback:
+                    self.callback(item)
             elif smallest is None or smallest > value:
                 smallest = value
         if smallest is not None:
@@ -102,3 +110,94 @@ class CachedDict(dict):
         if not self and self.greenlet:
             self.greenlet.kill()
             self.greenlet = None
+
+
+def sha256(s):
+    if isinstance(s, unicode):
+        s = s.encode("utf-8")
+    return hashlib.sha256(s).hexdigest()
+
+class LRUFileCache(object):
+    def __init__(self, path, levels=0, expire_time=None, max_size=None, max_items=None, cleanup_timeout=60):
+        self.path = path
+        self.levels = levels
+        self.expire_time = expire_time
+        self.max_size = max_size
+        self.max_items = max_items
+        self.cleanup_timeout = cleanup_timeout
+
+        self.size = 0
+        self.items = 0
+        self.check_greenlet = gevent.spawn(self._check)
+
+    def _create(self, key):
+        id = sha256(key)
+        a = list()
+        for l in xrange(self.levels):
+            a.append(id[l:l + 1])
+        path = os.path.join(self.path, *a)
+        file = os.path.join(path, id)
+        return id, path, file
+
+    def _check_expired(self, file, remove_from_stats=True):
+        if self.expire_time is not None:
+            stat = os.stat(file)
+            if stat.st_atime + self.expire_time < time.time():
+                os.unlink(file)
+                if remove_from_stats:
+                    self.size -= stat.st_size
+                    self.items -= 1
+                raise KeyError()
+            return stat
+
+    def _check(self):
+        try:
+            clean = list()
+            self.size = 0
+            for root, dirs, files in os.walk(self.path):
+                for file in files:
+                    file = os.path.join(root, file)
+                    try:
+                        stat = self._check_expired(file, remove_from_stats=False)
+                    except KeyError:
+                        continue
+                    self.size += stat.st_size
+                    self.items += 1
+                    if self.max_size is not None or self.max_items is not None:
+                        bisect.insort(clean, (stat.st_atime, stat.st_size, file))
+                gevent.sleep(0)
+            if self.max_size is not None or self.max_items is not None:
+                while clean and ((self.size is not None and self.size > self.max_size) or (self.max_items is not None and len(clean) > self.max_items)):
+                    atime, size, file = clean.pop(0)
+                    os.unlink(file)
+                    self.size -= size
+        finally:
+            self.check_greenlet = None
+
+    def __getitem__(self, key):
+        id, path, file = self._create(key)
+        if not os.path.exists(file):
+            raise KeyError(key)
+        try:
+            self._check_expired(file)
+        except KeyError:
+            raise KeyError(key)
+        os.utime(file, None)
+        with open(file, 'rb') as f:
+            return f.read()
+
+    def __setitem__(self, key, value):
+        id, path, file = self._create(key)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        elif os.path.exists(file):
+            self.size -= os.path.getsize(file)
+            self.items -= 1
+        self.size += len(value)
+        self.items += 1
+        if self.cleanup_timeout is not None and self.check_greenlet is None and ((self.max_size is not None and self.size > self.max_size) or (self.max_items is not None and self.items > self.max_items)):
+            self.check_greenlet = gevent.spawn_later(self.cleanup_timeout, self._check)
+        with open(file, 'wb') as f:
+            f.write(value)
+
+lru_file_cache = LRUFileCache(os.path.join(settings.temp_dir, 'lru'), 2, 14*24*3600, 50*1024*1024, 100000)

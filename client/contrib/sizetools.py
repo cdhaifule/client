@@ -68,7 +68,10 @@ def bytes2human(n, format='%(value).1f %(symbol)s', symbols='customary'):
         if n >= prefix[symbol]:
             value = float(n) / prefix[symbol]
             return format % locals()
-    return format % dict(symbol=symbols[0], value=n)
+    s = format % dict(symbol=symbols[0], value=n)
+    if symbols[0] == 'B':
+      s = s.replace('.0', '')
+    return s
 
 def human2bytes(s):
     """

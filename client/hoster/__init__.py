@@ -42,7 +42,7 @@ from .models import Hoster, HttpHoster, PremiumHoster, HttpPremiumHoster, \
 from .util import http_response_errors, _get_content_range_bytes, \
     http_response, serialize_html_form, get_multihoster_account, localctx, \
     buy_premium, check_download_url, find_favicon, generate_icon, add_extra, \
-    parse_seconds, get_image
+    parse_seconds, parse_seconds2, get_image, xfilesharing_download
 
 from ..scheme import transaction
 from ..settings import temp_dir

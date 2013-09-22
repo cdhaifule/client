@@ -359,7 +359,6 @@ class InputFunctions(object):
     def solve_captcha(self, module=None, seconds=None, browser=None, retries=5, **kwargs):
         """see input.input_loop for kwargs arguments.
         seconds - only used with InputTimeout exception
-        testfunc - testfunc(result, challenge)
         """
         if module is None:
             if not kwargs.get('func', None):

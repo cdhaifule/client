@@ -78,6 +78,9 @@ def collect_links(text, schemeless=True):
                 if not r:
                     continue
                 for m in r.finditer(text):
-                    link = 'http://'+m.group(1).split(' ', 1)[0]
+                    link = m.group(1).split(' ', 1)[0]
+                    if '://' in link:
+                        continue
+                    link = u'http://'+link
                     links.add(link)
     return links

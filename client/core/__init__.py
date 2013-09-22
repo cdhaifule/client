@@ -15,19 +15,27 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import sys
 import gevent
 
-from .engine import config, log, lock, _packages, packages, files, Package, File, Chunk, global_status
+from .engine import config, log, lock, _packages, packages, files, Package, File, Chunk, GlobalStatus, global_status
 from .functions import add_links, accept_collected, url_exists
 from .events import sort_queue
 from .. import db, interface
 from ..plugintools import dict_json
-from ..scheme import transaction, filter_objects_callback
+from ..scheme import transaction, filter_objects_callback, get_by_uuid
+from ..localize import _T
 
 
 ########################## init
 
-def init():
+def init_optparser(parser, OptionGroup):
+    if sys.platform == 'win32':
+        group = OptionGroup(parser, _T.core__options)
+        group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
+        parser.add_option_group(group)
+
+def init(options):
     if not os.path.exists(config.download_dir):
         try:
             os.makedirs(config.download_dir)
@@ -46,6 +54,8 @@ def init():
                     Package(**a)
                 except RuntimeError:
                     pass
+                except:
+                    log.unhandled_exception('load package {}'.format(a.get('id', None)))
 
             yield 'loading files'
             bb = cursor.execute("SELECT * FROM file")
@@ -55,6 +65,8 @@ def init():
                     f = File(**b)
                 except (RuntimeError, TypeError):
                     pass
+                except:
+                    log.unhandled_exception('load file {}'.format(b.get('id', None)))
                 else:
                     download = f.get_download_file()
                     complete = f.get_complete_file()
@@ -72,6 +84,8 @@ def init():
                     Chunk(**c)
                 except RuntimeError:
                     pass
+                except:
+                    log.unhandled_exception('load chunk {}'.format(c.get('id', None)))
     finally:
         db.register_listener()
 
@@ -80,6 +94,9 @@ def init():
         if file.host not in ignore:
             gevent.spawn(file.host.get_account, 'download', file)
             ignore.add(file.host)
+
+    if sys.platform == 'win32':
+        config.shutdown = options.shutdown
 
 
 ########################## interface
@@ -199,6 +216,16 @@ class Interface(interface.Interface):
     def modify_file(update=None, **filter):
         with transaction:
             filter_objects_callback(files(), filter, lambda obj: obj.modify_table(update))
+
+    def move_file(target=None, **filter):
+        target = get_by_uuid(int(target))
+        assert isinstance(target, Package)
+
+        def update(file):
+            file.package = target
+        with transaction:
+            for p in _packages[:]:
+                filter_objects_callback(p.files[:], filter, update)
 
     def activate_package(**filter):
         with transaction:

@@ -119,8 +119,11 @@ class StreamingExtract(object):
                 result = self.bruteforce(path, file)
             except rarfile.NeedFirstVolume:
                 self.next = os.path.join(path.dir, "{}.part{}.rar".format(path.basename, "1".zfill(len(path.part))))
-                return self.find_next()
-
+                self.find_next()
+                if core.config.delete_extracted_archives:
+                    return False
+                return
+            
             if result and result is not True:
                 raise result
 
@@ -136,6 +139,8 @@ class StreamingExtract(object):
             self.wait_data()
             if not path.finished.ready():
                 path.finished.set()
+            if core.config.delete_extracted_archives:
+                return False
         except BaseException as e:
             traceback.print_exc()
             self.kill(e)
@@ -321,6 +326,7 @@ class StreamingExtract(object):
                     if file.state == 'rarextract_complete':
                         file.state = 'rarextract'
                         file.enabled = False
+                    print "!"*100, 'FUCK YOU'
                     if 'rarextract' in file.completed_plugins:
                         file.completed_plugins.remove('rarextract')
 
@@ -340,8 +346,17 @@ class StreamingExtract(object):
                 self.finish_file(*self.current)
 
             if core.config.delete_extracted_archives:
+                with transaction:
+                    for path, file in self.parts.values():
+                        if file:
+                            file.delete_local_files()
+                            file.fatal('extracted and deleted', type='info', abort_greenlet=False)
+                        else:
+                            os.remove(path)
+            else:
                 for path, file in self.parts.values():
-                    os.remove(file.get_complete_file())
+                    if file:
+                        file.log.info('extract complete')
 
 def check_file(path):
     with lock:

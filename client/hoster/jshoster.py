@@ -268,7 +268,19 @@ to_js_converters.append((
     lambda original_obj: original_obj.next))
 
 to_js_converters.append((
-    (Account, File, Chunk, plugintools.MatchContext),
+    Account,
+    partial(
+        decorate_to_js,
+        ro_attrs='get,post')))
+
+to_js_converters.append((
+    (File, Chunk),
+    partial(
+        decorate_to_js,
+        ro_attrs='set_infos,account,url,set_offline')))
+
+to_js_converters.append((
+    plugintools.MatchContext,
     decorate_to_js))
 
 to_js_converters.append((
@@ -380,6 +392,10 @@ class JSHoster(PyV8.JSClass):
     @call_from_js_decorator
     def serialize_html_form(self, form):
         return util.serialize_html_form(proxy_from_js(form))
+
+    @call_from_js_decorator
+    def xfilesharing_download(self, resp, step, free):
+        return util.xfilesharing_download(proxy_from_js(resp), proxy_from_js(step), proxy_from_js(free))
 
     @call_from_js_decorator
     def urljoin(self, a, b):

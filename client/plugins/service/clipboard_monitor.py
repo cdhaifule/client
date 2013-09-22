@@ -146,6 +146,7 @@ def read_links(data):
 
 class ClipboardMonitor(service.ServicePlugin):
     default_enabled = False
+
     def __init__(self, name):
         service.ServicePlugin.__init__(self, name)
         self.config.default("ignore_plugins", list(), list, description="List of ignored plugins for clipboard monitor.")
@@ -157,15 +158,21 @@ class ClipboardMonitor(service.ServicePlugin):
         current = paste()
         while self.greenlet:
             gevent.sleep(1)
-            new = paste()
-            if not new:
-                continue
-            if new != current:
-                self.log.debug("clipboard changed")
-                current = new
-                links = read_links(current)
-                if links:
-                    core.add_links(links, ignore_plugins=['http', 'ftp'])
+            try:
+                new = paste()
+                if not new:
+                    continue
+                if new != current:
+                    self.log.debug("clipboard changed")
+                    current = new
+                    links = read_links(current)
+                    if links:
+                        core.add_links(links, ignore_plugins=['http', 'ftp'])
+            except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
+                break
+            except:
+                self.log.unhandled_exception('error in clipboard monitor loop')
+
         self.log.info("stopped")
 
 cpmonitor = ClipboardMonitor('clipboard_monitor')

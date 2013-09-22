@@ -34,7 +34,7 @@ class BrowserInterface(interface.Interface):
         result = []
         if sys.platform == 'win32' and len(path) == 2 and path[1] == ':':
             path += '\\'
-        if sys.platform == 'win32' and path == "\\" or path == "/" or not path:
+        if sys.platform == 'win32' and (path == "\\" or path == "/" or not path):
             import win32api
             return path, [
                 dict(
@@ -52,7 +52,7 @@ class BrowserInterface(interface.Interface):
             return path, result
         except (OSError, IOError) as e:
             return "ls.error", repr(e)
-    
+
     def mkdir(path=None, name=None):
         npath = os.path.join(path, name)
         if not os.path.exists(npath):

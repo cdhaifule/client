@@ -58,6 +58,8 @@ class InterfaceManager(dict):
             result = func(*args, **kwargs)
             if isinstance(result, types.GeneratorType):
                 result = list(result)
+            elif result is not None and not isinstance(result, (set, tuple, list, dict)):
+                result = dict(result=result)
             return result
         except gevent.GreenletExit:
             pass
@@ -102,18 +104,16 @@ def guest_protected_dialog():
     return result == "ok"
 
 def protected(func):
-    if ignore_protected_functions:
-        return func
-
     def fn(protected_key=None, *args, **kwargs):
-        from . import login
-        if protected_key == "guest" and login.is_guest():
-            if guest_protected_dialog():
-                return func(*args, **kwargs)
-        if pyotp and protected_key.isdigit():
-            raise NotImplementedError()
-        if protected_key != login.get('protected'):
-            raise ValueError('Invalid protected key')
+        if not ignore_protected_functions:
+            from . import login
+            if protected_key == "guest" and login.is_guest():
+                if guest_protected_dialog():
+                    return func(*args, **kwargs)
+            if pyotp and protected_key.isdigit():
+                raise NotImplementedError()
+            if protected_key != login.get('protected'):
+                raise ValueError('Invalid protected key')
         return func(*args, **kwargs)
     return fn
 

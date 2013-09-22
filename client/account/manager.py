@@ -79,8 +79,8 @@ class AccountPool(list):
     def remove(self, account):
         if account not in self:
             raise ValueError('account not exists')
-        account.table_delete()
         list.remove(self, account)
+        account.delete()
 
     def clear(self):
         self[:] = []

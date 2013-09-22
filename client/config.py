@@ -41,11 +41,13 @@ class Config(object):
     def new(self, name):
         return SubConfig(self, name)
 
-    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None, use_keyring=False):
+    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None, use_keyring=False, persistent=True):
         if not func is None:
             self.register_hook(key, func)
         if isinstance(enum, basestring):
             raise TypeError("must use a collection as enum not string")
+        if not persistent and (private or use_keyring):
+            raise RuntimeError('persistent is only allowed when key is not private and not using keyring')
         if enum is not None and not isinstance(enum, dict):
             enum = {i: None for i in enum}
         _defaults[key] = {
@@ -53,6 +55,7 @@ class Config(object):
             'type': type,
             'private': private or use_keyring,
             'protected': protected,
+            'persistent': persistent,
             'allow_none': value is None and True or allow_none,
             'description': description,
             'enum': enum,
@@ -120,7 +123,8 @@ class Config(object):
                 if _defaults[key]['use_keyring']:
                     channels.add('password')
                 else:
-                    channels.add('config')
+                    if _defaults[key]['persistent']:
+                        channels.add('config')
                     if not _defaults[key]['private']:
                         channels.add('api')
                 if _defaults[key]['type'] is not None or _defaults[key]['allow_none'] is False:

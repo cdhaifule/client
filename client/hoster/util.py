@@ -189,8 +189,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
-    else:
-        print "multi: no accounts found"
+    #else:
+    #    print "multi: no accounts found"
 
 ######## premium accounts...
 
@@ -201,30 +201,30 @@ config = globalconfig.new('hoster_util')
 config.default('ignore_ask_premium', list(), list)
 
 def buy_premium(hoster, url):
-    if not account.config.ask_buy_premium:
-        return
-    try:
-        if isinstance(asked[hoster], Event):
-            asked[hoster].wait()
-        if asked[hoster] > (time.time() - account.config.ask_buy_premium_time):
+    with premium_lock:
+        if not account.config.ask_buy_premium:
             return
-    except KeyError:
-        pass
-    asked[hoster] = Event()
-    ignore_asked = False
-    try:
-        with premium_lock:
+        try:
+            if isinstance(asked[hoster], Event):
+                asked[hoster].wait()
+            if asked[hoster] > (time.time() - account.config.ask_buy_premium_time):
+                return
+        except KeyError:
+            pass
+        asked[hoster] = Event()
+        ignore_asked = False
+        try:
             return ask_buy_premium_dialog(hoster, url)
-    except gevent.GreenletExit:
-        ignore_asked = True
-        raise
-    finally:
-        e = asked[hoster]
-        if ignore_asked:
-            del asked[hoster]
-        else:
-            asked[hoster] = time.time()
-        e.set()
+        except gevent.GreenletExit:
+            ignore_asked = True
+            raise
+        finally:
+            e = asked[hoster]
+            if ignore_asked:
+                del asked[hoster]
+            else:
+                asked[hoster] = time.time()
+            e.set()
 
 def ask_buy_premium_dialog(hoster, url):
     if hoster in config.ignore_ask_premium:
@@ -371,3 +371,28 @@ def parse_seconds(s):
     for i, s in enumerate(reversed(s.split(':'))):
         t += float(s)*times[i]
     return t
+
+def parse_seconds2(s):
+    """parses the seconds from strings like 2 hours 1 minute 50 seconds
+    """
+    wait = 0
+    t = dict(hour=3600, hours=3600, minute=60, minutes=60, second=1, seconds=1)
+    for x in s.split(', '):
+        a, b = x.split(' ', 1)
+        wait += int(a.strip())*t[b.strip()]
+    return wait
+
+def xfilesharing_download(resp, step=1, free=True):
+    form = resp.soup.find('input', attrs=dict(name='op', value='download{}'.format(step)))
+    form = form.find_parent('form')
+
+    # remove child forms (yes, they exists sometimes)
+    for f in form.find_all('form'):
+        f.decompose()
+    
+    action, data = serialize_html_form(form)
+    if free:
+        data.pop('method_premium', None)
+    else:
+        data.pop('method_free', None)
+    return lambda *args, **kwargs: resp.post(action, data=data, *args, **kwargs), data

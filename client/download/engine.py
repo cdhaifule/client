@@ -337,6 +337,7 @@ class FileDownload(object):
                 continue
             chunk.next_try = None
             chunk.last_error = None
+            chunk.last_error_type = None
             chunk.need_reconnect = False
             chunk.spawn(self.download_chunk, chunk)
             self.pool.add(chunk.greenlet)
@@ -370,6 +371,7 @@ class FileDownload(object):
         next_try = None
         need_reconnect = False
         last_error = None
+        last_error_type = None
 
         with transaction:
             for chunk in self.file.chunks:
@@ -379,11 +381,14 @@ class FileDownload(object):
                         next_try = chunk.next_try
                         need_reconnect = chunk.need_reconnect
                         last_error = chunk.last_error
+                        last_error_type = chunk.last_error_type
                     elif chunk.last_error and not last_error:
                         last_error = chunk.last_error
+                        last_error_type = chunk.last_error_type
                 chunk.next_try = None
                 chunk.need_reconnect = False
                 chunk.last_error = None
+                chunk.last_error_type = None
 
             if complete:
                 self.finalize_complete_download()
@@ -404,7 +409,7 @@ class FileDownload(object):
             if next_try:
                 self.file.retry(last_error, next_try - time.time(), need_reconnect)
             elif last_error:
-                self.file.fatal(last_error)
+                self.file.fatal(last_error, type=last_error_type)
 
     def finalize_complete_download(self):
         if self.file.package.system == 'torrent':
@@ -527,6 +532,7 @@ class FileDownload(object):
                     raise ValueError('not possible exception: found no initial chunk')
                 return None # assume all chunks are complete
             chunk.last_error = None
+            chunk.last_error_type = None
             chunk.need_reconnect = None
 
         return chunk

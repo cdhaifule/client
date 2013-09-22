@@ -124,8 +124,8 @@ class Choice(Button):
             value, content = value
             ok, cancel = False, False
 
-        if ok and cancel:
-            raise RuntimeError('ok and cancel cannot be true')
+        #if ok and cancel:
+        #    raise RuntimeError('ok and cancel cannot be true')
 
         if not content:
             content = value
@@ -298,19 +298,19 @@ def reset_timeout(id, timeout):
         timeout = time.time() + timeout - 0.2
     event.fire("input:reset_timeout", id, timeout)
 
-def input_loop(testfunc=None, postfunc=None, retries=1, func=get, **kwargs):
+def input_loop(testfunc=None, prefunc=None, retries=1, func=get, **kwargs):
     """retry input with callback.
     arguments:
         testfunc - callback function to test result.
                    this function must return not None when successful
                    when testfunc is None the function returns when any result is present
-        postfunc - callback function called before func(**kwargs)
+        prefunc - callback function called before func(**kwargs)
         retries - number of retries
         func - input function (defaults to "get")
     """
     for i in xrange(retries):
-        if postfunc:
-            postfunc()
+        if prefunc:
+            prefunc()
         result = func(**kwargs)
         if result:
             if testfunc is None:
@@ -320,10 +320,19 @@ def input_loop(testfunc=None, postfunc=None, retries=1, func=get, **kwargs):
                 return t
     raise InputFailed()
     
-def input_iter(retries=1, func=get, **kwargs):
+def input_iter(retries=1, func=get, prefunc=None, **kwargs):
     for i in xrange(retries):
+        if prefunc:
+            prefunc(kwargs)
         yield func(**kwargs)
     raise InputFailed()
+
+def get_input_table(id):
+    try:
+        id = int(id)
+    except ValueError:
+        pass
+    return input_tables[id]
 
 @interface.register
 class AnswerMachine(interface.Interface):
@@ -332,25 +341,25 @@ class AnswerMachine(interface.Interface):
     def answer(id=None, answer=None):
         """Answer to resid's request, args: resid, answer"""
         try:
-            input_tables[id].set_result(answer)
+            get_input_table(id).set_result(answer)
         except KeyError:
             pass
     
     def abort(id=None):
         try:
-            input_tables[id].set_error(InputAborted())
+            get_input_table(id).set_error(InputAborted())
         except KeyError:
             pass
     
     def reset_timeout(id=None, timeout=None):
         """reset timeout of a resid to timeout or remove timeout"""
         try:
-            input_tables[id].reset_timeout(timeout)
+            get_input_table(id).reset_timeout(timeout)
         except KeyError:
             pass
 
     def request(id=None):
         try:
-            return input_tables[id].serialize(set(['api']))
+            return get_input_table(id).serialize(set(['api']))
         except KeyError:
             pass
