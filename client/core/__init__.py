@@ -55,7 +55,7 @@ def init(options):
                 except RuntimeError:
                     pass
                 except:
-                    log.unhandled_exception('load package {}'.format(a.get('id', None)))
+                    log.unhandled_exception('load package')
 
             yield 'loading files'
             bb = cursor.execute("SELECT * FROM file")
@@ -66,7 +66,7 @@ def init(options):
                 except (RuntimeError, TypeError):
                     pass
                 except:
-                    log.unhandled_exception('load file {}'.format(b.get('id', None)))
+                    log.unhandled_exception('load file')
                 else:
                     download = f.get_download_file()
                     complete = f.get_complete_file()
@@ -85,7 +85,7 @@ def init(options):
                 except RuntimeError:
                     pass
                 except:
-                    log.unhandled_exception('load chunk {}'.format(c.get('id', None)))
+                    log.unhandled_exception('load chunk')
     finally:
         db.register_listener()
 

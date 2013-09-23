@@ -849,7 +849,7 @@ class ConfigUrl(object):
                     strings = [txt.data[1:]]
                 for line in strings:
                     if line.startswith('repo-domain='):
-                        self.url = line[12:]
+                        self.url = u'http://{}/'.format(line[12:])
                         return self._update()
                     elif re.match(r'^\w+: \w+://', line):
                         key, value = line.split(': ', 1)
