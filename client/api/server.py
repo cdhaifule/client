@@ -307,11 +307,8 @@ login_template = SimpleTemplate("""
             .error {color:maroon;}
             .center {text-align:center;}
         </style>
-        <script type="text/javascript">
-            window.resizeTo(655, document.height);
-        </script>
     </head>
-    <body>
+    <body onload="window.resizeTo(655, document.height || (document.documentElement.clientHeight + 50));">
         % if action == 'denied':
             <p class="error">
                 {{_('Access denied')}}
