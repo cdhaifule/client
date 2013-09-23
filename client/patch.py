@@ -830,8 +830,34 @@ class ConfigUrl(object):
                 self.last_update = time.time()
 
     def _update(self):
-        if 'dlam-config.yaml' in self.url:
-            resp = requests.get(self.url)
+        data = dict()
+
+        u = Url(self.url)
+        host = u.host
+        try:
+            with Timeout(10):
+                query = dns.resolver.query(host, 'TXT')
+        except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
+            pass
+        except:
+            log.unhandled_exception('error resolving txt records')
+        else:
+            for txt in query:
+                if hasattr(txt, 'strings'):
+                    strings = txt.strings
+                else:
+                    strings = [txt.data[1:]]
+                for line in strings:
+                    if line.startswith('repo-domain='):
+                        self.url = line[12:]
+                        return self._update()
+                    elif re.match(r'^\w+: \w+://', line):
+                        key, value = line.split(': ', 1)
+                        data[key] = value
+
+        if not data and 'dlam-config.yaml' in self.url:
+            with Timeout(10):
+                resp = requests.get(self.url)
             resp.raise_for_status()
             buf = StringIO()
             buf.write(resp.content)
@@ -840,19 +866,7 @@ class ConfigUrl(object):
             if not isinstance(data, dict):
                 self.log.send('error', 'config url returned invalid data: {} (type {})'.format(resp.content, type(data)))
             assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
-        else:
-            u = Url(self.url)
-            host = u.host
-            data = dict()
-            for txt in dns.resolver.query(host, 'TXT'):
-                if hasattr(txt, 'strings'):
-                    strings = txt.strings
-                else:
-                    strings = [txt.data[1:]]
-                for line in strings:
-                    key, value = line.split(': ', 1)
-                    data[key] = value
-
+        
         assert len(data.keys()) > 0
 
         found_sources = list()
@@ -1366,8 +1380,8 @@ def identify_source(url):
         return 'config', url
 
     u = Url(url)
-    with Timeout(10):
-        try:
+    try:
+        with Timeout(10):
             for txt in dns.resolver.query(u.host, 'TXT'):
                 if hasattr(txt, 'strings'):
                     strings = txt.strings
@@ -1378,10 +1392,10 @@ def identify_source(url):
                         return identify_source(line[12:])
                     elif re.match(r'^\w+: \w+://', line):
                         return 'config', url
-        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
-            pass
-        except:
-            traceback.print_exc()
+    except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
+        pass
+    except:
+        log.unhandled_exception('error resolving txt records')
 
     if not u.host.startswith('www.'):
         u.host = 'www.{}'.format(u.host)

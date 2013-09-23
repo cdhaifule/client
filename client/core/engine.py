@@ -587,7 +587,12 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         self.global_status = global_status
 
         if not isinstance(package, Package):
-            package = get_by_uuid(package)
+            try:
+                package = get_by_uuid(package)
+            except KeyError:
+                log.warning('parent package {} of file {} not found. deleting file'.format(package, kwargs.get('id', None)))
+                self.table_delete()
+                package = None
             if not isinstance(package, Package):
                 raise ValueError('file.package must be a Package instance, got {}'.format(package))
         self.package = package
@@ -1216,7 +1221,7 @@ class Chunk(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 self.table_delete()
                 return
             if not isinstance(file, File):
-                raise ValueError('chunk.file must be a File instance, got{}'.format(file))
+                raise ValueError('chunk.file must be a File instance, got {}'.format(file))
         self.file = file
 
         self.begin = begin

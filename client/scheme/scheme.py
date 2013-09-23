@@ -130,20 +130,23 @@ def patch(col, value):
 class ColumnData(object):
     pass
 
+def channels_to_set(channels):
+    if type(channels) is set:
+        return channels
+    elif type(channels) in (list, tuple):
+        return set(channels)
+    elif channels is None:
+        return set()
+    else:
+        return set([channels])
+
 class Column(object):
     def __init__(self, channels=None, on_get=None, on_set=None, on_changed=None, read_only=True, fire_event=False,
             change_affects=None, always_use_getter=False, getter_cached=False, foreign_key=None):
         """read_only is only for api calls that would change that column
         getter_cached will cache return value of getter function until column is set dirty
         """
-        if type(channels) is set:
-            self.channels = channels
-        elif type(channels) in (list, tuple):
-            self.channels = set(channels)
-        elif channels is None:
-            self.channels = set()
-        else:
-            self.channels = set([channels])
+        self.channels = channels_to_set(channels)
         
         self.on_get = on_get
         self.set_hooks = deque()
@@ -295,7 +298,11 @@ class Column(object):
         self.handle_foreign_key(table, old, value)
 
         if _set_dirty:
-            transaction.set_dirty(table._table_data[self.name])
+            if table._table_auto_transaction:
+                with transaction:
+                    transaction.set_dirty(table._table_data[self.name])
+            else:
+                transaction.set_dirty(table._table_data[self.name])
 
     def on_changed(self, table, old):
         for hook in self.changed_hooks:
@@ -337,6 +344,7 @@ class Table(object):
     _table_collection = None
     _table_created_event = False
     _table_deleted_event = False
+    _table_auto_transaction = False
 
     def __new__(cls, *args, **kwargs):
         new = object.__new__(cls, *args, **kwargs)
@@ -405,11 +413,19 @@ class Table(object):
     def get_column_value(self, name):
         return getattr(self.__class__, name).get_value(self)
 
+    def set_table_dirty(self, channels=None, ignore_columns=None):
+        channels = channels_to_set(channels)
+        for key in dir(self.__class__):
+            col = getattr(self.__class__, key)
+            if isinstance(col, Column) and col.channels and (not channels or channels & col.channels) and (ignore_columns is None or col.name not in ignore_columns):
+                transaction.set_dirty(self._table_data[key])
+
     def serialize(self, channels=None, ignore_columns=None):
+        channels = channels_to_set(channels)
         data = dict()
         for key in dir(self.__class__):
             col = getattr(self.__class__, key)
-            if isinstance(col, Column) and col.channels and (channels is None or channels & col.channels) and (ignore_columns is None or col.name not in ignore_columns):
+            if isinstance(col, Column) and col.channels and (not channels or channels & col.channels) and (ignore_columns is None or col.name not in ignore_columns):
                 data[key] = col.get_value(self)
         return data
 
@@ -417,16 +433,11 @@ class Table(object):
     #    return json.dumps(self.serialize(), sort_keys=True)
 
     def match_filter(self, channels=None, not_filter=None, **filter):
-        if type(channels) == set or channels is None:
-            pass
-        elif type(channels) in (list, tuple):
-            channels = set(channels)
-        else:
-            channels = set([channels])
+        channels = channels_to_set(channels)
         match = lambda key, v: str(getattr(self, key)) == str(v)
         for k, v in filter.iteritems():
             col = getattr(self.__class__, k)
-            if channels is not None and not (channels & col.channels):
+            if channels and not (channels & col.channels):
                 raise KeyError('key {}.{} is not in namespace {}'.format(self._table_name, k, channels))
             list_matched = False
             if isinstance(v, tuple) or isinstance(v, list) or isinstance(v, set):
