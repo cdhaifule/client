@@ -118,16 +118,33 @@ def sha256(s):
     return hashlib.sha256(s).hexdigest()
 
 class LRUFileCache(object):
-    def __init__(self, path, levels=0, expire_time=None, max_size=None, max_items=None, cleanup_timeout=60):
+    def __init__(self, path, levels=0, expire_time=None, max_size=None, buffer_size=None, max_items=None, buffer_items=None, cleanup_timeout=60):
+        """file based LRU cache
+        path - cache base directory
+        levels - cache levels (<path>/1/2/3/123456789)
+        expire_time - time of cache expire in seconds
+        max_size - maximal bytes used by cache
+        buffer_size - on cleanup remove items until we have max_size - buffer_size free bytes
+        buffer_items - on cleanup remove items until we have max_items - buffer_items of free items
+        cleanup_timeout - when max_size or max_items is reached wait cleanup_timeout seconds till cleanup start
+        """
+        if max_size is not None and buffer_size is not None and buffer_size > max_size:
+            raise RuntimeError('buffer_size must be smaller than max_size')
+        if max_items is not None and buffer_items is not None and buffer_items > max_items:
+            raise RuntimeError('buffer_items must be smaller than max_items')
+
         self.path = path
         self.levels = levels
         self.expire_time = expire_time
         self.max_size = max_size
+        self.buffer_size = buffer_size
         self.max_items = max_items
+        self.buffer_items = buffer_items
         self.cleanup_timeout = cleanup_timeout
 
         self.size = 0
         self.items = 0
+        
         self.check_greenlet = gevent.spawn(self._check)
 
     def _create(self, key):
@@ -151,6 +168,8 @@ class LRUFileCache(object):
             return stat
 
     def _check(self):
+        max_size = self.max_size - (self.buffer_size or 0)
+        max_items = self.max_items - (self.buffer_items or 0)
         try:
             clean = list()
             self.size = 0
@@ -163,11 +182,11 @@ class LRUFileCache(object):
                         continue
                     self.size += stat.st_size
                     self.items += 1
-                    if self.max_size is not None or self.max_items is not None:
+                    if max_size is not None or max_items is not None:
                         bisect.insort(clean, (stat.st_atime, stat.st_size, file))
                 gevent.sleep(0)
-            if self.max_size is not None or self.max_items is not None:
-                while clean and ((self.size is not None and self.size > self.max_size) or (self.max_items is not None and len(clean) > self.max_items)):
+            if max_size is not None or max_items is not None:
+                while clean and ((self.size is not None and self.size > max_size) or (max_items is not None and len(clean) > max_items)):
                     atime, size, file = clean.pop(0)
                     os.unlink(file)
                     self.size -= size
@@ -200,4 +219,4 @@ class LRUFileCache(object):
         with open(file, 'wb') as f:
             f.write(value)
 
-lru_file_cache = LRUFileCache(os.path.join(settings.temp_dir, 'lru'), 2, 14*24*3600, 50*1024*1024, 100000)
+lru_file_cache = LRUFileCache(os.path.join(settings.temp_dir, 'lru'), 2, 14*24*3600, 50*1024*1024, 10*1024*1024, 100000, 20000)
