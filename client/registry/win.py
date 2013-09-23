@@ -117,7 +117,12 @@ def iterate_browsers(default=None):
     default = default.lower()
     ignore = set()
     for hkey in (HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE):
-        for key in enum_reg_keys(hkey, 'Software\\Clients\\StartMenuInternet'):
+        try:
+            enum = enum_reg_keys(hkey, 'Software\\Clients\\StartMenuInternet')
+        except WindowsError:
+            # key not exists or something?
+            continue
+        for key in enum:
             if key in ignore:
                 continue
             ignore.add(key)
@@ -128,7 +133,10 @@ def iterate_browsers(default=None):
             if not os.path.exists(path):
                 continue
             if key == 'IEXPLORE.EXE':
-                version = int(read_reg_key(hkey, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
+                try:
+                    version = int(read_reg_key(hkey, 'Software\\Microsoft\\Internet Explorer', 'Version')[0].split('.', 1)[0])
+                except AttributeError: # this maybe happens, don't know why. assume IE is outdated
+                    version = 0
                 if version < 9:
                     outdated = True
                 else:
@@ -276,6 +284,7 @@ def sudo_handler(timeout=15):
         
         c = wmi.WMI()
         for p in c.Win32_Process(name="cmd.exe"):
+            # TODO: fix this very dirty process find conditions
             if int(p.OtherOperationCount) > 500:
                 continue
             if int(p.UserModeTime) > 500:

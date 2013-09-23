@@ -113,6 +113,7 @@ def add_links(links, package_name=None, extract_passwords=None, system='download
                     link['enabled'] = False
                     link['state'] = 'check'
                     link['last_error'] = 'link already exists'
+                    link['last_error_type'] = 'info'
                     file = File(**link)
                     url_index[file.url].add(file)
 

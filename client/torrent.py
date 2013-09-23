@@ -455,13 +455,13 @@ monitor_greenlet = None
 
 def monitor_start():
     global monitor_greenlet
-    print "!"*100, 'monitor start'
+    #print "!"*100, 'monitor start'
     if monitor_greenlet is None:
         monitor_greenlet = gevent.spawn(monitor_func)
 
 def monitor_stop():
     global monitor_greenlet
-    print "!"*100, 'monitor stop'
+    #print "!"*100, 'monitor stop'
     if monitor_greenlet is not None:
         monitor_greenlet.kill()
         monitor_greenlet = None
@@ -643,7 +643,7 @@ class TorrentJob(Torrent):
         self.on_state_changed()
 
     def on_state_changed(self):
-        print "!"*100, 'CURRENT_STATE', self.state
+        #print "!"*100, 'CURRENT_STATE', self.state
         if self.state in ('check', 'download'):
             with transaction:
                 for file in self.file_objects.values():
@@ -693,7 +693,7 @@ class TorrentJob(Torrent):
                 self.update_file_progress()
 
     def update_file_progress(self):
-        #print "update file progress"
+        ##print "update file progress"
         n = 0
         with transaction:
             file_progress = self.file_progress
@@ -745,7 +745,7 @@ class TorrentJob(Torrent):
                 self.state = 'finish'
             gevent.spawn(self.finish)
 
-        #print "update file progress done"
+        ##print "update file progress done"
 
     def finish(self):
         with self.finish_lock:
@@ -755,11 +755,11 @@ class TorrentJob(Torrent):
             # check if download is complete
             #if any(f._state_download_incomplete or f.working for f in self.package.files if f.enabled and f.state == 'download'):
             if self.package.working or any(f._state_download_incomplete for f in self.package.files):
-                print "!"*100, 'finish called but rule not matching'
-                print "!"*100, 'finish called but rule not matching state', [g.state for g in self.package.files]
-                print "!"*100, 'finish called but rule not matching enabled', [g.enabled for g in self.package.files]
-                print "!"*100, 'finish called but rule not matching incomplete', [g._state_download_incomplete for g in self.package.files]
-                print "!"*100, 'finish called but rule not matching working', [g.working for g in self.package.files]
+                #print "!"*100, 'finish called but rule not matching'
+                #print "!"*100, 'finish called but rule not matching state', [g.state for g in self.package.files]
+                #print "!"*100, 'finish called but rule not matching enabled', [g.enabled for g in self.package.files]
+                #print "!"*100, 'finish called but rule not matching incomplete', [g._state_download_incomplete for g in self.package.files]
+                #print "!"*100, 'finish called but rule not matching working', [g.working for g in self.package.files]
                 return
 
             complete_path = self.package.get_complete_path()
@@ -779,14 +779,14 @@ class TorrentJob(Torrent):
                 self.rename_files(rename)
 
             if self.package.get_download_path() != complete_path:
-                print "!"*100, 'MOVE STORAGE'
+                #print "!"*100, 'MOVE STORAGE'
                 self.move_storage(complete_path)
 
-            print "!"*100, 'foo'
+            #print "!"*100, 'foo'
             self.pause_automanaged()
             self.save_resume_data()
 
-            print "!"*100, 'bar'
+            #print "!"*100, 'bar'
             for file in self.package.files:
                 if not file.enabled:
                     continue

@@ -28,7 +28,9 @@ from PIL import Image
 from gevent.event import Event
 from gevent._threading import Lock as ThreadingLock
 
-from .... import settings, event, login, localize
+from .... import settings, event, login, localize, core, download, torrent
+from ....speedregister import globalspeed
+from ....contrib.sizetools import bytes2human
 from ....contrib.systrayicon import SysTrayIcon
 
 from . import common
@@ -66,10 +68,12 @@ class SysTray(SysTrayIcon):
         SysTrayIcon.__init__(self, *args, **kwargs)
         
     def _set_active_icon(self, *_):
-        self.switch_icon(settings.taskbaricon)
+        self.icon = settings.taskbaricon
+        self.refresh_icon()
         
     def _set_inactive_icon(self, *_):
-        self.switch_icon(settings.taskbaricon_inactive)
+        self.icon = settings.taskbaricon_inactive
+        self.refresh_icon()
 
 def init():
     lock = ThreadingLock()
@@ -94,7 +98,38 @@ def init():
     if not icon:
         return
 
-    thread.spawn(SysTray, icon, "Download.am Client", options, lambda *_: event.call_from_thread(common.quit), 0, "download.am", lock=lock, init_callback=lambda _: event.call_from_thread(init_event.set))
+    def update_tooltip():
+        if download.config.state == 'stopped' and torrent.config.state == 'stopped':
+            text = localize.T.systray__win__tooltip_stopped
+        else:
+            files_queued = 0
+            bytes_complete, bytes_total = 0, 0
+            for p in core.packages():
+                if p.tab not in ('collect', 'complete'):
+                    bytes_total += p.size
+                    bytes_complete += p.size*(p.progress or 0)
+                    files_queued += len([f for f in p.files if f.enabled])
+            if files_queued:
+                template = localize.T.systray__win__tooltip
+            else:
+                template = localize.T.systray__win__tooltip_idle
+
+            text = template.format(
+                complete=bytes2human(bytes_complete),
+                total=bytes2human(bytes_total),
+                working=core.global_status.files_working,
+                queued=files_queued,
+                speed=bytes2human(globalspeed.get_bytes()))
+
+        if SysTray.instance.tooltip_text != text:
+            with lock:
+                SysTray.instance.tooltip_text = text
+                SysTray.instance.refresh_icon()
+
+    thread.spawn(SysTray, icon, options, lambda *_: event.call_from_thread(common.quit), 0, "download.am",
+        lock=lock,
+        init_callback=lambda _: event.call_from_thread(init_event.set),
+        update_tooltip_callback=update_tooltip)
     init_event.wait()
 
     @event.register('login:changed')
@@ -115,6 +150,12 @@ def init():
             with lock:
                 options[:] = opts
                 SysTray.instance.init_menu_options(options)
+
+    @event.register('loader:initiialized')
+    @core.GlobalStatus.files.changed
+    @core.GlobalStatus.files_working.changed
+    def on_update_tooltip(*_):
+        event.fire_once_later(1, 'systray.win:update_tooltip')
 
     try:
         on_login_changed()
