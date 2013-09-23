@@ -162,7 +162,6 @@ OriginalHub = gevent.hub.Hub
 
 class ErrorLoggingHub(OriginalHub):
     def print_exception(self, context, type, value, tb):
-        #traceback.print_exception(type, value, tb)
         if context is not None and not isinstance(context, str):
             try:
                 context = self.format_context(context)
@@ -170,7 +169,10 @@ class ErrorLoggingHub(OriginalHub):
                 try:
                     context = repr(context)
                 except:
-                    context = __builtins__.type(context)
+                    try:
+                        context = __builtins__.type(context)
+                    except:
+                        context = 'error getting error context'
             else:
                 context = '%s failed with %s' % (context, getattr(type, '__name__', 'exception'))
         try:
