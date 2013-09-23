@@ -89,6 +89,12 @@ def start_taskbar():
     t = NSStatusBar.systemStatusBar()
     icon = t.statusItemWithLength_(NSVariableStatusItemLength)
     icon.setHighlightMode_(1)
+
+    def update_tooltip():
+        text = common.generate_tooltip_text()
+        icon.setToolTip_(text)
+        gevent.spawn_later(5, update_tooltip)
+    gevent.spawn_later(5, update_tooltip)
         
     def set_image(path):
         taskbarimg = NSImage.alloc().initByReferencingFile_(path)
