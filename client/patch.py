@@ -40,6 +40,7 @@ import shutil
 import random
 import dns
 import dns.resolver
+import dns.rdtypes.ANY.TXT # import needed for py2exe
 
 from gevent import Timeout
 from cStringIO import StringIO

@@ -511,7 +511,10 @@ class Table(object):
 
     def _table_remove_from_dict(self):
         """internal"""
-        del all_tables[self._uuid]
+        try:
+            del all_tables[self._uuid]
+        except KeyError:
+            pass
 
 
 def filter_objects_callback(objects, filter, func):
