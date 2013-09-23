@@ -1456,8 +1456,8 @@ def init():
                     if 'url' in data:
                         if data['url'].startswith('http://patch.download.am'):
                             data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
-                        if data['url'].endswith('.git'):
-                            source = GitSource(id=id, **data)
+                        if data['url'].startswith('http://community.download.am'):
+                            data['url'] = data['url'].replace('http://community.download.am', 'http://www.download.am')
                         u = Url(data['url'])
                         u.host = u.host.lower()
                         data['url'] = u.to_string()
