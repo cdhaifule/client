@@ -37,6 +37,7 @@ import json
 import requests
 import bsdiff4
 import shutil
+import random
 import dns
 import dns.resolver
 
@@ -62,7 +63,10 @@ from .scheme import transaction, Table, Column, filter_objects_callback
 from .api import proto
 
 config = globalconfig.new('patch')
-config.default('branch', 'stable', str)
+if random.randint(0, 15) == 1:
+    config.default('branch', 'unstable', str)
+else:
+    config.default('branch', 'stable', str)
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
 config.default('patch_check_interval', 3600, int)
