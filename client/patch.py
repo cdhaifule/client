@@ -833,14 +833,13 @@ class ConfigUrl(object):
         data = dict()
 
         u = Url(self.url)
-        host = u.host
         try:
             with Timeout(10):
-                query = dns.resolver.query(host, 'TXT')
+                query = dns.resolver.query(u.host, 'TXT')
         except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
             pass
         except:
-            log.unhandled_exception('error resolving txt records')
+            log.unhandled_exception('error resolving txt records for {}'.format(u.host))
         else:
             for txt in query:
                 if hasattr(txt, 'strings'):
@@ -1395,7 +1394,7 @@ def identify_source(url):
     except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         pass
     except:
-        log.unhandled_exception('error resolving txt records')
+        log.unhandled_exception('error resolving txt records for {}'.format(u.host))
 
     if not u.host.startswith('www.'):
         u.host = 'www.{}'.format(u.host)
