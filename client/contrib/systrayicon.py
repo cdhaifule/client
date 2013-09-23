@@ -125,10 +125,12 @@ class SysTrayIcon(object):
         del self._next_action_id
         
     def stop(self):
-        win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
+        if self.hwnd:
+            win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
         
     def refresh_icon(self):
-        win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
+        if self.hwnd:
+            win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
         
     def _add_ids_to_menu_options(self, menu_options):
         result = []
@@ -152,6 +154,9 @@ class SysTrayIcon(object):
         
     def refresh_icon_handler(self):
         # Try and find a custom icon
+        if not self.hwnd:
+            return
+
         hinst = win32gui.GetModuleHandle(None)
         hicon = self.icon_cache.get(self.icon, None)
         if hicon is None:
@@ -217,6 +222,8 @@ class SysTrayIcon(object):
         #    self._show_menu()
 
     def _show_menu(self):
+        if not self.hwnd:
+            return
         self.hmenu = win32gui.CreatePopupMenu()
         self.create_menu(self.hmenu, self.menu_options)
         #win32gui.SetMenuDefaultItem(self.hmenu, 1000, 0)
@@ -290,7 +297,8 @@ class SysTrayIcon(object):
     def execute_menu_option(self, id):
         menu_action = self.menu_actions_by_id[id]
         if menu_action == self.QUIT:
-            win32gui.DestroyWindow(self.hwnd)
+            if self.hwnd:
+                win32gui.DestroyWindow(self.hwnd)
         else:
             menu_action(self)
             
