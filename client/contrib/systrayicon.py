@@ -20,7 +20,6 @@ except ImportError:
     import win32gui
 
 from gevent.lock import Semaphore
-from gevent.event import AsyncResult
 
 from .. import event
 
@@ -49,6 +48,7 @@ class SysTrayIcon(object):
         self.icon_cache = dict()
         self.on_quit = on_quit
 
+        self.notify_id = None
         self.tooltip_text = ""
         self.tooltip_lock = Semaphore()
         self.update_tooltip_callback = update_tooltip_callback
@@ -92,8 +92,7 @@ class SysTrayIcon(object):
                                               hinst,
                                               None)
             win32gui.UpdateWindow(self.hwnd)
-            self.notify_id = None
-            self.refresh_icon()
+            self.refresh_icon_handler()
             atexit.register(self.destroy, None, None, None, None)
             self.threadid = win32api.GetCurrentThreadId()
         finally:
@@ -128,7 +127,7 @@ class SysTrayIcon(object):
     def stop(self):
         win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
         
-    def refresh_icon(self, icon):
+    def refresh_icon(self):
         win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
         
     def _add_ids_to_menu_options(self, menu_options):
@@ -149,9 +148,9 @@ class SysTrayIcon(object):
         return result
         
     def _refresh_icon_event(self,  hwnd, msg, wparam, lparam):
-        self.refresh_icon()
+        self.refresh_icon_handler()
         
-    def refresh_icon(self):
+    def refresh_icon_handler(self):
         # Try and find a custom icon
         hinst = win32gui.GetModuleHandle(None)
         hicon = self.icon_cache.get(self.icon, None)
@@ -188,10 +187,11 @@ class SysTrayIcon(object):
             raise
 
     def restart(self, hwnd, msg, wparam, lparam):
-        self.refresh_icon()
+        self.refresh_icon_handler()
 
     def destroy(self, hwnd, msg, wparam, lparam):
-        if self.on_quit: self.on_quit(self)
+        if self.on_quit:
+            self.on_quit(self)
         nid = (self.hwnd, 0)
         try:
             win32gui.Shell_NotifyIcon(win32gui.NIM_DELETE, nid)
@@ -254,7 +254,7 @@ class SysTrayIcon(object):
             if option_icon:
                 option_icon = self.prep_menu_icon(option_icon)
             
-            if option_id in self.menu_actions_by_id:                
+            if option_id in self.menu_actions_by_id:
                 item, extras = win32gui_struct.PackMENUITEMINFO(text=option_text.encode(os_encoding),
                                                                 hbmpItem=option_icon,
                                                                 wID=option_id)
