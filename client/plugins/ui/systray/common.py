@@ -24,6 +24,9 @@ from functools import partial
 
 from ....login import logout, get_sso_url
 from .... import event, settings
+from .... import settings, event, login, localize, core, download, torrent
+from ....speedregister import globalspeed
+from ....contrib.sizetools import bytes2human
 
 def relogin(*_):
     logout()
@@ -53,3 +56,26 @@ open_browser = _open_browser
     
 def quit(*_):
     sys.exit(0)
+
+def generate_tooltip_text():
+    if download.config.state == 'stopped' and torrent.config.state == 'stopped':
+        return localize.T.systray__win__tooltip_stopped
+    else:
+        files_queued = 0
+        bytes_complete, bytes_total = 0, 0
+        for p in core.packages():
+            if p.tab not in ('collect', 'complete'):
+                bytes_total += p.size
+                bytes_complete += p.size*(p.progress or 0)
+                files_queued += len([f for f in p.files if f.enabled])
+        if files_queued:
+            template = localize.T.systray__win__tooltip
+        else:
+            template = localize.T.systray__win__tooltip_idle
+
+        return template.format(
+            complete=bytes2human(bytes_complete),
+            total=bytes2human(bytes_total),
+            working=core.global_status.files_working,
+            queued=files_queued,
+            speed=bytes2human(globalspeed.get_bytes()))
