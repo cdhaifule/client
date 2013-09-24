@@ -186,6 +186,14 @@ def get(h):
     wait()
     return current()[h]
 
+tab_to_id = dict(
+    collect=0,
+    download=1,
+    complete=3,
+    torrent=4,
+    search=5
+)
+
 def get_auth_token(tab=None, type=None):
     """returns base64 encoded auto token for automatic login to website
     """
@@ -195,7 +203,7 @@ def get_auth_token(tab=None, type=None):
     c = current() if type is None else config[type]
     data = "{};{};{};{}".format(c.username, c.login, c.frontend, settings.app_uuid)
     if tab is not None:
-        data = '{};{}'.format(data, tab)
+        data = '{};{}'.format(data, tab_to_id.get(tab, 0))
     data = base64.b64encode(gibberishaes.encrypt(key, data))
     data = data.replace('+', '-').replace('/', '_').replace('=', ',')
     return data+'!'+key
