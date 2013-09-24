@@ -48,16 +48,16 @@ class SysTrayIcon(object):
         self.icon_cache = dict()
         self.on_quit = on_quit
 
+        self.hwnd = None
+        self.hmenu = None
+        self.lock = lock
+
         self.notify_id = None
         self.tooltip_text = ""
         self.tooltip_lock = Semaphore()
         self.update_tooltip_callback = update_tooltip_callback
         self.last_tooltip_update = 0
-        self.update_tooltip_text()
 
-        self.hmenu = None
-        self.lock = lock
-        
         self.init_menu_options(menu_options)
         
         self.default_menu_index = (default_menu_index or 0)
@@ -92,6 +92,7 @@ class SysTrayIcon(object):
                                               hinst,
                                               None)
             win32gui.UpdateWindow(self.hwnd)
+            self.update_tooltip_text()
             self.refresh_icon_handler()
             atexit.register(self.destroy, None, None, None, None)
             self.threadid = win32api.GetCurrentThreadId()
