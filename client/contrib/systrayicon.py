@@ -93,7 +93,7 @@ class SysTrayIcon(object):
                                               None)
             win32gui.UpdateWindow(self.hwnd)
             self.update_tooltip_text()
-            self.refresh_icon_handler()
+            #self.refresh_icon_handler() # this should be called from update_tooltip_text function
             atexit.register(self.destroy, None, None, None, None)
             self.threadid = win32api.GetCurrentThreadId()
         finally:
