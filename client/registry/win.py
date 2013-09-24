@@ -276,7 +276,6 @@ sudo_proc = None
 def sudo_handler(timeout=15):
     global sudo_proc
     try:
-        settings.bin_dir = "C:\\Users\\shit\\client\\bin"
         params = ["/C", os.path.join(settings.bin_dir, 'sudo.bat'), "{}".format(timeout+1), sudo_file]
         params = '"'+'" "'.join(params)+'"'
         shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters=params, lpDirectory=settings.temp_dir, nShow=0)
