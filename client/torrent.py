@@ -24,6 +24,7 @@ from gevent.lock import Semaphore
 from gevent.pool import Group
 
 from . import event, core, proxy, logger, interface, settings
+from .seekingfile import check_space
 from .torrentengine import Session, Torrent
 from .plugintools import FakeGreenlet
 from .scheme import transaction, Column
@@ -590,6 +591,21 @@ class TorrentJob(Torrent):
         self.update_file_priorities()
         self.save_resume_data()
         
+        needed_size = 0
+        for f in package.files:
+            if f.enabled and not os.path.exists(f.get_download_path()):
+                needed_size += f.get_any_size()
+        if needed_size > 0:
+            try:
+                check_space(self.package.get_download_path(), needed_size)
+            except IOError as e: # disk is full?!
+                with transaction:
+                    for f in self.package.files:
+                        if f.enabled:
+                            f.fatal(unicode(e), abort_greenlet=False)
+                            if f.working:
+                                f.greenlet.kill()
+
         with transaction:
             self.update_status(self.status)
         

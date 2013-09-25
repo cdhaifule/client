@@ -100,7 +100,7 @@ class ApiListener(scheme.DelayedListener):
                         data['url'] = url.to_string()
                         if data['url'].startswith('http://repo.download.am/#'):
                             data['url'] = data['url'].replace('http://repo.download.am/#', 'http://github.com/downloadam/')+'.git'
-                    if 'config_url' in data:
+                    if 'config_url' in data and data['config_url'] is not None:
                         if data['config_url'] is not None:
                             data['config_url'] = data['config_url'].replace('dlam-config.yaml', '')
                             data['config_url'] = data['config_url'].replace('://repo.', '://')
