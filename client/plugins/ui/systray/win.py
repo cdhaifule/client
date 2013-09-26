@@ -21,16 +21,15 @@ import os
 from functools import partial
 from gevent import threadpool
 
-import win32gui, win32con
+import win32gui
+import win32con
 import glob
 from PIL import IcnsImagePlugin, BmpImagePlugin # preload for py2exe
 from PIL import Image
 from gevent.event import Event
 from gevent._threading import Lock as ThreadingLock
 
-from .... import settings, event, login, localize, core, download, torrent
-from ....speedregister import globalspeed
-from ....contrib.sizetools import bytes2human
+from .... import settings, event, login, localize, core
 from ....contrib.systrayicon import SysTrayIcon
 
 from . import common
@@ -107,9 +106,9 @@ def init():
                 SysTray.instance.refresh_icon()
 
     thread.spawn(SysTray, icon, options, lambda *_: event.call_from_thread(common.quit), 0, "download.am",
-        lock=lock,
-        init_callback=lambda _: event.call_from_thread(init_event.set),
-        update_tooltip_callback=update_tooltip)
+                 lock=lock,
+                 init_callback=lambda _: event.call_from_thread(init_event.set),
+                 update_tooltip_callback=update_tooltip)
     init_event.wait()
 
     @event.register('login:changed')

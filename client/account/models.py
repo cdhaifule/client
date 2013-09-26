@@ -294,7 +294,8 @@ class PasswordListener(scheme.TransactionListener):
     def on_commit(self, update):
         for key, data in update.iteritems():
             for k, v in data.iteritems():
-                if k in {"action", "table", "id"}: continue
+                if k in {"action", "table", "id"}:
+                    continue
                 key = "{}_{}_{}".format(data["table"], data["id"], k)
                 if data["action"] in {"new", "update"}:
                     keyring.set_password(settings.keyring_service, key, data["password"] or "")

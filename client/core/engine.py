@@ -58,16 +58,8 @@ config.default('open_browser_after_add_links', False, bool)
 config.default('adult', False, bool)
 
 # computer shutdown
-if sys.platform == 'win32' and "nose" not in sys.argv[0]:
-    try:
-        import wmi
-        wmi.WMI(privileges=["Shutdown"])
-    except:
-        pass
-    else:
-        config.default('shutdown', False, bool, persistent=False)
-        config.default('shutdown_timeout', 60, int, description="Display message box duration before computer shutdown")
-
+config.default('shutdown', False, bool, persistent=False)
+config.default('shutdown_timeout', 60, int, description="Display message box duration before computer shutdown")
 
 ########################## log and lock
 

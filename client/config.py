@@ -113,6 +113,7 @@ class Config(object):
             if key in _defaults:
                 enum = _defaults[key]["enum"]
                 if enum is not None and value not in enum:
+                    print enum, value
                     raise ValueError("value not allowed by enum definition")
                 else:
                     if _defaults[key]["type"] == bool:

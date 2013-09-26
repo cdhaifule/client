@@ -23,8 +23,7 @@ import gevent
 from functools import partial
 
 from ....login import logout, get_sso_url
-from .... import event, settings
-from .... import settings, event, login, localize, core, download, torrent
+from .... import settings, event, localize, core, download, torrent
 from ....speedregister import globalspeed
 from ....contrib.sizetools import bytes2human
 

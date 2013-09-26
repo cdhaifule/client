@@ -15,9 +15,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import subprocess
-from PyObjCTools import AppHelper
 
-from . import app, input
+from . import app
 
 has_ui = True
 
@@ -31,14 +30,14 @@ def main_loop():
 # seems to work fine with safari, chrome and firefox.
 def browser_has_focus():
     try:
-        title = subprocess.check_output(["osascript", "-e", 
+        title = subprocess.check_output(["osascript", "-e",
 """
 tell application "System Events"
 set frontApp to name of first application process whose frontmost is true
 end tell
 tell application frontApp
 if the (count of windows) is not 0 then
-	set window_name to name of front window
+    set window_name to name of front window
 end if
 end tell
 """
@@ -50,4 +49,3 @@ end tell
         return True
     else:
         return False
-        

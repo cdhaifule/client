@@ -30,10 +30,9 @@ from ..localize import _T
 ########################## init
 
 def init_optparser(parser, OptionGroup):
-    if sys.platform == 'win32':
-        group = OptionGroup(parser, _T.core__options)
-        group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
-        parser.add_option_group(group)
+    group = OptionGroup(parser, _T.core__options)
+    group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
+    parser.add_option_group(group)
 
 def init(options):
     if not os.path.exists(config.download_dir):
@@ -95,8 +94,7 @@ def init(options):
             gevent.spawn(file.host.get_account, 'download', file)
             ignore.add(file.host)
 
-    if sys.platform == 'win32':
-        config.shutdown = options.shutdown
+    config.shutdown = options.shutdown
 
 
 ########################## interface
