@@ -1834,7 +1834,7 @@ def parse_dos_time(stamp):
     yr = (stamp & 0x7F) + 1980
     return (yr, mon, day, hr, min, sec * 2)
 
-def custom_popen(cmd):
+def custom_popen(cmd, stderr=STDOUT):
     """Disconnect cmd from parent fds, read only from stdout."""
 
     # needed for py2exe
@@ -1845,7 +1845,7 @@ def custom_popen(cmd):
     # run command
     try:
         p = Popen(cmd, bufsize = 0,
-                  stdout = PIPE, stdin = PIPE, stderr = STDOUT,
+                  stdout = PIPE, stdin = PIPE, stderr = stderr,
                   creationflags = creationflags)
     except OSError:
         ex = sys.exc_info()[1]

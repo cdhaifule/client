@@ -159,15 +159,14 @@ class StreamingExtract(object):
             if not i in passwords:
                 passwords.append(i)
         if rar.needs_password() and rar.infolist():
-            # unencrypted headers. use file password or ask user.
-            pw = None
+            pw = bruteforce_by_content(rar, passwords)
             if not pw:
-                pw = bruteforce_by_content(rar, passwords)
-                if not pw:
-                    for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
-                        break
-                    else:
-                        return self.kill('extract password not entered')
+                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
+                    pw = bruteforce_by_content(rar, [pw])
+                    if not pw:
+                        continue
+                else:
+                    return self.kill('extract password not entered')
             self.password = pw
             return
         print "testing", passwords
@@ -409,19 +408,28 @@ def _test_passwords(rar, fname, passwords):
         from libmagic import from_buffer
     except ImportError:
         return False
-
+    # c
     for pw in passwords:
-        cmd = [rarfile.UNRAR_TOOL, "-y", "-p"+pw, "p", rar.rarfile, fname]
-        p = rarfile.custom_popen(cmd)
-        data = p.stdout.read(1024*1024)
-        p.kill()
+        cmd = [rarfile.UNRAR_TOOL, "-ierr", "-p"+pw, "-y", "p", rar.rarfile, fname]
+        try:
+            p = rarfile.custom_popen(cmd, -1)
+            data = p.stdout.read(1024*1024)
+        except (IOError, OSError):
+            traceback.print_exc()
+            continue
+        if not data.strip():
+            p.kill()
+            continue
         result = from_buffer(data)
-        mime = result.mime_type
-        if mime == "application/octet-stream":
+        p.kill()
+        mime = result.mimetype
+        print "mimetype is", mime
+        if result.mimetype == "application/octet-stream":
             continue
         else:
             return pw # return pw for everything besides random application data
     return False
+
 
 def bruteforce_by_content(rar, passwords):
     def _sort(k):
@@ -432,7 +440,7 @@ def bruteforce_by_content(rar, passwords):
         return (k1, k2, k3)
 
     for i in sorted(rar.infolist(), key=_sort):
-        pw = _test_passwords(rar, i, passwords)
+        pw = _test_passwords(rar, i.filename, passwords)
         if pw:
             return pw
     return False

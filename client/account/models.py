@@ -348,10 +348,6 @@ class Profile(Account):
         return w
 
 
-#from requests.models import Response
-#from requests.packages.urllib3.response import HTTPResponse
-#sbox.type_manager.add(Response, leave=['close'])
-
 class HosterAccount(Account):
     username = Column(('api', 'db'), read_only=False, fire_event=True)
     password = Column("password", read_only=False, fire_event=True, always_use_getter=True)
@@ -370,6 +366,7 @@ class HosterAccount(Account):
 
     def on_initialize(self):
         pass
+
 
 class PremiumAccount(HosterAccount):
     premium = Column('api', always_use_getter=True)
@@ -626,6 +623,7 @@ class Http(object):
             if g in Http.http_garbage:
                 Http.http_garbage[g].add(resp)
                 resp._o_close = resp.close
+
                 def close():
                     try:
                         Http.http_garbage[g].remove(resp)
@@ -701,8 +699,8 @@ class MultiAccount(PremiumAccount):
                 h.append(name)
         with transaction:
             self.compatible_hostnames = hosts
-        self.log.debug('mulit hoster fallback hosts: {}'.format(', '.join(self.compatible_plugins)))
-        self.log.debug('mulit hoster direct hosts: {}'.format(', '.join(h)))
+        self.log.debug('multi hoster fallback hosts: {}'.format(', '.join(self.compatible_plugins)))
+        self.log.debug('multi hoster direct hosts: {}'.format(', '.join(h)))
 
 
 class HttpAccount(Http, Account):
@@ -738,7 +736,6 @@ class HttpMultiAccount(Http, MultiAccount):
         MultiAccount.__init__(self, *args, **kwargs)
         Http.__init__(self)
         self.multi_account = True
-        
         
     def on_reset(self):
         MultiAccount.on_reset(self)

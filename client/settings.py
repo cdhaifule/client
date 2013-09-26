@@ -139,6 +139,8 @@ if sys.platform == "win32" and sys.frozen:
     requests.certs.where = lambda: os.environ["REQUESTS_CA_BUNDLE"]
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
+    os.environ["MAGIC"] = os.path.join(bin_dir, "magic.mgc")
+    
     # keyring
     from keyring.backends import Windows
 
@@ -157,6 +159,7 @@ elif sys.platform == "darwin" and sys.frozen:
     # cert
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
     os.environ["REQUESTS_CA_BUNDLE"] = os.environ['SSL_CERT_FILE']
+    os.environ["MAGIC"] = os.path.join(bin_dir, "magic.mgc")
 else:
     # dirs and files
     app_dir = os.getcwd()
