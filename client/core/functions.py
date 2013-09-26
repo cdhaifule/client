@@ -68,6 +68,10 @@ def add_links(links, package_name=None, extract_passwords=None, system='download
                     link['host'], link['pmatch'] = host
 
                 # normalize url
+                try:
+                    link['url'], link['extra'] = link['url'].rsplit("&---extra=", 1)
+                except ValueError:
+                    pass
                 link['url'] = link['host'].normalize_url(link['url'], link['pmatch'])
                 if not link['url']:
                     log.warning('{}.normalize({}) returned null'.format(link['host'].name, link['url']))

@@ -20,7 +20,6 @@ except ImportError:
     import win32gui
 
 from gevent.lock import Semaphore
-from gevent.event import AsyncResult
 
 from .. import event
 
@@ -49,15 +48,16 @@ class SysTrayIcon(object):
         self.icon_cache = dict()
         self.on_quit = on_quit
 
+        self.hwnd = None
+        self.hmenu = None
+        self.lock = lock
+
+        self.notify_id = None
         self.tooltip_text = ""
         self.tooltip_lock = Semaphore()
         self.update_tooltip_callback = update_tooltip_callback
         self.last_tooltip_update = 0
-        self.update_tooltip_text()
 
-        self.hmenu = None
-        self.lock = lock
-        
         self.init_menu_options(menu_options)
         
         self.default_menu_index = (default_menu_index or 0)
@@ -92,8 +92,8 @@ class SysTrayIcon(object):
                                               hinst,
                                               None)
             win32gui.UpdateWindow(self.hwnd)
-            self.notify_id = None
-            self.refresh_icon()
+            self.update_tooltip_text()
+            #self.refresh_icon_handler() # this should be called from update_tooltip_text function
             atexit.register(self.destroy, None, None, None, None)
             self.threadid = win32api.GetCurrentThreadId()
         finally:
@@ -126,10 +126,12 @@ class SysTrayIcon(object):
         del self._next_action_id
         
     def stop(self):
-        win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
+        if self.hwnd:
+            win32gui.PostMessage(self.hwnd, win32con.WM_DESTROY, 0, 0)
         
-    def refresh_icon(self, icon):
-        win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
+    def refresh_icon(self):
+        if self.hwnd:
+            win32gui.PostMessage(self.hwnd, win32con.WM_USER+21, 0, 0)
         
     def _add_ids_to_menu_options(self, menu_options):
         result = []
@@ -149,10 +151,13 @@ class SysTrayIcon(object):
         return result
         
     def _refresh_icon_event(self,  hwnd, msg, wparam, lparam):
-        self.refresh_icon()
+        self.refresh_icon_handler()
         
-    def refresh_icon(self):
+    def refresh_icon_handler(self):
         # Try and find a custom icon
+        if not self.hwnd:
+            return
+
         hinst = win32gui.GetModuleHandle(None)
         hicon = self.icon_cache.get(self.icon, None)
         if hicon is None:
@@ -188,10 +193,11 @@ class SysTrayIcon(object):
             raise
 
     def restart(self, hwnd, msg, wparam, lparam):
-        self.refresh_icon()
+        self.refresh_icon_handler()
 
     def destroy(self, hwnd, msg, wparam, lparam):
-        if self.on_quit: self.on_quit(self)
+        if self.on_quit:
+            self.on_quit(self)
         nid = (self.hwnd, 0)
         try:
             win32gui.Shell_NotifyIcon(win32gui.NIM_DELETE, nid)
@@ -217,6 +223,8 @@ class SysTrayIcon(object):
         #    self._show_menu()
 
     def _show_menu(self):
+        if not self.hwnd:
+            return
         self.hmenu = win32gui.CreatePopupMenu()
         self.create_menu(self.hmenu, self.menu_options)
         #win32gui.SetMenuDefaultItem(self.hmenu, 1000, 0)
@@ -254,7 +262,7 @@ class SysTrayIcon(object):
             if option_icon:
                 option_icon = self.prep_menu_icon(option_icon)
             
-            if option_id in self.menu_actions_by_id:                
+            if option_id in self.menu_actions_by_id:
                 item, extras = win32gui_struct.PackMENUITEMINFO(text=option_text.encode(os_encoding),
                                                                 hbmpItem=option_icon,
                                                                 wID=option_id)
@@ -290,7 +298,8 @@ class SysTrayIcon(object):
     def execute_menu_option(self, id):
         menu_action = self.menu_actions_by_id[id]
         if menu_action == self.QUIT:
-            win32gui.DestroyWindow(self.hwnd)
+            if self.hwnd:
+                win32gui.DestroyWindow(self.hwnd)
         else:
             menu_action(self)
             

@@ -21,6 +21,15 @@ import sys
 from . import loader
 
 def main():
+    if '--test-mode' in sys.argv:
+        sys.argv.remove('--test-mode')
+        try:
+            from client import test
+        except ImportError:
+            from client import testdefault as test
+
+        test.init()
+
     try:
         loader.init()
         loader.main_loop()

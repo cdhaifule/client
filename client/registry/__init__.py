@@ -19,3 +19,4 @@ import sys
 
 if sys.platform == 'win32' and "nose" not in sys.argv[0]:
     from . import win
+    win.init()

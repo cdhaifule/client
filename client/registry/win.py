@@ -37,12 +37,13 @@ config = globalconfig.new('registry.win')
 config.default('webbrowser', None, unicode, private=True)
 config.default('portable', '', unicode, private=True)
 
-config.default('autostart', True, bool, protected=True)
-config.default('ext_torrent', True, bool, protected=True)
-config.default('ext_wdl', True, bool, protected=True)
-config.default('ext_dlc', True, bool, protected=True)
-config.default('ext_ccf', True, bool, protected=True)
-config.default('scheme_magnet', True, bool, protected=True)
+config.default('autostart', True, bool, protected=True, persistent=False)
+config.default('ext_torrent', True, bool, protected=True, persistent=False)
+config.default('ext_wdl', True, bool, protected=True, persistent=False)
+config.default('ext_dlc', True, bool, protected=True, persistent=False)
+config.default('ext_ccf', True, bool, protected=True, persistent=False)
+config.default('ext_rsdf', True, bool, protected=True, persistent=False)
+config.default('scheme_magnet', True, bool, protected=True, persistent=False)
 
 
 ################################################ basic registry functions
@@ -66,7 +67,7 @@ def read_reg_key(hkey, subkey, value=""):
     except WindowsError as e:
         errno, message = e.args
         if errno != 2:
-            raise e    
+            raise e
     return (None, None)
 
 def enum_reg_keys(hkey, subkey):
@@ -269,125 +270,170 @@ import win32com
 import win32con
 from win32com.shell import shell
 
-sudo_lock = Semaphore()
-sudo_file = None
-sudo_proc = None
+class Sudo(object):
+    def __init__(self):
+        self.lock = Semaphore()
+        self.file = None
+        self.timeout = None
 
-def sudo_handler(timeout=15):
-    global sudo_proc
-    try:
-        settings.bin_dir = "C:\\Users\\shit\\client\\bin"
-        params = ["/C", os.path.join(settings.bin_dir, 'sudo.bat'), "{}".format(timeout+1), sudo_file]
-        params = '"'+'" "'.join(params)+'"'
-        shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters=params, lpDirectory=settings.temp_dir, nShow=0)
-        gevent.sleep(0.5)
-        
-        c = wmi.WMI()
-        for p in c.Win32_Process(name="cmd.exe"):
-            # TODO: fix this very dirty process find conditions
-            if int(p.OtherOperationCount) > 500:
-                continue
-            if int(p.UserModeTime) > 500:
-                continue
-            break
+    def reg_execute(self, args):
+        if not args:
+            return
+        with self.lock:
+            if self.file is not None and os.path.exists(self.file+'.reg'):
+                for _ in xrange(3):
+                    gevent.sleep(1)
+                    if not os.path.exists(self.file+'.reg'):
+                        break
+                else:
+                    print "WARNING: file stll exists after 2 seconds. assuming sudo process is dead"
+                    self.end()
+
+            if self.file is None:
+                self.file = os.path.join(settings.temp_dir, 'win32reg-{}'.format(time.time()))
+
+            with open(self.file+'.reg.tmp', 'a') as f:
+                f.write('Windows Registry Editor Version 5.00\r\n\r\n\r\n')
+                f.write('{}\r\n'.format('\r\n'.join(args)))
+            os.rename(self.file+'.reg.tmp', self.file+'.reg')
+
+            if self.timeout is None:
+                params = [os.path.join(settings.bin_dir, 'sudo.bat'), self.file+'.reg', self.file+'.end']
+                params = '/C ""'+'" "'.join(params)+'""'
+                shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters=params, lpDirectory=settings.temp_dir, nShow=0)
+            elif self.timeout is not None:
+                self.timeout.kill()
+            self.timeout = gevent.spawn_later(30, self._timeout_handler)
+
+    def end(self):
+        try:
+            with open(self.file+'.end.tmp', 'a') as f:
+                f.write('end')
+            os.rename(self.file+'.end.tmp', self.file+'.end')
+        finally:
+            gevent.spawn_later(60, self._cleanup, self.file)
+            self.file = None
+            self.timeout = None
+
+    def _timeout_handler(self):
+        with self.lock:
+            self.end()
+
+    def _cleanup(self, file):
+        for p in ('.reg', '.reg.tmp', '.end', '.end.tmp'):
+            try:
+                os.unlink(file+p)
+            except:
+                pass
+
+sudo = Sudo()
+
+
+hkey_to_str = {
+    HKEY_CLASSES_ROOT: 'HKEY_CLASSES_ROOT',
+    HKEY_LOCAL_MACHINE: 'HKEY_LOCAL_MACHINE',
+    HKEY_CURRENT_USER: 'HKEY_CURRENT_USER'}
+
+def add_sudo_reg(hkey, key, key_value=None, subkey=None, subkey_value=None):
+    args = list()
+    if key_value is not None:
+        value = read_reg_key(hkey, key)[0]
+        if value != key_value:
+            args.append(u'@="{}"'.format(key_value.replace('\\', '\\\\').replace('"', '\\"')))
+    if subkey is not None:
+        if subkey_value is None:
+            raise RuntimeError('subkey_value can not be none')
+        value = read_reg_key(hkey, key, subkey)[0]
+        if value != subkey_value:
+            args.append(u'"{}"="{}"'.format(subkey.replace('"', '\\"'), subkey_value.replace('\\', '\\\\').replace('"', '\\"')))
+    if args:
+        args.insert(0, u'[{}\\{}]'.format(hkey_to_str[hkey], key))
+        args.append('')
+    return args
+
+def del_sudo_reg(hkey, key, subkey=None, expected_value=None):
+    args = list()
+    value = read_reg_key(hkey, key, '' if subkey is None else subkey)[0]
+    if value is not None and (expected_value is None or value == expected_value):
+        if subkey is None:
+            args.append(u'[-{}\\{}]'.format(hkey_to_str[hkey], key))
         else:
-            raise RuntimeError('sudo shell not found')
-        for i in xrange(timeout):
-            q = c.Win32_Process(ProcessID=p.ProcessID)
-            if not q:
-                break
-            gevent.sleep(1)
-        else:
-            raise RuntimeError('sudo shell is still running')
-        print "process ended"
-    finally:
-        with sudo_lock:
-            sudo_proc = None
+            args.append(u'[{}\\{}]'.format(hkey_to_str[hkey], key))
+            args.append(u'"{}"=-'.format(subkey.replace('"', '\\"')))
+    return args
 
-def admin_reg_execute(*args, **kwargs):
-    global sudo_file
-    global sudo_proc
-    with sudo_lock:
-        if sudo_file is not None and not os.path.exists(sudo_file):
-            sudo_file = None
-        if sudo_file is None:
-            sudo_file = os.path.join(settings.temp_dir, 'win32reg-{}.reg'.format(time.time()))
-            args = ['Windows Registry Editor Version 5.00', '', ''] + list(args)
-
-        with open(sudo_file, 'a') as f:
-            f.write('{}\r\n'.format('\r\n'.join(args).format(**kwargs)))
-
-        if sudo_proc is None:
-            sudo_proc = gevent.spawn(sudo_handler)
-
-def add_rpc_stuff(*args, **kwargs):
-    admin_reg_execute(
-        '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Download.am]',
-        '@="Download.am"',
-        '',
-        '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Download.am\DefaultIcon]',
-        '@="{app_file},0"'
-        '',
-        '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Download.am\shell]',
-        '@="open"',
-        ''
-        '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Download.am\shell\open]',
-        '',
-        '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Download.am\shell\open\command]',
-        '@="\"{app_file}\" \"file.add path=%1\" \"browser.open_browser\""',
-        *args,
-        app_file=os.path.join(settings.app_dir, 'download.am.exe').replace('/', '\\\\'),
-        **kwargs)
-
-def handle_file_extension(ext, content_type, value):
-    if value:
-        add_rpc_stuff(
-            '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.{}]'.format(ext),
-            '@="Download.am File"',
-            '"Content Type"="{}"'.format(content_type))
+def on_autostart_changed(add, execute=True):
+    if add:
+        app_file = os.path.join(settings.app_dir, 'download.am.exe')
+        args = add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', None, 'Download.am', '{} --no-browser --disable-splash'.format(app_file))
     else:
-        admin_reg_execute(
-            '[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.{}]'.format(ext))
+        args = del_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 'Download.am')
+    if execute and args:
+        sudo.reg_execute(args)
+    return args
 
-
-@config.register('autostart')
-def on_autostart_changed(value):
-    if value:
-        admin_reg_execute(
-            '[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]',
-            '"Download.am"="{app_file} --no-browser --disable-splash"',
-            app_file=os.path.join(settings.app_dir, 'download.am.exe').replace('/', '\\\\'))
+@config.register('scheme_magnet')
+def on_scheme_magnet_changed(add, execute=True):
+    if add:
+        app_file = os.path.join(settings.app_dir, 'download.am.exe')
+        args = add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\magnet', 'URL:magnet protocol', 'URL Protocol', '')
+        args += add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\magnet\shell\open\command', '"{}" "core.add_links links=%1"'.format(app_file))
     else:
-        admin_reg_execute(
-            'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]',
-            '"Download.am"=-')
+        args = del_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\magnet')
+    if execute and args:
+        sudo.reg_execute(args)
+    return args
 
-@config.register('magnet')
-def on_autostart_changed(value):
-    if value:
-        admin_reg_execute(
-            '[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\magnet\shell\open\command]',
-            '@="\"{app_file}\" \"core.add_links links=%1\""')
+def handle_file_extension(ext, content_type, add, execute=True):
+    if add:
+        args = add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\.{}'.format(ext), 'Download.am File', 'Content Type', content_type)
+        if args:
+            app_file = os.path.join(settings.app_dir, 'download.am.exe')
+            args += add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\Download.am File', 'Download.am File')
+            args += add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\Download.am File\DefaultIcon', '{},0'.format(app_file))
+            args += add_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\Download.am File\shell\open\command', '"{}" "file.add path=%1"'.format(app_file))
     else:
-        admin_reg_execute(
-            '[-HKEY_LOCAL_MACHINE\SOFTWARE\Classes\magnet]')
+        args = del_sudo_reg(HKEY_LOCAL_MACHINE, 'SOFTWARE\Classes\.{}'.format(ext))
+    if execute and args:
+        sudo.reg_execute(args)
+    return args
 
-@config.register('ext_torrent')
-def on_ext_torrent_changed(value):
-    handle_file_extension('torrent', 'application/x-bittorrent', value)
+def on_ext_torrent_changed(add, execute=True):
+    return handle_file_extension('torrent', 'application/x-bittorrent', add, execute)
 
-@config.register('ext_wdl')
-def on_ext_wdl_changed(value):
-    handle_file_extension('wdl', 'application/x-wdl', value)
+def on_ext_wdl_changed(add, execute=True):
+    return handle_file_extension('wdl', 'application/x-wdl', add, execute)
 
-@config.register('ext_dlc')
-def on_ext_dlc_changed(value):
-    handle_file_extension('dlc', 'application/x-dlc', value)
+def on_ext_dlc_changed(add, execute=True):
+    return handle_file_extension('dlc', 'application/x-dlc', add, execute)
 
-@config.register('ext_ccf')
-def on_ext_ccf_changed(value):
-    handle_file_extension('ccf', 'application/x-ccf', value)
+def on_ext_ccf_changed(add, execute=True):
+    return handle_file_extension('ccf', 'application/x-ccf', add, execute)
 
-@config.register('ext_rsdf')
-def on_ext_rsdf_changed(value):
-    handle_file_extension('rsdf', 'application/x-rsdf', value)
+def on_ext_rsdf_changed(add, execute=True):
+    return handle_file_extension('rsdf', 'application/x-rsdf', add, execute)
+
+def init():
+    config.autostart = False if on_autostart_changed(True, False) else True
+    config.scheme_magnet = False if on_scheme_magnet_changed(True, False) else True
+    config.ext_torrent = False if on_ext_torrent_changed(True, False) else True
+    config.ext_wdl = False if on_ext_wdl_changed(True, False) else True
+    config.ext_dlc = False if on_ext_dlc_changed(True, False) else True
+    config.ext_ccf = False if on_ext_ccf_changed(True, False) else True
+    config.ext_rsdf = False if on_ext_rsdf_changed(True, False) else True
+
+    config.register_hook('autostart', lambda add: on_autostart_changed(add, True))
+    config.register_hook('scheme_magnet', lambda add: on_scheme_magnet_changed(add, True))
+    config.register_hook('ext_torrent', lambda add: on_ext_torrent_changed(add, True))
+    config.register_hook('ext_wdl', lambda add: on_ext_wdl_changed(add, True))
+    config.register_hook('ext_dlc', lambda add: on_ext_dlc_changed(add, True))
+    config.register_hook('ext_ccf', lambda add: on_ext_ccf_changed(add, True))
+    config.register_hook('ext_rsdf', lambda add: on_ext_rsdf_changed(add, True))
+
+# TODO: remove this block when update propagation is done
+
+@event.register('config:before_load')
+def on_config_before_load(e, data):
+    for key in ('autostart', 'ext_torrent', 'ext_wdl', 'ext_dlc', 'ext_ccf', 'ext_rsdf', 'scheme_magnet'):
+        key = 'registry.win.{}'.format(key)
+        data.pop(key, None)

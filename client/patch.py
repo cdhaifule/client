@@ -37,8 +37,12 @@ import json
 import requests
 import bsdiff4
 import shutil
+import random
 import dns
 import dns.resolver
+# imports needed for py2exe
+import dns.rdtypes.ANY.TXT
+import dns.rdtypes.ANY.CNAME
 
 from gevent import Timeout
 from cStringIO import StringIO
@@ -62,7 +66,10 @@ from .scheme import transaction, Table, Column, filter_objects_callback
 from .api import proto
 
 config = globalconfig.new('patch')
-config.default('branch', 'stable', str)
+if random.randint(0, 15) == 1:
+    config.default('branch', 'unstable', str)
+else:
+    config.default('branch', 'stable', str)
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
 config.default('patch_check_interval', 3600, int)
@@ -833,14 +840,13 @@ class ConfigUrl(object):
         data = dict()
 
         u = Url(self.url)
-        host = u.host
         try:
             with Timeout(10):
-                query = dns.resolver.query(host, 'TXT')
+                query = dns.resolver.query(u.host, 'TXT')
         except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
             pass
         except:
-            log.unhandled_exception('error resolving txt records')
+            log.unhandled_exception('error resolving txt records for {}'.format(u.host))
         else:
             for txt in query:
                 if hasattr(txt, 'strings'):
@@ -849,7 +855,7 @@ class ConfigUrl(object):
                     strings = [txt.data[1:]]
                 for line in strings:
                     if line.startswith('repo-domain='):
-                        self.url = line[12:]
+                        self.url = u'http://{}/'.format(line[12:])
                         return self._update()
                     elif re.match(r'^\w+: \w+://', line):
                         key, value = line.split(': ', 1)
@@ -1395,7 +1401,7 @@ def identify_source(url):
     except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         pass
     except:
-        log.unhandled_exception('error resolving txt records')
+        log.unhandled_exception('error resolving txt records for {}'.format(u.host))
 
     if not u.host.startswith('www.'):
         u.host = 'www.{}'.format(u.host)
@@ -1457,8 +1463,8 @@ def init():
                     if 'url' in data:
                         if data['url'].startswith('http://patch.download.am'):
                             data['url'] = data['url'].replace('http://patch.download.am', 'http://repo.download.am')
-                        if data['url'].endswith('.git'):
-                            source = GitSource(id=id, **data)
+                        if data['url'].startswith('http://community.download.am'):
+                            data['url'] = data['url'].replace('http://community.download.am', 'http://www.download.am')
                         u = Url(data['url'])
                         u.host = u.host.lower()
                         data['url'] = u.to_string()
