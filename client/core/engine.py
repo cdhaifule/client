@@ -570,7 +570,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     # misc
     file_plugins_complete = False
 
-    def __init__(self, package=None, enabled=True, state='check', url=None, host=None, pmatch=None, completed_plugins=None, weight=0, **kwargs):
+    def __init__(self, package=None, enabled=True, state='check', url=None, host=None, pmatch=None, completed_plugins=None, weight=0, extra=None, **kwargs):
         GreenletObject.__init__(self)
         if host:
             self.host = host
@@ -614,6 +614,17 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         if not self.host:
             raise ValueError('file.host can not be null')
 
+        # url extra overwrites extra from function arguments
+        try:
+            self.url, extra = self.url.rsplit("&---extra=", 1)
+        except ValueError:
+            pass
+        if extra is not None:
+            try:
+                self.extra = json.loads(base64.urlsafe_b64decode(extra.encode("ascii")))
+            except (ValueError, TypeError):
+                self.extra = extra
+
         kwargs.setdefault("name", None)
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
@@ -625,13 +636,6 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 self.last_error_type = 'info'
             else:
                 self.last_error_type = 'fatal'
-
-        try:
-            self.url, extra = self.url.rsplit("&---extra=", 1)
-        except ValueError:
-            extra = None
-        if extra is not None:
-            self.extra = json.loads(base64.urlsafe_b64decode(extra.encode("ascii")))
 
         self._speed = speedregister.SpeedRegister()
 
