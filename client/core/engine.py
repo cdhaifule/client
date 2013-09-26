@@ -58,8 +58,7 @@ config.default('open_browser_after_add_links', False, bool)
 config.default('adult', False, bool)
 
 # computer shutdown
-config.default('shutdown', False, bool, persistent=False)
-config.default('shutdown_timeout', 60, int, description="Display message box duration before computer shutdown")
+# -- defaults moved to events.py
 
 ########################## log and lock
 

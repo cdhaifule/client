@@ -227,9 +227,10 @@ elif sys.platform == "win32" and "nose" not in sys.argv[0]:
 else:
     shutdown_actions = {}
 
-shutdown_actions[""] = None
-
-config.default("shutdown_action", default, str, enum=list(shutdown_actions), description="Select shutdown action")
+if shutdown_actions:
+    config.default("shutdown_action", default, str, enum=list(shutdown_actions), description="Select shutdown action")
+    config.default('shutdown', False, bool, persistent=False)
+    config.default('shutdown_timeout', 60, int, description="Display message box duration before computer shutdown")
 
 def on_package_tab_changed(p, old):
     if p.tab not in {'collect', 'complete'}:
