@@ -66,10 +66,7 @@ from .scheme import transaction, Table, Column, filter_objects_callback
 from .api import proto
 
 config = globalconfig.new('patch')
-if random.randint(0, 15) == 1:
-    config.default('branch', 'unstable', str)
-else:
-    config.default('branch', 'stable', str)
+config.default('branch', 'stable', str)
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
 config.default('patch_check_interval', 3600, int)
@@ -150,6 +147,46 @@ def patch_get(url, *args, **options):
 def patch_post(url, *args, **options):
     url = "/".join([url.split('#', 1)[0].rstrip('/')]+map(str, args))
     return requests.post(url, **options)
+
+# dns txt resolve function
+
+def dns_txt_resolve(domain):
+    try:
+        with Timeout(5):
+            query = dns.resolver.query(domain, 'TXT')
+    except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
+        return
+    except dns.resolver.NoNameservers:
+        # try proxied request
+        try:
+            with Timeout(5):
+                resp = requests.get('{}/resolve/txt/{}'.format(settings.patchserver, domain))
+            resp.raise_for_status()
+            data = resp.json()
+            if 'error' in data:
+                if data['error'] in {'timeout', 'no_answer', 'nxdomain'}:
+                    return
+                raise ValueError(u'Proxy resolve error: {}'.format(data['error']))
+            assert isinstance(data, list)
+            if not data:
+                return # raise dns.resolver.NoAnswer
+            return data
+        except Timeout:
+            return
+        except:
+            raise
+    except:
+        raise
+    else:
+        result = list()
+        for txt in query:
+            if hasattr(txt, 'strings'):
+                strings = txt.strings
+            else:
+                strings = [txt.data[1:]]
+            for line in strings:
+                result.append(line)
+        return result
 
 # the big bad patch process
 
@@ -841,19 +878,12 @@ class ConfigUrl(object):
 
         u = Url(self.url)
         try:
-            with Timeout(10):
-                query = dns.resolver.query(u.host, 'TXT')
-        except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
-            pass
+            query = dns_txt_resolve(u.host)
         except:
             log.unhandled_exception('error resolving txt records for {}'.format(u.host))
         else:
-            for txt in query:
-                if hasattr(txt, 'strings'):
-                    strings = txt.strings
-                else:
-                    strings = [txt.data[1:]]
-                for line in strings:
+            if query is not None:
+                for line in query:
                     if line.startswith('repo-domain='):
                         self.url = u'http://{}/'.format(line[12:])
                         return self._update()
@@ -1387,21 +1417,18 @@ def identify_source(url):
 
     u = Url(url)
     try:
-        with Timeout(10):
-            for txt in dns.resolver.query(u.host, 'TXT'):
-                if hasattr(txt, 'strings'):
-                    strings = txt.strings
-                else:
-                    strings = [txt.data[1:]]
-                for line in strings:
-                    if line.startswith('repo-domain='):
-                        return identify_source(line[12:])
-                    elif re.match(r'^\w+: \w+://', line):
-                        return 'config', url
+        query = dns_txt_resolve(u.host)
     except (Timeout, dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         pass
     except:
         log.unhandled_exception('error resolving txt records for {}'.format(u.host))
+    else:
+        if query is not None:
+            for line in query:
+                if line.startswith('repo-domain='):
+                    return identify_source(line[12:])
+                elif re.match(r'^\w+: \w+://', line):
+                    return 'config', url
 
     if not u.host.startswith('www.'):
         u.host = 'www.{}'.format(u.host)
