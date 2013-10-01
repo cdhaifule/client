@@ -15,7 +15,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
-import sys
 import gevent
 
 from .engine import config, log, lock, _packages, packages, files, Package, File, Chunk, GlobalStatus, global_status
@@ -283,3 +282,5 @@ class Interface(interface.Interface):
     def split_by(key=None, **filter):
         filter['system'] = 'download'
         filter_objects_callback(_packages[:], filter, lambda obj: obj.split(key))
+
+_pyflakes_silence = [config, log, lock, _packages, packages, files, Package, File, Chunk, GlobalStatus, global_status, sort_queue]

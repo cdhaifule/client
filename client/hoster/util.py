@@ -147,6 +147,7 @@ def serialize_html_form(form):
 
 def get_multihoster_account(task, multi_match, file):
     if not account.config.use_useraccounts:
+        print "multihoster off, use_useraccounts false"
         return
     
     group = Group()
@@ -169,6 +170,7 @@ def get_multihoster_account(task, multi_match, file):
                 continue
             if hasattr(acc, 'premium') and not acc.premium:
                 continue
+            print acc.premium
             if not multi_match(acc, hostname):
                 continue
             try:
@@ -189,8 +191,8 @@ def get_multihoster_account(task, multi_match, file):
             raise
         except BaseException as e:
             log.exception(e)"""
-    #else:
-    #    print "multi: no accounts found"
+    else:
+        print "multi: no accounts found"
 
 ######## premium accounts...
 

@@ -1034,6 +1034,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 if file != self and file.get_download_file() == download_file:
                     file.reset(_package=_package if file.package == self.package else False, _inner_reset=True)
 
+        event.fire("file:reset", self)
+
         self.delete_local_files()
 
     def delete_chunks(self):

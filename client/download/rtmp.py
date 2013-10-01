@@ -131,7 +131,7 @@ class RTMPDownload(DownloadFunction):
             return
              
         try:
-            self.rtmp.connectstream(startat) 
+            self.rtmp.connectstream(startat)
             for buf in iter(self.rtmp.read, ""):
                 output.write(buf)
                 if self.stopped:
