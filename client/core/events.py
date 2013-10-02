@@ -285,7 +285,6 @@ def on_check_package_tabs(e):
     notify.warning('Computer will shutdown now')
     
     func = shutdown_actions.get(config.shutdown_action.strip())
-    print func, repr(config.shutdown_action)
     if func:
         func()
     else:
