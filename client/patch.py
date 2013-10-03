@@ -37,7 +37,6 @@ import json
 import requests
 import bsdiff4
 import shutil
-import random
 import dns
 import dns.resolver
 # imports needed for py2exe
@@ -1531,6 +1530,25 @@ def init():
                     pass
 
     if not emergency_patch and not test_mode:
+        for name in os.listdir(os.path.join(settings.bin_dir, 'external')):
+            path = os.path.join(settings.bin_dir, 'external', name)
+            if not os.path.isdir(path):
+                continue
+            if not os.path.exists(os.path.join(path, 'HEAD')):
+                continue
+            target = os.path.join(settings.external_plugins, name)
+            if os.path.exists(target):
+                continue
+            yield u'copying preloaded default repo {}'.format(name)
+            try:
+                shutil.copytree(path, target)
+            except:
+                try:
+                    really_clean_repo(path)
+                except:
+                    pass
+                log.unhandled_exception('error copying preloaded default repo {}'.format(name))
+
         default_sources = dict(
             downloadam='download.am'
         )
