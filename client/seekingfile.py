@@ -92,7 +92,7 @@ class SeekingFile(object):
 
     def write(self, data, pos):
         if not self.f:
-            raise IOError("not opened??")
+            raise IOError("not opened")
         if self.pos != pos:
             self.f.seek(pos)
         self.f.write(data)
@@ -111,6 +111,7 @@ class SeekingFile(object):
                     flags |= os.O_NOATIME
                 raw = io.FileIO(os.open(self.filepath, flags), "w+")
                 self.f = io.BufferedRandom(raw, 4*1024*1024)
+        self.refcount += 1
         return self
 
     def close(self):
