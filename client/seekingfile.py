@@ -17,6 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
 import traceback
+import io
 
 from gevent.lock import Semaphore
 from gevent.threadpool import ThreadPool
@@ -75,7 +76,7 @@ def check_space(path, size):
 open_lock = Semaphore()
 allocate_pool = ThreadPool(1)
 
-class SeekingFile:
+class SeekingFile(object):
     def __init__(self, filepath, size=None):
         self.filepath = filepath
         self.size = size
@@ -87,18 +88,18 @@ class SeekingFile:
 
     def __del__(self):
         if self.f:
-            os.close(self.f)
+            self.f.close()
 
     def write(self, data, pos):
-        with self.lock:
-            if self.pos != pos:
-                os.lseek(self.f, pos, os.SEEK_SET)
-            os.write(self.f, data)
-            self.pos = pos + len(data)
+        if not self.f:
+            raise IOError("not opened??")
+        if self.pos != pos:
+            self.f.seek(pos)
+        self.f.write(data)
 
     def open(self):
         with open_lock, self.lock:
-            if self.refcount == 0:
+            if not self.f:
                 exists = os.path.exists(self.filepath)
                 if not exists and self.size and self.size > 1:
                     check_space(self.filepath, self.size)
@@ -108,17 +109,16 @@ class SeekingFile:
                     flags |= os.O_BINARY | os.O_RANDOM
                 if hasattr(os, 'O_NOATIME'):
                     flags |= os.O_NOATIME
-                self.f = os.open(self.filepath, flags)
-                self.pos = None
-            self.refcount += 1
-            return self
+                raw = io.FileIO(os.open(self.filepath, flags), "w+")
+                self.f = io.BufferedRandom(raw, 4*1024*1024)
+        return self
 
     def close(self):
         with self.lock:
             self.refcount -= 1
-            if self.refcount == 0:
-                os.fsync(self.f)
-                os.close(self.f)
+            if self.refcount <= 0 and self.f:
+                self.f.flush()
+                self.f.close()
                 self.f = None
 
     def __enter__(self):

@@ -161,12 +161,15 @@ class StreamingExtract(object):
         if rar.needs_password() and rar.infolist():
             pw = bruteforce_by_content(rar, passwords)
             if not pw:
-                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
+                print "could not find password, asking user"
+                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=5):
                     pw = bruteforce_by_content(rar, [pw])
-                    if not pw:
-                        continue
+                    if pw:
+                        break
                 else:
                     return self.kill('extract password not entered')
+            else:
+                print "Found password by content:", pw
             self.password = pw
             return
         print "testing", passwords
@@ -421,14 +424,28 @@ def _test_passwords(rar, fname, passwords):
     ext = fname.rsplit(".", 1)[-1]
     for pw in passwords:
         cmd = [rarfile.UNRAR_TOOL, "-ierr", "-p"+pw, "-y", "p", rar.rarfile, fname]
+        
         try:
-            p = rarfile.custom_popen(cmd, -1)
-            data = p.stdout.read(1024*1024)
-        except (IOError, OSError):
-            traceback.print_exc()
+            p = None
+            with gevent.Timeout(10):
+                p = rarfile.custom_popen(cmd, -1)
+                data = p.stdout.read(1024*1024)
+        except (IOError, OSError, gevent.Timeout) as e:
+            print "popen failed for", cmd, e
+            #traceback.print_exc()
+            if p:
+                try:
+                    p.kill()
+                except:
+                    pass
             continue
+
         if not data.strip():
-            p.kill()
+            print "killing process"
+            try:
+                p.kill()
+            except:
+                pass
             continue
         if ext == "m2ts":
             if test_m2ts(data):
@@ -439,15 +456,20 @@ def _test_passwords(rar, fname, passwords):
         p.kill()
         desc = result.description
         print "magic desc is", desc
+        print "ext is", ext
+        print "mime is:", result.mimetype
         if desc == "data":
             continue
         elif ext in extensions: # enforce mime type for extensions
+            print "ext is", ext
             if result.mimetype != extensions[ext]:
                 continue
             else:
+                print "found password", pw
                 return pw
         else:
             # may get false positives
+            print "found password", pw
             return pw # return pw for everything besides random application data
     return False
 
