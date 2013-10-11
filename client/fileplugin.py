@@ -234,7 +234,7 @@ elif sys.platform == "darwin":
     workspace = NSWorkspace.sharedWorkspace()
 
     def selectfiles(show):
-        workspace.activateFileViewerSelectingURLs_(NSURL.fileURLWithPath_(i.decode("utf-8")) for i in show)
+        workspace.activateFileViewerSelectingURLs_(list(NSURL.fileURLWithPath_(i.decode("utf-8")) for i in show))
         return 0
 else:
     def selectfiles(show): # xxx test for nautilus? gnome-open?
