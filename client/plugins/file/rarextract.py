@@ -25,7 +25,7 @@ import traceback
 from gevent.lock import RLock
 from gevent.event import AsyncResult
 
-from ... import core, event, settings, interface, logger, fileplugin
+from ... import core, event, settings, logger, fileplugin
 from ...scheme import transaction
 from ...config import globalconfig
 from ...contrib import rarfile
@@ -219,9 +219,7 @@ class StreamingExtract(object):
         event.fire('rarextract:part_complete', path, file)
     
     def new_data(self, data):
-        """called when new data or new line
-        """
-        #print "got new data from unrar:", data
+        """called when new data or new line"""
         if "packed data CRC failed in volume" in data:
             return self.kill('checksum error in rar archive')
 
@@ -490,14 +488,6 @@ def bruteforce_by_content(rar, passwords):
 def reinit(rar):
     rar._last_aes_key = (None, None, None)
     rarfile.RarFile.__init__(rar, rar.rarfile, ignore_next_part_missing=True)
-
-
-@interface.register
-class RarextractInterface(interface.Interface):
-    name = "file.rarextract"
-
-    def extract(file=None, password=None):
-        pass
 
 extensions = {
     '3gp': 'video/3gpp',

@@ -213,6 +213,7 @@ def startfile(path):
 
 if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
     from win32com.shell import shell, shellcon
+
     def selectfiles(show):
         folders = defaultdict(list)
         for p in show:
@@ -222,7 +223,8 @@ if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
             folder = shell.SHILCreateFromPath(path, 0)[0]
             desktop = shell.SHGetDesktopFolder()
             shell_folder = desktop.BindToObject(folder, None, shell.IID_IShellFolder)
-            shell.SHOpenFolderAndSelectItems(folder, 
+            shell.SHOpenFolderAndSelectItems(
+                folder,
                 [item for item in shell_folder if desktop.GetDisplayNameOf(item, 0) in files],
                 0)
         return 0
@@ -230,8 +232,9 @@ if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
 elif sys.platform == "darwin":
     from AppKit import NSWorkspace, NSURL
     workspace = NSWorkspace.sharedWorkspace()
+
     def selectfiles(show):
-        workspace.activateFileViewerSelectingURLs_(map(NSURL.fileURLWithPath_, show))
+        workspace.activateFileViewerSelectingURLs_(NSURL.fileURLWithPath_(i.decode("utf-8")) for i in show)
         return 0
 else:
     def selectfiles(show): # xxx test for nautilus? gnome-open?
@@ -292,3 +295,17 @@ class FileInterface(interface.Interface):
                 if os.path.exists(path):
                     show.append(path)
         return selectfiles(show)
+
+    def force_extract(fileids=None):
+        if not fileids:
+            return
+        for f in core.files():
+            if f.id in fileids:
+                path = f.get_complete_file()
+                if os.path.exists(path):
+                    path = FilePath(path)
+                    pluginname = path.ext + "extract"
+                    for _, __, plugin in manager.plugins:
+                        if plugin.name == pluginname:
+                            manager.execute_plugin(plugin, path, f)
+                            break
