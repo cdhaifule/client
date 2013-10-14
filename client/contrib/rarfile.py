@@ -455,6 +455,7 @@ class RarFile(object):
     #: Archive comment.  Byte string or None.  Use UNICODE_COMMENTS
     #: to get automatic decoding to unicode.
     comment = None
+    not_first_volume = False
 
     def __init__(self, rarfile, mode="r", charset=None, info_callback=None, crc_check = True, ignore_next_part_missing=False):
         """Open and parse a RAR archive.
@@ -477,6 +478,7 @@ class RarFile(object):
         self.rarfile = rarfile
         self._ignore_next_part_missing = ignore_next_part_missing
         self.next_part_missing = False
+        self.not_first_volume = False
         self.comment = None
         self._charset = charset or DEFAULT_CHARSET
         self._info_callback = info_callback
@@ -698,7 +700,8 @@ class RarFile(object):
     def _process_entry(self, item):
         if item.type == RAR_BLOCK_FILE:
             # use only first part
-            if (item.flags & RAR_FILE_SPLIT_BEFORE) == 0:
+            if (item.flags & RAR_FILE_SPLIT_BEFORE) == 0 or \
+                    (self._ignore_next_part_missing and item.filename not in self._info_map):
                 self._info_map[item.filename] = item
                 self._info_list.append(item)
                 # remember if any items require password
@@ -785,7 +788,9 @@ class RarFile(object):
                     # RAR 2.x does not set FIRSTVOLUME,
                     # so check it only if NEWNUMBERING is used
                     if (h.flags & RAR_MAIN_FIRSTVOLUME) == 0:
-                        raise NeedFirstVolume("Need to start from first volume")
+                        self.not_first_volume = True
+                        if not self._ignore_next_part_missing:
+                            raise NeedFirstVolume("Need to start from first volume")
                 if h.flags & RAR_MAIN_PASSWORD:
                     self._needs_password = True
                     if not self._password:
@@ -800,7 +805,9 @@ class RarFile(object):
                     more_vols = 1
                 # RAR 2.x does not set RAR_MAIN_FIRSTVOLUME
                 if volume == 0 and h.flags & RAR_FILE_SPLIT_BEFORE:
-                    raise NeedFirstVolume("Need to start from first volume")
+                    self.not_first_volume = True
+                    if not self._ignore_next_part_missing:
+                        raise NeedFirstVolume("Need to start from first volume")
 
             # store it
             self._process_entry(h)
@@ -811,6 +818,7 @@ class RarFile(object):
 
     # AES encrypted headers
     _last_aes_key = (None, None, None) # (salt, key, iv)
+
     def _decrypt_header(self, fd):
         if not _have_crypto:
             raise NoCrypto('Cannot parse encrypted headers - no crypto')

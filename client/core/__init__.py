@@ -152,6 +152,10 @@ class Interface(interface.Interface):
                     for f in obj.files:
                         f.enabled = False
 
+    def start_file(**filter):
+        """open a file. With MacOS use VLC by default, windows will use startfile only for now. other oses will use xdg-open"""
+        filter_objects_callback(files(), filter, lambda obj: obj.startfile())
+
     def stop_file(**filter):
         """stops files. for arguments see accept_collected"""
         with transaction:

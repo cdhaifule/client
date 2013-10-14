@@ -97,6 +97,13 @@ class SeekingFile(object):
             self.f.seek(pos)
         self.f.write(data)
 
+    def read(self, bytes, pos):
+        if not self.f:
+            raise IOError("not opened")
+        if self.pos != pos:
+            self.f.seek(pos)
+        self.f.read(bytes)
+
     def open(self):
         with open_lock, self.lock:
             if not self.f:

@@ -90,6 +90,8 @@ class StreamingExtract(object):
         self.next = None
         self.next_part_event = AsyncResult()
         self.rar = None
+        self.library = None
+        self._library_added = set()
         extractors[id] = self
 
     def feed_part(self, path, file):
@@ -147,10 +149,10 @@ class StreamingExtract(object):
             raise
 
     def bruteforce(self, path, file):
-        try:
-            rar = rarfile.RarFile(path, ignore_next_part_missing=True)
-        except rarfile.NeedFirstVolume:
-            raise
+        rar = rarfile.RarFile(path, ignore_next_part_missing=True)
+        if rar.not_first_volume:
+            raise rarfile.NeedFirstVolume("First Volume for extraction")
+    
         if not rar.needs_password():
             self.password = None
             return
@@ -286,8 +288,49 @@ class StreamingExtract(object):
                 log.debug('got next part from wait {}: {}'.format(next, self.current[0]))
 
         self.current = self.parts[next]
+        self.add_library_files()
         return self.go_on()
-                
+
+    def add_library_files(self):
+        """Add extracted files into the library"""
+        path = fileplugin.FilePath(self.current[0])
+        f = self.first[1]
+
+        with transaction:
+            if self.library is None:
+                print "Creating package for", path.basename
+                self.library = core.Package(
+                    name=os.path.basename(path.basename),
+                    complete_dir=f.package.complete_dir,
+                    exctract_dir=f.package.extract_dir,
+                )
+            rar = rarfile.RarFile(path, ignore_next_part_missing=True)
+            print "password is", self.password
+            try:
+                if not rar.infolist():
+                    rar.setpassword(self.password)
+            except rarfile.BadRarFile:
+                if not rar.infolist():
+                    self.library.delete()
+                    return
+            for item in rar.infolist():
+                name = item.filename
+                print "From new infolist:", name
+                if name in self._library_added:
+                    print "\t already added"
+                    continue
+                else:
+                    self._library_added.add(name)
+                print "creating file for", name, self.library
+                mf = core.File(
+                    package=self.library.id,
+                    name=name,
+                    url='file://' + os.path.join(f.get_extract_path(), name),
+                    state="download_complete",
+                )
+                print mf.package
+        print mf.package
+
     def go_on(self):
         if self.rar is None:
             return self.run(*self.current)
@@ -306,6 +349,7 @@ class StreamingExtract(object):
         
     def kill(self, exc=""):
         blacklist.add(self.first[0].basename) # no autoextract for failed archives
+        self.library.delete()
         print "killing rarextract", self.first[0].basename
         if isinstance(exc, basestring):
             exc = ValueError(exc)

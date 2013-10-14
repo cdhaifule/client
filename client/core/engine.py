@@ -529,6 +529,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     greenlet = Column(None, change_affects=['working'])
     working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['speed', ['package', 'files_working']])
 
+    openable = Column('api', always_use_getter=True, getter_cached=True)
+
     global_status = Column()
 
     # variables only for download
@@ -683,6 +685,29 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             return auto_generate_filename(self)
         else:
             return name
+
+    def on_get_openable(self, value):
+        try:
+            from libmagic import from_file
+        except ImportError:
+            return False
+
+        p = self.get_file_path()
+        t = from_file(p)
+        mime = t.mimetype
+        
+        # videos are openable
+        if mime.startswith("video"):
+            return True
+
+        return False
+
+    def get_file_path(self):
+        order = [self.get_complete_path(), self.get_download_file()]
+        for i in order:
+            if os.path.exists(i):
+                return i
+        raise IOError("File does not exist.")
 
     def on_get_url(self, url):
         return hashlib.md5(url).hexdigest()
