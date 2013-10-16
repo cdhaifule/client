@@ -303,7 +303,7 @@ class StreamingExtract(object):
                 for p in core.packages():
                     if p.name == name:
                         self.library = p
-                        self._library_added = set(f.name for f in p.files())
+                        self._library_added = set(f.name for f in p.files)
                         print "\treused package", p.id
                         print "package", p.id, p.tab
                 if not self.library:
