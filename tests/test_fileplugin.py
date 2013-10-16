@@ -22,7 +22,7 @@ loader.init()
 import os
 import gevent
 
-from client import event, core, fileplugin, debugtools
+from client import event, core, fileplugin, debugtools, download, torrent
 from client.scheme import transaction
 from client import interface
 

@@ -297,13 +297,20 @@ class StreamingExtract(object):
         f = self.first[1]
 
         with transaction:
-            if self.library is None:
+            if not self.library:
                 print "Creating package for", path.basename
-                self.library = core.Package(
-                    name=os.path.basename(path.basename),
-                    complete_dir=f.package.complete_dir,
-                    exctract_dir=f.package.extract_dir,
-                )
+                name = "{} {}".format("Extracted files from", os.path.basename(path.basename))
+                for p in core.packages():
+                    if p.name == name:
+                        self.library = p
+                        self._library_added = set(f.name for f in p.files())
+                        print "\treused package", p.id
+                        print "package", p.id, p.tab
+                if not self.library:
+                    self.library = f.package.clone_empty(
+                        name=name,
+                        tab="complete",
+                    )
             rar = rarfile.RarFile(path, ignore_next_part_missing=True)
             print "password is", self.password
             try:
@@ -313,23 +320,27 @@ class StreamingExtract(object):
                 if not rar.infolist():
                     self.library.delete()
                     return
+            links = []
             for item in rar.infolist():
                 name = item.filename
                 print "From new infolist:", name
                 if name in self._library_added:
                     print "\t already added"
                     continue
+                elif item.isdir():
+                    print "\t is dir"
+                    continue
                 else:
                     self._library_added.add(name)
                 print "creating file for", name, self.library
-                mf = core.File(
-                    package=self.library.id,
+                
+                links.append(dict(
                     name=name,
+                    size=item.file_size,
                     url='file://' + os.path.join(f.get_extract_path(), name),
-                    state="download_complete",
-                )
-                print mf.package
-        print mf.package
+                ))
+        if links:
+            core.add_links(links, package_id=self.library.id)
 
     def go_on(self):
         if self.rar is None:
@@ -387,6 +398,8 @@ class StreamingExtract(object):
 
     def close(self):
         """called when process is closed"""
+        if not self.library:
+            self.add_library_files()
         try:
             del extractors[self.id]
         except KeyError:

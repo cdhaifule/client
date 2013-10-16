@@ -209,6 +209,7 @@ class Package(Table):
 
     _torrent_hash = None
     _log = None
+    _tab_set = False
 
     def __init__(self, extract_passwords=None, position=None, state='collect', system='download', **kwargs):
         self.files = []
@@ -289,7 +290,14 @@ class Package(Table):
         #return any(True for f in self.files if f.working) if self.files else False
         return self.files_working > 0
 
+    def on_set_tab(self, value):
+        self._tab_set = True
+        print "debug: SET_TAB", value
+        return value
+
     def on_get_tab(self, value):
+        if self._tab_set: # explicitly set tab
+            return value
         if self.state is None or self.state == 'collect' or self.files is None:
             return 'collect'
         if self.state == 'download':
