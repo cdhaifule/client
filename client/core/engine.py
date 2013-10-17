@@ -699,8 +699,10 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             from libmagic import from_file
         except ImportError:
             return False
-
-        p = self.get_file_path()
+        try:
+            p = self.get_file_path()
+        except IOError:
+            return False
         t = from_file(p)
         mime = t.mimetype
         
@@ -711,9 +713,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         return False
 
     def get_file_path(self):
-        order = [self.get_complete_path(), self.get_download_file()]
+        order = [self.get_complete_file(), self.get_download_file()]
         for i in order:
-            if os.path.exists(i):
+            if os.path.isfile(i):
                 return i
         raise IOError("File does not exist.")
 
