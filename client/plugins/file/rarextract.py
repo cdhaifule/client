@@ -105,7 +105,7 @@ class StreamingExtract(object):
                 file.state = 'rarextract'
 
         if self.first is None:
-            self.current = path, file
+            self.first = self.current = path, file
             self.add_library_files()
             self.run(path, file)
         else:
