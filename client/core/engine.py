@@ -699,6 +699,10 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             from libmagic import from_file
         except ImportError:
             return False
+        except:
+            import traceback
+            traceback.print_exc()
+            return False
 
         p = self.get_file_path()
         t = from_file(p)
@@ -1026,6 +1030,9 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         return t
 
     def reset(self, _package=False, _inner_reset=False):
+        if self.url.startswith("file://"):
+            self.log("ignored reset for file://.")
+            return
         with transaction:
             self.stop(_package=_package, _stop_fileplugins=True)
             self.reset_progress()

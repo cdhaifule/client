@@ -92,6 +92,7 @@ class StreamingExtract(object):
         self.rar = None
         self.library = None
         self._library_added = set()
+        self._deleted_library = None
         extractors[id] = self
 
     def feed_part(self, path, file):
@@ -105,6 +106,7 @@ class StreamingExtract(object):
 
         if self.first is None:
             self.current = path, file
+            self.add_library_files()
             self.run(path, file)
         else:
             if path.path == self.next:
@@ -311,6 +313,21 @@ class StreamingExtract(object):
                         name=name,
                         tab="complete",
                     )
+
+                @event.register("package:deleted")
+                @event.register("file:deleted")
+                def _deleted_library(event, package):
+                    if event.startswith("file:"):
+                        package = package.package
+
+                    if package.id == self.library.id:
+                        event.remove(_deleted_library)
+                        for f in self.library.files:
+                            f.delete_local_files()
+                        self.kill("Extracted files have been deleted.", False)
+
+                self._deleted_library = _deleted_library
+
             rar = rarfile.RarFile(path, ignore_next_part_missing=True)
             print "password is", self.password
             try:
@@ -358,9 +375,10 @@ class StreamingExtract(object):
             self.current[1].log.info("extract go on: {}".format(self.current[1].name))
         return True
         
-    def kill(self, exc=""):
+    def kill(self, exc="", _del_lib=True):
         blacklist.add(self.first[0].basename) # no autoextract for failed archives
-        self.library.delete()
+        if _del_lib:
+            self.library.delete()
         print "killing rarextract", self.first[0].basename
         if isinstance(exc, basestring):
             exc = ValueError(exc)
@@ -404,7 +422,10 @@ class StreamingExtract(object):
             del extractors[self.id]
         except KeyError:
             pass
-        
+
+        if self._deleted_library:
+            event.remove("package:deleted", self._deleted_library)
+
         if not self.killed:
             if self.current is not None:
                 self.finish_file(*self.current)
