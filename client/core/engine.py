@@ -699,10 +699,6 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             from libmagic import from_file
         except ImportError:
             return False
-        except:
-            import traceback
-            traceback.print_exc()
-            return False
 
         p = self.get_file_path()
         t = from_file(p)
