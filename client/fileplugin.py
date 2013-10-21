@@ -299,13 +299,17 @@ class FileInterface(interface.Interface):
     def force_extract(fileids=None):
         if not fileids:
             return
+        fileids = [int(f) for f in fileids]
         for f in core.files():
             if f.id in fileids:
                 path = f.get_complete_file()
+                print path, os.path.exists(path)
                 if os.path.exists(path):
                     path = FilePath(path)
                     pluginname = path.ext + "extract"
                     for _, __, plugin in manager.plugins:
+                        print "!"*100, 'TEST', plugin.name, pluginname
                         if plugin.name == pluginname:
+                            print "!"*100, 'EXEC', plugin.name
                             manager.execute_plugin(plugin, path, f)
                             break
