@@ -24,7 +24,7 @@ from gevent.event import Event
 from client import interface
 interface.ignore_protected_functions = True
 
-from client import settings, db, api, ui, service, loader, login, logger, localrpc, config, interface, patch
+from client import settings, db, api, ui, service, loader, login, logger, localrpc, config, interface, patch, event
 
 api.is_connected = lambda: True
 api.init = lambda: None
@@ -67,4 +67,6 @@ def init():
 
     interface.call('config', 'set', key='check.use_cache', value=False)
     
-    login.set_login('rico@download.net', 'helloworld')
+    login.set_login('hello@world.com', 'helloworld')
+
+    event.fire('loader:initialized')
