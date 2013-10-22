@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import json
 import keyring
 import traceback
@@ -263,8 +264,13 @@ class ConfigListener(scheme.TransactionListener):
                 return
             data = json.dumps(data, indent=4, sort_keys=True)
             with self.lock:
-                with open(settings.config_file, 'w') as f:
+                with open(settings.config_file+'.tmp', 'w') as f:
                     f.write(data)
+                try:
+                    os.unlink(settings.config_file)
+                except:
+                    pass
+                os.rename(settings.config_file+'.tmp', settings.config_file)
 
 @interface.register
 class Interface(interface.Interface):
@@ -336,8 +342,12 @@ loaded_data = dict()
 def init():
     if settings.config_file:
         try:
-            with open(settings.config_file, 'r') as f:
-                loaded_data.update(json.load(f))
+            try:
+                with open(settings.config_file, 'r') as f:
+                    loaded_data.update(json.load(f))
+            except (IOError, OSError):
+                with open(settings.config_file+'.tmp', 'r') as f:
+                    loaded_data.update(json.load(f))
             event.fire_blocked('config:before_load', loaded_data)
             with transaction:
                 for key in loaded_data.keys():
