@@ -40,13 +40,13 @@ def add_links(links, package_name=None, extract_passwords=None, system='download
         for p in packages():
             if p.id == package_id:
                 default_package = p
+                if extract_passwords:
+                    for password in extract_passwords:
+                        if password not in default_package.extract_passwords:
+                            default_package.extract_passwords.append(password)
                 break
         else:
-            raise RuntimeError("package_id {} not found".format(package_id))
-        if extract_passwords:
-            for password in extract_passwords:
-                if password not in default_package.extract_passwords:
-                    default_package.extract_passwords.append(password)
+            default_package = None
     else:
         default_package = None
 

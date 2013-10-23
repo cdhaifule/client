@@ -169,6 +169,7 @@ with transaction:
 
 PACKAGE_POSITION_MULTIPLICATOR = 5
 
+
 class Package(Table):
     _table_name = 'package'
     _table_collection = _packages
@@ -183,13 +184,15 @@ class Package(Table):
     extract = Column(('db', 'api'), read_only=False)             # value of None means global setting
     extract_passwords = Column(('db', 'api'), read_only=False)
     position = Column(('db', 'api'), read_only=False, fire_event=True)
-    enabled = Column('api', fire_event=True, change_affects=['tab'])       # dummy variable needed for frontend
-    state = Column(('db', 'api'), change_affects=['tab'], fire_event=True) # collect, download, (extract), complete
+    enabled = Column('api', fire_event=True, change_affects=['tab'])        # dummy variable needed for frontend
+    state = Column(('db', 'api'), change_affects=['tab'], fire_event=True)  # collect, download, (extract), complete
+    
+    # collect download torrent complete
     tab = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'tabs']])
 
     system = Column(('db', 'api'))
 
-    hosts = Column('api', always_use_getter=True) # , getter_cached=True)
+    hosts = Column('api', always_use_getter=True)  # , getter_cached=True)
 
     last_error = Column(('db', 'api'), change_affects=['last_error_type'])
     last_error_type = Column(('db', 'api'))
@@ -197,15 +200,19 @@ class Package(Table):
 
     size = Column('api', always_use_getter=True, getter_cached=True, change_affects=['eta', ['global_status', 'size']])
     _progress = Column(always_use_getter=True, getter_cached=True)
-    progress = Column('api', always_use_getter=True, getter_cached=True, change_affects=['speed', 'eta', '_progress', ['global_status', 'progress']])
+    progress = Column('api', always_use_getter=True, getter_cached=True,
+                      change_affects=['speed', 'eta', '_progress', ['global_status', 'progress']])
     speed = Column('api', always_use_getter=True, getter_cached=True, change_affects=['eta', ['global_status', 'speed']])
     eta = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'eta']])
     files = Column(None, change_affects=[['global_status', 'files'], 'hosts', 'size', 'progress', 'tab'])
-    files_working = Column(None, always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'files_working'], 'tab', 'working'])
+    files_working = Column(None, always_use_getter=True, getter_cached=True,
+                           change_affects=[['global_status', 'files_working'], 'tab', 'working'])
     chunks = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks']])
-    chunks_working = Column('api', always_use_getter=True, getter_cached=True, change_affects=[['global_status', 'chunks_working']])
+    chunks_working = Column('api', always_use_getter=True, getter_cached=True,
+                            change_affects=[['global_status', 'chunks_working']])
 
-    working = Column('api', always_use_getter=True, getter_cached=True, change_affects=['tab', ['global_status', 'packages_working']])
+    working = Column('api', always_use_getter=True, getter_cached=True,
+                     change_affects=['tab', ['global_status', 'packages_working']])
 
     _torrent_hash = None
     _log = None
@@ -237,7 +244,7 @@ class Package(Table):
 
     def on_get_hosts(self, value):
         return self.files and list(set(file.host.name for file in self.files if file.host)) or list()
-    
+
     def on_get_size(self, value):
         return sum((f.get_any_size() or 0) for f in self.files if f.enabled) if self.files else 0
 
@@ -246,7 +253,7 @@ class Package(Table):
         max_progress = sum(f._max_progress for f in files)
         progress = sum(f.progress for f in files) if max_progress else 0
         return max_progress, progress
-    
+
     def on_get_progress(self, value):
         if not self.files:
             return
@@ -254,7 +261,7 @@ class Package(Table):
         if max_progress:
             return float(progress)/max_progress
         return None
-        
+
     def on_get_speed(self, value):
         if not self.files:
             return
@@ -276,10 +283,10 @@ class Package(Table):
 
     def on_get_files(self, value):
         return len(self.files)
-    
+
     def on_get_files_working(self, value):
         return self.files and sum(1 for f in self.files if f.working) or 0
-    
+
     def on_get_chunks(self, value):
         return self.files and sum(len(f.chunks) for f in self.files) or 0
 
@@ -296,7 +303,7 @@ class Package(Table):
         return value
 
     def on_get_tab(self, value):
-        if self._tab_set: # explicitly set tab
+        if self._tab_set:  # explicitly set tab
             return value
         if self.state is None or self.state == 'collect' or self.files is None:
             return 'collect'
@@ -360,8 +367,6 @@ class Package(Table):
         with transaction:
             for file in self.files:
                 t = file.stop(_package=True) or t
-        #if t:
-        #    self.log.debug('stopped')
         return t
 
     def reset(self):
@@ -404,7 +409,7 @@ class Package(Table):
                 if self.name and config['create_package_folders']:
                     self.download_dir = os.path.join(self.download_dir, self.name)
         return self.download_dir
-        
+
     @filesystemencoding
     def get_complete_path(self):
         """gets and sets the complete directory"""
@@ -414,7 +419,7 @@ class Package(Table):
                 if self.name and config['create_package_folders']:
                     self.complete_dir = os.path.join(self.complete_dir, self.name)
         return self.complete_dir
-    
+
     @filesystemencoding
     def get_extract_path(self):
         """gets and sets the extract directory"""
@@ -496,12 +501,19 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     _table_deleted_event = True
 
     id = Column(('db', 'api'), change_affects=[['global_status', 'files']])
-    package = Column(('db', 'api'), fire_event=True, foreign_key=[Package, 'files', lambda self, package: package.delete()], change_affects=[['package', 'files']])
+    package = Column(('db', 'api'), fire_event=True,
+                     foreign_key=[Package, 'files', lambda self, package: package.delete()],
+                     change_affects=[['package', 'files']])
     name = Column(('db', 'api'), getter_cached=True)
     size = Column(('db', 'api'), change_affects=[['package', 'size'], 'eta'], fire_event=True)
     position = Column(('db', 'api'), fire_event=True)
-    state = Column(('db', 'api'), fire_event=True, change_affects=[['package', 'tab']])   # check, collect, download, download_complete, (extract, extract_complete), complete
-    enabled = Column(('db', 'api'), fire_event=True, read_only=False, change_affects=['speed', 'name', 'working', ['package', 'tab'], ['package', 'size']])
+
+    # states: check, collect, download, download_complete, (extract, extract_complete), complete
+    state = Column(('db', 'api'), fire_event=True,
+                   change_affects=[['package', 'tab']])
+    enabled = Column(('db', 'api'),
+                     fire_event=True, read_only=False,
+                     change_affects=['speed', 'name', 'working', ['package', 'tab'], ['package', 'size']])
     last_error = Column(('db', 'api'), change_affects=['name', 'working', 'last_error_type'], fire_event=True)
     last_error_type = Column(('db', 'api'))
     completed_plugins = Column(('db', 'api'))
@@ -571,7 +583,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     # misc
     file_plugins_complete = False
 
-    def __init__(self, package=None, enabled=True, state='check', url=None, host=None, pmatch=None, completed_plugins=None, weight=0, extra=None, **kwargs):
+    def __init__(self, package=None, enabled=True, state='check', url=None,
+                 host=None, pmatch=None, completed_plugins=None, weight=0, extra=None, **kwargs):
         GreenletObject.__init__(self)
         if host:
             self.host = host
@@ -972,8 +985,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
             g.kill()
 
     def fatal(self, msg, abort_greenlet=True, type='fatal'):
-        """type can be fatal, error, info. default is fatal
-        """
+        """type can be fatal, error, info. default is fatal"""
         if self.input:
             interface.call('input', 'abort', id=self.input.id)
             self.input = None
@@ -1069,7 +1081,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
             download_file = self.get_download_file()
             for file in files():
-                if file != self and file.get_download_file() == download_file:
+                if file != self and file.tab == self.tab and file.get_download_file() == download_file:
                     file.reset(_package=_package if file.package == self.package else False, _inner_reset=True)
 
         event.fire("file:reset", self)
@@ -1136,23 +1148,32 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def delete_local_files(self):
         def _remove(fn, path):
-            if os.path.exists(path):
+            if os.path.isfile(path):
                 try:
                     fn(path)
                     return True
-                except OSError:
+                except (OSError, IOError):
                     return False
 
+        if self.tab == "collect":
+            # assume there are no local files.
+            return
+
         path = self.get_download_file()
+        for f in files():
+            # do not delete other file while downloading.
+            if f != self and f.tab in ["download", "torrent"] and f.get_download_file() == path:
+                return
+
         if os.path.exists(path):
-            _remove(os.unlink, path)
+            _remove(os.remove, path)
         if path.endswith('.dlpart'):
             path = os.path.splitext(path)[0]
-            _remove(os.unlink, path)
+            _remove(os.remove, path)
 
         if self.name is not None:
             path = self.get_complete_file()
-            _remove(os.unlink, path)
+            _remove(os.remove, path)
 
             download_path = self.get_download_path()
             complete_path = self.get_complete_path()
