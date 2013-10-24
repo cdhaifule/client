@@ -359,12 +359,14 @@ class StreamingExtract(object):
                     continue
                 else:
                     self._library_added.add(name)
-                print "creating file for", name, self.library
+                print "creating file for", repr(name), self.library
                 
                 links.append(dict(
                     name=name,
                     size=item.file_size,
-                    url='file://' + os.path.join(f.get_extract_path(), name),
+                    url=u'file://' + os.path.join(
+                        f.get_extract_path().decode(sys.getfilesystemencoding()),
+                        name),
                 ))
         if links:
             core.add_links(links, package_id=self.library.id)

@@ -16,8 +16,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import sys
 
-from ... import hoster
+from ... import hoster, plugintools
+
 
 @hoster.host
 class this:
@@ -30,20 +32,32 @@ class this:
     favicon_url = "http://download.am/assets/img/icons/http/128icon.png"
     max_chunks = 1
 
+
+@plugintools.filesystemencoding
+def get_path(url):
+    return url[7:]
+
+
 def on_check(file):
     dirs = (file.get_extract_path(), file.get_complete_path(), file.get_download_path())
-    path = file.url[7:]
+    path = get_path(file.url)
+
+    print "file plugin, path is", repr(path)
     
+    try:
+        if file.size:
+            size = file.size
+        else:
+            size = os.path.getsize(path)
+    except OSError:
+        file.set_offline()
+
     if not file.name:
         for p in dirs:
             if path.startswith(p):
-                file.set_infos(name=path[len(p):])
+                file.set_infos(name=path[len(p):].encode(sys.getfilesystemencoding()), size=size)
                 return
-        file.set_infos(name=os.path.basename(path))
+        file.set_infos(name=os.path.basename(path), size=size)
 
-    if any(path.startswith(p) for p in dirs):
-        with hoster.transaction:
-            file.state = "download_done"
-
-def on_download(chunk):
-    print "on_download file"
+    with hoster.transaction:
+        file.state = "download_complete"

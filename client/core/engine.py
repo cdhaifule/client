@@ -51,7 +51,7 @@ config.default('bruteforce_passwords', list(), list)
 config.default('delete_extracted_archives', False, bool)
 
 # misc options
-config.default('removed_completed', 'never', str) # never|package|file
+config.default('removed_completed', 'never', str)  # never|package|file
 config.default('open_browser_after_add_links', False, bool)
 
 # adult
@@ -879,6 +879,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     
     @filesystemencoding
     def get_download_file(self, create_dirs=False):
+        if self.url.startswith("file://"):
+            return self.url[7:]
         path = self.get_download_path(create_dirs)
         if self.name:
             path = os.path.join(path, self._get_fs_name())
@@ -898,6 +900,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     
     @filesystemencoding
     def get_complete_file(self, create_dirs=False):
+        if self.url.startswith("file://"):
+            return self.url[7:]
         path = self.get_complete_path(create_dirs)
         if self.name:
             return os.path.join(path, self._get_fs_name())
@@ -1043,7 +1047,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def reset(self, _package=False, _inner_reset=False):
         if self.url.startswith("file://"):
-            self.log("ignored reset for file://.")
+            self.log.info("ignored reset for file://.")
             return
         with transaction:
             self.stop(_package=_package, _stop_fileplugins=True)

@@ -300,6 +300,7 @@ class FileInterface(interface.Interface):
                 path = f.get_download_file()
                 if os.path.exists(path):
                     show.append(path)
+        print "will select:", repr(show)
         return selectfiles(show)
 
     def force_extract(fileids=None):
