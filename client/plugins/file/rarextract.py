@@ -262,11 +262,12 @@ class StreamingExtract(object):
                         current = fileplugin.FilePath(next), f
                         current[0].finished = AsyncResult()
                         self.parts[next] = current
-                        log.debug('got next part from idle {}: {}'.format(next, self.current[0]))
+                        print('got next part from idle {}: {}'.format(next, self.current[0]))
                         break
-                    if f.working and f.state == "download":
+                    if f.state == "download":
                         found = True
                         break
+                    print "found path but not valid", f.state, f.working
 
             if not found:
                 # file is not in system, check if it exists on hdd
@@ -274,13 +275,13 @@ class StreamingExtract(object):
                     current = fileplugin.FilePath(next), self.first[1]
                     current[0].finished = AsyncResult()
                     self.parts[next] = current
-                    log.debug('got next part from hdd {}: {}'.format(next, self.current[0]))
+                    print('got next part from hdd {}: {}'.format(next, self.current[0]))
                 else:
                     # part does not exists. fail this extract
                     return self.kill('missing part {}'.format(next))
 
             if next not in self.parts:
-                log.debug('waiting for part {}'.format(next))
+                print('waiting for part {}'.format(next))
                 event.fire('rarextract:waiting_for_part', next)
 
                 @event.register("file:last_error")
@@ -479,6 +480,7 @@ def process(path, file, hddsem, threadpool):
             except KeyError:
                 pass
             extractors[id] = StreamingExtract(id, hddsem, threadpool)
+    print "FEED!", path
     extractors[id].feed_part(path, file)
 
 

@@ -23,10 +23,12 @@ from ... import core
 name = 'zipextract'
 priority = 100
 
+
 def match(path, file):
     if core.config.autoextract and path.ext == "zip":
         return True
-        
+
+  
 def process(path, file, hddsem, threadpool):
     ball = zipfile.ZipFile(path)
     with hddsem:
@@ -34,4 +36,4 @@ def process(path, file, hddsem, threadpool):
             extract = path.dir
         else:
             extract = file.get_extract_path()
-        threadpool.spawn(ball.extractall, extract).wait() # xxx flat unpack, xxx progress?
+        threadpool.spawn(ball.extractall, extract).wait()  # xxx flat unpack, xxx progress?

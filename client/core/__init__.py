@@ -33,6 +33,7 @@ def init_optparser(parser, OptionGroup):
     group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
     parser.add_option_group(group)
 
+
 def init(options):
     if not os.path.exists(config.download_dir):
         try:
@@ -93,7 +94,7 @@ def init(options):
             gevent.spawn(file.host.get_account, 'download', file)
             ignore.add(file.host)
 
-    config.shutdown = options.shutdown
+    config.shutdown = bool(options.shutdown)
 
 
 ########################## interface
