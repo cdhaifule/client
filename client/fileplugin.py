@@ -154,6 +154,7 @@ class FilePluginManager(object):
         else:
             gevent.spawn(self.process, fp, delete_after_processing)
 
+
 def fileorpath(fp):
     try:
         path = fp.get_complete_file()
@@ -170,11 +171,13 @@ def on_download_started(e):
         if not f.working and f.package.system == 'download' and 'download' in f.completed_plugins:
             spawn_tasks(e, f, None)
 
+
 @event.register('torrent:started')
 def on_torrent_started(e):
     for f in core.files():
         if not f.working and f.package.system == 'torrent' and 'download' in f.completed_plugins:
             spawn_tasks(e, f, None)
+
 
 @event.register('file.state:changed')
 def spawn_tasks(e, file, old):
@@ -194,10 +197,12 @@ def spawn_tasks(e, file, old):
 
 manager = FilePluginManager()
 
+
 def init():
     for mod in plugintools.load("file"):
         manager.add(mod)
-        
+
+
 def startfile(path):
     try:
         return os.startfile(path)
@@ -237,9 +242,10 @@ elif sys.platform == "darwin":
         workspace.activateFileViewerSelectingURLs_(list(NSURL.fileURLWithPath_(i.decode("utf-8")) for i in show))
         return 0
 else:
-    def selectfiles(show): # xxx test for nautilus? gnome-open?
+    def selectfiles(show):  # xxx test for nautilus? gnome-open?
         parent = os.path.dirname(show[0])
         return startfile(parent)
+
 
 @interface.register
 class FileInterface(interface.Interface):

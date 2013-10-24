@@ -78,7 +78,7 @@ files = lambda: itertools.chain(*[iter(package.files) for package in packages()]
 def convert_name(system, value):
     if not isinstance(value, basestring):
         raise ValueError("name must be string")
-    if system != 'torrent': # remove slashes when this is not a torrent
+    if system != 'torrent':  # remove slashes when this is not a torrent
         value = re.sub(r'[/\\]', '_', value)
     if sys.platform == 'win32':
         for c in '/:*?"<>|':
@@ -307,6 +307,8 @@ class Package(Table):
             return value
         if self.state is None or self.state == 'collect' or self.files is None:
             return 'collect'
+        if all("download" in f.completed_plugins for f in self.files):
+            return "complete"
         if self.state == 'download':
             return self.system
         if not self.enabled or self.working or any(True for f in self.files if f.enabled and not f.state.endswith('_complete')):
@@ -1081,7 +1083,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
             download_file = self.get_download_file()
             for file in files():
-                if file != self and file.tab == self.tab and file.get_download_file() == download_file:
+                if file != self and file.package.tab == self.package.tab and file.get_download_file() == download_file:
                     file.reset(_package=_package if file.package == self.package else False, _inner_reset=True)
 
         event.fire("file:reset", self)
@@ -1155,14 +1157,14 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 except (OSError, IOError):
                     return False
 
-        if self.tab == "collect":
+        if self.package.tab == "collect":
             # assume there are no local files.
             return
 
         path = self.get_download_file()
         for f in files():
             # do not delete other file while downloading.
-            if f != self and f.tab in ["download", "torrent"] and f.get_download_file() == path:
+            if f != self and f.package.tab in ["download", "torrent"] and f.get_download_file() == path:
                 return
 
         if os.path.exists(path):

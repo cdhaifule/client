@@ -36,6 +36,7 @@ config.default('enabled', True, bool)
 
 algorithms = set(hashlib.algorithms)
 
+
 class ProgressTrack(intervalled.Cache):
     def __init__(self, check, file, total):
         self.check = check
@@ -67,7 +68,8 @@ class ProgressTrack(intervalled.Cache):
             print "Set:", self.file.hash_value
             self.file.fatal('file checksum invalid')
         print "checksum OK"
-            
+
+
 class CRC32(object):
     """hashlib compatible interface to crc32"""
     name = 'crc32'
@@ -87,6 +89,7 @@ class CRC32(object):
     def update(self, bytes):
         self._hash = zlib.crc32(bytes, self._hash)
 
+
 class MegaCbcMac(object):
     """interface for checking cbc-mac of mega.co.nz"""
     name = "cbcmac"
@@ -96,7 +99,7 @@ class MegaCbcMac(object):
     def __init__(self, file_key):
         file_key = crypto.base64_to_a32(file_key)
         key = (file_key[0] ^ file_key[4], file_key[1] ^ file_key[5],
-                 file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
+               file_key[2] ^ file_key[6], file_key[3] ^ file_key[7])
         self.meta_mac = file_key[6:8]
         self.file_mac = '\0' * 16
         self.key = crypto.a32_to_str(key)
@@ -117,11 +120,13 @@ algorithms.add("crc32")
 algorithms.add("cbc_mac_mega")
 hashlib.crc32 = CRC32
 
+
 def hashfile(path, check, bs=64*1024):
     try:
         with open(path) as f:
             if check.check.name == "cbcmac":
                 chunks = crypto.get_chunks(path.st_size)
+
                 def readfunc():
                     try:
                         return f.read(chunks.next()[1])
@@ -152,6 +157,7 @@ def match(path, file):
             file.log.debug("hashtype {} not supported".format(file.hash_type))
             return False
     return False
+
 
 def process(path, file, hddsem, threadpool):
     with hddsem:

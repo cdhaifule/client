@@ -154,7 +154,7 @@ class StreamingExtract(object):
         rar = rarfile.RarFile(path, ignore_next_part_missing=True)
         if rar.not_first_volume:
             raise rarfile.NeedFirstVolume("First Volume for extraction")
-    
+
         if not rar.needs_password():
             self.password = None
             return
@@ -166,7 +166,9 @@ class StreamingExtract(object):
             pw = bruteforce_by_content(rar, passwords)
             if not pw:
                 print "could not find password, asking user"
-                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=5):
+                for pw in file.solve_password(
+                        message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name),
+                        retries=5):
                     pw = bruteforce_by_content(rar, [pw])
                     if pw:
                         break
@@ -179,7 +181,9 @@ class StreamingExtract(object):
         print "testing", passwords
         if not self.threadpool.apply(bruteforce, (rar, passwords, self.hddsem, file.log)):
             # ask user for password
-            for pw in file.solve_password(message="Enter the extract password for file: {} #".format(path.name), retries=5):
+            for pw in file.solve_password(
+                    message="Enter the extract password for file: {} #".format(path.name),
+                    retries=5):
                 if self.threadpool.apply(bruteforce, (rar, [pw], self.hddsem, file.log)):
                     break
             else:
@@ -227,7 +231,7 @@ class StreamingExtract(object):
         if "packed data CRC failed in volume" in data:
             return self.kill('checksum error in rar archive')
 
-        if data.startswith("CRC failed in the encrypted file"): # corrupt file or download not complete
+        if data.startswith("CRC failed in the encrypted file"):  # corrupt file or download not complete
             return self.kill('checksum error in rar archive. wrong password?')
 
         if "bad archive" in data.lower():
@@ -253,13 +257,17 @@ class StreamingExtract(object):
             name = os.path.basename(next)
             for f in core.files():
                 if f.name == name and f.get_complete_file() == next:
-                    found = True
                     if not f.working and 'download' in f.completed_plugins:
+                        found = True
                         current = fileplugin.FilePath(next), f
                         current[0].finished = AsyncResult()
                         self.parts[next] = current
                         log.debug('got next part from idle {}: {}'.format(next, self.current[0]))
                         break
+                    if f.working and f.state == "download":
+                        found = True
+                        break
+
             if not found:
                 # file is not in system, check if it exists on hdd
                 if os.path.exists(next):
@@ -312,6 +320,7 @@ class StreamingExtract(object):
                     self.library = f.package.clone_empty(
                         name=name,
                         tab="complete",
+                        state="download_complete",
                     )
 
                 @event.register("package:deleted")
@@ -376,7 +385,7 @@ class StreamingExtract(object):
         return True
         
     def kill(self, exc="", _del_lib=True):
-        blacklist.add(self.first[0].basename) # no autoextract for failed archives
+        blacklist.add(self.first[0].basename)  # no autoextract for failed archives
         if _del_lib:
             self.library.delete()
         print "killing rarextract", self.first[0].basename
@@ -443,6 +452,7 @@ class StreamingExtract(object):
                     if file:
                         file.log.info('extract complete')
 
+
 def check_file(path):
     with lock:
         id = os.path.join(path.dir, path.basename)
@@ -457,16 +467,22 @@ def check_file(path):
             pass
         return id
 
+
 def process(path, file, hddsem, threadpool):
     print "process rar file", path
     with lock:
-        id = os.path.join(path.dir, path.basename) # check_file(path)
+        id = os.path.join(path.dir, path.basename)  # check_file(path)
         if id not in extractors:
             print "Creating StreamingExtract from", path
+            try:
+                blacklist.remove(path.basename)
+            except KeyError:
+                pass
             extractors[id] = StreamingExtract(id, hddsem, threadpool)
     extractors[id].feed_part(path, file)
 
-def bruteforce(rar, pwlist, hddsem, log): # runs in threadpool
+
+def bruteforce(rar, pwlist, hddsem, log):  # runs in threadpool
     if not rar.needs_password():
         return True
     
@@ -481,16 +497,18 @@ def bruteforce(rar, pwlist, hddsem, log): # runs in threadpool
             else:
                 # bug? seems to be successfully checked. maybe crc error, try extracting anyway
                 pass
-        if had_infolist and rar.infolist(): # headers not encrypted, test password
+        if had_infolist and rar.infolist():  # headers not encrypted, test password
             raise NotImplementedError("Cannot bruteforce files with unencrypted headers")
-        if not had_infolist and rar.infolist(): # password set successfull
+        if not had_infolist and rar.infolist():  # password set successfull
             return True
         reinit(rar)
     print "not found"
     return False
 
+
 def test_m2ts(content):
     return all(content.find("\x47", i, 2000) == i for i in (4, 196, 388, 580))
+
 
 def _test_passwords(rar, fname, passwords):
     try:
@@ -536,7 +554,7 @@ def _test_passwords(rar, fname, passwords):
         print "mime is:", result.mimetype
         if desc == "data":
             continue
-        elif ext in extensions: # enforce mime type for extensions
+        elif ext in extensions:  # enforce mime type for extensions
             print "ext is", ext
             if result.mimetype != extensions[ext]:
                 continue
@@ -546,8 +564,9 @@ def _test_passwords(rar, fname, passwords):
         else:
             # may get false positives
             print "found password", pw
-            return pw # return pw for everything besides random application data
+            return pw  # return pw for everything besides random application data
     return False
+
 
 def bruteforce_by_content(rar, passwords):
     def _sort(k):
@@ -562,6 +581,7 @@ def bruteforce_by_content(rar, passwords):
         if pw:
             return pw
     return False
+
 
 def reinit(rar):
     rar._last_aes_key = (None, None, None)
