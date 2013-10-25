@@ -735,6 +735,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         raise IOError("File does not exist.")
 
     def on_get_url(self, url):
+        if isinstance(url, unicode):
+            url = url.encode("ascii", "replace")
         return hashlib.md5(url).hexdigest()
 
     def on_get_package(self, package):

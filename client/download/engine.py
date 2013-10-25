@@ -260,7 +260,7 @@ class DownloadFunction(intervalled.Cache):
 
 def close_stream(stream):
     if stream:
-        if hasattr(stream, 'release_conn') and callable(stream.release_conn): # requests.response.raw object
+        if hasattr(stream, 'release_conn') and callable(stream.release_conn):  # requests.response.raw object
             stream.release_conn()
         elif hasattr(stream, 'close') and callable(stream.close):
             stream.close()
@@ -293,7 +293,7 @@ class FileDownload(object):
             #self.set_context()
             chunk = self.get_first_chunk()
 
-        if chunk is None: # all chunks have state 'complete'
+        if chunk is None:  # all chunks have state 'complete'
             return
 
         # initialize the first download
