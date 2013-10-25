@@ -38,6 +38,7 @@ log = logger.get('loader')
 
 config = globalconfig.new('file')
 
+
 class FilePath(str):
     """File's path string with stat infos and extensions
     """
@@ -52,7 +53,7 @@ class FilePath(str):
         self.dir = os.path.dirname(path)
         n, sext = os.path.splitext(self.basename)
         self.part = None
-        self.compression = None # for tar
+        self.compression = None  # for tar
         if sext.startswith(".part") and self.ext == ".rar":
             self.basename = n
             self.part = sext[5:].strip(". ")
@@ -88,7 +89,11 @@ class FilePluginManager(object):
             if isinstance(fp, core.File):
                 if not fp.enabled or fp.last_error:
                     return
-                fp.fatal('failed opening file: {}'.format(e))
+                if not fp.url.startswith(u"file://"):
+                    fp.fatal('failed opening file: {}'.format(e))
+                else:
+                    fp.log.info("file created, but not there yet.")
+                    return
             log.error('failed opening file: {}'.format(e))
             return
         for _, _, plugin in self.plugins:

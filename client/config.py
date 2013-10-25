@@ -29,6 +29,7 @@ from .scheme import transaction
 
 module_initialized = Event()
 
+
 class ConfigTable(scheme.Table):
     _table_name = 'config'
 
@@ -38,11 +39,16 @@ class ConfigTable(scheme.Table):
 
 _defaults = dict()
 
+
 class Config(object):
     def new(self, name):
         return SubConfig(self, name)
 
-    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None, use_keyring=False, persistent=True):
+    def default(
+            self, key, value, type=None,
+            func=None, private=False, protected=False,
+            allow_none=False, description=None, enum=None,
+            hook=None, use_keyring=False, persistent=True):
         if not func is None:
             self.register_hook(key, func)
         if isinstance(enum, basestring):
@@ -93,7 +99,8 @@ class Config(object):
         elif cnt == 4:
             cb = lambda e, table, old: func(e, configobj(_config or self), self[key], old)
         else:
-            raise ValueError('callback function must have 4 (event, config, value, old_value), 2 (value, old_value), 1 (value) or 0 arguments, not {}'.format(cnt))
+            raise ValueError('callback function must have 4 (event, \
+config, value, old_value), 2 (value, old_value), 1 (value) or 0 arguments, not {}'.format(cnt))
         event.add(e, cb)
 
         # fire changed event directly when config is already initialized

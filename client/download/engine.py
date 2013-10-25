@@ -418,7 +418,9 @@ class FileDownload(object):
         self.file.log.debug('download complete')
 
         if self.file.filehandle is not None and self.file.filehandle.f is not None or self.file.filehandle.refcount != 0:
-            self.file.log.unhandled_exception('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
+            self.file.log.unhandled_exception(
+                'filehandle still open, refcount: {}, handle: {}'.format(
+                    self.file.filehandle.refcount, self.file.filehandle.f))
 
         download_file = self.file.get_download_file()
 

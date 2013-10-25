@@ -113,7 +113,11 @@ class Interface(interface.Interface):
                     continue
                 if not_filter_file and file.match_filter(None, **not_filter_file):
                     continue
-                print "    ", file.enabled, file.working, file.id, file.state, repr(file.name), file.progress, file.last_error, 'reconnect:'+str(file.need_reconnect), file.get_any_size(), file.get_column_value('substate'), file.get_column_value('progress')
+                print("\t", file.enabled, file.working, file.id,
+                      file.state, repr(file.name), file.progress,
+                      file.last_error, 'reconnect:'+str(file.need_reconnect),
+                      file.get_any_size(), file.get_column_value('substate'),
+                      file.get_column_value('progress'))
                 #for chunk in file.chunks:
                 #    print "        ", chunk.id, chunk.working, chunk.state, chunk, chunk.last_error, chunk.substate
         print "-------------------------------------------------------------"

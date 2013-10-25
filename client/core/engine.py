@@ -307,7 +307,7 @@ class Package(Table):
             return value
         if self.state is None or self.state == 'collect' or self.files is None:
             return 'collect'
-        if all("download" in f.completed_plugins for f in self.files):
+        if all("download" in f.completed_plugins for f in self.files if f.enabled):
             return "complete"
         if self.state == 'download':
             return self.system
@@ -1118,10 +1118,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
                 self.table_delete()
         #self.log.debug('deleted')
         if tempfile != complete and os.path.exists(tempfile):
-            try:
-                os.remove(tempfile)
-            except (IOError, OSError) as e:
-                self.log.warning("could not delete temporary file {}: {}".format(tempfile, e))
+            self.delete_local_files()
 
     def delete_after_greenlet(self):
         self.run_after_greenlet(self.delete)
@@ -1154,45 +1151,39 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
 
     def delete_local_files(self):
         def _remove(fn, path):
-            if os.path.isfile(path):
-                try:
-                    fn(path)
-                    return True
-                except (OSError, IOError):
-                    return False
+            self.log.info("REMOVE called on " + repr(path))
+            try:
+                fn(path)
+                return True
+            except (OSError, IOError):
+                return False
 
-        if self.package.tab == "collect":
+        if not "download" in self.completed_plugins:
             # assume there are no local files.
             return
 
+        if self.url.startswith(u"file://"):
+            print "wanted to delete local file", self.url
+            return
+
         path = self.get_download_file()
+        path_complete = self.get_complete_file()
         for f in files():
             # do not delete other file while downloading.
-            if f != self and f.package.tab in ["download", "torrent"] and f.get_download_file() == path:
-                return
+            if f != self and f.package.tab in ["download", "torrent"]:
+                if f.get_download_file() == path or f.get_complete_file() == path_complete:
+                    return
 
-        if os.path.exists(path):
-            _remove(os.remove, path)
-        if path.endswith('.dlpart'):
-            path = os.path.splitext(path)[0]
-            _remove(os.remove, path)
+        _remove(os.remove, path)
+        _remove(os.remove, path_complete)
 
         if self.name is not None:
-            path = self.get_complete_file()
-            _remove(os.remove, path)
-
-            download_path = self.get_download_path()
-            complete_path = self.get_complete_path()
-
-            while True:
-                path = os.path.split(self.name)[0]
-                if not path:
-                    break
-                b = False
-                for path in [os.path.join(download_path, path), os.path.join(complete_path, path)]:
-                    b = _remove(os.rmdir, path) or b
-                if b is False:
-                    break
+            dirname = os.path.split(self.name)[0]
+            if not dirname:
+                return
+            for path in [os.path.join(self.get_download_path(), dirname),
+                         os.path.join(self.get_complete_path(), dirname)]:
+                _remove(os.rmdir, path)
 
     ####################### compare this file with another
 
