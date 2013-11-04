@@ -69,7 +69,9 @@ def init(options):
                 else:
                     download = f.get_download_file()
                     complete = f.get_complete_file()
-                    if "download" in f.completed_plugins and os.path.exists(complete) and os.path.exists(download):
+                    if "download" in f.completed_plugins \
+                            and download != complete \
+                            and os.path.exists(complete) and os.path.exists(download):
                         try:
                             os.remove(download)
                         except (OSError, IOError) as e:

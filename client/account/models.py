@@ -17,11 +17,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import gevent
 import hashlib
 import requests
-import dateutil
+import datetime
 import urlparse
 import time
 
 import keyring
+import dateutil
 from gevent.lock import Semaphore
 
 from .manager import config, manager
@@ -31,6 +32,7 @@ from ..scheme import transaction, Table, Column
 from ..plugintools import ErrorFunctions, InputFunctions, GreenletObject, ctx_error_handler, wildcard
 from ..contrib import sizetools
 from ..variablesizepool import VariableSizePool
+
 
 class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
     """on ErrorFunctions member functions the variable need_reconnect is ignored
@@ -63,7 +65,7 @@ class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
     def __init__(self, **kwargs):
         GreenletObject.__init__(self)
 
-        self.account = self # needed for InputFunctions.solve_* functions
+        self.account = self  # needed for InputFunctions.solve_* functions
 
         self.multi_account = False
 
@@ -136,10 +138,10 @@ class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
             if self.working:
                 return
             if not self.enabled:
-                #TODO: raise GreenletExit ?
+                # TODO: raise GreenletExit ?
                 return
             if self.next_try is not None:
-                #TODO: raise GreenletExit ?
+                # TODO: raise GreenletExit ?
                 return
             with transaction:
                 self.last_error = None
@@ -217,7 +219,7 @@ class Account(Table, ErrorFunctions, InputFunctions, GreenletObject):
         else:
             self.fatal('login failed')
 
-    def retry(self, msg, seconds, _=False): # _ is a placeholder to make ErrorFunctions work. we have no need_reconnect
+    def retry(self, msg, seconds, _=False):  # _ is a placeholder to make ErrorFunctions work. we have no need_reconnect
         with transaction:
             self.next_try = gevent.spawn_later(seconds, self.reset_retry)
             self.next_try.eta = time.time() + seconds
@@ -322,7 +324,9 @@ class Profile(Account):
             self._hostname = self._all_hostnames
 
     def __eq__(self, other):
-        return isinstance(other, Profile) and self.name == other.name and self.hostname == other.hostname and self.port == other.port and self.username == other.username
+        return isinstance(other, Profile) and self.name == other.name and \
+            self.hostname == other.hostname and self.port == other.port and \
+            self.username == other.username
 
     def get_login_data(self):
         data = Account.get_login_data(self)
@@ -392,7 +396,16 @@ class PremiumAccount(HosterAccount):
         return value
 
     def on_set_expires(self, value):
-        return isinstance(value, basestring) and time.mktime(dateutil.parser.parse(value).timetuple()) or value
+        if isinstance(value, datetime.datetime):
+            return time.mktime(value.timetuple())
+        if isinstance(value, basestring):
+            return time.mktime(dateutil.parser.parse(value).timetuple())
+        else:
+            return value
+
+    def set_expires(self, value, **kwargs):
+        """dayfirst, yearfirst"""
+        self.expires = time.mktime(dateutil.parser.parse(value, **kwargs).timetuple())
 
     def on_get_premium(self, premium):
         if not premium:
@@ -678,8 +691,8 @@ class MultiAccount(PremiumAccount):
     multi_account = Column('api')
     compatible_hostnames = Column('api')
 
-    compatible_plugins = [] # string matched existing plugin names
-    compatible_hosts = []   # regex matched hosts
+    compatible_plugins = []  # string matched existing plugin names
+    compatible_hosts = []    # regex matched hosts
 
     def __init__(self, *args, **kwargs):
         PremiumAccount.__init__(self, *args, **kwargs)
@@ -713,6 +726,7 @@ class HttpAccount(Http, Account):
         Account.on_reset(self)
         Http.on_reset(self)
 
+
 class HttpHosterAccount(Http, HosterAccount):
     def __init__(self, **kwargs):
         HosterAccount.__init__(self, **kwargs)
@@ -721,6 +735,7 @@ class HttpHosterAccount(Http, HosterAccount):
     def on_reset(self):
         HosterAccount.on_reset(self)
         Http.on_reset(self)
+
 
 class HttpPremiumAccount(Http, PremiumAccount):
     def __init__(self, **kwargs):
@@ -731,8 +746,8 @@ class HttpPremiumAccount(Http, PremiumAccount):
         PremiumAccount.on_reset(self)
         Http.on_reset(self)
 
+
 class HttpMultiAccount(Http, MultiAccount):
-    
     def __init__(self, *args, **kwargs):
         MultiAccount.__init__(self, *args, **kwargs)
         Http.__init__(self)
