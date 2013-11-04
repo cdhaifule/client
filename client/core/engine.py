@@ -567,6 +567,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
     _log = None
     _split_url = None
     _filehandle = None
+    _speed = None
 
     def set_download_context(self, account=None, proxy=None, download_func=None, download_next_func=None, can_resume=None, max_chunks=None):
         if account is not None:
@@ -636,6 +637,8 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         except ValueError:
             pass
         if extra is not None:
+            if not isinstance(extra, basestring):
+                extra = str(extra)
             try:
                 self.extra = json.loads(base64.urlsafe_b64decode(extra.encode("ascii")))
             except (ValueError, TypeError):
@@ -797,7 +800,7 @@ class File(Table, ErrorFunctions, InputFunctions, GreenletObject):
         return progress and self._max_progress and progress/self._max_progress or 0.0
 
     def on_get_speed(self, speed):
-        return self.greenlet and self.enabled and self._speed.get_bytes() or 0
+        return self.greenlet and self.enabled and self._speed and self._speed.get_bytes() or 0
 
     def on_get_eta(self, eta):
         if not self.greenlet:
