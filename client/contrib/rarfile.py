@@ -342,7 +342,10 @@ class RarSignalExit(RarExecError):
 
 def is_rarfile(fn):
     '''Check quickly whether file is rar archive.'''
-    buf = open(fn, "rb").read(len(RAR_ID))
+    try:
+        buf = open(fn, "rb").read(len(RAR_ID))
+    except (OSError, IOError):
+        return False
     return buf == RAR_ID
 
 

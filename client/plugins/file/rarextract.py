@@ -48,12 +48,15 @@ rarfile.NEED_COMMENTS = 1
 rarfile.UNICODE_COMMENTS = 1
 rarfile.USE_DATETIME = 1
 rarfile.PATH_SEP = '/'
-rarfile.UNRAR_TOOL = config["rartool"]
 
 
 @config.register("rartool")
-def changed(value):
+def changed_rartool(value):
+    if isinstance(value, unicode):
+        value.encode(sys.getfilesystemencoding())
     rarfile.UNRAR_TOOL = value
+
+changed_rartool(config["rartool"])
 
 extractors = dict()
 blacklist = set()
