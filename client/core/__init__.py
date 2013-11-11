@@ -62,6 +62,8 @@ def init(options):
                 try:
                     dict_json(b)
                     f = File(**b)
+                    if f.url is None:
+                        raise RuntimeError('file.url is None')
                 except (RuntimeError, TypeError):
                     pass
                 except:

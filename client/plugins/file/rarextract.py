@@ -53,7 +53,7 @@ rarfile.PATH_SEP = '/'
 @config.register("rartool")
 def changed_rartool(value):
     if isinstance(value, unicode):
-        value.encode(sys.getfilesystemencoding())
+        value = value.encode(sys.getfilesystemencoding())
     rarfile.UNRAR_TOOL = value
 
 changed_rartool(config["rartool"])
@@ -233,14 +233,14 @@ class StreamingExtract(object):
         if "bad archive" in data.lower():
             return self.kill('Bad archive')
 
-        m = re.search(r"Insert disk with (.*?) \[C\]ontinue\, \[Q\]uit", data)
+        m = re.search(r"Insert disk with (.*?((\.part\d+)?\.r..)) \[C\]ontinue\, \[Q\]uit", data)
         if not m:
             return
 
         if self.current is not None:
             self.finish_file(*self.current)
 
-        self.next = m.group(1)
+        self.next = self.first[0].basename + m.group(2)
         print "setting self.next", self.next
         return self.find_next()
 
@@ -324,6 +324,9 @@ class StreamingExtract(object):
                 @event.register("package:deleted")
                 @event.register("file:deleted")
                 def _deleted_library(e, package):
+                    import traceback
+                    print traceback.print_stack()
+                    print "---------", e
                     if e.startswith("file:"):
                         package = package.package
 
@@ -386,15 +389,18 @@ class StreamingExtract(object):
         return True
         
     def kill(self, exc="", _del_lib=True):
+        if self.killed:
+            return exc
+        self.killed = True
+
         blacklist.add(self.first[0].basename)  # no autoextract for failed archives
         if _del_lib:
             self.library.delete()
-        print "killing rarextract", self.first[0].basename
+        print "killing rarextract", self.first[0].basename, exc
         if isinstance(exc, basestring):
             exc = ValueError(exc)
 
         self.current = None
-        self.killed = True
 
         if self.rar is not None:
             self.rar.terminate()
