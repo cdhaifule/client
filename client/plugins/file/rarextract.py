@@ -329,12 +329,13 @@ class StreamingExtract(object):
 
                 @event.register("package:deleted")
                 @event.register("file:deleted")
-                def _deleted_library(event, package):
-                    if event.startswith("file:"):
+                def _deleted_library(e, package):
+                    if e.startswith("file:"):
                         package = package.package
 
                     if package.id == self.library.id:
-                        event.remove(_deleted_library)
+                        event.remove("package:deleted", _deleted_library)
+                        event.remove("file:deleted", _deleted_library)
                         for f in self.library.files:
                             f.delete_local_files()
                         self.kill("Extracted files have been deleted.", False)
