@@ -15,5 +15,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import intervalled
-from .transaction import transaction, register, unregister, TransactionListener, PassiveListener, DelayedListener, DebugListener, TransactionError
+from .transaction import transaction, register, unregister, \
+	TransactionListener, PassiveListener, DelayedListener, DebugListener, TransactionError
 from .scheme import get_by_uuid, Column, Table, filter_objects_callback

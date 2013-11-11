@@ -47,10 +47,12 @@ class ProgressTrack(intervalled.Cache):
         
     def start(self):
         # setup file state that it is checked
-        self.file.init_progress(self.total)
-        
+        # self.file.init_progress(self.total)
+        print "start checksum progress"
+
     def commit(self):
-        self.file.set_progress(self.updated)
+        #self.file.set_progress(self.updated)
+        print "update checksum progress", self.updated
         
     def update(self, data):
         self.check.update(data)
