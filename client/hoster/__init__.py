@@ -156,6 +156,7 @@ class HosterInterface(interface.Interface):
         else:
             return False
 
+
 def reset_icon_cache():
     global icon_cache
     if icon_cache is not None:
@@ -166,6 +167,7 @@ def reset_icon_cache():
 
 icon_cache = None
 icon_cache_path = os.path.join(temp_dir, "icon_cache")
+
 
 def check_dependencies(module, retry):
     if hasattr(module.this, 'uses'):
@@ -178,14 +180,24 @@ def check_dependencies(module, retry):
                 retry.append(module)
                 return True
 
+
 def init():
     global icon_cache
     
     # load icon cache
-    icon_cache = shelve.open(icon_cache_path.encode(sys.getfilesystemencoding()), writeback=True)
+    cachepath = icon_cache_path.encode(sys.getfilesystemencoding())
+    for i in range(3):
+        try:
+            icon_cache = shelve.open(cachepath, writeback=True)
+        except ImportError:
+            # icon cache was copied to a different platform or system
+            reset_icon_cache()
+        else:
+            break
+
     icon_cache.close = icon_cache.sync
     try:
-        a, (b, c) = icon_cache.iteritems().next() # reset cache if format not correct.
+        a, (b, c) = icon_cache.iteritems().next()  # reset cache if format not correct.
         b/1
         assert isinstance(c, dict)
     except StopIteration:

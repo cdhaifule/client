@@ -38,6 +38,7 @@ log = logger.get('loader')
 
 config = globalconfig.new('file')
 
+
 class FilePath(str):
     """File's path string with stat infos and extensions
     """
@@ -52,7 +53,7 @@ class FilePath(str):
         self.dir = os.path.dirname(path)
         n, sext = os.path.splitext(self.basename)
         self.part = None
-        self.compression = None # for tar
+        self.compression = None  # for tar
         if sext.startswith(".part") and self.ext == ".rar":
             self.basename = n
             self.part = sext[5:].strip(". ")
@@ -88,7 +89,11 @@ class FilePluginManager(object):
             if isinstance(fp, core.File):
                 if not fp.enabled or fp.last_error:
                     return
-                fp.fatal('failed opening file: {}'.format(e))
+                if not fp.url.startswith(u"file://"):
+                    fp.fatal('failed opening file: {}'.format(e))
+                else:
+                    fp.log.info("file created, but not there yet.")
+                    return
             log.error('failed opening file: {}'.format(e))
             return
         for _, _, plugin in self.plugins:
@@ -154,6 +159,7 @@ class FilePluginManager(object):
         else:
             gevent.spawn(self.process, fp, delete_after_processing)
 
+
 def fileorpath(fp):
     try:
         path = fp.get_complete_file()
@@ -170,11 +176,13 @@ def on_download_started(e):
         if not f.working and f.package.system == 'download' and 'download' in f.completed_plugins:
             spawn_tasks(e, f, None)
 
+
 @event.register('torrent:started')
 def on_torrent_started(e):
     for f in core.files():
         if not f.working and f.package.system == 'torrent' and 'download' in f.completed_plugins:
             spawn_tasks(e, f, None)
+
 
 @event.register('file.state:changed')
 def spawn_tasks(e, file, old):
@@ -194,10 +202,12 @@ def spawn_tasks(e, file, old):
 
 manager = FilePluginManager()
 
+
 def init():
     for mod in plugintools.load("file"):
         manager.add(mod)
-        
+
+
 def startfile(path):
     try:
         return os.startfile(path)
@@ -213,6 +223,7 @@ def startfile(path):
 
 if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
     from win32com.shell import shell, shellcon
+
     def selectfiles(show):
         folders = defaultdict(list)
         for p in show:
@@ -222,7 +233,8 @@ if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
             folder = shell.SHILCreateFromPath(path, 0)[0]
             desktop = shell.SHGetDesktopFolder()
             shell_folder = desktop.BindToObject(folder, None, shell.IID_IShellFolder)
-            shell.SHOpenFolderAndSelectItems(folder, 
+            shell.SHOpenFolderAndSelectItems(
+                folder,
                 [item for item in shell_folder if desktop.GetDisplayNameOf(item, 0) in files],
                 0)
         return 0
@@ -230,13 +242,15 @@ if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
 elif sys.platform == "darwin":
     from AppKit import NSWorkspace, NSURL
     workspace = NSWorkspace.sharedWorkspace()
+
     def selectfiles(show):
-        workspace.activateFileViewerSelectingURLs_(map(NSURL.fileURLWithPath_, show))
+        workspace.activateFileViewerSelectingURLs_(list(NSURL.fileURLWithPath_(i.decode("utf-8")) for i in show))
         return 0
 else:
-    def selectfiles(show): # xxx test for nautilus? gnome-open?
+    def selectfiles(show):  # xxx test for nautilus? gnome-open?
         parent = os.path.dirname(show[0])
         return startfile(parent)
+
 
 @interface.register
 class FileInterface(interface.Interface):
@@ -291,4 +305,23 @@ class FileInterface(interface.Interface):
                 path = f.get_download_file()
                 if os.path.exists(path):
                     show.append(path)
+        print "will select:", repr(show)
         return selectfiles(show)
+
+    def force_extract(fileids=None):
+        if not fileids:
+            return
+        fileids = [int(f) for f in fileids]
+        for f in core.files():
+            if f.id in fileids:
+                path = f.get_complete_file()
+                print path, os.path.exists(path)
+                if os.path.exists(path):
+                    path = FilePath(path)
+                    pluginname = path.ext + "extract"
+                    for _, __, plugin in manager.plugins:
+                        print "!"*100, 'TEST', plugin.name, pluginname
+                        if plugin.name == pluginname:
+                            print "!"*100, 'EXEC', plugin.name
+                            manager.execute_plugin(plugin, path, f)
+                            break

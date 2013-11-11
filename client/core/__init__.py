@@ -33,6 +33,7 @@ def init_optparser(parser, OptionGroup):
     group.add_option('--shutdown', dest="shutdown", action="store_true", default=False, help=_T.core__shutdown)
     parser.add_option_group(group)
 
+
 def init(options):
     if not os.path.exists(config.download_dir):
         try:
@@ -68,7 +69,9 @@ def init(options):
                 else:
                     download = f.get_download_file()
                     complete = f.get_complete_file()
-                    if "download" in f.completed_plugins and os.path.exists(complete) and os.path.exists(download):
+                    if "download" in f.completed_plugins \
+                            and download != complete \
+                            and os.path.exists(complete) and os.path.exists(download):
                         try:
                             os.remove(download)
                         except (OSError, IOError) as e:
@@ -93,7 +96,7 @@ def init(options):
             gevent.spawn(file.host.get_account, 'download', file)
             ignore.add(file.host)
 
-    config.shutdown = options.shutdown
+    config.shutdown = bool(options.shutdown)
 
 
 ########################## interface
@@ -112,7 +115,11 @@ class Interface(interface.Interface):
                     continue
                 if not_filter_file and file.match_filter(None, **not_filter_file):
                     continue
-                print "    ", file.enabled, file.working, file.id, file.state, repr(file.name), file.progress, file.last_error, 'reconnect:'+str(file.need_reconnect), file.get_any_size(), file.get_column_value('substate'), file.get_column_value('progress')
+                print("\t", file.enabled, file.working, file.id,
+                      file.state, repr(file.name), file.progress,
+                      file.last_error, 'reconnect:'+str(file.need_reconnect),
+                      file.get_any_size(), file.get_column_value('substate'),
+                      file.get_column_value('progress'))
                 #for chunk in file.chunks:
                 #    print "        ", chunk.id, chunk.working, chunk.state, chunk, chunk.last_error, chunk.substate
         print "-------------------------------------------------------------"
@@ -151,6 +158,10 @@ class Interface(interface.Interface):
                     obj.stop()
                     for f in obj.files:
                         f.enabled = False
+
+    def start_file(**filter):
+        """open a file. With MacOS use VLC by default, windows will use startfile only for now. other oses will use xdg-open"""
+        filter_objects_callback(files(), filter, lambda obj: obj.startfile())
 
     def stop_file(**filter):
         """stops files. for arguments see accept_collected"""

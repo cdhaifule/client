@@ -22,13 +22,14 @@ loader.init()
 import os
 import gevent
 
-from client import event, core, fileplugin, debugtools
+from client import event, core, fileplugin, debugtools, download, torrent
 from client.scheme import transaction
 from client import interface
 
 fileplugin.init()
 
 rootpath = os.path.dirname(__file__)
+
 
 class FakeHosterPlugin(object):
     name = 'fake.com'
@@ -39,13 +40,15 @@ class FakeHosterPlugin(object):
     def get_hostname(self, file):
         return 'fake.com'
 
+
 def _test_file(name, plugin):
     print '-'*100, "testing plugin {} with file {}".format(plugin, name)
 
     path = os.path.join(rootpath, name)
     with transaction:
         package = core.Package(name=os.path.splitext(name)[0], complete_dir=rootpath)
-        file = core.File(package=package, name=name, url='file://{}'.format(path), host=FakeHosterPlugin(), pmatch='asdf', state='download_complete')
+        file = core.File(package=package, name=name, url='file://{}'.format(path), host=FakeHosterPlugin(),
+                         pmatch='asdf', state='download_complete')
 
     event.wait_for_events(['fileplugin:done'], 5)
 
@@ -64,43 +67,56 @@ def _test_file(name, plugin):
 
     file.delete()
 
+
 def add_files(files, s1, s2, s3):
     with transaction:
         package = core.Package(name=os.path.splitext('1mb')[0], complete_dir=rootpath)
         name = '1mb.part1.rar'
-        files.append(core.File(package=package, name=name, url='file://{}'.format(os.path.join(rootpath, name)), host=FakeHosterPlugin(), pmatch='asdf', state=s1))
+        files.append(core.File(package=package, name=name,
+                     url='file://{}'.format(os.path.join(rootpath, name)), host=FakeHosterPlugin(),
+                     pmatch='asdf', state=s1))
         name = '1mb.part2.rar'
-        files.append(core.File(package=package, name=name, url='file://{}'.format(os.path.join(rootpath, name)), host=FakeHosterPlugin(), pmatch='asdf', state=s2))
+        files.append(core.File(package=package, name=name,
+                     url='file://{}'.format(os.path.join(rootpath, name)), host=FakeHosterPlugin(),
+                     pmatch='asdf', state=s2, working=True))
         name = '1mb.part3.rar'
-        files.append(core.File(package=package, name=name, url='file://{}'.format(os.path.join(rootpath, name)), host=FakeHosterPlugin(), pmatch='asdf', state=s3))
+        files.append(core.File(package=package, name=name, url='file://{}'.format(os.path.join(rootpath, name)),
+                     host=FakeHosterPlugin(), pmatch='asdf', state=s3, working=True))
+
 
 def test_rar_multipart():
     print "-"*100, 'test_rar_multipart'
 
     files = list()
-    add_files(files, 'download_complete', 'foo', 'foo')
+    add_files(files, 'download_complete', 'download', 'download')
 
     event.wait_for_events(['rarextract:part_complete', 'rarextract:waiting_for_part'], 5)
     interface.call('core', 'printr')
 
     with transaction:
-        files[1].state = 'download_complete'
+        if not "rarextract" in files[1].completed_plugins:
+            print files[1].state
+            files[1].state = 'download_complete'
+            files[1].working = False
 
     event.wait_for_events(['rarextract:part_complete', 'rarextract:waiting_for_part'], 5)
     interface.call('core', 'printr')
 
     with transaction:
-        files[2].state = 'download_complete'
+        if not "rarextract" in files[2].completed_plugins:
+            print files[2].state
+            files[2].state = 'download_complete'
+            files[2].working = False
 
     event.wait_for_events(['rarextract:part_complete', 'rarextract:waiting_for_part'], 5)
     interface.call('core', 'printr')
 
-    gevent.sleep(0.1)
+    gevent.sleep(1)
     for f in files:
         f.join()
         assert f.last_error is None
-        assert f.working is False
-        assert f.state == 'rarextract_complete'
+        assert not f.working, "{} is working".format(f.name)
+        assert f.state == 'rarextract_complete', "expected complete, but is {}".format(f.state)
 
     p = os.path.join(files[0].get_extract_path(), "1mb.bin")
     assert os.path.exists(p)
@@ -112,6 +128,7 @@ def test_rar_multipart():
 
     for f in files:
         f.delete()
+
 
 def _test_rar_multipart_start_stop():
     print '-'*100, 'test_rar_multipart_start_stop'
@@ -145,7 +162,7 @@ def _test_rar_multipart_start_stop():
         f.join()
         assert f.last_error is None
         assert f.working is False
-        assert f.state == 'rarextract_complete'
+        assert f.state == 'rarextract_complete', "expected complete, but is {}".format(f.state)
 
     p = os.path.join(files[0].get_extract_path(), "1mb.bin")
     assert os.path.exists(p)
@@ -157,6 +174,7 @@ def _test_rar_multipart_start_stop():
 
     for f in files:
         f.delete()
+
 
 def test_fileplugin():
     _test_file('test_fileplugin.rar', 'rarextract')

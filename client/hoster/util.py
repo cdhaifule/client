@@ -84,7 +84,10 @@ def http_response(chunk, resp=None):
         length = None
 
     if resp.headers.get('Content-Disposition', None) not in (None, 'attachment'):
-        name = contentdisposition.parse(resp.headers['Content-Disposition'])
+        try:
+            name = contentdisposition.parse(resp.headers['Content-Disposition'])
+        except AttributeError:
+            name = None
     else:
         name = None
 

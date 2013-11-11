@@ -34,6 +34,7 @@ def on_package_changed(*args):
     with transaction:
         global_status.packages = len(_packages)
 
+
 @event.register('file:deleted')
 def on_file_deleted(e, file):
     p = file.package
@@ -45,11 +46,13 @@ def on_file_deleted(e, file):
 
 sort_queue = EmptyQueue()
 
+
 @Package.position.changed
 def package_position_changed(package, old):
     if 'packages' not in sort_queue:
         sort_queue.put('packages')
         event.fire_once_later(0.2, 'core:sort_queue')
+
 
 @File.package.changed
 @File.host.changed
@@ -59,6 +62,7 @@ def sort_package_files(file, old):
         sort_queue.put('package')
         event.fire_once_later(0.2, 'core:sort_queue')
 
+
 @event.register('account:created')
 @event.register('account:initialized')
 @event.register('account:deleted')
@@ -66,6 +70,7 @@ def sort_all_files(*args):
     if not 'files' in sort_queue:
         sort_queue.put('files')
         event.fire_once_later(0.2, 'core:sort_queue')
+
 
 @event.register('core:sort_queue')
 def handle_sort_queue(*args):
@@ -97,6 +102,7 @@ while checking or downloading:
     ['waiting', miliseconds]
     ['retry', miliseconds, need_reconnect]"""
 
+
 @File.waiting.changed
 @Chunk.waiting.changed
 def waiting_changed(self, value):
@@ -104,6 +110,7 @@ def waiting_changed(self, value):
         self.push_substate('waiting', int(value*1000))
     else:
         self.pop_substate()
+
 
 @File.next_try.changed
 @File.need_reconnect.changed
@@ -119,6 +126,7 @@ def retry_changed(self, value):
     #elif self.substate[0] != 'waiting_account':
     elif self.substate[0] == 'retry':
         self.pop_substate()
+
 
 @File.input.changed
 @Chunk.input.changed
@@ -159,6 +167,7 @@ def _auto_remove_files(file):
             f.log.info('auto removing complete file')
             f.delete()
 
+
 @event.register('fileplugin:done')
 def on_fileplugin_done(e, path, file):
     if file is None:
@@ -182,8 +191,8 @@ def on_fileplugin_done(e, path, file):
                 _auto_remove_files(file.package.files[0])
             file.package.delete()
 
-# file chunks changed (progress update)
 
+# file chunks changed (progress update)
 @File.chunks.changed
 def file_chunks_changed(file, old):
     if file.state == 'download' and file.package.system == 'download':
@@ -192,8 +201,8 @@ def file_chunks_changed(file, old):
             file.init_progress(size)
             file.set_progress(sum(chunk.pos - chunk.begin for chunk in file.chunks))
 
-# shutdown computer when downloads are done
 
+# shutdown computer when downloads are done
 def tell_system_events(command):
     subprocess.call(
         ["osascript", "-e",
@@ -202,6 +211,7 @@ tell application "System Events"
     {}
 end tell
 """.format(command)])
+
 
 def shutdown_windows():
     wmi.WMI(privileges=["Shutdown"]).Win32_OperatingSystem()[0].Shutdown()
@@ -232,14 +242,17 @@ if shutdown_actions:
     config.default('shutdown', False, bool, persistent=False)
     config.default('shutdown_timeout', 60, int, description="Display message box duration before computer shutdown")
 
+
 def on_package_tab_changed(p, old):
     if p.tab not in {'collect', 'complete'}:
         return
     event.fire_once_later(1, 'core:check_package_tabs')
 
+
 def on_engine_state_changed(*_):
     if check_engine_state():
         return
+
 
 def check_engine_state():
     from .. import download, torrent

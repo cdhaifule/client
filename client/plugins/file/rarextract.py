@@ -15,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
 import os
 import re
 import sys
@@ -26,7 +25,7 @@ import traceback
 from gevent.lock import RLock
 from gevent.event import AsyncResult
 
-from ... import core, event, settings, interface, logger, fileplugin
+from ... import core, event, settings, logger, fileplugin
 from ...scheme import transaction
 from ...config import globalconfig
 from ...contrib import rarfile
@@ -49,14 +48,19 @@ rarfile.NEED_COMMENTS = 1
 rarfile.UNICODE_COMMENTS = 1
 rarfile.USE_DATETIME = 1
 rarfile.PATH_SEP = '/'
-rarfile.UNRAR_TOOL = config["rartool"]
+
 
 @config.register("rartool")
-def changed(value):
+def changed_rartool(value):
+    if isinstance(value, unicode):
+        value.encode(sys.getfilesystemencoding())
     rarfile.UNRAR_TOOL = value
+
+changed_rartool(config["rartool"])
 
 extractors = dict()
 blacklist = set()
+
 
 def match(path, file):
     if not isinstance(file, core.File):
@@ -73,6 +77,7 @@ def match(path, file):
         return None
     return True
 
+
 class StreamingExtract(object):
     def __init__(self, id, hddsem, threadpool):
         self.id = id
@@ -88,8 +93,11 @@ class StreamingExtract(object):
         self.next = None
         self.next_part_event = AsyncResult()
         self.rar = None
+        self.library = None
+        self._library_added = set()
+        self._deleted_library = None
         extractors[id] = self
-        
+
     def feed_part(self, path, file):
         path.finished = AsyncResult()
         self.parts[path.path] = path, file
@@ -100,7 +108,8 @@ class StreamingExtract(object):
                 file.state = 'rarextract'
 
         if self.first is None:
-            self.current = path, file
+            self.first = self.current = path, file
+            self.add_library_files()
             self.run(path, file)
         else:
             if path.path == self.next:
@@ -143,35 +152,41 @@ class StreamingExtract(object):
             traceback.print_exc()
             self.kill(e)
             raise
-        
+
     def bruteforce(self, path, file):
-        try:
-            rar = rarfile.RarFile(path, ignore_next_part_missing=True)
-        except rarfile.NeedFirstVolume:
-            raise
+        rar = rarfile.RarFile(path, ignore_next_part_missing=True)
+        if rar.not_first_volume:
+            raise rarfile.NeedFirstVolume("First Volume for extraction")
+
         if not rar.needs_password():
             self.password = None
-            return
-        if rar.needs_password() and rar.infolist():
-            # unencrypted headers. use file password or ask user.
-            pw = None
-            if len(file.package.extract_passwords) == 1:
-                pw = file.package.extract_passwords[0]
-            if not pw:
-                for pw in file.solve_password(message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name), retries=1):
-                    break
-                else:
-                    return self.kill('extract password not entered')
-            self.password = pw
             return
         passwords = []
         for i in itertools.chain(file.package.extract_passwords, core.config.bruteforce_passwords):
             if not i in passwords:
                 passwords.append(i)
+        if rar.needs_password() and rar.infolist():
+            pw = bruteforce_by_content(rar, passwords)
+            if not pw:
+                print "could not find password, asking user"
+                for pw in file.solve_password(
+                        message="Rarfile {} password cannot be cracked. Enter correct password: #".format(path.name),
+                        retries=5):
+                    pw = bruteforce_by_content(rar, [pw])
+                    if pw:
+                        break
+                else:
+                    return self.kill('extract password not entered')
+            else:
+                print "Found password by content:", pw
+            self.password = pw
+            return
         print "testing", passwords
         if not self.threadpool.apply(bruteforce, (rar, passwords, self.hddsem, file.log)):
             # ask user for password
-            for pw in file.solve_password(message="Enter the extract password for file: {} #".format(path.name), retries=5):
+            for pw in file.solve_password(
+                    message="Enter the extract password for file: {} #".format(path.name),
+                    retries=5):
                 if self.threadpool.apply(bruteforce, (rar, [pw], self.hddsem, file.log)):
                     break
             else:
@@ -215,14 +230,15 @@ class StreamingExtract(object):
         event.fire('rarextract:part_complete', path, file)
     
     def new_data(self, data):
-        """called when new data or new line
-        """
-        #print "got new data from unrar:", data
+        """called when new data or new line"""
         if "packed data CRC failed in volume" in data:
             return self.kill('checksum error in rar archive')
-            
-        if data.startswith("CRC failed in the encrypted file"): # corrupt file or download not complete
+
+        if data.startswith("CRC failed in the encrypted file"):  # corrupt file or download not complete
             return self.kill('checksum error in rar archive. wrong password?')
+
+        if "bad archive" in data.lower():
+            return self.kill('Bad archive')
 
         m = re.search(r"Insert disk with (.*?) \[C\]ontinue\, \[Q\]uit", data)
         if not m:
@@ -234,7 +250,7 @@ class StreamingExtract(object):
         self.next = m.group(1)
         print "setting self.next", self.next
         return self.find_next()
-        
+
     def find_next(self):
         print "finding next", self.next
         next = self.next
@@ -244,27 +260,40 @@ class StreamingExtract(object):
             name = os.path.basename(next)
             for f in core.files():
                 if f.name == name and f.get_complete_file() == next:
-                    found = True
                     if not f.working and 'download' in f.completed_plugins:
+                        found = True
                         current = fileplugin.FilePath(next), f
                         current[0].finished = AsyncResult()
                         self.parts[next] = current
-                        log.debug('got next part from idle {}: {}'.format(next, self.current[0]))
+                        print('got next part from idle {}: {}'.format(next, self.current[0]))
                         break
+                    if f.state == "download":
+                        found = True
+                        break
+                    print "found path but not valid", f.state, f.working
+
             if not found:
                 # file is not in system, check if it exists on hdd
                 if os.path.exists(next):
                     current = fileplugin.FilePath(next), self.first[1]
                     current[0].finished = AsyncResult()
                     self.parts[next] = current
-                    log.debug('got next part from hdd {}: {}'.format(next, self.current[0]))
+                    print('got next part from hdd {}: {}'.format(next, self.current[0]))
                 else:
                     # part does not exists. fail this extract
                     return self.kill('missing part {}'.format(next))
 
             if next not in self.parts:
-                log.debug('waiting for part {}'.format(next))
+                print('waiting for part {}'.format(next))
                 event.fire('rarextract:waiting_for_part', next)
+
+                @event.register("file:last_error")
+                def killit(e, f):
+                    if not f.name == name and f.get_complete_file() == next:
+                        return
+                    if all(f.last_error for f in core.files() if f.name == name and f.get_complete_file() == next):
+                        event.remove("file:last_error", killit)
+                        self.kill('all of the next parts are broken.')
                 
                 while next not in self.parts:
                     self.next_part_event.get()
@@ -273,8 +302,79 @@ class StreamingExtract(object):
                 log.debug('got next part from wait {}: {}'.format(next, self.current[0]))
 
         self.current = self.parts[next]
+        self.add_library_files()
         return self.go_on()
+
+    def add_library_files(self):
+        """Add extracted files into the library"""
+        path = fileplugin.FilePath(self.current[0])
+        f = self.first[1]
+
+        with transaction:
+            if not self.library:
+                print "Creating package for", path.basename
+                name = "{} {}".format("Extracted files from", os.path.basename(path.basename))
+                for p in core.packages():
+                    if p.name == name:
+                        self.library = p
+                        self._library_added = set(f.name for f in p.files)
+                        print "\treused package", p.id
+                        print "package", p.id, p.tab
+                if not self.library:
+                    self.library = f.package.clone_empty(
+                        name=name,
+                        tab="complete",
+                        state="download_complete",
+                    )
+
+                @event.register("package:deleted")
+                @event.register("file:deleted")
+                def _deleted_library(e, package):
+                    if e.startswith("file:"):
+                        package = package.package
+
+                    if package.id == self.library.id:
+                        event.remove("package:deleted", _deleted_library)
+                        event.remove("file:deleted", _deleted_library)
+                        for f in self.library.files:
+                            f.delete_local_files()
+                        self.kill("Extracted files have been deleted.", False)
+
+                self._deleted_library = _deleted_library
+
+            rar = rarfile.RarFile(path, ignore_next_part_missing=True)
+            print "password is", self.password
+            try:
+                if not rar.infolist():
+                    rar.setpassword(self.password)
+            except rarfile.BadRarFile:
+                if not rar.infolist():
+                    self.library.delete()
+                    return
+            links = []
+            for item in rar.infolist():
+                name = item.filename
+                print "From new infolist:", name
+                if name in self._library_added:
+                    print "\t already added"
+                    continue
+                elif item.isdir():
+                    print "\t is dir"
+                    continue
+                else:
+                    self._library_added.add(name)
+                print "creating file for", repr(name), self.library
                 
+                links.append(dict(
+                    name=name,
+                    size=item.file_size,
+                    url=u'file://' + os.path.join(
+                        f.get_extract_path().decode(sys.getfilesystemencoding()),
+                        name),
+                ))
+        if links:
+            core.add_links(links, package_id=self.library.id)
+
     def go_on(self):
         if self.rar is None:
             return self.run(*self.current)
@@ -291,8 +391,10 @@ class StreamingExtract(object):
             self.current[1].log.info("extract go on: {}".format(self.current[1].name))
         return True
         
-    def kill(self, exc=""):
-        #blacklist.add(self.first[0].basename) # no autoextract for failed archives
+    def kill(self, exc="", _del_lib=True):
+        blacklist.add(self.first[0].basename)  # no autoextract for failed archives
+        if _del_lib:
+            self.library.delete()
         print "killing rarextract", self.first[0].basename
         if isinstance(exc, basestring):
             exc = ValueError(exc)
@@ -321,7 +423,6 @@ class StreamingExtract(object):
                     if file.state == 'rarextract_complete':
                         file.state = 'rarextract'
                         file.enabled = False
-                    print "!"*100, 'FUCK YOU'
                     if 'rarextract' in file.completed_plugins:
                         file.completed_plugins.remove('rarextract')
 
@@ -331,11 +432,16 @@ class StreamingExtract(object):
 
     def close(self):
         """called when process is closed"""
+        if not self.library:
+            self.add_library_files()
         try:
             del extractors[self.id]
         except KeyError:
             pass
-        
+
+        if self._deleted_library:
+            event.remove("package:deleted", self._deleted_library)
+
         if not self.killed:
             if self.current is not None:
                 self.finish_file(*self.current)
@@ -353,6 +459,7 @@ class StreamingExtract(object):
                     if file:
                         file.log.info('extract complete')
 
+
 def check_file(path):
     with lock:
         id = os.path.join(path.dir, path.basename)
@@ -367,16 +474,23 @@ def check_file(path):
             pass
         return id
 
+
 def process(path, file, hddsem, threadpool):
     print "process rar file", path
     with lock:
-        id = os.path.join(path.dir, path.basename) #check_file(path)
+        id = os.path.join(path.dir, path.basename)  # check_file(path)
         if id not in extractors:
             print "Creating StreamingExtract from", path
+            try:
+                blacklist.remove(path.basename)
+            except KeyError:
+                pass
             extractors[id] = StreamingExtract(id, hddsem, threadpool)
+    print "FEED!", path
     extractors[id].feed_part(path, file)
 
-def bruteforce(rar, pwlist, hddsem, log): # runs in threadpool
+
+def bruteforce(rar, pwlist, hddsem, log):  # runs in threadpool
     if not rar.needs_password():
         return True
     
@@ -391,56 +505,233 @@ def bruteforce(rar, pwlist, hddsem, log): # runs in threadpool
             else:
                 # bug? seems to be successfully checked. maybe crc error, try extracting anyway
                 pass
-        if had_infolist and rar.infolist() and test_on_smallest(rar, hddsem, log): # headers not encrypted, test password
+        if had_infolist and rar.infolist():  # headers not encrypted, test password
             raise NotImplementedError("Cannot bruteforce files with unencrypted headers")
-        if not had_infolist and rar.infolist(): # password set successfull
+        if not had_infolist and rar.infolist():  # password set successfull
             return True
         reinit(rar)
     print "not found"
     return False
 
+
+def test_m2ts(content):
+    return all(content.find("\x47", i, 2000) == i for i in (4, 196, 388, 580))
+
+
+def _test_passwords(rar, fname, passwords):
+    try:
+        from libmagic import from_buffer
+    except ImportError:
+        return False
+    ext = fname.rsplit(".", 1)[-1]
+    for pw in passwords:
+        cmd = [rarfile.UNRAR_TOOL, "-ierr", "-p"+pw, "-y", "p", rar.rarfile, fname]
+        
+        try:
+            p = None
+            with gevent.Timeout(10):
+                p = rarfile.custom_popen(cmd, -1)
+                data = p.stdout.read(1024*1024)
+        except (IOError, OSError, gevent.Timeout) as e:
+            print "popen failed for", cmd, e
+            #traceback.print_exc()
+            if p:
+                try:
+                    p.kill()
+                except:
+                    pass
+            continue
+
+        if not data.strip():
+            print "killing process"
+            try:
+                p.kill()
+            except:
+                pass
+            continue
+        if ext == "m2ts":
+            if test_m2ts(data):
+                return pw
+            else:
+                continue
+        result = from_buffer(data)
+        p.kill()
+        desc = result.description
+        print "magic desc is", desc
+        print "ext is", ext
+        print "mime is:", result.mimetype
+        if desc == "data":
+            continue
+        elif ext in extensions:  # enforce mime type for extensions
+            print "ext is", ext
+            if result.mimetype != extensions[ext]:
+                continue
+            else:
+                print "found password", pw
+                return pw
+        else:
+            # may get false positives
+            print "found password", pw
+            return pw  # return pw for everything besides random application data
+    return False
+
+
+def bruteforce_by_content(rar, passwords):
+    def _sort(k):
+        ext = k.filename.rsplit(".", 1)[-1]
+        k1 = ext not in extensions
+        k2 = k.file_size
+        k3 = k.filename
+        return (k1, k2, k3)
+
+    for i in sorted(rar.infolist(), key=_sort):
+        pw = _test_passwords(rar, i.filename, passwords)
+        if pw:
+            return pw
+    return False
+
+
 def reinit(rar):
     rar._last_aes_key = (None, None, None)
     rarfile.RarFile.__init__(rar, rar.rarfile, ignore_next_part_missing=True)
 
-def test_on_smallest(rar, hddsem, log):
-    return True # this is broken... test later
-    smallest = 0
-    #smallest_fname = ""
-    for i in rar.infolist():
-        fname = i.filename
-        fsize = i.file_size
-        if not smallest or (i.file_size < smallest and i.file_size > 0):
-            smallest = fsize
-            #smallest_fname = fname
-    if smallest > 10*1024**2:
-        hddsem.acquire()
-        _acquired = True
-    else:
-        _acquired = False
-    try:
-        cmd = [rarfile.UNRAR_TOOL] + list(rarfile.TEST_ARGS)
-        cmd += ["-y", "-p" + rar._password, rar.rarfile, fname]
-        p = rarfile.custom_popen(cmd)
-        output = p.communicate()[0]
-        try:
-            rarfile.check_returncode(p, output)
-        except rarfile.RarCRCError:
-            return False
-        except (KeyboardInterrupt, SystemExit):
-            raise
-        except: # XXX other errors testing?
-            log.exception("test_on_smallest")
-            return False
-        else:
-            return True
-    finally:
-        if _acquired:
-            hddsem.release()
-
-@interface.register
-class RarextractInterface(interface.Interface):
-    name = "file.rarextract"
-
-    def extract(file=None, password=None):
-        pass
+extensions = {
+    '3gp': 'video/3gpp',
+    'ai': 'application/postscript',
+    'aif': 'audio/x-aiff',
+    'aifc': 'audio/x-aiff',
+    'aiff': 'audio/x-aiff',
+    'asc': 'application/pgp-signature',
+    'asf': 'video/x-ms-asf',
+    'asx': 'video/x-ms-asf',
+    'au': 'audio/basic',
+    'avi': 'video/x-msvideo',
+    'boz': 'application/x-bzip2',
+    'bz2': 'application/x-bzip2',
+    'cab': 'application/vnd.ms-cab-compressed',
+    'cpio': 'application/x-cpio',
+    'deb': 'application/x-debian-package',
+    'djv': 'image/vnd.djvu',
+    'djvu': 'image/vnd.djvu',
+    'doc': 'application/msword',
+    'dot': 'application/msword',
+    'dvi': 'application/x-dvi',
+    'eml': 'message/rfc822',
+    'eps': 'application/postscript',
+    'f': 'text/x-fortran',
+    'f77': 'text/x-fortran',
+    'f90': 'text/x-fortran',
+    'flac': 'audio/x-flac',
+    'fli': 'video/x-fli',
+    'flv': 'video/x-flv',
+    'for': 'text/x-fortran',
+    'gif': 'image/gif',
+    'gnumeric': 'application/x-gnumeric',
+    'gv': 'text/vnd.graphviz',
+    'h264': 'video/h264',
+    'hdf': 'application/x-hdf',
+    'hqx': 'application/mac-binhex40',
+    'htm': 'text/html',
+    'html': 'text/html',
+    'iso': 'application/x-iso9660-image',
+    'jpe': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'jpg': 'image/jpeg',
+    'kar': 'audio/midi',
+    'kml': 'application/vnd.google-earth.kml+xml',
+    'kmz': 'application/vnd.google-earth.kmz',
+    'lwp': 'application/vnd.lotus-wordpro',
+    'm1v': 'video/mpeg',
+    'm2a': 'audio/mpeg',
+    'm2v': 'video/mpeg',
+    'm2ts': 'video/MP2T',
+    'm3a': 'audio/mpeg',
+    'man': 'text/troff',
+    'mdb': 'application/x-msaccess',
+    'me': 'text/troff',
+    'mid': 'audio/midi',
+    'midi': 'audio/midi',
+    'mime': 'message/rfc822',
+    'mk3d': 'video/x-matroska',
+    'mks': 'video/x-matroska',
+    'mkv': 'video/x-matroska',
+    'mng': 'video/x-mng',
+    'mov': 'video/quicktime',
+    'movie': 'video/x-sgi-movie',
+    'mp2': 'audio/mpeg',
+    'mp2a': 'audio/mpeg',
+    'mp3': 'audio/mpeg',
+    'mp4': 'video/mp4',
+    'mp4a': 'audio/mp4',
+    'mp4v': 'video/mp4',
+    'mpe': 'video/mpeg',
+    'mpeg': 'video/mpeg',
+    'mpg': 'video/mpeg',
+    'mpg4': 'video/mp4',
+    'mpga': 'audio/mpeg',
+    'ms': 'text/troff',
+    'nfo': 'text/plain',
+    'odb': 'application/vnd.oasis.opendocument.database',
+    'odc': 'application/vnd.oasis.opendocument.chart',
+    'odf': 'application/vnd.oasis.opendocument.formula',
+    'odft': 'application/vnd.oasis.opendocument.formula-template',
+    'odg': 'application/vnd.oasis.opendocument.graphics',
+    'odi': 'application/vnd.oasis.opendocument.image',
+    'odm': 'application/vnd.oasis.opendocument.text-master',
+    'odp': 'application/vnd.oasis.opendocument.presentation',
+    'ods': 'application/vnd.oasis.opendocument.spreadsheet',
+    'odt': 'application/vnd.oasis.opendocument.text',
+    'ogx': 'application/ogg',
+    'otc': 'application/vnd.oasis.opendocument.chart-template',
+    'otg': 'application/vnd.oasis.opendocument.graphics-template',
+    'oth': 'application/vnd.oasis.opendocument.text-web',
+    'oti': 'application/vnd.oasis.opendocument.image-template',
+    'otp': 'application/vnd.oasis.opendocument.presentation-template',
+    'ots': 'application/vnd.oasis.opendocument.spreadsheet-template',
+    'ott': 'application/vnd.oasis.opendocument.text-template',
+    'pbm': 'image/x-portable-bitmap',
+    'pdf': 'application/pdf',
+    'pgp': 'application/pgp-encrypted',
+    'png': 'image/png',
+    'ppm': 'image/x-portable-pixmap',
+    'ps': 'application/postscript',
+    'psd': 'image/vnd.adobe.photoshop',
+    'qt': 'video/quicktime',
+    'ra': 'audio/x-pn-realaudio',
+    'ram': 'audio/x-pn-realaudio',
+    'rm': 'application/vnd.rn-realmedia',
+    'rmi': 'audio/midi',
+    'roff': 'text/troff',
+    'sig': 'application/pgp-signature',
+    'sis': 'application/vnd.symbian.install',
+    'sisx': 'application/vnd.symbian.install',
+    'sit': 'application/x-stuffit',
+    'snd': 'audio/basic',
+    'svg': 'image/svg+xml',
+    'svgz': 'image/svg+xml',
+    'swf': 'application/x-shockwave-flash',
+    't': 'text/troff',
+    'tfm': 'application/x-tex-tfm',
+    'tif': 'image/tiff',
+    'tiff': 'image/tiff',
+    'torrent': 'application/x-bittorrent',
+    'tr': 'text/troff',
+    'ttc': 'application/x-font-ttf',
+    'ttf': 'application/x-font-ttf',
+    'udeb': 'application/x-debian-package',
+    'vcf': 'text/x-vcard',
+    'vob': 'video/mpeg',
+    'vrml': 'model/vrml',
+    'wav': 'audio/x-wav',
+    'wrl': 'model/vrml',
+    'xla': 'application/vnd.ms-excel',
+    'xlc': 'application/vnd.ms-excel',
+    'xlm': 'application/vnd.ms-excel',
+    'xls': 'application/vnd.ms-excel',
+    'xlt': 'application/vnd.ms-excel',
+    'xlw': 'application/vnd.ms-excel',
+    'xml': 'application/xml',
+    'xsl': 'application/xml',
+    'xz': 'application/x-xz',
+    'zip': 'application/zip'
+}

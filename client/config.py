@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import json
 import keyring
 import traceback
@@ -28,6 +29,7 @@ from .scheme import transaction
 
 module_initialized = Event()
 
+
 class ConfigTable(scheme.Table):
     _table_name = 'config'
 
@@ -37,11 +39,16 @@ class ConfigTable(scheme.Table):
 
 _defaults = dict()
 
+
 class Config(object):
     def new(self, name):
         return SubConfig(self, name)
 
-    def default(self, key, value, type=None, func=None, private=False, protected=False, allow_none=False, description=None, enum=None, hook=None, use_keyring=False, persistent=True):
+    def default(
+            self, key, value, type=None,
+            func=None, private=False, protected=False,
+            allow_none=False, description=None, enum=None,
+            hook=None, use_keyring=False, persistent=True):
         if not func is None:
             self.register_hook(key, func)
         if isinstance(enum, basestring):
@@ -92,7 +99,8 @@ class Config(object):
         elif cnt == 4:
             cb = lambda e, table, old: func(e, configobj(_config or self), self[key], old)
         else:
-            raise ValueError('callback function must have 4 (event, config, value, old_value), 2 (value, old_value), 1 (value) or 0 arguments, not {}'.format(cnt))
+            raise ValueError('callback function must have 4 (event, \
+config, value, old_value), 2 (value, old_value), 1 (value) or 0 arguments, not {}'.format(cnt))
         event.add(e, cb)
 
         # fire changed event directly when config is already initialized
@@ -209,6 +217,7 @@ class SubConfig(object):
         return self._config.__setattr__('{}.{}'.format(self._name, key), value)
     __setitem__ = __setattr__
 
+
 def configobj(config):
     class _Config(object):
         def __iter__(self):
@@ -263,8 +272,14 @@ class ConfigListener(scheme.TransactionListener):
                 return
             data = json.dumps(data, indent=4, sort_keys=True)
             with self.lock:
-                with open(settings.config_file, 'w') as f:
+                with open(settings.config_file+'.tmp', 'w') as f:
                     f.write(data)
+                try:
+                    os.unlink(settings.config_file)
+                except:
+                    pass
+                os.rename(settings.config_file+'.tmp', settings.config_file)
+
 
 @interface.register
 class Interface(interface.Interface):
@@ -319,6 +334,7 @@ class Interface(interface.Interface):
                     enum=value['enum'])
         return result
 
+
 @event.register('loader:initialized')
 def _(e):
     for key, col in _configtable.__dict__.items():
@@ -333,11 +349,16 @@ with transaction:
 
 loaded_data = dict()
 
+
 def init():
     if settings.config_file:
         try:
-            with open(settings.config_file, 'r') as f:
-                loaded_data.update(json.load(f))
+            try:
+                with open(settings.config_file, 'r') as f:
+                    loaded_data.update(json.load(f))
+            except (IOError, OSError):
+                with open(settings.config_file+'.tmp', 'r') as f:
+                    loaded_data.update(json.load(f))
             event.fire_blocked('config:before_load', loaded_data)
             with transaction:
                 for key in loaded_data.keys():

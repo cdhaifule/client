@@ -77,7 +77,7 @@ def init():
         # main initialisation
         _init(pre_objects, options, args)
         g = gevent.spawn(_init, post_objects, options, args)
-        _init(main_objects, options, args) # this call MAY block (it does on MACOS)
+        _init(main_objects, options, args)  # this call MAY block (it does on MACOS)
 
         # wait until post object load is complete
         g.join()
@@ -97,7 +97,7 @@ def init():
         if 'config' not in modules_by_name:
             from . import config
             try:
-                _init_pre(config)
+                _init_pre([config])
             except:
                 log_exception('error pre-initializing config system')
         else:
@@ -112,7 +112,7 @@ def init():
         if 'patch' not in modules_by_name:
             from . import patch
             try:
-                _init_pre(patch)
+                _init_pre([patch])
             except:
                 log_exception('error pre-initializing patch system')
             modules_by_name['patch'] = patch

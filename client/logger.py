@@ -36,6 +36,7 @@ logging.raiseExceptions = False
 handlers = []
 loggerClass = logging.getLoggerClass()
 
+
 class MyLogger(loggerClass):
     def __init__(self, *args, **kwargs):
         loggerClass.__init__(self, *args, **kwargs)
@@ -45,6 +46,7 @@ class MyLogger(loggerClass):
 
     def debug(self, *args, **kwargs):
         return loggerClass.debug(self, *args, **kwargs)
+    __call__ = debug
 
     def info(self, *args, **kwargs):
         return loggerClass.info(self, *args, **kwargs)
@@ -112,7 +114,7 @@ class MyLogger(loggerClass):
             c = c.replace(settings.home_dir, '{HOME_DIR}')
             c = re.sub(r'/[^\s]+/lib/python([23](\.\d+)?)?', 'lib', c)
             c = re.sub(r'0x[0-9a-fA-F]+', '0x12345678', c)
-            c = re.sub(r'\d/\d/\d', '#/#/#', c) # ThreadPool errors
+            c = re.sub(r'\d/\d/\d', '#/#/#', c)  # ThreadPool errors
             return c
 
         message = anonymize(message)
@@ -126,11 +128,12 @@ class MyLogger(loggerClass):
         for target in log_targets:
             gevent.spawn(target.send_error, *data)
 
-# some logbal functions
 
+# some logbal functions
 def getLogger(name):
     return logging.getLogger(name)
 get = getLogger
+
 
 def var_to_level(level):
     if isinstance(level, basestring):
@@ -142,6 +145,7 @@ def var_to_level(level):
 
 unhandled_exception_log = None
 ignore_exceptions = [SystemExit, gevent.GreenletExit]
+
 
 def excepthook(type, value, tb, *args, **kwargs):
     #traceback.print_exception(type, value, tb)
@@ -159,6 +163,7 @@ def excepthook(type, value, tb, *args, **kwargs):
 
 original_excepthook = sys.excepthook
 OriginalHub = gevent.hub.Hub
+
 
 class ErrorLoggingHub(OriginalHub):
     def print_exception(self, context, type, value, tb):
@@ -185,6 +190,7 @@ class ErrorLoggingHub(OriginalHub):
 consolehandler = None
 filehandler = None
 
+
 def set_filelog():
     global filehandler
 
@@ -197,6 +203,7 @@ def set_filelog():
         filehandler.setFormatter(formatter)
         filehandler.setLevel(config['log_file_level'])
         logging.getLogger().addHandler(filehandler)
+
 
 def set_consolelog():
     global consolehandler
@@ -211,8 +218,8 @@ def set_consolelog():
         consolehandler.setLevel(config['log_console_level'])
         logging.getLogger().addHandler(consolehandler)
 
-# config
 
+# config
 class JsonFile(dict):
     def __init__(self, file, defaults=None):
         self._file = file
@@ -248,8 +255,8 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 unhandled_exception_log = get('unhandled_exception')
 
-# stdout/err redirect
 
+# stdout/err redirect
 class Std(object):
     def __init__(self, name, superobj, level=logging.DEBUG):
         self.level = level
@@ -278,11 +285,14 @@ class Std(object):
 
 test_mode = False
 
+
 def init_pre():
     global config
-    config = JsonFile(settings.log_settings_file, defaults=dict(log_file=settings.log_file, log_file_level=logging.DEBUG, log_console_level=logging.DEBUG))
+    config = JsonFile(settings.log_settings_file, defaults=dict(log_file=settings.log_file,
+                      log_file_level=logging.DEBUG, log_console_level=logging.DEBUG))
     set_consolelog()
     set_filelog()
+
 
 def init_optparser(parser, OptionGroup):
     from .localize import _T
@@ -292,13 +302,14 @@ def init_optparser(parser, OptionGroup):
     group.add_option('--log-file-level', dest="log_file_level", metavar="LEVEL", help=_T.logger__log_file_level)
     parser.add_option_group(group)
 
+
 def init(options):
     #if "nose" not in sys.argv[0]:
     #    sys.excepthook = lambda type, value, tb: excepthook(type, value, tb, 'unhandled exception in main loop')
     gevent.hub.Hub = ErrorLoggingHub
     gevent.get_hub().__class__ = ErrorLoggingHub
 
-    if options is not None: # used for tests
+    if options is not None:  # used for tests
         reload_console = False
         reload_file = False
 
@@ -326,6 +337,7 @@ def init(options):
     if not test_mode:
         sys.stdout = Std("stdout", sys.stdout)
         sys.stderr = Std("stderr", sys.stderr, logging.ERROR)
+
 
 def terminate():
     sys.excepthook = original_excepthook

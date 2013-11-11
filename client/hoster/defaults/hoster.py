@@ -94,15 +94,20 @@ def load_icon(hostname):
             pass
     else:
         from ...patch import get_file_iterator
-        source, name = this.module.__name__.rsplit('.', 1)[1].split('_', 2)[1:]
-        path = os.path.join('hoster', name+'.ico')
+        print this.module.__name__
         try:
-            files = list(get_file_iterator(source, path))
-            assert len(files) == 1
-        except:
+            source, name = this.module.__name__.rsplit('.', 1)[1].split('_', 2)[1:]
+        except ValueError:
             pass
         else:
-            return files[0].get_contents()
+            path = os.path.join('hoster', name+'.ico')
+            try:
+                files = list(get_file_iterator(source, path))
+                assert len(files) == 1
+            except:
+                pass
+            else:
+                return files[0].get_contents()
     print "default load_icon this is:", this.name, this.favicon_url
     if this.favicon_data:
         data = base64.b64decode(this.favicon_data)

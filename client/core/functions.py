@@ -36,7 +36,19 @@ def add_links(links, package_name=None, extract_passwords=None, system='download
             extract_passwords = list(extract_passwords)
     added = []
     set_infos = list()
-    default_package = None
+    if package_id:
+        for p in packages():
+            if p.id == package_id:
+                default_package = p
+                if extract_passwords:
+                    for password in extract_passwords:
+                        if password not in default_package.extract_passwords:
+                            default_package.extract_passwords.append(password)
+                break
+        else:
+            default_package = None
+    else:
+        default_package = None
 
     with lock:
         url_index = defaultdict(set)

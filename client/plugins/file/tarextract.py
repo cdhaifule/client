@@ -21,6 +21,7 @@ import tarfile
 name = 'tarextract'
 priority = 100
 
+
 def match(path, file):
     if path.ext in ["tar"]:
         if path.compression is None:
@@ -38,6 +39,7 @@ def match(path, file):
         return True
     return False
 
+
 def process(path, file, hddsem, threadpool):
     mode = "r"
     if path.compression:
@@ -48,4 +50,4 @@ def process(path, file, hddsem, threadpool):
     else:
         extract = file.get_extract_path()
     with hddsem:
-        threadpool.spawn(ball.extractall, extract).wait() # xxx progress somehow?
+        threadpool.spawn(ball.extractall, extract).wait()  # xxx progress somehow?

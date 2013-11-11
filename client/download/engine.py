@@ -39,14 +39,15 @@ lock = Semaphore()
 ########################## config
 
 config = globalconfig.new('download')
-config.default('state', 'started', str) # started|paused|stopped
+config.default('state', 'started', str)  # started|paused|stopped
 config.default('max_simultan_downloads', 2, int)
 config.default('max_chunks', 1, int)
 config.default('min_chunk_size', sizetools.KB(500), int)
 config.default('blocksize', sizetools.KB(8), int)
-config.default('overwrite', 'ask', str)  # ask|skip|rename|overwrite
+config.default('overwrite', 'ask', str, enum="ask skip rename overwrite".split())
 config.default('max_retires', 3, int)
 config.default('rate_limit', 0, int)
+
 
 @config.register('max_simultan_downloads')
 def config_max_simultan_downloads(value):
@@ -56,6 +57,7 @@ def config_max_simultan_downloads(value):
         config.max_simultan_downloads = 20
     pool.set(config.max_simultan_downloads)
     event.fire_once_later(0.5, 'download:spawn_tasks')
+
 
 @config.register('max_chunks')
 def config_max_chunks(value):
@@ -260,7 +262,7 @@ class DownloadFunction(intervalled.Cache):
 
 def close_stream(stream):
     if stream:
-        if hasattr(stream, 'release_conn') and callable(stream.release_conn): # requests.response.raw object
+        if hasattr(stream, 'release_conn') and callable(stream.release_conn):  # requests.response.raw object
             stream.release_conn()
         elif hasattr(stream, 'close') and callable(stream.close):
             stream.close()
@@ -293,7 +295,7 @@ class FileDownload(object):
             #self.set_context()
             chunk = self.get_first_chunk()
 
-        if chunk is None: # all chunks have state 'complete'
+        if chunk is None:  # all chunks have state 'complete'
             return
 
         # initialize the first download
@@ -418,7 +420,9 @@ class FileDownload(object):
         self.file.log.debug('download complete')
 
         if self.file.filehandle is not None and self.file.filehandle.f is not None or self.file.filehandle.refcount != 0:
-            self.file.log.unhandled_exception('filehandle still open, refcount: {}, handle: {}'.format(self.file.filehandle.refcount, self.file.filehandle.f))
+            self.file.log.unhandled_exception(
+                'filehandle still open, refcount: {}, handle: {}'.format(
+                    self.file.filehandle.refcount, self.file.filehandle.f))
 
         download_file = self.file.get_download_file()
 

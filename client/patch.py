@@ -54,7 +54,7 @@ from requests.exceptions import ConnectionError
 from collections import defaultdict
 
 from dulwich import pack
-pack.has_mmap = False # mmap causes never closed .idx files
+pack.has_mmap = False  # mmap causes never closed .idx files
 from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
 
@@ -65,7 +65,7 @@ from .scheme import transaction, Table, Column, filter_objects_callback
 from .api import proto
 
 config = globalconfig.new('patch')
-config.default('branch', 'stable', str)
+config.default('branch', 'stable', str, enum=["stable", "unstable", "master"])
 config.default('patchtest', False, bool)
 config.default('restart', None, str, allow_none=True)
 config.default('patch_check_interval', 3600, int)
@@ -84,6 +84,7 @@ module_initialized = Event()
 
 # update patch interval
 
+
 @event.register('config:loaded')
 def on_config_loaded(e):
     config.patch_check_interval = 3600
@@ -100,8 +101,8 @@ if platform == 'linux2':
 elif platform == "darwin":
     platform = "macos"
 
-# events
 
+# events
 @config.register('branch')
 def branch_changed(value, old):
     if value != old:
@@ -109,7 +110,6 @@ def branch_changed(value, old):
 
 
 # signature functions
-
 def check_signature(source, data):
     sizex, sizey = struct.unpack_from('BB', buffer(data, len(data)-2))
     end = len(data) - sizex - sizey-2

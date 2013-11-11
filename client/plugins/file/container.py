@@ -31,10 +31,12 @@ config.default('delete_after_process', None, bool)
 
 log = logger.get("file.container")
 
+
 def match(path, file):
     if file is not None and not config.process_after_download:
         return False
     return path.ext in container
+
     
 def process(path, file, hddsem):
     with open(path) as f:

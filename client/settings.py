@@ -91,7 +91,7 @@ try:
     sys.frozen
 except AttributeError:
     sys.frozen = False
-#    
+
 def _makedirs(path):
     try:
         try:
@@ -168,6 +168,8 @@ else:
     img_dir = os.path.join(app_dir, 'client/img')
     # cert
     os.environ['SSL_CERT_FILE'] = os.path.join(bin_dir, "cacert.pem")
+    if sys.platform == "win32":
+        os.environ["MAGIC"] = os.path.join(bin_dir, "magic.mgc")
     if sys.platform == "darwin":
         # dirs and files
         mainicon = os.path.join(app_dir, "client/img/dlam.icns")
