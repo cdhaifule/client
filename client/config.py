@@ -217,6 +217,7 @@ class SubConfig(object):
         return self._config.__setattr__('{}.{}'.format(self._name, key), value)
     __setitem__ = __setattr__
 
+
 def configobj(config):
     class _Config(object):
         def __iter__(self):
@@ -279,6 +280,7 @@ class ConfigListener(scheme.TransactionListener):
                     pass
                 os.rename(settings.config_file+'.tmp', settings.config_file)
 
+
 @interface.register
 class Interface(interface.Interface):
     name = 'config'
@@ -332,6 +334,7 @@ class Interface(interface.Interface):
                     enum=value['enum'])
         return result
 
+
 @event.register('loader:initialized')
 def _(e):
     for key, col in _configtable.__dict__.items():
@@ -345,6 +348,7 @@ with transaction:
     globalconfig = config
 
 loaded_data = dict()
+
 
 def init():
     if settings.config_file:

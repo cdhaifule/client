@@ -29,15 +29,17 @@ from .input import Text, Choice, get as get_input, InputTimeout, InputError
 log = logger.get("reconnect")
 
 config = globalconfig.new("reconnect")
-config.default("method", 'script', str)  # script|extern
+config.default("method", 'script', str, enum=["script", "extern"])  # script|extern
 config.default("auto", False, bool)
 config.default("timeout", 60, int)
 config.default("retry", 2, int)
+
 
 @event.register('config:before_load')
 def before_config_loaded(e, data):
     if 'reconnect.method' in data and data['reconnect.method'] is None:
         data['reconnect.method'] = 'script'
+
 
 @config.register('method')
 def check_method(value):
@@ -47,11 +49,13 @@ def check_method(value):
         config['method'] = None
         log.error('unknown reconnect method: {}'.format(value))
 
+
 @config.register('auto')
 def check_auto(value):
     if value and config.method is None:
         config['auto'] = False
         log.error('cannot reonnect without a method')
+
 
 def guess_router_ip(): # xxx better method?
     localip = socket.gethostbyname(socket.gethostname())
@@ -62,12 +66,14 @@ try:
 except:
     config.default("routerip", "", str)
 
-config.default("username", "admin", str) # router login data
-config.default("password", "", str)      # useful for all plugins
+config.default("username", "admin", str)  # router login data
+config.default("password", "", str)       # useful for all plugins
+
 
 def get_extern_ip():
     resp = requests.get(settings.patchserver + "/ip")
     return resp.content
+
 
 def translate(s, _notranslate={"auto", "method"}):
     for key in (config._defaults - _notranslate):
@@ -76,6 +82,7 @@ def translate(s, _notranslate={"auto", "method"}):
         except TypeError:
             s = s.replace("{"+key+"}", repr(config[key]))
     return s
+
     
 class Reconnect(object):
     def __init__(self):
@@ -173,6 +180,7 @@ class Reconnect(object):
 manager = Reconnect()
 reconnect = manager.reconnect
 reconnecting = False
+
 
 def init():
     for mod in plugintools.itermodules("reconnect"):

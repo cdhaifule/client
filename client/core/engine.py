@@ -51,7 +51,7 @@ config.default('bruteforce_passwords', list(), list)
 config.default('delete_extracted_archives', False, bool)
 
 # misc options
-config.default('removed_completed', 'never', str)  # never|package|file
+config.default('removed_completed', 'never', str, enum="never package file".split())
 config.default('open_browser_after_add_links', False, bool)
 
 # adult

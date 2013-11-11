@@ -30,7 +30,7 @@ from .contrib import socks
 log = logger.get('proxy')
 
 config = globalconfig.new('proxy')
-config.default('type', None, str)
+config.default('type', None, str, enum=[None, "socks4", "socks5", "http", "https"])
 config.default('host', None, unicode)
 config.default('port', None, int)
 config.default('username', None, str)
@@ -48,8 +48,14 @@ local_networks = (
     IPNetwork('240.0.0.0/8'),
     IPNetwork('255.0.0.0/8'))
 
+
 def proxy_enabled():
-    return config['type'] is not None and config['host'] is not None and config['port'] is not None and config['enabled'] and config['last_error'] is None
+    return config['type'] is not None and \
+        config['host'] is not None and \
+        config['port'] is not None and \
+        config['enabled'] and \
+        config['last_error'] is None
+
 
 class wrapped_socket(socks.socksocket):
     def __init__(self, family=socket.AF_INET, type=socket.SOCK_STREAM, proto=0, _sock=None, force_direct_connect=False):
@@ -60,12 +66,18 @@ class wrapped_socket(socks.socksocket):
         for res in socket.getaddrinfo(destpair[0], destpair[1], self.family, self.type, self.proto):
             af, socktype, proto, _canonname, sa = res
             ip = IPAddress(sa[0])
-            if self._force_direct_connect or config['type'] is None or not config['enabled'] or config['last_error'] or any(ip in network for network in local_networks):
+            if self._force_direct_connect or config['type'] is None or \
+                    not config['enabled'] or config['last_error'] or any(ip in network for network in local_networks):
                 self.setproxy()
             else:
-                self.setproxy(proxytype=type_to_int(config['type']), addr=config['host'], port=config['port'], rdns=True, username=config['username'], password=config['password'])
+                self.setproxy(
+                    proxytype=type_to_int(config['type']),
+                    addr=config['host'], port=config['port'], rdns=True,
+                    username=config['username'], password=config['password']
+                )
             socks.socksocket.connect(self, sa)
             break
+
 
 # stolen from gevent/socket.py
 def create_connection(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
