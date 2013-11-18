@@ -320,8 +320,8 @@ class FileInterface(interface.Interface):
                     path = FilePath(path)
                     pluginname = path.ext + "extract"
                     for _, __, plugin in manager.plugins:
-                        print "!"*100, 'TEST', plugin.name, pluginname
+                        #print "!"*100, 'TEST', plugin.name, pluginname
                         if plugin.name == pluginname:
-                            print "!"*100, 'EXEC', plugin.name
+                            #print "!"*100, 'EXEC', plugin.name
                             manager.execute_plugin(plugin, path, f)
                             break
