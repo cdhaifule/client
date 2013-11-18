@@ -21,6 +21,7 @@ loader.init()
 
 import os
 import gevent
+from gevent.pool import Pool
 
 from client import event, core, fileplugin, debugtools, download, torrent
 from client.scheme import transaction
@@ -33,12 +34,16 @@ rootpath = os.path.dirname(__file__)
 
 class FakeHosterPlugin(object):
     name = 'fake.com'
+    download_pool = Pool(10)
 
     def weight(self, file):
         return 100
 
     def get_hostname(self, file):
         return 'fake.com'
+
+    def get_download_context(self, account):
+        pass
 
 
 def _test_file(name, plugin):

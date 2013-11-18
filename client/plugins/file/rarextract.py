@@ -432,7 +432,7 @@ class StreamingExtract(object):
 
         with transaction:
             for path, file in self.parts.values():
-                if file is not None or not file._table_deleted:
+                if file is not None and not file._table_deleted:
                     try:
                         file.stop()
                     except gevent.GreenletExit:
