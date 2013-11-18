@@ -889,6 +889,7 @@ class ConfigUrl(object):
                     elif re.match(r'^\w+: \w+://', line):
                         key, value = line.split(': ', 1)
                         data[key] = value
+            assert len(data.keys()) > 0
 
         if not data and 'dlam-config.yaml' in self.url:
             with Timeout(10):
@@ -901,8 +902,11 @@ class ConfigUrl(object):
             if not isinstance(data, dict):
                 self.log.send('error', 'config url returned invalid data: {} (type {})'.format(resp.content, type(data)))
             assert isinstance(data, dict), 'config url returned invalid data: {}'.format(data)
+            assert len(data.keys()) > 0
         
-        assert len(data.keys()) > 0
+        if not data.keys():
+            return
+        #assert len(data.keys()) > 0
 
         found_sources = list()
         group = Group()

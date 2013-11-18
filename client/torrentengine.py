@@ -815,7 +815,6 @@ class Torrent(object):
             def _on_file_rename_failed_alert(alert):
                 if alert.index in pending:
                     del pending[alert.index]
-                del pending[alert.index]
                 result.exception(alert)
 
             files = self.files
