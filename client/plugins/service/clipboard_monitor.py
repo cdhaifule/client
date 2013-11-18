@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup
 
 from ... import logger, service, core, hoster, interface
 
+
 def extracthtml(html):
     html = BeautifulSoup(html)
     links = set()
@@ -40,6 +41,7 @@ def extracthtml(html):
         except KeyError:
             pass
     return links
+
 
 def tkpaste():
     if not "DISPLAY" in os.environ:
@@ -59,6 +61,7 @@ def tkpaste():
                 log.debug('tk paste error: {}'.format(e))
             return ""
     return paste
+
     
 def macpaste():
     from AppKit import NSPasteboard
@@ -68,7 +71,7 @@ def macpaste():
     def paste():
         items = pb.pasteboardItems()
         if lastitems[0] == items:
-            return False # if the clipboard did not change, return False, more performance
+            return False  # if the clipboard did not change, return False, more performance
         else:
             lastitems[0] = items
             
@@ -95,7 +98,7 @@ def macpaste():
                         continue
                     if data:
                         links |= hoster.collect_links(data)
-                    break # do not parse multiple encodings
+                    break  # do not parse multiple encodings
         return links
     return paste
 
@@ -112,7 +115,7 @@ try:
                     log.debug("typerror windows clipboard: {}".format(e))
                 return ""
             else:
-                f = data.find("<!--StartFragment-->") # html fragment data from firefox or chrome
+                f = data.find("<!--StartFragment-->")  # html fragment data from firefox or chrome
                 if f >= 0:
                     return extracthtml(data[f:])
                 else:
@@ -134,6 +137,7 @@ except ImportError:
 
 log = logger.get('clipboard_monitor')
 
+
 def read_links(data):
     if isinstance(data, list):
         return data
@@ -143,6 +147,7 @@ def read_links(data):
         if data:
             return list(hoster.collect_links(data))
         return list()
+
 
 class ClipboardMonitor(service.ServicePlugin):
     default_enabled = False
@@ -167,7 +172,7 @@ class ClipboardMonitor(service.ServicePlugin):
                     current = new
                     links = read_links(current)
                     if links:
-                        core.add_links(links, ignore_plugins=['http', 'ftp'])
+                        core.add_links(links, ignore_plugins=['http', 'file'])
             except (KeyboardInterrupt, SystemExit, gevent.GreenletExit):
                 break
             except:
@@ -177,6 +182,7 @@ class ClipboardMonitor(service.ServicePlugin):
 
 cpmonitor = ClipboardMonitor('clipboard_monitor')
 service.register(cpmonitor)
+
 
 @interface.register
 class Interface(interface.Interface):
@@ -196,4 +202,8 @@ class Interface(interface.Interface):
             data = paste()
             links = read_links(data)
             if links:
-                core.add_links(links, ignore_plugins=ignore_plugins or cpmonitor.config.ignore_plugins)
+                if ignore_plugins:
+                    ignore_plugins.append("file")
+                if cpmonitor.config.ignore_plugins:
+                    ignore_plugins = cpmonitor.config.ignore_plugins + ["file"]
+                core.add_links(links, ignore_plugins=(ignore_plugins or cpmonitor.config.ignore_plugins) or ['file'])

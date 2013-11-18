@@ -30,8 +30,10 @@ config.default("script_name", "", unicode, protected=True)
 
 name = "script"
 
+
 def is_configured():
     return config.script_name and True or False
+
 
 def load(name):
     p = os.path.join(reconnectscriptsdir, name)
@@ -39,7 +41,8 @@ def load(name):
         with open(p, 'rb') as f:
             return f.read()
     except (OSError, IOError):
-        log.exception("error opening reconnect script {}".format(name))
+        log.exception(u"error opening reconnect script {}".format(name))
+
 
 def reconnect():
     data = load(config["script_name"])
@@ -58,7 +61,8 @@ def reconnect():
         return False
     else:
         return True
-    
+
+
 def save(name, data):
     if not name.endswith('-custom'):
         name = name + '-custom'
@@ -80,6 +84,8 @@ def save(name, data):
 
 
 scripts = dict()
+
+
 def index():
     for i, fn in enumerate(os.listdir(reconnectscriptsdir)):
         try:
@@ -97,6 +103,7 @@ def index():
         if i % 2 == 0:
             gevent.sleep()
 index()
+
 
 @interface.register
 class ReconnectScript(interface.Interface):

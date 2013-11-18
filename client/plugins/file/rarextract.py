@@ -26,7 +26,7 @@ from gevent.lock import RLock
 from gevent.event import AsyncResult
 
 from ... import core, event, settings, logger, fileplugin
-from ...scheme import transaction
+from ...scheme import transaction, TransactionError
 from ...config import globalconfig
 from ...contrib import rarfile
 
@@ -230,16 +230,9 @@ class StreamingExtract(object):
     def finish_file(self, path, file):
         if file is not None:
             with core.transaction:
-                #if not 'rarextract' in file.completed_plugins:
-                #    file.completed_plugins.append('rarextract')
-                #file.greenlet = None
-                #file.on_greenlet_finish()
-                #file.on_greenlet_stopped()
                 file.state = 'rarextract_complete'
                 file.init_progress(1)
                 file.set_progress(1)
-                #file.stop()
-        #path.finished.set()
         event.fire('rarextract:part_complete', path, file)
     
     def new_data(self, data):
@@ -301,6 +294,7 @@ class StreamingExtract(object):
                 event.fire('rarextract:waiting_for_part', next)
 
                 @event.register("file:last_error")
+                @event.register("file:deleted")
                 def killit(e, f):
                     if not f.name == name and f.get_complete_file() == next:
                         return
@@ -438,7 +432,7 @@ class StreamingExtract(object):
 
         with transaction:
             for path, file in self.parts.values():
-                if file is not None:
+                if file is not None or not file._table_deleted:
                     try:
                         file.stop()
                     except gevent.GreenletExit:
@@ -449,10 +443,9 @@ class StreamingExtract(object):
                     if 'rarextract' in file.completed_plugins:
                         file.completed_plugins.remove('rarextract')
 
-        self.first[1].fatal('rarextract: {}'.format(exc))
-
-        return exc
-
+        if not self.first[1]._table_deleted:
+            self.first[1].fatal('rarextract: {}'.format(exc))
+    
     def close(self):
         """called when process is closed"""
         #self.killed = True
