@@ -181,11 +181,13 @@ def _test_rar_multipart_start_stop():
         f.delete()
 
 
-def test_fileplugin():
+def test_fileplugin_rarextract():
     _test_file('test_fileplugin.rar', 'rarextract')
+
+def test_fileplugin_zipextract():
     _test_file('test_fileplugin.zip', 'zipextract')
-    test_rar_multipart()
-    #test_rar_multipart_start_stop()
 
 if __name__ == '__main__':
-    test_fileplugin()
+    test_rar_multipart()
+    test_fileplugin_rarextract()
+    test_fileplugin_zipextract()
