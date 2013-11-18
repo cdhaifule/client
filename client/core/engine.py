@@ -403,7 +403,8 @@ class Package(Table):
 
     ####################### paths
     
-    def _get_download_path(self):
+    @filesystemencoding
+    def get_download_path(self):
         """gets and sets the download directory"""
         if not self.download_dir:
             with transaction:
@@ -413,10 +414,7 @@ class Package(Table):
         return self.download_dir
 
     @filesystemencoding
-    def get_download_path(self):
-        return self._get_download_path()
-
-    def _get_complete_path(self):
+    def get_complete_path(self):
         """gets and sets the complete directory"""
         if not self.complete_dir:
             with transaction:
@@ -426,10 +424,7 @@ class Package(Table):
         return self.complete_dir
 
     @filesystemencoding
-    def get_complete_path(self):
-        return self._get_complete_path()
-
-    def _get_extract_path(self):
+    def get_extract_path(self):
         """gets and sets the extract directory"""
         if not self.extract_dir:
             with transaction:
@@ -437,10 +432,6 @@ class Package(Table):
                 if self.name and config['create_package_folders']:
                     self.extract_dir = os.path.join(self.extract_dir, self.name)
         return self.extract_dir
-
-    @filesystemencoding
-    def get_extract_path(self):
-        return self._get_extract_path()
 
     ####################### clone package
 
