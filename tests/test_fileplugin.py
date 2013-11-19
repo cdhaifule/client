@@ -21,6 +21,7 @@ loader.init()
 
 import os
 import gevent
+from gevent.pool import Pool
 
 from client import event, core, fileplugin, debugtools, download, torrent
 from client.scheme import transaction
@@ -33,12 +34,16 @@ rootpath = os.path.dirname(__file__)
 
 class FakeHosterPlugin(object):
     name = 'fake.com'
+    download_pool = Pool(10)
 
     def weight(self, file):
         return 100
 
     def get_hostname(self, file):
         return 'fake.com'
+
+    def get_download_context(self, account):
+        pass
 
 
 def _test_file(name, plugin):
@@ -176,11 +181,13 @@ def _test_rar_multipart_start_stop():
         f.delete()
 
 
-def test_fileplugin():
+def test_fileplugin_rarextract():
     _test_file('test_fileplugin.rar', 'rarextract')
+
+def test_fileplugin_zipextract():
     _test_file('test_fileplugin.zip', 'zipextract')
-    test_rar_multipart()
-    #test_rar_multipart_start_stop()
 
 if __name__ == '__main__':
-    test_fileplugin()
+    test_rar_multipart()
+    test_fileplugin_rarextract()
+    test_fileplugin_zipextract()

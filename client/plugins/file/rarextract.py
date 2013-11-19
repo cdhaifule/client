@@ -148,6 +148,9 @@ class StreamingExtract(object):
                 path.finished.set()
             if core.config.delete_extracted_archives:
                 return False
+        except gevent.GreenletExit as e:
+            self.kill(e)
+            raise
         except BaseException as e:
             traceback.print_exc()
             self.kill(e)
@@ -212,7 +215,17 @@ class StreamingExtract(object):
                         bytes = ''
                     if result and result is not True:
                         raise result
-        self.close()
+        result = self.rar.returncode
+        if result is None:
+            try:
+                with gevent.Timeout(5):
+                    result = self.rar.wait()
+            except:
+                result = self.rar.returncode
+        if self.rar.returncode != 0:
+            self.kill(exc='rar exited with errorcode {}'.format(self.rar.returncode), _del_lib=True)
+        else:
+            self.close()
 
     def finish_file(self, path, file):
         if file is not None:
@@ -324,9 +337,6 @@ class StreamingExtract(object):
                 @event.register("package:deleted")
                 @event.register("file:deleted")
                 def _deleted_library(e, package):
-                    import traceback
-                    print traceback.print_stack()
-                    print "---------", e
                     if e.startswith("file:"):
                         package = package.package
 
@@ -391,6 +401,7 @@ class StreamingExtract(object):
     def kill(self, exc="", _del_lib=True):
         if self.killed:
             return exc
+
         self.killed = True
 
         blacklist.add(self.first[0].basename)  # no autoextract for failed archives
@@ -403,7 +414,10 @@ class StreamingExtract(object):
         self.current = None
 
         if self.rar is not None:
-            self.rar.terminate()
+            try:
+                self.rar.terminate()
+            except:
+                pass
             self.rar = None
 
         try:
@@ -418,8 +432,11 @@ class StreamingExtract(object):
 
         with transaction:
             for path, file in self.parts.values():
-                if file is not None or not file._table_deleted:
-                    file.stop()
+                if file is not None and not file._table_deleted:
+                    try:
+                        file.stop()
+                    except gevent.GreenletExit:
+                        pass
                     if file.state == 'rarextract_complete':
                         file.state = 'rarextract'
                         file.enabled = False
@@ -431,6 +448,8 @@ class StreamingExtract(object):
     
     def close(self):
         """called when process is closed"""
+        #self.killed = True
+
         if not self.library:
             self.add_library_files()
         try:

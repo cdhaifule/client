@@ -402,6 +402,7 @@ class Package(Table):
         self.delete()
 
     ####################### paths
+    
     @filesystemencoding
     def get_download_path(self):
         """gets and sets the download directory"""
