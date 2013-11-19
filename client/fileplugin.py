@@ -227,6 +227,7 @@ if sys.platform.startswith("win") and "nose" not in sys.argv[0]:
     def selectfiles(show):
         folders = defaultdict(list)
         for p in show:
+            p = os.path.normpath(p)
             folders[os.path.dirname(p)].append(os.path.basename(p))
         for path, files in folders.iteritems():
             files = set(os.path.splitext(f)[0] for f in files) | set(files)

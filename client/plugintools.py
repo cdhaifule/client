@@ -56,6 +56,7 @@ def iterplugins(type):
     for loader, name, ispkg in iter_modules([os.path.join(settings.script_dir, *package.split('.'))]):
         yield '.'+name, package
 
+
 def itermodules(type, load_external=True, handlers=None):
     if handlers is None:
         handlers = dict()
@@ -118,8 +119,10 @@ def itermodules(type, load_external=True, handlers=None):
             except:
                 log.exception('error loading external module {}'.format(display_name))
 
+
 def load(type):
     return list(itermodules(type))
+
     
 def auto_generate_filename(file):
     for field in ["name", "title"]:
@@ -136,8 +139,8 @@ def auto_generate_filename(file):
             except:
                 return file.url
 
-################################## queue functions
 
+################################## queue functions
 class EmptyQueue(object):
     def __init__(self, *args, **kwargs):
         self.items = list()
@@ -190,8 +193,8 @@ def after(a, l):
     except ValueError:
         return a
 
-################################## some default error/input member functions
 
+################################## some default error/input member functions
 class ErrorFunctions(object):
     # base functions
 
@@ -285,6 +288,7 @@ class ErrorFunctions(object):
         exc = sys.exc_info()
         msg = traceback.format_exception_only(exc[0], exc[1])[0].strip()
         self.plugin_out_of_date(1800, False, msg, exc, True)
+
 
 class InputFunctions(object):
     def get_input(self, type, seconds=None, **kwargs):
@@ -806,6 +810,7 @@ def dict_json(d):
 
 _filesystem_encoding = sys.getfilesystemencoding()
 
+
 def filesystemencoding(f):
     if sys.platform == 'win32':
         @functools.wraps(f)
@@ -817,12 +822,12 @@ def filesystemencoding(f):
                 x = x.replace(':', '_')
             if isinstance(x, unicode):
                 x = x.encode(_filesystem_encoding)
-            return x
+            return os.path.normpath(x)
     else:
         @functools.wraps(f)
         def _enc(*args, **kwargs):
             x = f(*args, **kwargs)
             if isinstance(x, unicode):
                 x = x.encode(_filesystem_encoding)
-            return x
+            return os.path.normpath(x)
     return _enc
