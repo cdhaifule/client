@@ -190,7 +190,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             result.set([False, 'Client login error'])
             return
         try:
-            result = result.get(timeout=90)
+            result = result.get(timeout=300)
         except gevent.Timeout:
             result = [False, "Login timed out"]
         finally:
