@@ -87,7 +87,7 @@ def route_index():
 @app.route('/online.js')
 def route_online_js():
     response.headers['Content-Type'] = 'text/javascript'
-    return 'var online = 1;'
+    return 'var online = {};'.format(1 if client.is_connected() else 0)
     
 @app.route('/downloadam.js')
 def route_downloadam_js():
