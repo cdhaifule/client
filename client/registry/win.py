@@ -119,7 +119,7 @@ def iterate_browsers(default=None):
     ignore = set()
     for hkey in (HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE):
         try:
-            enum = enum_reg_keys(hkey, 'Software\\Clients\\StartMenuInternet')
+            enum = list(enum_reg_keys(hkey, 'Software\\Clients\\StartMenuInternet'))
         except WindowsError:
             # key not exists or something?
             continue

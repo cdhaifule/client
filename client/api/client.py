@@ -192,7 +192,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         try:
             result = result.get(timeout=20)
         except gevent.Timeout:
-            result = ["False", "Login timed out"]
+            result = [False, "Login timed out"]
         finally:
             try:
                 del self.login_results[rid]
