@@ -389,6 +389,7 @@ def send_file_status_to_cache(e, file):
     check_cache[file.hashed_url] = data
     event.fire_once_later(30, 'check:set_cache')
 
+
 @event.register('check:set_cache')
 def set_cache(e):
     global check_cache

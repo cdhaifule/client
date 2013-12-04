@@ -23,9 +23,10 @@ from gevent.queue import JoinableQueue
 
 from .. import scheme, interface, settings
 from . import proto, server
-from .client import client
+from .client2 import client
 from .push import listener
 from ..localize import _T
+
 
 @interface.register
 class Interface(interface.Interface):
@@ -42,7 +43,7 @@ class Interface(interface.Interface):
                 update.append(data)
         if update:
             return listener.prepare(update)
-            
+
     def logout():
         reconnect()
         return True
@@ -72,8 +73,10 @@ send = proto.send
 
 _greenlet = None
 
+
 def reconnect():
     client.disconnected_event.set()
+
 
 def init_optparser(parser, OptionGroup):
     group = OptionGroup(parser, _T.api__options)
@@ -82,12 +85,13 @@ def init_optparser(parser, OptionGroup):
     group.add_option('--test-no-change-node', dest="nochangenode", action="store_false", default=True, help="internal")
     parser.add_option_group(group)
 
+
 def init(options):
     global _greenlet
 
     proto.debug = options.api_log
     scheme.register(listener)
-    
+
     if options.testbackend:
         client.change_node = options.nochangenode
         client.node = (options.testbackend, 443)
@@ -106,9 +110,10 @@ def init(options):
             break
     client.connection_state = None
 
+
 def terminate():
     server.terminate()
-    
+
     if _greenlet:
         try:
             _greenlet.kill()

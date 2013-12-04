@@ -27,9 +27,11 @@ log = logger.get('api.push')
 config = globalconfig.new('api').new('push')
 config.default('interval', 0, float)
 
-@config.register('inverval')
+
+@config.register('interval')
 def _(value):
     listener.delay = value
+
 
 class ApiListener(scheme.DelayedListener):
     def __init__(self):
@@ -70,7 +72,7 @@ class ApiListener(scheme.DelayedListener):
                         data['substate'] = ['waiting', data['next_try']]
                     if 'completed_plugins' in data:
                         data['completed_plugins'] = list(data['completed_plugins'])
-                
+
                 elif data['table'] == 'account':
                     # don't send free dummy accounts
                     t = scheme.scheme.get_by_uuid(data['id'])

@@ -40,17 +40,18 @@ log = logger.get("api.client")
 config = globalconfig.new('api').new('client')
 config.default('show_error_dialog', True, bool)
 
+
 class APIClient(BaseNamespace, plugintools.GreenletObject):
     #nodes = ["ws-{}.download.am".format(i) for i in range(3, 4)]
     nodes = ['ws.download.am']
-    random.shuffle(nodes)
-    node_cycler = cycle(nodes)
     node_port = 443
-    change_node = False # change node if asked to, may be overridden by --testbackend for internal testing
+    change_node = False  # change node if asked to\][', may be overridden by --testbackend for internal testing
+    use_rsa = "rsa"
 
     def __init__(self):
         plugintools.GreenletObject.__init__(self)
-
+        random.shuffle(self.nodes)
+        self.node_cycler = cycle(self.nodes)
         self.io = None
         self.next_node = None
         self.greenlet = None
@@ -65,7 +66,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         self.connect_error_dialog = None
 
         self.connection_states = None
-        
+
     def __call__(self, socketio, path):
         BaseNamespace.__init__(self, socketio, path)
         return self
@@ -77,7 +78,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
 
             node = self.node_cycler.next()
             node_port = self.node_port
-                
+
             log.info('connecting to {}'.format(node))
             self.io = SocketIO(node, node_port, self, secure=True)
 
@@ -111,7 +112,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
 
     def on_connect(self, *args, **kwargs):
         log.debug('connected')
-    
+
     def on_disconnect(self, exception):
         if self.io:
             if exception:
@@ -119,7 +120,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             else:
                 log.debug('disconnected')
             self.close()
-        
+
     def on_reconnect(self, *args):
         log.warning("unhandled event: RECONNECT: {}".format(args))
 
@@ -147,9 +148,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
         if type == 'frontend':
             if not self.connected_event.is_set():
                 return
-
         message = proto.pack_message(type, command, in_response_to, payload, channel=channel, encrypt=encrypt)
-
         self.send_message(message)
 
     def on_message(self, message):
@@ -180,7 +179,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             'l': login.get('login'),
             'system': data,
         }
-        message_key = proto.pack_message('backend', 'api.set_key', payload=dict(key=key), encrypt="rsa")
+        message_key = proto.pack_message('backend', 'api.set_key', payload=dict(key=key), encrypt=self.use_rsa)
         message = proto.pack_message('backend', 'api.login', payload=payload)
 
         try:
@@ -297,7 +296,7 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
                 raise
             except BaseException as e:
                 log_state('connection error')
-                log.error('error connecting: {}'.format(e))
+                log.exception('error connecting')
                 self.close()
                 event.fire('api:connection_error')
                 error = True
@@ -370,12 +369,15 @@ class APIClient(BaseNamespace, plugintools.GreenletObject):
             login.hashes["backend"] = None
             event.fire('api:disconnected')
 
+
 client = APIClient()
+
 
 @event.register('login:changed')
 @event.register('proxy:changed')
 def _(e, *args):
     client.disconnected_event.set()
+
 
 @event.register('reconnect:reconnecting')
 def __(e, *args):

@@ -32,6 +32,7 @@ log = logger.get('cache')
 
 get_results = dict()
 
+
 def get(items):
     if not api.client.is_connected():
         return dict()
@@ -46,8 +47,10 @@ def get(items):
     finally:
         del get_results[rid]
 
+
 def set(cache):
     api.proto.send('backend', command='cache.set', payload=cache, encrypt=False)
+
 
 @interface.register
 class Interface(interface.Interface):
@@ -117,6 +120,7 @@ def sha256(s):
         s = s.encode("utf-8")
     return hashlib.sha256(s).hexdigest()
 
+
 class LRUFileCache(object):
     def __init__(self, path, levels=0, expire_time=None, max_size=None, buffer_size=None, max_items=None, buffer_items=None, cleanup_timeout=60):
         """file based LRU cache
@@ -144,7 +148,7 @@ class LRUFileCache(object):
 
         self.size = 0
         self.items = 0
-        
+
         self.check_greenlet = gevent.spawn(self._check)
 
     def _create(self, key):
@@ -214,7 +218,10 @@ class LRUFileCache(object):
             self.items -= 1
         self.size += len(value)
         self.items += 1
-        if self.cleanup_timeout is not None and self.check_greenlet is None and ((self.max_size is not None and self.size > self.max_size) or (self.max_items is not None and self.items > self.max_items)):
+        if self.cleanup_timeout is not None and \
+                self.check_greenlet is None and \
+                ((self.max_size is not None and self.size > self.max_size)
+                    or (self.max_items is not None and self.items > self.max_items)):
             self.check_greenlet = gevent.spawn_later(self.cleanup_timeout, self._check)
         with open(file, 'wb') as f:
             f.write(value)

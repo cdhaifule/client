@@ -27,6 +27,7 @@ pyotp = False
 
 log = logger.get('interface')
 
+
 class InterfaceManager(dict):
     def add(self, interface):
         if interface.name in self:
@@ -34,7 +35,7 @@ class InterfaceManager(dict):
         self[interface.name] = interface
         event.fire('interface:new', interface)
         return interface
-        
+
     def call(self, _name, _funcname, _responder=None, **kwargs):
         try:
             method = getattr(self[_name], _funcname)
@@ -71,6 +72,7 @@ class InterfaceManager(dict):
         del self[name]
         event.fire('interface:removed', interface)
 
+
 class Interface(object):
     name = None
 
@@ -83,7 +85,8 @@ class Interface(object):
             if callable(func) and not name.startswith('_'):
                 functions.append(dict(name=name, doc=func.__doc__ and func.__doc__.strip() or func.__doc__))
         return functions
-        
+
+
 def guest_protected_dialog():
     from .input import Text, Choice, get, InputTimeout, InputError
     elements = [Text('The website wants to change or do something that could harm or damage your computer.')]
@@ -99,9 +102,10 @@ def guest_protected_dialog():
         result = 'cancel'
     except InputError:
         result = 'cancel'
-    except KeyError: # don't know why this can happen
+    except KeyError:
         result = 'cancel'
     return result == "ok"
+
 
 def protected(func):
     def fn(protected_key=None, *args, **kwargs):
@@ -120,6 +124,7 @@ def protected(func):
 manager = InterfaceManager()
 register = manager.add      # use as class decorator
 call = manager.call
+
 
 @register
 class InterfaceInterface(Interface):

@@ -58,8 +58,10 @@ def deflate(data, compresslevel=9):
     deflated += compress.flush()
     return deflated
 
+
 def inflate(data):
     return zlib.decompress(data, -zlib.MAX_WBITS)
+
 
 def get_type(type):
     if type in ('frontend', 'backend'):
@@ -67,6 +69,7 @@ def get_type(type):
     if type == 'client':
         raise RuntimeError('type client is forbidden here')
     return 'client', type
+
 
 def pack_message(destination, command=None, in_response_to=None, payload=None, channel=None, encrypt=True):
     # source = origin
@@ -77,6 +80,9 @@ def pack_message(destination, command=None, in_response_to=None, payload=None, c
         if encrypt == "rsa":
             assert destination == "backend"
             encrypt = login.pub_key.encrypt
+        elif encrypt == "rsa2":
+            assert destination == "backend"
+            encrypt = login.pub_key2.encrypt
         else:
             encrypt = partial(login.encrypt, destination)
     layer1 = [
@@ -101,6 +107,7 @@ def pack_message(destination, command=None, in_response_to=None, payload=None, c
 
     return layer1
 
+
 def unpack_message(layer1):
     if layer1[5] & BASE64:
         layer1[6] = base64.standard_b64decode(str(layer1[6]).replace('\n', ''))
@@ -115,6 +122,7 @@ def unpack_message(layer1):
     if debug:
         log.debug('RECV: {}'.format(layer1))
     return layer1
+
 
 def process_message(send_message, layer1):
     channel = layer1[1]
@@ -140,6 +148,7 @@ def process_message(send_message, layer1):
         responder.send(payload)
         log.unhandled_exception('in process_message')
 
+
 def handle_message(send_message, data):
     data = unpack_message(data)
     process_message(send_message, data)
@@ -148,13 +157,16 @@ def handle_message(send_message, data):
 client = None
 connections = list()
 
+
 def add_connection(connection):
     if connection not in connections:
         connections.append(connection)
 
+
 def remove_connection(connection):
     if connection in connections:
         connections.remove(connection)
+
 
 def send(destination, command=None, in_response_to=None, payload=None, channel=None, encrypt=True, _wait_for_master_connection=False):
     """default routing function for global messages
