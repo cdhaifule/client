@@ -55,13 +55,16 @@ class NewAPIClient(oldclient.APIClient):
                     _connected.set()
                     self.io.connected = True
                     log.info("sockjs connected")
+                elif msg == "PING":
+                    print "PONG PONG"
+                    log.info("PONG PONG")
                 elif msg == "c":
                     self.io.connected = False
+                    self.io.sock.settimeout(60)
                     log.info("sockjs about to close")
                 elif msg == "h":
-                    log.info("received heartbeat")
+                    print("received heartbeat")
                 elif msg.startswith("a"):
-                    log.info("received a", len(msg))
                     for m in json.loads(msg[1:]):
                         self.on_message(json.loads(m))
                 else:

@@ -718,9 +718,11 @@ class WebSocket(object):
         try:
             return self.sock.send(data)
         except socket.timeout as e:
+            print "SOCKET TIME OUT"
             raise WebSocketTimeoutException(e.message)
         except Exception as e:
             if "timed out" in e.message:
+                print "SOCKET TIME OUT"
                 raise WebSocketTimeoutException(e.message)
             else:
                 raise e
@@ -729,9 +731,11 @@ class WebSocket(object):
         try:
             bytes = self.sock.recv(bufsize)
         except socket.timeout as e:
+            print "SOCKET TIME OUT"
             raise WebSocketTimeoutException(e.message)
         except SSLError as e:
             if e.message == "The read operation timed out":
+                print "SSL TIME OUT READ"
                 raise WebSocketTimeoutException(e.message)
             else:
                 raise
