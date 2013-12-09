@@ -103,7 +103,7 @@ class NewAPIClient(oldclient.APIClient):
             pass
 
     def send_message(self, message):
-        self.io.send('[' + json.dumps(json.dumps(message)) + ']')
+        self.io.send(json.dumps([message]))
 
     def emit(self, *args):
         pass
