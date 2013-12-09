@@ -55,9 +55,6 @@ class NewAPIClient(oldclient.APIClient):
                     _connected.set()
                     self.io.connected = True
                     log.info("sockjs connected")
-                elif msg == "PING":
-                    print "PONG PONG"
-                    log.info("PONG PONG")
                 elif msg == "c":
                     self.io.connected = False
                     self.io.sock.settimeout(60)
@@ -103,7 +100,8 @@ class NewAPIClient(oldclient.APIClient):
             pass
 
     def send_message(self, message):
-        self.io.send(json.dumps([message]))
+        print "message is {} ... {}".format(repr(message), type(message))
+        self.io.send("["+json.dumps(message)+"]")
 
     def emit(self, *args):
         pass
