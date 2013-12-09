@@ -109,7 +109,8 @@ def pack_message(destination, command=None, in_response_to=None, payload=None, c
 
 
 def unpack_message(layer1):
-    print "repr:", layer1, type(layer1)
+    if isinstance(layer1, basestring):
+        layer1 = json.loads(layer1)
     if layer1[5] & BASE64:
         layer1[6] = base64.standard_b64decode(str(layer1[6]).replace('\n', ''))
     if layer1[5] & ENCRYPTED:

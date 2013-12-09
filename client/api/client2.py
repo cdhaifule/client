@@ -100,8 +100,9 @@ class NewAPIClient(oldclient.APIClient):
             pass
 
     def send_message(self, message):
-        print "message is {} ... {}".format(repr(message), type(message))
-        self.io.send("["+json.dumps(message)+"]")
+        m = "["+json.dumps(message)+"]"
+        print "raw to ws:", repr(m)
+        self.io.send(m)
 
     def emit(self, *args):
         pass
