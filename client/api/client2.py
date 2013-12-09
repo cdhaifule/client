@@ -66,7 +66,7 @@ class NewAPIClient(oldclient.APIClient):
                     print("received heartbeat")
                 elif msg.startswith("a"):
                     for m in json.loads(msg[1:]):
-                        self.on_message(json.loads(m))
+                        self.on_message(m)
                 else:
                     print "unknown message type"
 
