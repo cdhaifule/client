@@ -36,9 +36,11 @@ from . import common
 
 _X = localize.X
 
+
 def menu_color():
     return win32gui.GetSysColor(win32con.COLOR_MENU)
-    
+
+
 def create_icon(name, inputpath, width, height, bgcolor):
     path = os.path.join(settings.menuiconfolder, "{}_{}_{}_{}.bmp".format(name, width, height, bgcolor))
     if os.path.exists(path):
@@ -50,7 +52,8 @@ def create_icon(name, inputpath, width, height, bgcolor):
     new.paste(source, mask=alpha)
     new.convert("RGB").save(path, "BMP")
     return path
-    
+
+
 def bmp_factory(name, path=None):
     if path is None:
         path = os.path.join(settings.menuiconfolder, '{}.icns'.format(name))
