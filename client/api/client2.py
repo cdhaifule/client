@@ -32,7 +32,7 @@ log = logger.get("api.client2")
 
 
 class NewAPIClient(oldclient.APIClient):
-    nodes = ["81.95.0.18:4224"]
+    nodes = ["wsx.download.am/backend"]
     use_rsa = "rsa2"
 
     def connect(self):
@@ -77,7 +77,7 @@ class NewAPIClient(oldclient.APIClient):
                 self.disconnected_event.set()
                 loop.kill()
 
-            url = "ws://{}/backend/{}/{}/websocket".format(
+            url = "ws://{}/{}/{}/websocket".format(
                   node, random.randint(100, 999), settings.app_uuid)
             self.io = websocket.WebSocketApp(
                 url,
